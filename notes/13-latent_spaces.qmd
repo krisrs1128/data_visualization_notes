@@ -879,7 +879,7 @@ ag_news_sae |>
 
 ```{ojs}
 //| label: sae-vgplot-setup
-//|  echo: false
+//| echo: false
 
 // This creates the tables that will be used in both the UMAP and histogram visualization below.
 sae_setup = {

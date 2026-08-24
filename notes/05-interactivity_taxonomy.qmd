@@ -545,7 +545,7 @@ $t$-statistic for the difference in means. Suppose we begin with this implementa
 (prepare mosaic analog for this.)
 
 ```{r}
-llibrary(shiny)
+library(shiny)
 library(tidyverse)
 
 ui <- fluidPage(
@@ -610,7 +610,7 @@ server <- function(input, output) {
   output$dt <- renderDataTable(samples())
 }
 
-app <- shinyApp(ui, server)}
+app <- shinyApp(ui, server)
 ```
 
 1. Whenever building an interactive visualization, I find it helpful to work

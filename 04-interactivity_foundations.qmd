@@ -1,0 +1,392 @@
+---
+title: "Interactive Visualization - Part 1"
+author: Kris Sankaran
+date: 2026-09-01
+bibliography: references.bib
+format:
+  html:
+    embed-resources: true
+    html-math-method: mathjax
+    fig-align: center
+execute:
+    echo: true
+    message: false
+    warning: false
+    cache: false
+    eval: true
+---
+
+```{r}
+#| label: setup
+#| echo: false
+library(tidyverse)
+theme_set(theme_classic() + theme(panel.border= element_rect(fill = NA, linewidth = .5)))
+set.seed(2026)
+```
+
+## History
+
+1. Interactive visualizations are visualizations that respond to user input. We
+grew up with computers, so we might have gotten used to how extraordinary they
+are.  But stepping back, consider that even though visualizations have been a
+part of scientific and public discourse for centuries, they were almost always
+static. The visualization designer was responsible for a particular data and
+view that would be broadcast verbatim to all their readers.  A particularly
+ambitious team might prepare a few related visualizations mean to be viewed
+together, like an atlas. A few visionaries explored the idea of interactivity
+using mechanical devices, like the Bertin Loom,
+
+    {{<video https://www.youtube.com/watch?v=EUoaEwxUeQ0>}}
+
+  These were impractical, but they set the stage for what was to come.
+
+1. The situation changed dramatically with the arrival of computers in the 1970s
+- 1980s. Compared to print, computer displays can cheaply show many views in
+sequence. Through new interfaces, users could also direct the particular
+sequence that was shown to them. There might be thousands of options for what
+data, visual encodings, and annotation to include in a particular visualization.
+An well-designed interactive visualization lets users explore many options
+iteratively; they might traverse a path through the space of visualizations that
+no other reader has ever considered, one tailored to their particular interests.
+
+   ![Early tablet and touch screens [source](https://nightingaledvs.com/the-evolution-and-future-of-interactive-data-visualization-part-1/).](figures/prim9.jpeg)
+
+   In this sense, interactive visualizations put their users into conversation
+   with the data. They are no longer passive viewers, but can pose questions and
+   receive answers from their visualizations (a good interactive visualization
+   should feel like an engaging conversation, exploring many avenues and going
+   beyond superficialities).
+
+1. There has since been an explosion of software tools for building interactive
+visualizations. But there are fundamental concepts that are shared across all
+these tools, both about interaction dynamics (so that the plots help users
+actually answer questions) and software design (so that the implementation is
+modular and logical).
+
+## Interaction Taxonomy: Data and View Specification
+
+1. Heer and Shneiderman argue that, at a high-level, interaction dynamics in
+visualization can be categorized into three groups: (1) data and view
+specification, (2) view manipulation, and (3) analysis process and provenance.
+These notes focus on group (1), which can be further broken into four actions,
+
+    - Visualize: Decide on a set of visual encodings.
+    - Filter: Modify which samples are shown.
+    - Sort: Reorder where the the samples appear on the display.
+    - Derive: Introduce new variables to the display.
+
+   all of which are made accessible to the user.
+
+1. From our study of static visualizations, we know that different visual
+encodings prioritize different comparisons. An interactive visualization that
+supports the "visualize" action allows the user to modify the encodings directly
+within the interface. This can be done through excel-style dropdowns,
+
+    ![](figures/excel_selection.png)
+
+   but this is less expressive than a full grammar of graphics (e.g., we can't
+   overlay regression lines over a scatterplot). Alternatively, some systems
+   allow particular encodings to be specified interactively. These are
+   essentially interactive, code-free versions of ggplot2; the most famous
+   example is tableau.
+
+    ![](figures/tableau_specification.png)
+
+1. Filters allow users to query for particular subsets of the data. They can be
+specified through input widgets, like dropdown menus, sliders, radio buttons, or
+search bars.
+
+   ![A (too...) complicated interface that many types of filter inputs.](figures/filter_inputs.png)
+
+   Further, the filter input can itself be augmented by small visualizations,
+   called scented widgets (because they give a "scent" about the information
+   that can be "foraged" through a particular interaction).
+
+   ![](figures/scented_widgets.png)
+
+1. Often the ordering of the datapoints can make a difference in the patterns
+that we perceive. The visualization below shows the relationships between
+characters in Les Miserables (we'll study networks in much more depth later).
+Notice how many of the purple connections are collected in the same block when
+using the Bray Curtis, but not Euclidean, sorting option.
+
+   {{<video figures/sorting_reorder.mp4>}}
+
+1. Finally, it's possible to compute new variables based on interactive user
+queries. This is the least common form of interactive data/view specification,
+but it has a lot of potential, especially in data science, where statistical
+algorithms often return new numerical summaries related to the analysis. For
+example, we can fit a linear regression over a subset of interest, or compute
+$p$-values contrasting selected vs. unselected points, like in the plot below.
+
+   ![From the [scSketch demo](https://github.com/colabobio/scsketch).](diff_exp_analysis_demo.gif)
+
+### Gulfs, Constancy, and Memory
+
+1. As we've seen above, interactivity opens up many possibilities for
+"conversing" with the data. But sometimes interactive visualizations are painful
+to use. What can go wrong?
+
+1. One useful abstraction idea is that interactive systems must bridge the two
+interaction gulfs.
+
+   - Gulf of execution: The time it takes to specify a query and update the display.
+   - Gulf of evaluation: How long it takes to understand the updated display.
+
+   If either of the gulfs takes too long to cross, then the system starts
+   becoming difficult to use. Updates that take less than 0.1 seconds feel
+   smooth, between 0.1 and 1 second will have a noticeable lag but still support
+   continuous train of thought. 10 seconds is generally considered the limit
+   before users actively change their interaction behaviors.
+
+   ![](figures/interaction_gulfs.png)
+
+1. Animation can help reduce the gulf of evaluation. Instead of having to
+manually scan plot labels or marks to see how it has changed, we can follow the
+same object as it transitions between views. For example, the plot below shows
+the population breakdown of different states according to age groups. It's easy
+to see which states had stable rankings.
+
+   {{<video figures/object_constancy.mp4}}
+
+   It's important that the transitions track the same object. For example, it
+   makes no sense to transition between views showing different datasets.
+   Further, if there is very little shared between two adjacent views, then the
+   animations can become very hard to follow.
+
+1. This highlights the basic tradeoff between static and interactive
+visualization. While interactive visualization allows us to explore many related
+views, it relies heavily on our memory. In contrast, a small multiples plot
+doesn't place as much burden on memory, though it doesn't scale well to many
+views. This basic trade-off is summarized by Tamara Munzner's rule of thumb:
+"eyes beat memory." We should only use interactivity when it's really not
+possible to gather the same insights from a static view.
+
+## Mosaic
+
+1. The basic challenge in programming interactive systems is that different
+parts of the code need to be rerun on demand as the user sends new inputs.  This
+is different from traditional computer programs, which execute code from the top
+to the bottom of a file, and is often called "reactive programming," because the
+program's state reacts to user inputs.
+
+1. There are different ways to handle the resulting coordination problem. We'll
+discuss how Mosaic monitors for user interactions and triggers updates to the
+visualization. Let's focus on an example. The visualization below responds to
+two slider inputs. When we set `batch = n`, it will filter to the first `10n`
+rows of the data and recompute the confidence intervals. The confidence interval
+widths depend on the confidence level, which itself can be set by a slider
+(larger CI levels are more conservative, so lead to wider intervals).
+
+```{ojs}
+import * as vg from "@uwdata/vgplot";
+
+await vg.coordinator().exec([
+    vg.loadParquet("https://github.com/uwdata/mosaic/raw/main/data/athletes.parquet", {
+    select: ["*", "10 * CEIL(ROW_NUMBER() OVER (PARTITION BY sport) / 10) AS batch"],
+    where: "height IS NOT NULL"
+    })
+]);
+
+const $ci = vg.Param.value(0.95);
+const $query = vg.Selection.single();
+
+vg.vconcat(
+    vg.hconcat(
+        vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
+        vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"})
+    ),
+    vg.plot(
+        vg.errorbarX(
+        vg.from("athletesBatched", {filterBy: $query}),
+        {
+            ci: $ci,
+            x: "height",
+            y: "sport",
+            stroke: "sex"
+        }
+        ),
+    ),
+    vg.colorLegend({for: "heights"})
+)
+```
+
+### Coordinator
+
+1. The first, probably most mysterious, part of the program defines a
+coordinator. This reads in the data and stores it in a database that's hidden
+from our view.  The SQL query on load defines a new column `batch` that groups
+every 10 consecutive rows in the `athletes.parquet` dataset.
+
+```{ojs}
+#| eval: false
+await vg.coordinator().exec([
+    vg.loadParquet("https://github.com/uwdata/mosaic/raw/main/data/athletes.parquet", {
+    select: ["*", "10 * CEIL(ROW_NUMBER() OVER (PARTITION BY sport) / 10) AS batch"],
+    where: "height IS NOT NULL"
+    })
+]);
+```
+
+The coordinator object is actually a wrapper of the databases we defined when
+discussing data management. We can query it like this.
+
+```{ojs}
+vg.coordinator().query({sql: "SHOW TABLES"})
+```
+
+```{ojs}
+vg.coordinator().query({sql: "SELECT * FROM athletesBatched LIMIT 5"})
+```
+
+When we interact with the visualization, queries like this will be automatically
+constructed and sent to the coordinator to fetch relevant data.
+
+### Reactives
+
+1. The reactive variables are stored as either `Param`s or `Selection`s. We have
+a `Param` for the confidence interval level and a `Selection` for the number of
+data batches to use in the visualization. What they have in common is that any
+changes to their values (via user inputs, discussed below) will trigger changes
+on all visualization components that refer to them. In mosaic, both these types
+of variables are prefixed with a `$`. The key difference is:
+
+   * `Selection` define SQL queries that are used to filter the rows that end up in the visualization.
+   * `Params` are variables that influence visual appearance or any computational steps after the data has been queried.
+
+   You can think of this as data and view specification.
+
+1. An important aspect of `Selection`s is that a visualization might define
+multiple selections which later need to be reconciled. E.g., we might have two
+sliders defining filters using two columns, like Height > c_1, Weight > c_2.
+There are a few reconciliation approaches defined in mosaic.
+
+   * `vg.Selection.intersection()`: Consider only samples that pass both conditions.
+   * `vg.Selection.union()`: Consider samples that pass either condition.
+   * `vg.Selection.single()`: Consider samples that pass the condition that was most recently changed by the user.
+
+1. In our example, we define a parameter for confidence level initialized at
+0.95. This changes the width of the intervals in the visualization, but we can
+change its value without needing to query the data.
+
+   ```{ojs}
+   #| eval: false
+   const $ci = vg.Param.value(0.95);
+   ```
+
+   For the number of batches to use, we instead need a selection. The code below
+   doesn't specify what data query will be run every time it is changed. We're
+   using `.single()` reconciliation strategy, but this could have been choice,
+   because we only have one selection in this visualization.
+
+   ```{ojs}
+   #| eval: false
+   const $query = vg.Selection.single();
+   ```
+
+### Inputs
+
+1. Mosaic allows the user to modify these reactive variables using `Inputs`.
+The package implements,
+
+    * [`menu`](https://idl.uw.edu/mosaic/api/inputs/menu.html): Select rows by the category levels in a column.
+    * [`slider`](https://idl.uw.edu/mosaic/api/inputs/slider.html): There are either point or interval sliders. Point sliders let you filter rows where a column is above (or below) a given threshold. Interval sliders filter rows where a column has values between the interval boundaries.
+    * [`search`](https://idl.uw.edu/mosaic/api/inputs/search.html): Select rows where the search text appears in a column.
+    * [`table`](https://idl.uw.edu/mosaic/api/inputs/table.html): Select rows where the user has hovered their mouse.
+
+1. In our example, there are two sliders. The syntax is different because the
+first modifies a `Selection` while the second modifies a `Param`. The first
+slider is requerying the `athletesBatched` dataset to retrieve rows where the
+value in the `batch` column is less than `query`.
+
+```{ojs}
+#| eval: false
+vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
+```
+
+The arguments mean:
+
+   - `as`: The `Selection` object. This ties the user inputs to subsequent visual changes.
+   - `from`: Which dataset do we draw the query from?
+   - `column`: Which column of the dataset do we use when defining the query?
+   - `select`: Should we keep only the rows where `batch` equals the slider value, or should we consider any value less than the selected slider value? Interval means we should use the latter.
+
+Given this information, the slider will construct the SQL query,
+
+```{ojs}
+#| eval: false
+SELECT * WHERE batch < {slider value} from athletesBatched
+```
+
+   The definition of the `Param`-based slider slider is more straightforward, because it never needs to refer to the data.
+
+```{ojs}
+#| eval: false
+vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"})
+```
+
+   - `as`: The `Param` object. Like in the slider above, this makes sure inputs
+   trigger changes in the downstream visualization.
+   - `min, max, step`: Controls the endpoints and resolution of the slider. When we used a `Selection`, this information was automatically inferred^[We could have also set it manually.].
+
+1. Different inputs have different arguments controlling their appearance and
+what they make possible to the user, and when working on a new visualization,
+it's helpful to have the documentation open. But they all have the same
+`Selection` vs. `Param` distinction, with different specifications depending on
+whether they are used to define new data queries (`Selection`) or simply set
+variables that will be used downstream (`Param`).
+
+### Visual Layers
+
+1. Finally, we relate these reactive variables to the visualization. Any part of
+a Mosaic plot that refers to a reactive variable will be recomputed whenever the
+user inputs are changed. Whenever `query` selection is changed, we requery the
+`athletesBatched` dataset (the first argument in any mosaic layer describes the
+dataset of interest). The `ci` parameter controls the `ci` visual encoding in
+the error bar layer.
+
+```{ojs}
+#| eval: false
+vg.plot(
+    vg.errorbarX(
+    vg.from("athletesBatched", {filterBy: $query}),
+    {
+        ci: $ci,
+        x: "height",
+        y: "sport",
+        stroke: "sex"
+    }
+    ),
+)
+```
+
+_Exercise: What are the reactive variables in this program? When they are changed, do they affect the displayed data or the visual encoding?_
+
+1. We can organize the interface using `vconcat` (vertical concatenation) and
+`hconcat` (horizontal concatenation). They are analogous to `/` and `+` for
+combining panels in patchwork. They have no influence on the computation or
+interaction dynamics, just where the components appear on the display.
+
+1. For example, if we had wanted to place the sliders on the side of the main
+visualization, we can use
+
+```{ojs}
+vg.hconcat(
+    vg.vconcat(
+        vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
+        vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"})
+    ),
+    vg.plot(
+        vg.errorbarX(
+        vg.from("athletesBatched", {filterBy: $query}),
+        {
+            ci: $ci,
+            x: "height",
+            y: "sport",
+            stroke: "sex"
+        }
+        ),
+    ),
+    vg.colorLegend({for: "heights"})
+)
+```

@@ -1,0 +1,1014 @@
+---
+title: "Latent Spaces"
+author: Kris Sankaran
+format:
+  html:
+    embed-resources: true
+    html-math-method: mathjax
+    fig-align: center
+execute:
+    echo: true
+    message: false
+    warning: false
+    cache: false
+    eval: true
+---
+
+```{r setup}
+library(curl)
+library(ggimage)
+library(glue)
+library(magick)
+library(reticulate)
+library(tidyverse)
+set.seed(2026)
+theme_set(theme_classic())
+```
+
+1. So far in this class we've generally worked with data that can be expressed in data tables. Even when we worked with spatial data, we converted that spatial information into two-dimensional coordinates. Of course this is only a tiny fraction of all the data that's out there. It's very natural to want to visualize text, images, audio, for example, but it's not at all obvious how to represent these highly structured signals into data tables in a way that makes them amenable to our usual visualization techniques.
+
+2. To make this concrete imagine working with a text collection. One way to represent the samples as a matrix would be to organize the documents along rows and words along columns, with a one if the word is present and a zero otherwise. But now we've lost all the information about the order of the words. Similarly we could try to represent an image using pixels as columns and storing the pixel intensity within each entry. But this means if we see the same object but shifted by a few pixels, the new sample will look completely different in our matrix.
+
+3. There is a concrete way forward though. In the last decade or so it's become possible to apply deep learning to extract meaningful representations of these more abstract objects. Since our primary focus is visualization, we won't discuss the mechanics of deep learning models or how exactly they are trained. But we'll learn enough about their architectures so that we can fruitfully use them to define latent spaces through which we can visualize and navigate across collections of more complicated structured data.
+
+4. The techniques we describe here are useful for two use cases:
+   1. We can use them simply to navigate a collection that we're interested in. We might want to analyze the text of all the music album reviews on some website. Or maybe we want to visualize the effects of deforestation using satellite and drone imagery.
+   2. Alternatively we might be interested in the models themselves. This is the focus of a lot of recent work in the fairness and interpretability literature. Since models are so ubiquitous, understanding their properties in different settings becomes important and visualization is a key tool for making sense of how these models behave.
+
+5. To get to this endpoint we'll first discuss how deep learning models represent a single sample, like one image or sentence. We'll see then how to expand this to larger collections by adapting our previous techniques from high-dimensional data visualization. Finally we'll introduce some visualization techniques that have been developed specifically in the context of navigating the representation spaces learned by deep learning models.
+
+### Working with a single sample.
+
+1. Deep learning models chain together many parametrized modules, each which slightly modifies the representation of an input to extract more meaningful features from it. Formally, let $x$ be the input, define modules ("layers"),
+
+   $h^{l} = f_{l}\left(h^{l - 1}; \theta_{l}\right)$
+
+   and chain them together,
+
+   $x \xrightarrow{f_1} h^{1} \xrightarrow{f_{2}} \dots \xrightarrow{f_{L}} h^{L}$.
+
+2. For now let's focus on text data. The input $x$ can't be an entire document. Documents could have very different sizes and for model training to be successful the inputs need to be units of comparable size. This motivates "tokenization." A sentence can be broken into individual characters, parts of words, or entire words and these become the inputs $x$ and the chain above.
+
+Let's look at a concrete example where I passed in the sentence,
+
+   ```
+   here is an example sentence
+   ```
+
+First, we get a tokenizer that processes inputs into a format that can be used
+by the distilled BERT model.
+
+```{python}
+#| results: false
+#| message: false
+import numpy as np
+import pandas as pd
+import torch
+from transformers import AutoModel, AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+model = AutoModel.from_pretrained("distilbert-base-uncased")
+model.eval()
+```
+
+Then we can apply a tokenizer to break the sentence apart.
+
+```{python}
+# ID representations
+sentence = "Hello there I am an example sentence."
+inputs = tokenizer(sentence, return_tensors="pt")
+print(inputs)
+
+# word representations
+tokens = tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
+print(tokens)
+```
+
+1. Aside: In this note we're going to be mixing Python and R code. The reason is
+that the most mature pretrained models are hosted in Python packages but the
+most infomrative visualizations can be made with R. Fortunately the reticulate
+package makes it very easy to transfer objects back and forth. We'll see this
+when we call `py$` and `r.` to fetch information from the two languages
+
+3. At each layer the modules $f_l$ extract high-dimensional representations of the token.
+   There are seven layers in this pre-trained model.
+
+
+```{python}
+with torch.no_grad():
+    output = model(**inputs, output_hidden_states=True)
+
+activations = output.hidden_states
+print(len(activations))
+```
+
+   If we concentrate on layer one we see that each token is represented by 768
+   coordinates. Each coordinate is called a neuron. The values that appear in
+   this neuron for the token are called its activations.
+
+```{python}
+print(activations[1].shape)
+```
+
+Let's look at its actual values.
+
+```{python}
+layer_one = activations[1][0].detach().cpu().numpy()
+layer_one[:10]
+```
+
+   If we pass in a different sentence, we'll get the same shape of output but the values will change.
+
+```{python}
+inputs2 = tokenizer("Hello and I am a different sentence.", return_tensors="pt")
+with torch.no_grad():
+    output2 = model(**inputs2, output_hidden_states=True)
+
+layer_one2 = output2.hidden_states[1][0].detach().cpu().numpy()
+layer_one2[:10]
+```
+
+   In the terminology of deep learning, the pattern of neuron activations has
+   learned to represent the specific characteristics of the sample.
+
+4. A well-known phenomenon is that layers lower in the network tend to find surface-level features of the input while those near the end of the network identify higher-level, more semantically meaningful features. For example the figure below comes from this paper which visualized neuron activations. They find neurons that activate inside of quotes or depending on the position between newline characters, both of which are non-obvious features that were never explicitly fed into the model. Neurons in the initial layers don't exhibit this behavior.
+
+   [toy picture]
+
+   We will see something similar with our pretrained model once we give it more examples.
+
+6. Even though the discussion so far has been about text, similar logic applies to images. Instead of tokenizing by breaking a sentence into words, we break an image into patches. Then each patch has an activation in each neuron. To illustrate, let's download a painting from the wikiart dataset, _Pine Trees in the Fen_ by Vincent Van Gogh.
+
+```{python}
+#| results: false
+#| message: false
+from io import BytesIO
+import matplotlib.pyplot as plt
+import requests
+from PIL import Image, ImageOps
+
+rows_url = (
+    "https://datasets-server.huggingface.co/rows?"
+    "dataset=huggan%2Fwikiart&config=default&split=train&offset=0&length=1"
+)
+row = requests.get(rows_url).json()["rows"][0]["row"]
+response = requests.get(row["image"]["src"])
+painting = Image.open(BytesIO(response.content)).convert("RGB")
+painting = ImageOps.fit(painting, (224, 224)) # make it smaller
+
+plt.imshow(painting)
+plt.axis("off")
+```
+
+We can break it into patches that are 56 pixels across.
+
+```{python}
+#| label: patch-vis
+#| results: false
+#| message: false
+image_tensor = torch.from_numpy(np.array(painting)).permute(2, 0, 1) / 255
+patch_size = 56
+patches = [
+    image_tensor[:, row : row + patch_size, col : col + patch_size]
+    for row in range(0, image_tensor.shape[1], patch_size)
+    for col in range(0, image_tensor.shape[2], patch_size)
+]
+
+fig, axes = plt.subplots(4, 4, figsize=(7, 7))
+for i, (ax, patch) in enumerate(zip(axes.flat, patches)):
+    ax.imshow(patch.permute(1, 2, 0))
+    ax.set_xticks([])
+    ax.set_yticks([])
+```
+
+7. I've slightly simplified the situation here. It turns out that many neurons aren't really that interpretable. They seem to activate on images that have nothing to do with each other, and the examples are the paper above where cherrypicked (the authors acknowledged this and even highlighted this specific issue). We need slightly more sophisticated machinery to be able to deal with this issue, which is sometimes called the "superposition hypothesis" (the hypothesis is that to make sense of a particular representation, we need to understand the entire pattern of neuron activations, not just the neurons in isolation).
+
+8. Nonetheless, these patterns of activations turn out to be the key ingredient for visualization in a deep learning context. We can think about the neuron activations across as being like features in an ordinary data table. Unlike our naive approach using raw word or pixel identity, these neuron activations will capture meaningful features about the original sample. It doesn't matter what specific view we have. If we have a graphite-sketch sensitive neuron, then that neuron will activate on all such paintings.
+
+## Working with a Collection
+
+1. Arrange the activations across samples for a particular layer into a matrix with this format. Each row represents a sample. The columns give activations across all neurons in that layer. This is a high-dimensional matrix and we can methods like PCA or UMAP.
+
+[cartoon sketch]
+
+2. Analyzing a large collection might be unwieldy but let's see how dimensionality reduction is already useful in answering more targeted questions. Here I've downloaded the AG News Corp text corpus. The full collection samples articles across a variety of topics, including politics, sports, business, and technology.
+
+```{r}
+#| label: polysemy-corpus
+ag_url <- "https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/train.csv"
+news_groups <- c("World", "Sports", "Business", "Sci/Tech")
+ag_news_all <- read_csv(ag_url, col_names = c("class", "title", "description")) |>
+    mutate(
+        section = factor(class, levels = 1:4, labels = news_groups),
+        text = str_squish(str_c(title, ". ", description))
+    )
+```
+
+I've now filtered to all the sentences that just include the word "pitch". This is the data table that represents that subset.
+
+```{r}
+#| label: pitch-subset
+target_word <- "pitch"
+ag_news <- ag_news_all |>
+    filter(str_detect(text, "pitch"))
+ag_news
+```
+
+3. We can now extract all the final representations from a BERT model.
+The first step instantiates the tokenizer and pre-trained model. The eval call
+ensures that training-specific adjustments (e.g., from dropout regularization)
+are omitted.
+
+```{python}
+#| label: bert-tokenizer
+#| results: false
+import torch
+from transformers import AutoModel, AutoTokenizer
+
+bert_tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+bert = AutoModel.from_pretrained("bert-base-uncased")
+bert.eval()
+```
+
+Next, we loop over all the example sentences and extract the associated final
+layer representations (`out = bert(...`) just for the word "pitch" whereever it
+occurs in the sentence. This is the helper function that contains our main logic.
+
+```{python}
+#| label: bert-context-embeddings
+
+def embed_target(text, target, layer=12, batch_size=32):
+    target_id = bert_tokenizer.convert_tokens_to_ids(target)
+    batch_embeddings = []
+
+    # loop over sentences
+    for start in range(0, len(text), batch_size):
+        encoded = bert_tokenizer(
+            text[start : start + batch_size],
+            padding=True,
+            truncation=True,
+            max_length=192,
+            return_tensors="pt",
+        )
+
+        # get representations for the target token
+        with torch.no_grad():
+            out = bert(
+                **encoded,
+                output_hidden_states=True,
+            )
+
+        # get the representation for the target token
+        word_index = encoded["input_ids"] == target_id
+        word_index = word_index.int().argmax(dim=1)  # first occurrence
+        batch_index = torch.arange(len(word_index))
+        batch_embeddings.append(
+            out.hidden_states[layer][batch_index, word_index]
+        )
+
+    return torch.cat(batch_embeddings).numpy()
+```
+
+And here we call it on the news data set. Notice that reticulate automatically
+handles the conversion from an R matrix to a numpy array.
+
+```{r}
+#| label: bert-context-embeddings-r
+context_embeddings <- py$embed_target(ag_news$text, target_word)
+context_embeddings[1:6, 1:10]
+```
+
+4. Next I've run UMAP reduction on this matrix. The scores plot below shows some
+clear clusters, and they do seem related to (but not totally redundant with) the
+overall news sections.
+
+```{r}
+#| label: polysemy-umap
+#| fig-width: 9
+#| fig-height: 7
+umap_xy <- uwot::umap(
+    context_embeddings,
+    n_neighbors = 15,
+    min_dist = 0.15,
+    metric = "cosine",
+    n_threads = 1,
+    verbose = FALSE
+)
+colnames(umap_xy) <- c("UMAP1", "UMAP2")
+polysemy_scores <- bind_cols(ag_news, as_tibble(umap_xy))
+
+ggplot(polysemy_scores, aes(UMAP1, UMAP2, color = section)) +
+    geom_point(alpha = 0.65, size = 1.5) +
+    scale_color_brewer(palette = "Set2") +
+    labs(color = "News section", x = "UMAP 1", y = "UMAP 2")
+
+write_csv(
+    polysemy_scores |>
+        select(text, section, UMAP1, UMAP2),
+    "data/polysemy_scores.csv"
+)
+```
+
+1. Our visualization above doesn't really tell us what it is that's different
+between the clusters. We can create an interactive version where brushing the
+article shows the associated text.
+
+```{ojs}
+// label: polysemy-vgplot-setup
+// echo: false
+path = (p) => new URL(`data/${p}`, document.baseURI).href
+
+vg = {
+  const vg = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm");
+  const wasm = await vg.wasmConnector();
+  vg.coordinator().databaseConnector(wasm);
+  await vg.coordinator().exec([
+    vg.loadCSV("polysemy_scores", path("polysemy_scores.csv"))
+  ]);
+  return vg;
+}
+```
+
+```{ojs}
+// label: polysemy-brush
+$brush = vg.Selection.intersect();
+
+vg.vconcat(
+  vg.plot(
+    vg.dot(
+      vg.from("polysemy_scores"),
+      {
+        x: "UMAP1",
+        y: "UMAP2",
+        fill: "section",
+        r: 3,
+        fillOpacity: 0.65
+      }
+    ),
+    vg.intervalXY({
+      as: $brush,
+      //brush: {fill: "none", stroke: "black"}
+    }),
+    vg.colorLegend(),
+    vg.xLabel("UMAP 1"),
+    vg.yLabel("UMAP 2"),
+    vg.width(700),
+    vg.height(500)
+  ),
+  vg.table({
+    from: "polysemy_scores",
+    filterBy: $brush,
+    maxWidth: 700,
+    height: 250,
+    columns: ["section", "text"],
+    width: {section: 90, text: 600}
+  })
+);
+```
+
+ We can see clearly that even within a specific topic, the clusters represent
+ different uses of the word "pitch". Some of them are related to the pitching a
+ ball in baseball. Others are like "sales pitch" and others still are like
+ "pitch black." So the model can disambiguate the different contexts within
+ which the same word can be used. This is much more powerful than simply
+ tabulating word counts or word co-occurrences, which is how someone might have
+ analyzed a text document before deep learning (not that we were hopeless back
+ then. There are some beautiful papers on using word statistics to decide
+ whether Shakespeare wrote all of his plays and similar methods were also used
+ to break the enigma during World War).
+
+6. Let's apply similar methodology to analyzing an image collection. This
+example is inspired by the Artography project. We won't build up the entire
+interactive interface but we will build a similar kind of "atlas" of different
+artwork styles. This involves a some tedious preprocessing to handle the data
+downloads and extract relevant metadata . I've hidden most of the complicated
+code below, but you can see it in the original quarto source.  But at least in
+the block below you can see where we got the images from.
+
+```{r data}
+rows_url <- str_c(
+    "https://datasets-server.huggingface.co/rows?",
+    "dataset=huggan%2Fwikiart&config=default&split=train"
+)
+offsets <- c(0, 2500, 5000, 7500)
+rows_per_page <- 60
+
+pages <- map(offsets, \(offset) {
+    jsonlite::fromJSON(
+        str_c(rows_url, "&offset=", offset, "&length=", rows_per_page),
+        simplifyVector = FALSE
+    )
+})
+```
+
+Here is the metadata we extracted (without showing the code).
+
+```{r}
+#| echo: false
+# Extract metadata associated with each painting.
+classes <- pages[[1]]$features[-1] |>
+    set_names(map_chr(pages[[1]]$features[-1], "name")) |>
+    map(~ unlist(.x$type$names))
+
+paintings <- pages |>
+    map("rows") |>
+    list_flatten() |>
+    map_dfr(\(x) {
+        tibble(
+            id = x$row_idx,
+            url = x$row$image$src,
+            artist = classes$artist[x$row$artist + 1],
+            genre = classes$genre[x$row$genre + 1],
+            style = classes$style[x$row$style + 1]
+        )
+    }) |>
+    mutate(
+        artist = str_to_title(str_replace_all(artist, "-", " ")),
+        genre = str_to_title(str_replace_all(genre, "_", " ")),
+        style = str_replace_all(style, "_", " ")
+    )
+
+paintings
+```
+
+If you run the notebook yourself, you'll see data saved into
+`data/wikiart-sample`.
+
+```{r}
+#| echo: false
+image_dir <- "data/wikiart-sample"
+dir.create(image_dir, recursive = TRUE, showWarnings = FALSE)
+paintings <- paintings |>
+    mutate(path = file.path(image_dir, str_c("painting-", id, ".jpg")))
+
+multi_download(
+    paintings$url,
+    paintings$path,
+    progress = FALSE
+)
+
+# reduce image size (we're going to use a cropped version later anyways)
+walk(paintings$path, \(path) {
+    image_read(path) |>
+        image_resize("384x384>") |>
+        image_write(path, quality = 85)
+})
+```
+
+1. Let's load in all the original images and plot a few just to get some
+intuition. Let's get all the web pages where these artworks live.
+
+1. Next we need a pretrained model from which we can extract activations. The
+processor below serves the exact same role as the tokenizer in the earlier
+blocks.
+
+```{python}
+#| label: embed-wikiart-model
+#| results: false
+#| message: false
+import numpy as np
+import torch
+from PIL import Image
+from transformers import AutoImageProcessor, AutoModel
+
+checkpoint = "facebook/dinov2-small"
+processor = AutoImageProcessor.from_pretrained(checkpoint)
+model = AutoModel.from_pretrained(checkpoint)
+model.eval()
+```
+
+Let's build some intuition about the model representations by applying it to a
+single painting. The first token (in deep learning jargon, this is called the
+`[CLS]` token) corresponds to the overall image representation.
+
+```{python}
+#| label: single-image-embedding
+#| echo: true
+with torch.no_grad():
+    image_inputs = processor(images=painting, return_tensors="pt")
+    image_output = model(pixel_values=image_inputs["pixel_values"])
+
+image_embedding = (
+    image_output.last_hidden_state[:, 0, :]
+)
+image_embedding[0, :10]
+```
+
+The function below genearlizes this logic to all paintings.
+
+```{python}
+#| label: embed-wikiart
+#| results: false
+#| message: false
+def embed_images(paths, batch_size=16):
+    embeddings = []
+
+    # loop over paintings
+    for start in range(0, len(paths), batch_size):
+        images = [
+            Image.open(path).convert("RGB")
+            for path in paths[start : start + batch_size]
+        ]
+
+        inputs = processor(images=images, return_tensors="pt")
+        with torch.no_grad():
+            output = model(pixel_values=inputs["pixel_values"])
+
+        embeddings.append(
+            output.last_hidden_state[:, 0, :]
+            .detach()
+            .cpu()
+            .numpy()
+        )
+
+    return np.concatenate(embeddings)
+```
+
+Applying this to our entire data set, we get the high-dimensional
+representations of the artworks.
+
+```{r}
+#| label: embed-wikiart-r
+embedding_file <- "data/wikiart-dinov2-small.rds"
+
+# pattern to cache the embeddings (so I don't have to rerun it each time this
+# notebook compiles)
+if (file.exists(embedding_file)) {
+    embedding <- readRDS(embedding_file)
+} else {
+    embedding <- py_to_r(py$embed_images(paintings$path))
+    saveRDS(embedding, embedding_file)
+}
+
+embedding[1:5, 1:10]
+```
+
+8. We can apply our exact same dimensionality reduction ideas to create a UMAP of these high-dimensional representations.
+
+```{r umap}
+#| fig-width: 9
+#| fig-height: 6.5
+xy <- uwot::umap(
+    embedding,
+    n_neighbors = 15,
+    min_dist = 0.15,
+    metric = "cosine",
+    n_threads = 1,
+    verbose = FALSE
+)
+
+painting_map <- bind_cols(
+    paintings,
+    as_tibble(xy, .name_repair = ~ c("UMAP1", "UMAP2"))
+)
+
+ggplot(painting_map, aes(UMAP1, UMAP2, color = genre)) +
+    geom_point(size = 2.2, alpha = 0.8) +
+    scale_color_brewer(palette = "Paired") +
+    coord_equal() +
+    labs(x = "UMAP 1", y = "UMAP 2", color = "WikiArt genre")
+
+# Make the map available to the later vgplot cell.
+write_csv(
+    painting_map |> select(UMAP1, UMAP2, path),
+    "data/painting_map.csv"
+)
+```
+
+   The model has learned to associate all the landscape paintings with each other and all the portraits also. This is remarkable because in the original raw pixel values these images look very different. But by the nature of the model training, images that are similar in this semantic sense will have similar final layer representations.
+
+```{r umap-images}
+#| fig-width: 9
+#| fig-height: 6.5
+ggplot(painting_map, aes(UMAP1, UMAP2, color = genre)) +
+    geom_image(
+        data = painting_map,
+        aes(x = UMAP1, y = UMAP2, image = path),
+        size = 0.06,
+        by = "width",
+        inherit.aes = FALSE
+    ) +
+    scale_color_brewer(palette = "Paired") +
+    coord_equal() +
+    labs(x = "UMAP 1", y = "UMAP 2", color = "WikiArt genre")
+```
+
+1. While in theory we could associate each of these points with an ID and look
+up the associated painting separately, it's more efficient to show the images
+themselves. Here we've used the ggimage package, which allows us to overlay an
+image layer similarly to geom_point, for example.
+
+9. Alternatively we can apply dynamic linking. On the left we have the original scatter plot and as we hover within the neighborhood of a new painting, the associated display panel updates. The advantage is that now the painting can be shown at larger size. The downside is that we lose the context about the original images.
+
+```{ojs}
+// label: latent-spaces-hover
+painting_map_plot = {
+    await vg.coordinator().exec([
+        vg.loadCSV("painting_map", path("painting_map.csv"))
+    ]);
+
+    const hovered = vg.Selection.single({empty: true});
+    const map = vg.from("painting_map");
+
+    return vg.hconcat(
+        vg.plot(
+            vg.image(map, {
+                x: "UMAP1",
+                y: "UMAP2",
+                src: "path",
+                width: 28,
+                height: 28,
+                opacity: 0.8
+            }),
+            vg.nearest({as: hovered})
+        ),
+        vg.plot(
+            vg.image(
+                vg.from("painting_map", {filterBy: hovered}),
+                {
+                    x: 0.5,
+                    y: 0.5,
+                    src: "path",
+                    width: 360,
+                    height: 360
+                }
+            ),
+            vg.xDomain([0, 1]),
+            vg.yDomain([0, 1]),
+            vg.width(400),
+            vg.height(400)
+        )
+    );
+}
+```
+
+### Sparse Autoencoders
+
+1. In the examples we've looked at so far, there's actually not that much variation so it's reasonable to imagine a two-dimensional view being enough. But what if we had considered all the articles in the news corpus instead of just those that contained the word "pitch"? Or what if instead of just paintings we considered photographs, sculptures, ancient work, and modern ones too? The idea that we could reduce this to a two-dimensional atlas becomes a little bit dubious.
+
+2. A relatively recent alternative is to use a model called a sparse autoencoder. While PCA and UMAP reduce dimension, sparse autoencoders expand dimensions. This might seem counterintuitive but the logic is that in this expanded space each dimension has a very clear interpretation (this is unlike the original activation space). For a mathematical analogy think of this as learning a new coordinate system. Just like how sometimes polar coordinates can be more useful than Cartesian coordinates, the autoencoder coordinate scan be more meaningful than the original representation's coordinates.
+
+3. Concretely we can think of the original activations as being expanded into two matrices, analogous to the PCA scores and loadings. Each row of the scores and each column of the loadings is considered one factor, just like in PCA.
+
+   Besides having a larger k than the original data, the key difference with PCA and UMAP is that most of the entries in the scores will be zero. This is a by-product of how sparse autoencoder models are trained and it's beyond the scope of this class. But the consequences are clear. We can now think of each sample as only activating on some small subset of associated factors.
+
+4. Properly training an SAE can be a bit complicated because it requires many
+more samples than a simple PCA. However, there are many pre-trained SAEs
+available in repositories like HuggingFace. We have to match it to the original
+model that creates activations, so intead of analyzing BERT embeddings like
+above, we're using embeddings from a smaller model (`EleutherAI/pythia-70m`).
+
+We will have to extract the raw activations from the pythia model, then we pass
+those to extract the associated SAE activations. As a first step, let's load the
+pretrained model (and its associated tokenizer).
+
+```{python}
+#| label: pythia-model
+#| results: false
+#| message: false
+import pandas as pd
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+pythia_tokenizer = AutoTokenizer.from_pretrained("EleutherAI/pythia-70m")
+pythia_model = AutoModelForCausalLM.from_pretrained("EleutherAI/pythia-70m")
+pythia_model.eval()
+```
+
+The helper below extracts the activations from layer 5 for a single string of
+text. It uses the same pattern from the BERT example.  We end up with
+activations for each token and neuron.
+
+```{python}
+#| label: pythia-activations
+def pythia_activations(text, layer=5):
+    with torch.no_grad():
+        output = pythia_model(
+            **pythia_tokenizer(text, return_tensors="pt"),
+            output_hidden_states=True
+        )
+    return output.hidden_states[layer][0]
+
+
+example = "Oil prices fell sharply on Monday as the Fed signaled a rate cut."
+pythia_activations(example).shape
+```
+
+1. The block below loads an accompanying SAE model that has already been trained
+on the layer 4 representations from that larger model. The final SAE has $K =
+32,000$ latent factors.
+
+```{python}
+#| label: sae-ag-news
+#| results: false
+#| message: false
+from sparsify import Sae
+
+sae = Sae.load_from_hub("EleutherAI/sae-pythia-70m-32k", hookpoint="layers.4")
+sae.eval()
+```
+
+Example below shows what a difference sparsity makes, even though there are
+30,000 potential factors to work with, the sentence we had above only activates
+16 of them.
+
+```{python}
+#| label: sae-encode-example
+with torch.no_grad():
+    encoded = sae.encode(pythia_activations(example))
+
+print(sae.num_latents, encoded.top_indices.shape)
+```
+
+1. We care about all the articles, not just an individual sentence. The code
+below loops over the articles and saves the associated SAE scores. The
+representations are made at the individual token level, but we will want
+summaries of entire articles. For this, we'll sum up all the scores for each
+factor across all tokens in an article. One subtlety is that we merge all the
+factors into one tall matrix. This is going to make it easier to filter our
+DuckDB database by factor label when build our visualizations later.
+
+```{python}
+#| label: sae-scores
+def sae_scores(text, sae):
+    result = []
+    for article_id, article in enumerate(text, start=1):
+        with torch.no_grad():
+            encoded = sae.encode(pythia_activations(article))
+
+        scores = pd.DataFrame({
+            "article_id": article_id,
+            "factor_id": encoded.top_indices.ravel().numpy(),
+            "score": encoded.top_acts.ravel().numpy(),
+        })
+        result.append(
+            scores.groupby(["article_id", "factor_id"], as_index=False)["score"].sum()
+        )
+
+    return pd.concat(result, ignore_index=True)
+```
+
+Let's apply this to 5000 random articles from the news collection. We again use
+a caching pattern to avoid recomputing this step if it's already been done
+before.
+
+```{r}
+#| label: pythia-articles-r
+ag_news_sae <- ag_news_all |>
+    slice_sample(n = 5000) |>
+    mutate(article_id = row_number())
+
+# this step is slow, so try reading from a previous run
+pertoken_scores_file <- "data/ag-news-sae-scores-pertoken.rds"
+if (file.exists(pertoken_scores_file)) {
+    scores_long <- readRDS(pertoken_scores_file)
+} else {
+    scores_long <- py_to_r(py$sae_scores(ag_news_sae$text, py$sae))
+    saveRDS(scores_long, pertoken_scores_file)
+}
+```
+
+1. Working with 30,000 dimensions is a little bit tedious, even when we have
+dimensionality reduction methods like UMAP and PCA. To narrow our search, let's
+focus on factors that seem most promising. The idea is to look for those factors
+which are most concentrated within individual news sections, for example, those
+that are only ever active in articles related to sports. Our approach is
+relatively heuristic, but the results will make sense later. We'll compute the
+total factor score among articles for each topic (e.g., 800 for Sports, 200 for
+Business, 100 for World, ...) and then compare the maximum with the sum. If a
+large fraction of the total is concentrated in one topic, we will call that
+factor pure.
+
+```{r}
+#| label: sae-factor-summary-r
+n_factors <- 1000
+min_articles <- 20
+
+factor_summary <- scores_long |>
+    left_join(select(ag_news_sae, article_id, section), by = "article_id") |>
+    summarize(
+        mass = sum(score),
+        n_articles = n(),
+        .by = c(factor_id, section)
+    ) |>
+    summarize(
+        purity = max(mass) / sum(mass),
+        n_articles = sum(n_articles),
+        .by = factor_id
+    ) |>
+    filter(n_articles >= min_articles) |>
+    slice_max(purity, n = n_factors, with_ties = FALSE) |>
+    mutate(
+        factor_rank = row_number(),
+        factor_label = glue("{factor_rank} | factor {factor_id}")
+    )
+
+scores_top <- scores_long |>
+    filter(factor_id %in% factor_summary$factor_id)
+```
+
+1. Next, we save both the scores and the original articles to the file so that
+we can load them directly from disk in our mosaic visualizations later.
+
+```{r}
+#\ label: save-sae
+sae_articles <- ag_news_sae |>
+    mutate(
+        snippet = map_chr(description, \(x) {
+            sentences <- str_split(str_squish(x), "(?<=[.!?])\\s+")[[1]]
+            str_c(head(sentences, 3), collapse = " ")
+        })
+    ) |>
+    select(article_id, title, section, snippet)
+
+write_csv(scores_top, "data/sae_scores.csv")
+write_csv(factor_summary, "data/sae_factors.csv")
+write_csv(sae_articles, "data/sae_articles.csv")
+```
+
+1. In our BERT example above, we made a UMAP of the original neuron activations.
+In the SAE literature, however, it's also common to make UMAPs of the associated
+SAE scores. The intuition is that the distances defined in this SAE space might
+be more meaningful than those in the original full representation space, making
+it easier to interpret the relationship between articles in the resulting UMAP.
+To that end, the UMAP below is constructed from a matrix of all scores across
+articles. One subtlety is that this matrix was constructed using only factors
+that passed the purity filter  above. We shouldn't be too surprised that the
+articles separate by topic, because we deliberately chose only those factors
+that are concentrated within topics.
+
+Nonetheless, we do seem to find some interesting subgroups when we use this UMAP
+representation. Brushing some of the clusters, we see very narrow collections of
+articles related to Enron or Mozilla, for example.
+
+```{r}
+#| label: sae-umap
+# Convert the long data frame to a article-by-factor matrix.
+sae_score_matrix <- matrix(0, nrow = nrow(ag_news_sae), ncol = nrow(factor_summary))
+score_locations <- cbind(
+    match(scores_top$article_id, ag_news_sae$article_id),
+    match(scores_top$factor_id, factor_summary$factor_id)
+)
+
+# normalize the factors to have comparable scores
+sae_score_matrix[score_locations] <- scores_top$score
+row_norms <- sqrt(rowSums(sae_score_matrix^2))
+row_norms[row_norms == 0] <- 1
+sae_umap_matrix <- t(t(sae_score_matrix) / row_norms)
+
+# run the UMAP
+sae_umap_xy <- uwot::umap(
+    sae_umap_matrix,
+    n_neighbors = 15,
+    min_dist = 0.15,
+    metric = "euclidean",
+    n_threads = 1,
+    verbose = FALSE
+)
+```
+
+```{r}
+#| label: write-csv
+#| echo: false
+colnames(sae_umap_xy) <- c("UMAP1", "UMAP2")
+ag_news_sae |>
+    select(article_id) |>
+    bind_cols(as_tibble(sae_umap_xy)) |>
+    write_csv("data/sae_umap.csv")
+```
+
+```{ojs}
+//| label: sae-vgplot-setup
+//|  echo: false
+
+// This creates the tables that will be used in both the UMAP and histogram visualization below.
+sae_setup = {
+  await vg.coordinator().exec([
+    vg.loadCSV("sae_scores", path("sae_scores.csv")),
+    vg.loadCSV("sae_factors", path("sae_factors.csv")),
+    vg.loadCSV("sae_articles", path("sae_articles.csv")),
+    vg.loadCSV("sae_umap", path("sae_umap.csv")),
+    `CREATE VIEW "sae_umap_articles" AS
+      SELECT u.article_id, u.UMAP1, u.UMAP2, a.title, a.section, a.snippet
+      FROM sae_umap AS u
+      JOIN sae_articles AS a USING (article_id)`,
+
+    `CREATE VIEW "sae_article_scores" AS
+      SELECT s.article_id, s.factor_id, s.score, f.factor_label,
+             a.title, a.section, a.snippet
+      FROM sae_scores AS s
+      JOIN sae_factors AS f USING (factor_id)
+      JOIN sae_articles AS a USING (article_id)`
+  ]);
+  return true;
+}
+```
+
+```{ojs}
+//| label: sae-umap-view
+sae_umap_view = {
+  await sae_setup;
+  const $umap_brush = vg.Selection.intersect();
+
+  return vg.vconcat(
+    vg.plot(
+      vg.dot(
+        vg.from("sae_umap_articles"),
+        {x: "UMAP1", y: "UMAP2", fill: "section", r: 3, fillOpacity: 0.65}
+      ),
+      vg.intervalXY({as: $umap_brush}),
+      vg.colorLegend(),
+      vg.xLabel("UMAP 1"),
+      vg.yLabel("UMAP 2"),
+      vg.width(700),
+      vg.height(500)
+    ),
+    vg.table({
+      from: "sae_umap_articles",
+      filterBy: $umap_brush,
+      maxWidth: 900,
+      height: 250,
+      columns: ["section", "title", "snippet"],
+      width: {section: 90, title: 200, snippet: 560}
+    })
+  );
+}
+```
+
+4. To interpret the factors we simply look for the samples which have the highest magnitudes in that factor. Those samples should be most representative of what that factor means. This is an admittedly heuristic approach but is often enough to start drawing useful conclusions about the data.
+
+```{ojs}
+// label: sae-selections
+// The factor menu and the histogram brush both narrow the article table.
+$factor = vg.Selection.intersect();
+$score_brush = vg.Selection.intersect();
+$query = vg.Selection.intersect({include: [$factor, $score_brush]});
+```
+
+```{ojs}
+// label: sae-factor-brush
+sae_factor_view = {
+  await sae_setup;
+  const factor_options = await vg.coordinator().query(
+    `SELECT factor_label AS value
+     FROM sae_factors
+     ORDER BY factor_rank`,
+    {type: "json"}
+  );
+
+  return vg.vconcat(
+    vg.menu({
+      label: "Factor",
+      as: $factor,
+      field: "factor_label",
+      options: factor_options,
+      value: factor_options[0].value
+    }),
+    vg.plot(
+      vg.rectY(
+        vg.from("sae_article_scores", {filterBy: $factor}),
+        {
+          x: vg.bin("score", {step: 0.25}),
+          y: vg.count(),
+          fill: "steelblue",
+          insetLeft: 0.5,
+          insetRight: 0.5
+        }
+      ),
+      vg.intervalX({as: $score_brush}),
+      vg.xLabel("SAE score"),
+      vg.yLabel("Articles"),
+      vg.width(700),
+      vg.height(250)
+    ),
+    vg.table({
+      from: "sae_article_scores",
+      filterBy: $query,
+      rowBatch: 200,
+      maxWidth: 900,
+      height: 300,
+      columns: ["factor_id", "score", "section", "title", "snippet"],
+      width: {factor_id: 65, score: 75, section: 90, title: 180, snippet: 480}
+    })
+  );
+}
+```
+
+6. A similar process can be used to auto-encode imagery, and the motivation is
+similar. It gives us an objective way of finding more sharply defined features
+within samples, rather than just relying on low-dimensional (but rather coarse)
+atlases.
+
+7. You can imagine that we can now understand a much larger number of factors
+than we could have with PCA. There each sample was somewhat related to each
+factor dimension, and those dimensions are mainly related to global
+characteristics that reflect shared variation across the data. Now there's only
+a small subset and the meaning of each factor is relatively narrow. This turns
+out to be extremely useful in building a more granular view of larger data sets.
+
+8. These models have been used more recently to understand popular large
+language models and biological sequence model representations. It is beyond the
+scope of this class but once the models are represented in this way, it also
+becomes possible to apply certain kinds of "surgery" to modify the
+representations in downstream tasks. This can be useful in controlling proteins
+for protein design or removing sensitive information for AI safety.

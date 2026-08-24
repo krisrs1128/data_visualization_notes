@@ -1,0 +1,81 @@
+---
+title: "Workspace Orientation"
+author: Kris Sankaran
+date: 2026-09-01
+bibliography: references.bib
+format:
+  html:
+    embed-resources: true
+    html-math-method: mathjax
+    fig-align: center
+execute:
+    echo: true
+    message: false
+    warning: false
+    cache: false
+    eval: true
+---
+
+```{r}
+#| label: setup
+#| echo: false
+library(tidyverse)
+theme_set(theme_classic() + theme(panel.border= element_rect(fill = NA, linewidth = .5)))
+set.seed(2026)
+```
+
+This note describes the development environment we'll use throughout the class.
+By the end, you should be able to
+
+    - use quarto notebooks to combine code, visualizations, and commentary.
+    - run the pi coding agent to create a ggplot2 visualization
+    - rerun code demos using the course codespace
+
+## Notebooks
+
+1. What does a code notebook look like.
+
+1. How is it run.
+
+1. What types of languages it can run
+
+    - how to create an R cell
+    - how to create a javascript cell
+    - how to create a python cell
+
+1. Why is it useful: rerunning easily
+
+1. Quarto notebooks make it possible to combine visualization code with
+commentary within the same plain text file. This is very helpful whenever the
+source data might potentially change (either because new data are generated over
+time or because mistakes are found and fixed). If the code in our notebook...
+
+1. Why it is useful: compiles into several types of output, including HTML for the web
+
+1. Making the notebooks clean
+
+1. Making the notebook self-contained
+
+## Agentic Coding
+
+1. what is a coding agent, how is it different from using online resource
+
+1. why it's still important to learn: context
+
+1. why it's still important to learn: judgment
+
+## Submissions
+
+1. quarto render
+
+1. embedding resources
+
+1. sharing a server
+
+1. how to do this for the homework
+
+## Codespaces
+
+1. for testing things out in the meantime
+
+1. will eventually want to develop yourself

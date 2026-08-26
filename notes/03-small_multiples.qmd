@@ -33,15 +33,9 @@ theme_set(theme_classic() + theme(panel.border= element_rect(fill = NA, linewidt
 set.seed(2026)
 ```
 
-References
+Readings: [1](https://clauswilke.com/dataviz/multi-panel-figures.html), [2](https://www.edwardtufte.com/notebook/sparkline-theory-and-practice-edward-tufte/) (optional), [3](https://medium.com/@hint_fm/design-and-redesign-4ab77206cf9) (optional)
 
-- https://observablehq.com/plot/features/facets
-- https://www.edwardtufte.com/notebook/sparkline-theory-and-practice-edward-tufte/
-- vconcat, hconcat https://idl.uw.edu/mosaic/examples/weather.html
-- https://observablehq.com/@didoesdigital/about-sparklines
-- https://observablehq.com/@kgryte/stdlib-unicode-sparkline-column-chart
-- https://medium.com/@hint_fm/design-and-redesign-4ab77206cf9
-- https://simplystatistics.org/posts/2019-02-21-dynamite-plots-must-die/
+Items marked with $^\dagger$ will not be tested on exams.
 
 ## Concepts
 
@@ -50,20 +44,20 @@ display at a time. While there are many types of encodings we could in theory
 use, only a few them are very effective, and they can interfere with one
 another.
 
-1. There are several ways around this, though. One of the most effective is to
+2. There are several ways around this, though. One of the most effective is to
 combine multiple views, either in parallel (small multiples) or which complement
 one another (multiform views). We'll study why this works and the design
 considerations that make the results more readable.
 
 ### Small Multiples
 
-1. Our eyes are good at making sense of many small plots, as long as there is
+3. Our eyes are good at making sense of many small plots, as long as there is
 shared structure across the plots. We can quickly scan the collection and spot
 meaningful relationships. Formally, a small multiples plot first partitions the
 data into disjoint subsets and then applies the same encoding to each of the
 subsets. Each subset is associated with a small panel within the larger plot.
 
-1. Some important considerations are,
+4. Some important considerations are,
 
    - Should the views share the same axes? Sharing makes panels directly
    comparable, but if the data ranges are very different, it might be difficult
@@ -75,12 +69,12 @@ subsets. Each subset is associated with a small panel within the larger plot.
 
    The basic downside of this approach is that it takes up a lot of space, since we are repeating an base visualization many times. When there are many subsets, we either have to shrink the individual panels (which can become illegible) or make the visualization very large (which we may not want to do if it's not the most important message to communicate).
 
-1. Here's a historical example, by Francis Walker for the 1870 US Census.  Note
+5. Here's a historical example, by Francis Walker for the 1870 US Census.  Note
 the simplicity of each component, which keeps the overall display readable.
 
    ![](figures/Persons_With_Gainful_Occupations_and_Attending_School_in_1870.jpg)
 
-1. Keep these kinds of plots in mind as a potential alternative to
+6. Keep these kinds of plots in mind as a potential alternative to
 interactivity. When we cover interactive visualization, we will show how to use
 user-controlled inputs to filter down to different subsets and update the visual
 display accordingly. This serves a similar purpose as small multiples, and
@@ -93,14 +87,14 @@ in reducing memory burden, from Muybridge.
 
    ![](figures/The_Horse_in_Motion.jpg)
 
-1. Ridge plots are a special case of small multiples that are particularly
+7. Ridge plots are a special case of small multiples that are particularly
 suited to displaying multiple parallel time series or densities.  An example
 ridge plot for the gapminder dataset is shown below. The effectiveness of this
 plot comes from the fact that multiple densities can be displayed in close
 proximity to one another, making it possible to facet across many variables in a
 space-efficient way.
 
-    ```{r}
+```{r}
 #| echo: FALSE
 data(gapminder)
 gapminder <- gapminder |>
@@ -116,38 +110,38 @@ gapminder <- gapminder |>
     group = factor(group, levels = c("Others", "Latin America",  "East Asia", "Sub-Saharan", "West")),
     west = ifelse(group == "West", "West", "Developing")
   )
-    ```
+```
 
 
-    ```{r}
+```{r}
 #| echo: FALSE
 past_year <- 1970
-gapminder_subset <- gapminder %>%
+gapminder_subset <- gapminder |>
   filter(year == past_year, !is.na(dollars_per_day))
 
 ggplot(gapminder_subset, aes(dollars_per_day, group)) +
   geom_density_ridges() +
   scale_x_log10()
-    ```
+```
 
-1. Why not plot the raw data? We do this using a `geom_point` below. The result
+8. Why not plot the raw data? We do this using a `geom_point` below. The result
 isn’t as satisfying, because, while the shape of the ridges popped out
 immediately in the original plot, we have to invest a bit more effort to
 understand the regions of higher density in the raw data plot. Also, when there
 are many samples, the entire range might appeared covered in marks when in fact
 there are some intervals with higher density than others.
 
-    ```{r}
+```{r}
 #| echo: FALSE
 ggplot(gapminder_subset, aes(dollars_per_day, group)) +
   geom_point(shape = "|", size = 5) +
   scale_x_log10()
-    ```
+```
 
-    A nice compromise is to include both the raw positions and the smoothed
+A nice compromise is to include both the raw positions and the smoothed
 densities.
 
-    ```{r}
+```{r}
 #| echo: FALSE
 ggplot(gapminder_subset, aes(dollars_per_day, group)) +
   geom_density_ridges(
@@ -156,27 +150,27 @@ ggplot(gapminder_subset, aes(dollars_per_day, group)) +
     point_shape = '|', point_size = 3
   ) +
   scale_x_log10()
-    ```
+```
 
-1. Another special case are sparklines. These are small, simplified line plots
+9. Another special case are sparklines. These are small, simplified line plots
 that are integrated directly into text.
 
-   ![](figures/sparklines_d3.png)
+![](figures/sparklines_d3.png)
 
-   They show trends without any axes or labels, which keeps them from feeling
-   too cluttered. At most, selective annotation can be used highlight a few
-   points of interest.
+They show trends without any axes or labels, which keeps them from feeling
+too cluttered. At most, selective annotation can be used highlight a few
+points of interest.
 
-1. Besides direct integration into text, it's common to see sparklines in merged
+10. Besides direct integration into text, it's common to see sparklines in merged
 into standalone figures. Even though there are many plots, the fact that they
 all share the same encoding means our eyes quickly recognize groupings and
 exceptions.
 
-   ![](figures/0001OS-15741.gif)
+![](figures/0001OS-15741.gif){width="200%"}
 
 ### Multiform Plots
 
-1. Small multiples are useful whenever we want different rows of the data to
+11. Small multiples are useful whenever we want different rows of the data to
 appear in different panels. What if we want to compare different columns, or
 work with several datasets? An alternative is to use multiform plots.  The idea
 is to construct plots separately and then combine them only at the very end.
@@ -184,7 +178,7 @@ This can be understood as the opposite of small multiples: Instead of applying
 the same encoding to different data subsets, we show different encodings of the
 same data.
 
-1. The main advantage of multiform plots is that individual panels can be
+12. The main advantage of multiform plots is that individual panels can be
 tailored to specific visual comparisons, but relationships across panels can
 also be studied. For example, the plot below shows change in the total number
 and composition of undergraduate majors over the last few decades. In principle,
@@ -193,7 +187,7 @@ comparing the percentages for 1970 and 2015 is much more straightforward using a
 line plot, and we can still see changes in the overall number of degrees using
 the area plot.
 
-    ```{r}
+```{r}
 #| echo: FALSE
 #| fig-width: 10
 #| fig-height: 3.5
@@ -202,20 +196,20 @@ the area plot.
     library(scales)
     library(patchwork)
 
-    degrees <- read_csv("https://raw.githubusercontent.com/krisrs1128/stat436_s23/main/data/degrees.csv") %>%
+    degrees <- read_csv("https://raw.githubusercontent.com/krisrs1128/stat436_s23/main/data/degrees.csv") |>
         filter(field %in% c("Business", "Health professions and related programs", "Social sciences and history", "Psychology", "Education"))
 
     p <- list()
-    p[["trend"]] <- degrees %>%
-      group_by(year) %>%
-      summarise(total = sum(count)) %>%
+    p[["trend"]] <- degrees |>
+      group_by(year) |>
+      summarise(total = sum(count)) |>
       ggplot() +
         geom_area(aes(year, total)) +
         scale_x_continuous(expand = c(0, 0)) +
         scale_y_continuous(expand = c(0, 0, 0.1, 0), labels = label_number(scale_cut = cut_short_scale())) +
         labs(x = NULL, y = "degrees awarded")
 
-    delta_data <- degrees %>%
+    delta_data <- degrees |>
       filter(year %in% c(1971, 2015))
 
     p[["delta"]] <- ggplot(delta_data, aes(year_str, perc)) +
@@ -223,7 +217,7 @@ the area plot.
       scale_y_continuous(labels = label_percent()) +
       geom_point() +
       geom_text(
-        data = delta_data %>% filter(year == 2015),
+        data = delta_data |> filter(year == 2015),
         aes(label = str_wrap(field, 20)),
         size = 3.5, nudge_x = 0.04, hjust = 0
       ) +
@@ -231,21 +225,21 @@ the area plot.
       labs(x = NULL, y = "proportion of degrees")
 
     p[["trend"]] + p[["delta"]] +
-      plot_layout(widths = c(0.65, 0.35))
-    ```
+    plot_layout(widths = c(0.65, 0.35))
+```
 
-    For reference, here is a non-multiform display of the same information.
+For reference, here is a non-multiform display of the same information.
 
-    ```{r}
+```{r}
 #| echo: FALSE
     ggplot(degrees) +
       geom_area(aes(year, count, fill = field)) +
         scale_x_continuous(expand = c(0, 0)) +
         scale_y_continuous(expand = c(0, 0, 0.1, 0), labels = label_number(scale_cut = cut_short_scale())) +
         scale_fill_brewer(palette = "Set2")
-    ```
+```
 
-1. There are a few considerations that can substantially improve the quality of
+13. There are a few considerations that can substantially improve the quality of
 a multiform plot,
 
     * Consistent visual encodings for shared variables
@@ -254,21 +248,21 @@ a multiform plot,
 
     We will discuss each point separately.
 
-1. The figures below are multiform plots of a dataset of athlete physiology. They
+14. The figures below are multiform plots of a dataset of athlete physiology. They
 are very similar, but the second is better because it enforces a more strict
 consistency in encodings across panels. Specifically, the male / female variable
 is (1) encoded using the same color scheme across all panels and (2) ordered so
 that female repeatedly appears on the right of male.
 
-    ```{r}
+```{r}
 #| echo: FALSE
-    athletes <- read_csv("https://raw.githubusercontent.com/krisrs1128/stat436_s23/main/data/athletes.csv") %>%
+    athletes <- read_csv("https://raw.githubusercontent.com/krisrs1128/stat436_s23/main/data/athletes.csv") |>
       filter(sport %in% c("basketball", "field", "rowing", "swimming", "tennis", "track (400m)"))
     p <- list()
 
-    p[["bar"]] <- athletes %>%
-      count(sex) %>%
-      mutate(sex = factor(sex, levels = c("m", "f"))) %>%
+    p[["bar"]] <- athletes |>
+      count(sex) |>
+      mutate(sex = factor(sex, levels = c("m", "f"))) |>
       ggplot() +
       geom_bar(aes(sex, n), stat = "identity") +
       scale_y_continuous(expand = c(0, 0))
@@ -279,17 +273,17 @@ that female repeatedly appears on the right of male.
       geom_boxplot(aes(sport, pcBfat, fill = sex))
 
     (p[["bar"]] + p[["scatter"]]) / p[["box"]]
-    ```
+```
 
     The improved, visually consistent approach is given below.
 
-    ```{r}
+```{r}
 #| echo: FALSE
-    athletes <- athletes %>%
+    athletes <- athletes |>
       mutate(sex = recode(sex, "m" = "male", "f" = "female"))
 
-    p[["bar"]] <- athletes %>%
-      count(sex) %>%
+    p[["bar"]] <- athletes |>
+      count(sex) |>
       ggplot() +
       geom_bar(aes(sex, n, fill = sex), stat = "identity") +
       scale_y_continuous(expand = c(0, 0)) +
@@ -309,17 +303,17 @@ that female repeatedly appears on the right of male.
 
     (p[["bar"]] + p[["scatter"]]) / p[["box"]] +
       plot_layout(guides = "collect") &
-      plot_annotation(theme = theme(legend.position = "bottom"))
-    ```
+    plot_annotation(theme = theme(legend.position = "bottom"))
+```
 
-1. Effective annotation can be used to refer to different subpanels of the data
+15. Effective annotation can be used to refer to different subpanels of the data
 without drawing too much attention to itself. Labels should be visible but
 subtle -- not too large, similar fonts as the figures, and logically ordered
 ((a) on top left). A nice heuristic is to think of these annotations like page
 numbers. They are useful for making references, but aren't something that is
 actively read.
 
-    ```{r}
+```{r}
 #| echo: FALSE
     p[["bar"]] <- p[["bar"]] + ggtitle("a")
     p[["scatter"]] <- p[["scatter"]] + ggtitle("b")
@@ -328,7 +322,7 @@ actively read.
     (p[["bar"]] + p[["scatter"]]) / p[["box"]] +
       plot_layout(guides = "collect") &
       plot_annotation(theme = theme(legend.position = "bottom"))
-    ```
+```
 
   1. For alignment, we will want figure baselines / borders to be consistent.
   Misalignment can be distracting. This is primarily a problem when multiform plots
@@ -339,14 +333,14 @@ actively read.
 
 ### Information Density
 
-1. Small multiples (and especially sparklines) are most legible when they trim
+16. Small multiples (and especially sparklines) are most legible when they trim
 away extraneous marks, allowing us to focus on the data itself. This principle
 applies to other figures and has been called _information density_ or the
 _data-to-ink ratio_. We can increase information density by trimming away grid
 lines, reducing the number of digits in axes labels, removing borders from
 legends, etc.
 
-1. A startling example is this redesign of a visualization related to the Space
+17. A startling example is this redesign of a visualization related to the Space
 Shuttle Challenger disaster, which was caused by damage to the shuttle's O-rings
 due to unusually cold weather. Here is a version from the official investigation
 into the disaster.
@@ -366,7 +360,7 @@ into the disaster.
    factors. We only know to plot temperature against O-ring damage after the
    disaster already happened.
 
-1. Nonetheless, increasing information density (and removing irrelevant marks)
+18. Nonetheless, increasing information density (and removing irrelevant marks)
 is something always worth considering. One corrolary is that we should avoid
 "premature summarization." By reducing data to aggregate statistics, we reduce
 the amount of information available to the viewer. For example, instead of showing "dynamite plot",
@@ -385,7 +379,7 @@ the amount of information available to the viewer. For example, instead of showi
 
 ### `ggplot2`
 
-1. There are two ggplot2 layers for making small multiples, which the package
+19. There are two ggplot2 layers for making small multiples, which the package
 calls "facets". The first, `facet_grid` uses formula syntax to split the data
 into subsets, each of which is associated with a panel. For example, `~ island` splits the three islands into columns.
 
@@ -397,34 +391,34 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = species)) +
     facet_grid(~ island)
 ```
 
-   Placing the variable before the `~` splits across rows.
+Placing the variable before the `~` splits across rows.
 
-   ```{r}
+```{r}
 #| echo: true
 #| fig-height: 3.5
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = species)) +
     geom_point() +
     facet_grid(island ~ .)
-   ```
+```
 
 
    We can facet across multiple variables. Variables before `~` are split across
    rows, those afterwards are split across columns.
 
-   ```{r}
+```{r}
 #| echo: true
 #| fig-height: 3.5
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = species)) +
     geom_point() +
     facet_grid(sex ~ island)
-   ```
+```
 
    Exercise: How might we facet with a continuous variable? Hint: Consider
    `cut()`.
 
    Exercise: What about more complicated formulas? Try `sex + island ~ year`
 
-1. If we have many very many panels and don't want them all in one row, we can
+20. If we have many very many panels and don't want them all in one row, we can
 use `facet_wrap`. It enforces a maximum number of panels per row and wraps extra
 panels onto new rows.
 
@@ -436,7 +430,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = species)) +
   facet_wrap(~island)
    ```
 
-1. By default, the panels are sorted alphabetically. But to increase information
+21. By default, the panels are sorted alphabetically. But to increase information
 density, it helps to instead sort by a property of the data. We can use
 `reorder` within our formula to sort the categories by a variable of interest.
 
@@ -452,7 +446,7 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = species)) +
 
 ### `ggridges`
 
-1. The ggridges package can be used to create ridge plots. If we want to
+22. The ggridges package can be used to create ridge plots. If we want to
 organize many densities according to a ridge plot, we can use
 `geom_density_ridges`.
 
@@ -463,7 +457,7 @@ ggplot(penguins, aes(body_mass_g, species, fill = species)) +
   geom_density_ridges()
 ```
 
-1. Sometimes we want a ridge plot and already have the height values for the
+23. Sometimes we want a ridge plot and already have the height values for the
 ridges computed in advance. In this case, we can use `geom_ridgeline` with a
 height encoding.
 
@@ -482,7 +476,7 @@ tibble(x = seq(0, 1, length.out = 10)) |>
 
 ### `patchwork`
 
-1. `patchwork` can be used to merge ggplot2 components into multiform plots. It
+24. `patchwork` can be used to merge ggplot2 components into multiform plots. It
 uses `a + b` to places ggplot objects `a` and `b` side-by-side and `/` to place
 them vertically. The `plot_layout` command can be used to customize the theme of
 the overall plot, for example, setting `guides = "collect"` ensures all legends
@@ -506,7 +500,7 @@ p1 + p2 +
 
 _Exercise: We removed the color legend for the histogram `p2` using `guide = "none"` in the `scale_fill_discrete` layer. Why? What would have happened to the plot if we removed this layer?_
 
-1. We can use `+` and `/` like algebraic symbols to compose more complex
+25. We can use `+` and `/` like algebraic symbols to compose more complex
 layouts. For example, below we place two plots side-by-side and both of those on
 top of a third.
 
@@ -520,14 +514,15 @@ p3 <- ggplot(penguins, aes(flipper_length_mm, body_mass_g, color = species)) +
 
 ### vgplot concat
 
-1. Let's first read in the penguins dataset. The code is a bit tedious because
-the original data have `NA` values, which causes the any variable with missing
-values to be read as a string, even when it should be treated as a numerical
-variable.
+26. Let's first read in the penguins dataset. We use a locally saved,
+preprocessed copy so that missing values do not cause numeric columns to be
+read as strings.
 
 ```{ojs}
+path = (p) => new URL(`data/${p}`, document.baseURI).href
+
 vg = {
-  const mod = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.4.0/+esm");
+  const mod = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm");
   const wasm = await mod.wasmConnector();
   mod.coordinator().databaseConnector(wasm);
   return mod;
@@ -535,27 +530,14 @@ vg = {
 
 // load the penguins data
 penguins_db = {
-  await vg.coordinator().exec(`
-    CREATE TABLE IF NOT EXISTS penguins AS
-    SELECT
-      species,
-      island,
-      bill_length_mm::DOUBLE AS bill_length_mm,
-      bill_depth_mm::DOUBLE AS bill_depth_mm,
-      flipper_length_mm::DOUBLE AS flipper_length_mm,
-      body_mass_g::DOUBLE AS body_mass_g,
-      sex
-    FROM read_csv_auto(
-      'https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv'
-    )
-    WHERE species IS NOT NULL
-      AND bill_length_mm != 'NA'
-  `);
+  await vg.coordinator().exec([
+    vg.loadCSV("penguins", path("penguins.csv"), { header: true })
+  ]);
   return true;
 }
 ```
 
-1. `vgplot` doesn't support faceting directly, but you can compose component
+27. `vgplot` doesn't support faceting directly, but you can compose component
 plots using `hconcat` and `vconcat`, analogous to patchwork's `+` and `/`. This
 can be used to manually create faceted plots, but the subsets and component
 plots have to be created manualy.
@@ -587,3 +569,13 @@ plots have to be created manualy.
     return vg.hconcat(scatterPlot, barChart);
 }
 ```
+
+### Objectives
+
+By the end of this week, you should be able to,
+
+- Compare and contrast faceting with multiform visualizations.
+- Critique and suggest improvements to a visualization from the information density perspective.
+- Describe best practices for ensuring readability of multiform plots.
+- Given examples of ggplot2 faceting or mosaic concatenation code, describe what each element means and what the output would look like.
+- Given examples of patchwork code, describe what the syntax means and what the output would look like.

@@ -39,7 +39,7 @@ theme_set(theme_classic())
 
 ### Working with a single sample.
 
-1. Deep learning models chain together many parametrized modules, each which slightly modifies the representation of an input to extract more meaningful features from it. Formally, let $x$ be the input, define modules ("layers"),
+6. Deep learning models chain together many parametrized modules, each which slightly modifies the representation of an input to extract more meaningful features from it. Formally, let $x$ be the input, define modules ("layers"),
 
    $h^{l} = f_{l}\left(h^{l - 1}; \theta_{l}\right)$
 
@@ -47,7 +47,7 @@ theme_set(theme_classic())
 
    $x \xrightarrow{f_1} h^{1} \xrightarrow{f_{2}} \dots \xrightarrow{f_{L}} h^{L}$.
 
-2. For now let's focus on text data. The input $x$ can't be an entire document. Documents could have very different sizes and for model training to be successful the inputs need to be units of comparable size. This motivates "tokenization." A sentence can be broken into individual characters, parts of words, or entire words and these become the inputs $x$ and the chain above.
+7. For now let's focus on text data. The input $x$ can't be an entire document. Documents could have very different sizes and for model training to be successful the inputs need to be units of comparable size. This motivates "tokenization." A sentence can be broken into individual characters, parts of words, or entire words and these become the inputs $x$ and the chain above.
 
 Let's look at a concrete example where I passed in the sentence,
 
@@ -84,13 +84,13 @@ tokens = tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
 print(tokens)
 ```
 
-1. Aside: In this note we're going to be mixing Python and R code. The reason is
+8. Aside: In this note we're going to be mixing Python and R code. The reason is
 that the most mature pretrained models are hosted in Python packages but the
 most infomrative visualizations can be made with R. Fortunately the reticulate
 package makes it very easy to transfer objects back and forth. We'll see this
 when we call `py$` and `r.` to fetch information from the two languages
 
-3. At each layer the modules $f_l$ extract high-dimensional representations of the token.
+9. At each layer the modules $f_l$ extract high-dimensional representations of the token.
    There are seven layers in this pre-trained model.
 
 
@@ -131,13 +131,13 @@ layer_one2[:10]
    In the terminology of deep learning, the pattern of neuron activations has
    learned to represent the specific characteristics of the sample.
 
-4. A well-known phenomenon is that layers lower in the network tend to find surface-level features of the input while those near the end of the network identify higher-level, more semantically meaningful features. For example the figure below comes from this paper which visualized neuron activations. They find neurons that activate inside of quotes or depending on the position between newline characters, both of which are non-obvious features that were never explicitly fed into the model. Neurons in the initial layers don't exhibit this behavior.
+10. A well-known phenomenon is that layers lower in the network tend to find surface-level features of the input while those near the end of the network identify higher-level, more semantically meaningful features. For example the figure below comes from this paper which visualized neuron activations. They find neurons that activate inside of quotes or depending on the position between newline characters, both of which are non-obvious features that were never explicitly fed into the model. Neurons in the initial layers don't exhibit this behavior.
 
    [toy picture]
 
    We will see something similar with our pretrained model once we give it more examples.
 
-6. Even though the discussion so far has been about text, similar logic applies to images. Instead of tokenizing by breaking a sentence into words, we break an image into patches. Then each patch has an activation in each neuron. To illustrate, let's download a painting from the wikiart dataset, _Pine Trees in the Fen_ by Vincent Van Gogh.
+11. Even though the discussion so far has been about text, similar logic applies to images. Instead of tokenizing by breaking a sentence into words, we break an image into patches. Then each patch has an activation in each neuron. To illustrate, let's download a painting from the wikiart dataset, _Pine Trees in the Fen_ by Vincent Van Gogh.
 
 ```{python}
 #| results: false
@@ -181,17 +181,17 @@ for i, (ax, patch) in enumerate(zip(axes.flat, patches)):
     ax.set_yticks([])
 ```
 
-7. I've slightly simplified the situation here. It turns out that many neurons aren't really that interpretable. They seem to activate on images that have nothing to do with each other, and the examples are the paper above where cherrypicked (the authors acknowledged this and even highlighted this specific issue). We need slightly more sophisticated machinery to be able to deal with this issue, which is sometimes called the "superposition hypothesis" (the hypothesis is that to make sense of a particular representation, we need to understand the entire pattern of neuron activations, not just the neurons in isolation).
+12. I've slightly simplified the situation here. It turns out that many neurons aren't really that interpretable. They seem to activate on images that have nothing to do with each other, and the examples are the paper above where cherrypicked (the authors acknowledged this and even highlighted this specific issue). We need slightly more sophisticated machinery to be able to deal with this issue, which is sometimes called the "superposition hypothesis" (the hypothesis is that to make sense of a particular representation, we need to understand the entire pattern of neuron activations, not just the neurons in isolation).
 
-8. Nonetheless, these patterns of activations turn out to be the key ingredient for visualization in a deep learning context. We can think about the neuron activations across as being like features in an ordinary data table. Unlike our naive approach using raw word or pixel identity, these neuron activations will capture meaningful features about the original sample. It doesn't matter what specific view we have. If we have a graphite-sketch sensitive neuron, then that neuron will activate on all such paintings.
+13. Nonetheless, these patterns of activations turn out to be the key ingredient for visualization in a deep learning context. We can think about the neuron activations across as being like features in an ordinary data table. Unlike our naive approach using raw word or pixel identity, these neuron activations will capture meaningful features about the original sample. It doesn't matter what specific view we have. If we have a graphite-sketch sensitive neuron, then that neuron will activate on all such paintings.
 
 ## Working with a Collection
 
-1. Arrange the activations across samples for a particular layer into a matrix with this format. Each row represents a sample. The columns give activations across all neurons in that layer. This is a high-dimensional matrix and we can methods like PCA or UMAP.
+14. Arrange the activations across samples for a particular layer into a matrix with this format. Each row represents a sample. The columns give activations across all neurons in that layer. This is a high-dimensional matrix and we can methods like PCA or UMAP.
 
 [cartoon sketch]
 
-2. Analyzing a large collection might be unwieldy but let's see how dimensionality reduction is already useful in answering more targeted questions. Here I've downloaded the AG News Corp text corpus. The full collection samples articles across a variety of topics, including politics, sports, business, and technology.
+15. Analyzing a large collection might be unwieldy but let's see how dimensionality reduction is already useful in answering more targeted questions. Here I've downloaded the AG News Corp text corpus. The full collection samples articles across a variety of topics, including politics, sports, business, and technology.
 
 ```{r}
 #| label: polysemy-corpus
@@ -214,7 +214,7 @@ ag_news <- ag_news_all |>
 ag_news
 ```
 
-3. We can now extract all the final representations from a BERT model.
+16. We can now extract all the final representations from a BERT model.
 The first step instantiates the tokenizer and pre-trained model. The eval call
 ensures that training-specific adjustments (e.g., from dropout regularization)
 are omitted.
@@ -278,7 +278,7 @@ context_embeddings <- py$embed_target(ag_news$text, target_word)
 context_embeddings[1:6, 1:10]
 ```
 
-4. Next I've run UMAP reduction on this matrix. The scores plot below shows some
+17. Next I've run UMAP reduction on this matrix. The scores plot below shows some
 clear clusters, and they do seem related to (but not totally redundant with) the
 overall news sections.
 
@@ -309,7 +309,7 @@ write_csv(
 )
 ```
 
-1. Our visualization above doesn't really tell us what it is that's different
+18. Our visualization above doesn't really tell us what it is that's different
 between the clusters. We can create an interactive version where brushing the
 article shows the associated text.
 
@@ -377,7 +377,7 @@ vg.vconcat(
  whether Shakespeare wrote all of his plays and similar methods were also used
  to break the enigma during World War).
 
-6. Let's apply similar methodology to analyzing an image collection. This
+19. Let's apply similar methodology to analyzing an image collection. This
 example is inspired by the Artography project. We won't build up the entire
 interactive interface but we will build a similar kind of "atlas" of different
 artwork styles. This involves a some tedious preprocessing to handle the data
@@ -455,10 +455,10 @@ walk(paintings$path, \(path) {
 })
 ```
 
-1. Let's load in all the original images and plot a few just to get some
+20. Let's load in all the original images and plot a few just to get some
 intuition. Let's get all the web pages where these artworks live.
 
-1. Next we need a pretrained model from which we can extract activations. The
+21. Next we need a pretrained model from which we can extract activations. The
 processor below serves the exact same role as the tokenizer in the earlier
 blocks.
 
@@ -543,7 +543,7 @@ if (file.exists(embedding_file)) {
 embedding[1:5, 1:10]
 ```
 
-8. We can apply our exact same dimensionality reduction ideas to create a UMAP of these high-dimensional representations.
+22. We can apply our exact same dimensionality reduction ideas to create a UMAP of these high-dimensional representations.
 
 ```{r umap}
 #| fig-width: 9
@@ -593,12 +593,12 @@ ggplot(painting_map, aes(UMAP1, UMAP2, color = genre)) +
     labs(x = "UMAP 1", y = "UMAP 2", color = "WikiArt genre")
 ```
 
-1. While in theory we could associate each of these points with an ID and look
+23. While in theory we could associate each of these points with an ID and look
 up the associated painting separately, it's more efficient to show the images
 themselves. Here we've used the ggimage package, which allows us to overlay an
 image layer similarly to geom_point, for example.
 
-9. Alternatively we can apply dynamic linking. On the left we have the original scatter plot and as we hover within the neighborhood of a new painting, the associated display panel updates. The advantage is that now the painting can be shown at larger size. The downside is that we lose the context about the original images.
+24. Alternatively we can apply dynamic linking. On the left we have the original scatter plot and as we hover within the neighborhood of a new painting, the associated display panel updates. The advantage is that now the painting can be shown at larger size. The downside is that we lose the context about the original images.
 
 ```{ojs}
 // label: latent-spaces-hover
@@ -644,15 +644,15 @@ painting_map_plot = {
 
 ### Sparse Autoencoders
 
-1. In the examples we've looked at so far, there's actually not that much variation so it's reasonable to imagine a two-dimensional view being enough. But what if we had considered all the articles in the news corpus instead of just those that contained the word "pitch"? Or what if instead of just paintings we considered photographs, sculptures, ancient work, and modern ones too? The idea that we could reduce this to a two-dimensional atlas becomes a little bit dubious.
+25. In the examples we've looked at so far, there's actually not that much variation so it's reasonable to imagine a two-dimensional view being enough. But what if we had considered all the articles in the news corpus instead of just those that contained the word "pitch"? Or what if instead of just paintings we considered photographs, sculptures, ancient work, and modern ones too? The idea that we could reduce this to a two-dimensional atlas becomes a little bit dubious.
 
-2. A relatively recent alternative is to use a model called a sparse autoencoder. While PCA and UMAP reduce dimension, sparse autoencoders expand dimensions. This might seem counterintuitive but the logic is that in this expanded space each dimension has a very clear interpretation (this is unlike the original activation space). For a mathematical analogy think of this as learning a new coordinate system. Just like how sometimes polar coordinates can be more useful than Cartesian coordinates, the autoencoder coordinate scan be more meaningful than the original representation's coordinates.
+26. A relatively recent alternative is to use a model called a sparse autoencoder. While PCA and UMAP reduce dimension, sparse autoencoders expand dimensions. This might seem counterintuitive but the logic is that in this expanded space each dimension has a very clear interpretation (this is unlike the original activation space). For a mathematical analogy think of this as learning a new coordinate system. Just like how sometimes polar coordinates can be more useful than Cartesian coordinates, the autoencoder coordinate scan be more meaningful than the original representation's coordinates.
 
-3. Concretely we can think of the original activations as being expanded into two matrices, analogous to the PCA scores and loadings. Each row of the scores and each column of the loadings is considered one factor, just like in PCA.
+27. Concretely we can think of the original activations as being expanded into two matrices, analogous to the PCA scores and loadings. Each row of the scores and each column of the loadings is considered one factor, just like in PCA.
 
    Besides having a larger k than the original data, the key difference with PCA and UMAP is that most of the entries in the scores will be zero. This is a by-product of how sparse autoencoder models are trained and it's beyond the scope of this class. But the consequences are clear. We can now think of each sample as only activating on some small subset of associated factors.
 
-4. Properly training an SAE can be a bit complicated because it requires many
+28. Properly training an SAE can be a bit complicated because it requires many
 more samples than a simple PCA. However, there are many pre-trained SAEs
 available in repositories like HuggingFace. We have to match it to the original
 model that creates activations, so intead of analyzing BERT embeddings like
@@ -694,7 +694,7 @@ example = "Oil prices fell sharply on Monday as the Fed signaled a rate cut."
 pythia_activations(example).shape
 ```
 
-1. The block below loads an accompanying SAE model that has already been trained
+29. The block below loads an accompanying SAE model that has already been trained
 on the layer 4 representations from that larger model. The final SAE has $K =
 32,000$ latent factors.
 
@@ -720,7 +720,7 @@ with torch.no_grad():
 print(sae.num_latents, encoded.top_indices.shape)
 ```
 
-1. We care about all the articles, not just an individual sentence. The code
+30. We care about all the articles, not just an individual sentence. The code
 below loops over the articles and saves the associated SAE scores. The
 representations are made at the individual token level, but we will want
 summaries of entire articles. For this, we'll sum up all the scores for each
@@ -768,7 +768,7 @@ if (file.exists(pertoken_scores_file)) {
 }
 ```
 
-1. Working with 30,000 dimensions is a little bit tedious, even when we have
+31. Working with 30,000 dimensions is a little bit tedious, even when we have
 dimensionality reduction methods like UMAP and PCA. To narrow our search, let's
 focus on factors that seem most promising. The idea is to look for those factors
 which are most concentrated within individual news sections, for example, those
@@ -807,7 +807,7 @@ scores_top <- scores_long |>
     filter(factor_id %in% factor_summary$factor_id)
 ```
 
-1. Next, we save both the scores and the original articles to the file so that
+32. Next, we save both the scores and the original articles to the file so that
 we can load them directly from disk in our mosaic visualizations later.
 
 ```{r}
@@ -826,7 +826,7 @@ write_csv(factor_summary, "data/sae_factors.csv")
 write_csv(sae_articles, "data/sae_articles.csv")
 ```
 
-1. In our BERT example above, we made a UMAP of the original neuron activations.
+33. In our BERT example above, we made a UMAP of the original neuron activations.
 In the SAE literature, however, it's also common to make UMAPs of the associated
 SAE scores. The intuition is that the distances defined in this SAE space might
 be more meaningful than those in the original full representation space, making
@@ -935,7 +935,7 @@ sae_umap_view = {
 }
 ```
 
-4. To interpret the factors we simply look for the samples which have the highest magnitudes in that factor. Those samples should be most representative of what that factor means. This is an admittedly heuristic approach but is often enough to start drawing useful conclusions about the data.
+34. To interpret the factors we simply look for the samples which have the highest magnitudes in that factor. Those samples should be most representative of what that factor means. This is an admittedly heuristic approach but is often enough to start drawing useful conclusions about the data.
 
 ```{ojs}
 // label: sae-selections
@@ -994,19 +994,19 @@ sae_factor_view = {
 }
 ```
 
-6. A similar process can be used to auto-encode imagery, and the motivation is
+35. A similar process can be used to auto-encode imagery, and the motivation is
 similar. It gives us an objective way of finding more sharply defined features
 within samples, rather than just relying on low-dimensional (but rather coarse)
 atlases.
 
-7. You can imagine that we can now understand a much larger number of factors
+36. You can imagine that we can now understand a much larger number of factors
 than we could have with PCA. There each sample was somewhat related to each
 factor dimension, and those dimensions are mainly related to global
 characteristics that reflect shared variation across the data. Now there's only
 a small subset and the meaning of each factor is relatively narrow. This turns
 out to be extremely useful in building a more granular view of larger data sets.
 
-8. These models have been used more recently to understand popular large
+37. These models have been used more recently to understand popular large
 language models and biological sequence model representations. It is beyond the
 scope of this class but once the models are represented in this way, it also
 becomes possible to apply certain kinds of "surgery" to modify the

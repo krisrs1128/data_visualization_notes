@@ -40,7 +40,7 @@ using mechanical devices, like the Bertin Loom,
 
   These were impractical, but they set the stage for what was to come.
 
-1. The situation changed dramatically with the arrival of computers in the 1970s
+2. The situation changed dramatically with the arrival of computers in the 1970s
 - 1980s. Compared to print, computer displays can cheaply show many views in
 sequence. Through new interfaces, users could also direct the particular
 sequence that was shown to them. There might be thousands of options for what
@@ -57,7 +57,7 @@ no other reader has ever considered, one tailored to their particular interests.
    should feel like an engaging conversation, exploring many avenues and going
    beyond superficialities).
 
-1. There has since been an explosion of software tools for building interactive
+3. There has since been an explosion of software tools for building interactive
 visualizations. But there are fundamental concepts that are shared across all
 these tools, both about interaction dynamics (so that the plots help users
 actually answer questions) and software design (so that the implementation is
@@ -65,7 +65,7 @@ modular and logical).
 
 ## Interaction Taxonomy: Data and View Specification
 
-1. Heer and Shneiderman argue that, at a high-level, interaction dynamics in
+4. Heer and Shneiderman argue that, at a high-level, interaction dynamics in
 visualization can be categorized into three groups: (1) data and view
 specification, (2) view manipulation, and (3) analysis process and provenance.
 These notes focus on group (1), which can be further broken into four actions,
@@ -77,7 +77,7 @@ These notes focus on group (1), which can be further broken into four actions,
 
    all of which are made accessible to the user.
 
-1. From our study of static visualizations, we know that different visual
+5. From our study of static visualizations, we know that different visual
 encodings prioritize different comparisons. An interactive visualization that
 supports the "visualize" action allows the user to modify the encodings directly
 within the interface. This can be done through excel-style dropdowns,
@@ -92,7 +92,7 @@ within the interface. This can be done through excel-style dropdowns,
 
     ![](figures/tableau_specification.png)
 
-1. Filters allow users to query for particular subsets of the data. They can be
+6. Filters allow users to query for particular subsets of the data. They can be
 specified through input widgets, like dropdown menus, sliders, radio buttons, or
 search bars.
 
@@ -104,7 +104,7 @@ search bars.
 
    ![](figures/scented_widgets.png)
 
-1. Often the ordering of the datapoints can make a difference in the patterns
+7. Often the ordering of the datapoints can make a difference in the patterns
 that we perceive. The visualization below shows the relationships between
 characters in Les Miserables (we'll study networks in much more depth later).
 Notice how many of the purple connections are collected in the same block when
@@ -112,7 +112,7 @@ using the Bray Curtis, but not Euclidean, sorting option.
 
    {{<video figures/sorting_reorder.mp4>}}
 
-1. Finally, it's possible to compute new variables based on interactive user
+8. Finally, it's possible to compute new variables based on interactive user
 queries. This is the least common form of interactive data/view specification,
 but it has a lot of potential, especially in data science, where statistical
 algorithms often return new numerical summaries related to the analysis. For
@@ -123,11 +123,11 @@ $p$-values contrasting selected vs. unselected points, like in the plot below.
 
 ### Gulfs, Constancy, and Memory
 
-1. As we've seen above, interactivity opens up many possibilities for
+9. As we've seen above, interactivity opens up many possibilities for
 "conversing" with the data. But sometimes interactive visualizations are painful
 to use. What can go wrong?
 
-1. One useful abstraction idea is that interactive systems must bridge the two
+10. One useful abstraction idea is that interactive systems must bridge the two
 interaction gulfs.
 
    - Gulf of execution: The time it takes to specify a query and update the display.
@@ -141,7 +141,7 @@ interaction gulfs.
 
    ![](figures/interaction_gulfs.png)
 
-1. Animation can help reduce the gulf of evaluation. Instead of having to
+11. Animation can help reduce the gulf of evaluation. Instead of having to
 manually scan plot labels or marks to see how it has changed, we can follow the
 same object as it transitions between views. For example, the plot below shows
 the population breakdown of different states according to age groups. It's easy
@@ -154,7 +154,7 @@ to see which states had stable rankings.
    Further, if there is very little shared between two adjacent views, then the
    animations can become very hard to follow.
 
-1. This highlights the basic tradeoff between static and interactive
+12. This highlights the basic tradeoff between static and interactive
 visualization. While interactive visualization allows us to explore many related
 views, it relies heavily on our memory. In contrast, a small multiples plot
 doesn't place as much burden on memory, though it doesn't scale well to many
@@ -164,13 +164,13 @@ possible to gather the same insights from a static view.
 
 ## Mosaic
 
-1. The basic challenge in programming interactive systems is that different
+13. The basic challenge in programming interactive systems is that different
 parts of the code need to be rerun on demand as the user sends new inputs.  This
 is different from traditional computer programs, which execute code from the top
 to the bottom of a file, and is often called "reactive programming," because the
 program's state reacts to user inputs.
 
-1. There are different ways to handle the resulting coordination problem. We'll
+14. There are different ways to handle the resulting coordination problem. We'll
 discuss how Mosaic monitors for user interactions and triggers updates to the
 visualization. Let's focus on an example. The visualization below responds to
 two slider inputs. When we set `batch = n`, it will filter to the first `10n`
@@ -213,7 +213,7 @@ vg.vconcat(
 
 ### Coordinator
 
-1. The first, probably most mysterious, part of the program defines a
+15. The first, probably most mysterious, part of the program defines a
 coordinator. This reads in the data and stores it in a database that's hidden
 from our view.  The SQL query on load defines a new column `batch` that groups
 every 10 consecutive rows in the `athletes.parquet` dataset.
@@ -244,7 +244,7 @@ constructed and sent to the coordinator to fetch relevant data.
 
 ### Reactives
 
-1. The reactive variables are stored as either `Param`s or `Selection`s. We have
+16. The reactive variables are stored as either `Param`s or `Selection`s. We have
 a `Param` for the confidence interval level and a `Selection` for the number of
 data batches to use in the visualization. What they have in common is that any
 changes to their values (via user inputs, discussed below) will trigger changes
@@ -256,7 +256,7 @@ of variables are prefixed with a `$`. The key difference is:
 
    You can think of this as data and view specification.
 
-1. An important aspect of `Selection`s is that a visualization might define
+17. An important aspect of `Selection`s is that a visualization might define
 multiple selections which later need to be reconciled. E.g., we might have two
 sliders defining filters using two columns, like Height > c_1, Weight > c_2.
 There are a few reconciliation approaches defined in mosaic.
@@ -265,7 +265,7 @@ There are a few reconciliation approaches defined in mosaic.
    * `vg.Selection.union()`: Consider samples that pass either condition.
    * `vg.Selection.single()`: Consider samples that pass the condition that was most recently changed by the user.
 
-1. In our example, we define a parameter for confidence level initialized at
+18. In our example, we define a parameter for confidence level initialized at
 0.95. This changes the width of the intervals in the visualization, but we can
 change its value without needing to query the data.
 
@@ -286,7 +286,7 @@ change its value without needing to query the data.
 
 ### Inputs
 
-1. Mosaic allows the user to modify these reactive variables using `Inputs`.
+19. Mosaic allows the user to modify these reactive variables using `Inputs`.
 The package implements,
 
     * [`menu`](https://idl.uw.edu/mosaic/api/inputs/menu.html): Select rows by the category levels in a column.
@@ -294,7 +294,7 @@ The package implements,
     * [`search`](https://idl.uw.edu/mosaic/api/inputs/search.html): Select rows where the search text appears in a column.
     * [`table`](https://idl.uw.edu/mosaic/api/inputs/table.html): Select rows where the user has hovered their mouse.
 
-1. In our example, there are two sliders. The syntax is different because the
+20. In our example, there are two sliders. The syntax is different because the
 first modifies a `Selection` while the second modifies a `Param`. The first
 slider is requerying the `athletesBatched` dataset to retrieve rows where the
 value in the `batch` column is less than `query`.
@@ -329,7 +329,7 @@ vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"})
    trigger changes in the downstream visualization.
    - `min, max, step`: Controls the endpoints and resolution of the slider. When we used a `Selection`, this information was automatically inferred^[We could have also set it manually.].
 
-1. Different inputs have different arguments controlling their appearance and
+21. Different inputs have different arguments controlling their appearance and
 what they make possible to the user, and when working on a new visualization,
 it's helpful to have the documentation open. But they all have the same
 `Selection` vs. `Param` distinction, with different specifications depending on
@@ -338,7 +338,7 @@ variables that will be used downstream (`Param`).
 
 ### Visual Layers
 
-1. Finally, we relate these reactive variables to the visualization. Any part of
+22. Finally, we relate these reactive variables to the visualization. Any part of
 a Mosaic plot that refers to a reactive variable will be recomputed whenever the
 user inputs are changed. Whenever `query` selection is changed, we requery the
 `athletesBatched` dataset (the first argument in any mosaic layer describes the
@@ -362,12 +362,12 @@ vg.plot(
 
 _Exercise: What are the reactive variables in this program? When they are changed, do they affect the displayed data or the visual encoding?_
 
-1. We can organize the interface using `vconcat` (vertical concatenation) and
+23. We can organize the interface using `vconcat` (vertical concatenation) and
 `hconcat` (horizontal concatenation). They are analogous to `/` and `+` for
 combining panels in patchwork. They have no influence on the computation or
 interaction dynamics, just where the components appear on the display.
 
-1. For example, if we had wanted to place the sliders on the side of the main
+24. For example, if we had wanted to place the sliders on the side of the main
 visualization, we can use
 
 ```{ojs}

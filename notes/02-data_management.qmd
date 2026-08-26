@@ -397,7 +397,7 @@ lengthen_result = vg.coordinator().query(lengthen_query)
 Inputs.table(lengthen_result)
 ```
 
-26. Just like we could lengthen a table using `pivot_longer()`, we can widen it
+25. Just like we could lengthen a table using `pivot_longer()`, we can widen it
 using `pivot_wider()`.
 
 ```{r}
@@ -411,7 +411,7 @@ table2 |>
 
 ### Deriving Variables
 
-27. In R, we can use the mutate command to derive new variables. For example,
+26. In R, we can use the mutate command to derive new variables. For example,
 this derives rate as the relative number of cases within a populations.
 
 ```{r}
@@ -465,17 +465,17 @@ Inputs.table(groupby_result, {format: { avg_rate: x => x.toFixed(5) }})
 
 ### Scaling to Large Datasets
 
-30. Sometimes, it's interesting to visualize very large datasets. Of course,
+27. Sometimes, it's interesting to visualize very large datasets. Of course,
 there's only so many pixels on any given screen, So we typically need to filter
 to reasonable subsets or perform some aggregation before graphical encoding.
 This is a setting where using a database becomes very helpful.
 
-31. To illustrate, below we've created a database using the NYC taxi data. This
+28. To illustrate, below we've created a database using the NYC taxi data. This
 has a million rows, each representing the starting and end points of a taxi trip
 in New York City , so visualizing every trip directly would be too overwhelming.
 But we can easily filter and aggregate to get some interesting findings.
 
-32. As a first step let's add a new table (which we call `taxi`) to our existing
+29. As a first step let's add a new table (which we call `taxi`) to our existing
 database by reading in the `trips.parquet` file. This uses the same coordinator
 we set up earlier, which is why we don't need all the extra boilerplate code
 about creating the database.
@@ -487,7 +487,7 @@ taxi_db = {
 }
 ```
 
-33. Now we can look at the first ten rows without having to read in the entire
+30. Now we can look at the first ten rows without having to read in the entire
 dataset.
 
 ```{ojs}
@@ -530,7 +530,7 @@ Inputs.table(taxi_hourly)
 ```
 
 
-34. To summarize, these are the main functions that we need to know for tidying
+31. To summarize, these are the main functions that we need to know for tidying
 data. Usually we'll be working with the R column, but it's good to know about
 the equivalent versions in SQL.
 
@@ -543,3 +543,14 @@ the equivalent versions in SQL.
 | lengthen               | `pivot_longer()`     | `UNPIVOT`                        |
 | widen                   | `pivot_wider()`      | `PIVOT`                            |
 | combine tables     | `left_join()`, etc. | `JOIN`                            |
+
+## Objectives
+
+By the end of this week, you should be able to,
+
+- Determine whether a data set is tidy, and if it isn't, describe how it would need to be reshaped to make it so.
+- Compare and contrast deriving vs. aggregation operations in general, and the `mutate` and `group_by` + `summarize` patterns for defining new data variables in particular.
+- Given a raw data set and a downstream test that requires it to be transformed, outline the R tidying code necessary to transform the dataset to answer the question of interest.
+- Given a pair of data sets before and after a sequence of transformations, sketch the code necessary to implement the transformation.
+- Given code that applies the data tidying functions `pivot_longer`, `pivot_wider`, `mutate`, `group_by`, and `summarize`, explain what each step in the code does and how it transforms inputs to outputs.
+- Given a CSV file, be able to load it directly into an R data.frame or a mosaic database, and compare and contrast the memory requirements of each approach on large-scale data.

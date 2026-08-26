@@ -61,7 +61,7 @@ them handy as you go off and solve real-world data science problems.
 
 [Reading](https://www.datasketch.es/project/655-frustrations-doing-data-visualization)
 
-1. How does a visualization expert go about creating a data visualization?
+9. How does a visualization expert go about creating a data visualization?
 Perhaps the most useful lesson from this reading is that good visualizations
 don't materialize out of thin air -- there is always a creative process
 involved, steps where it's unclear what the final result will be, even for a
@@ -69,7 +69,7 @@ data visualization genius like Shirley Wu. We're lucky that she has documented
 this process for us, so that we might be able to take away a few lessons for our
 own reflection.
 
-2. Her visualization, ["655 Frustrations of Data
+10. Her visualization, ["655 Frustrations of Data
 Visualization"](https://shirleywu.studio/community/), is based on an online
 data visualization survey. It had 45 questions ("How many years have you been
 doing data visualization? What percent of your day is focused on data prep work?
@@ -83,7 +83,7 @@ include_graphics("https://uwmadison.box.com/shared/static/isvmdbb6ki3olgzpnouq9p
 
 ### Question Formulation
 
-3. At the start of the project -- before writing code -- there is the problem of
+11. At the start of the project -- before writing code -- there is the problem of
 choosing a guiding question. Her initial question was "Why might people leave
 the field?" This was a timely question, because, after a few years of high
 activity and visibility in industry, data visualization seemed to be cooling
@@ -96,7 +96,7 @@ or less time visualizing data in the future?"
     Data analysis should be driven by curiosity about the world, not simply the
     data that happen to be conveniently accessible.
 
-4. To see what within the data are relevant to this guiding question, she then
+12. To see what within the data are relevant to this guiding question, she then
 conducted an exploratory analysis^[Using vega-lite!], studying the marginal
 distributions of all the available questions. For example, visualizing the
 "percentage of time" questions, it became clear that most people worked on a mix
@@ -109,7 +109,7 @@ understand whether people want to stay in the field.
 include_graphics("https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61cc310e3c74f94ee343a_percenttime.jpeg")
 ```
 
-5. The exploratory analysis also revealed that there are [some
+13. The exploratory analysis also revealed that there are [some
 questions](https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61cc3f46a9b23e56d8ad8_qualitative.jpeg)
 that would not be useful for answering the guiding question. For example, many
 of the qualitative responses were not useful^[Are there really 100x more pie
@@ -119,7 +119,7 @@ more important to focus on the guiding question(s).
 
 ### Initial Design
 
-6. The initial design answered whether there is a relationship between (a) the
+14. The initial design answered whether there is a relationship between (a) the
 survey respondent wanting to do more data visualization in the future, and (b)
 the current fraction of time spent on design. This was visually encoded using a
 stacked barchart. However, the display was not that informative, because most
@@ -131,7 +131,7 @@ instance of selection bias.].
 include_graphics("https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61cc4bad27a0e9fbb781e_histogram.png")
 ```
 
-7. In this situation, it seemed like perhaps additional context would help.
+15. In this situation, it seemed like perhaps additional context would help.
 However, the resulting faceted barchart was difficult to make sense of, again
 because any relationships between variables were weak or nonexistent.
 
@@ -142,7 +142,7 @@ include_graphics("https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61
 
 ### Redesigns
 
-8. At this point, two significant changes to the design were made, one to the
+16. At this point, two significant changes to the design were made, one to the
 question, and one to the design. The question was reframed from "do you want to
 continue working in data visualization" to "do you experience any frustrations
 with data visualization." This question is still related to the guiding
@@ -158,7 +158,7 @@ to see every single respondent.
 include_graphics("https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61cc41f5b4208e98d517f_beeswarm.png")
 ```
 
-9. A few more refinements were made. Instead of placing those with and without
+17. A few more refinements were made. Instead of placing those with and without
 frustrations far apart on the page, they were rearranged to share the same
 $x$-axis^[The less our eyes have to travel across the page to make a comparison,
 the more efficient the visualization.]. Also, instead of coloring circles by
@@ -166,7 +166,7 @@ years of experience, color was used to represent the percentage of the day spent
 on data visualization. Again, these changes reflect sharpening of both design
 and questions.
 
-10. In the final version of the static display, a boxplot was introduced to
+18. In the final version of the static display, a boxplot was introduced to
 summarize the most salient characteristics of each beeswarm. Then, instead of
 just plotting the points in two parallel regions, they were made to "rise" and
 "fall" off the boxplots, depending on whether the respondents experienced
@@ -182,7 +182,7 @@ include_graphics("https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61
 
 ### Interpretation
 
-11. Only at this point is interactivity introduced into the visualization. The
+19. Only at this point is interactivity introduced into the visualization. The
 interactivity is simple -- views transition into one another depending on
 selected questions -- but provides an effective alternative to simply faceting
 all pairs of questions.
@@ -192,7 +192,7 @@ all pairs of questions.
 include_graphics("https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61cc45c83ddedf6089f0c_brush.gif")
 ```
 
-12. Finally, this interactive visualization is used for an extensive
+20. Finally, this interactive visualization is used for an extensive
 exploration. This is often when the effectiveness of a visualization can be
 evaluated. Ultimately, visualization should help inform our body of beliefs,
 guiding the actions we take (either in the short or long-term). If it's hard to
@@ -204,18 +204,18 @@ functional.
 include_graphics("https://uploads-ssl.webflow.com/5fa9d88da1855554db37b1e1/5fc61cc4d7219332619180f9_frustrations1.jpeg")
 ```
 
-13. To guide the reader, this investigative work was then incorporated into the
+21. To guide the reader, this investigative work was then incorporated into the
 visualization. These additional details allow the visualization to stand alone,
 it becomes a self-explanatory intellectual artifact.
 
 ### Conclusion
 
-14. Wrapping up, the final visualization is clearly the culmination of
+22. Wrapping up, the final visualization is clearly the culmination of
 substantial intellectual labor over the course of weeks (if not months). The
 result is both beautiful and informative. This is an ideal to strive for -- the
 crafting of data visualizations that can guide discovery and change.
 
-15. One final note. It's often useful to study the development of projects that
+23. One final note. It's often useful to study the development of projects that
 you find interesting. Sometimes, authors share their code on github, or earlier
 versions are available through technical reports or recorded talks. This
 additional context can shed light on the overall inspiration and intention of
@@ -226,14 +226,14 @@ strategy for learning.
 
 [Reading](https://simplystatistics.org/posts/2019-04-17-tukey-design-thinking-and-better-questions/)
 
-1. In these notes, we will review "Tukey, Design Thinking, and Better Questions,"
+24. In these notes, we will review "Tukey, Design Thinking, and Better Questions,"
 a blog post by Roger Peng. In the post, he discusses the importance of
 formulating good questions in data analysis. While the process of refining
 questions is central to any successful, real-world analysis, it is rarely
 discussed in formal statistics textbooks, which usually restrict themselves to
 developments in theory, methodology, or computation.
 
-2. The post itself is based on a line of thinking from the statistician John
+25. The post itself is based on a line of thinking from the statistician John
 Tukey's 1962 paper, "The Future of Data Analysis."  Perhaps the most famous
 quote from this paper is,
 
@@ -244,7 +244,7 @@ quote from this paper is,
     called upon to provide stamps of authority and (2) be distracted by the allure
     of proving optimal algorithms in settings that are likely not that realistic.
 
-3. This of course begs the question -- what should data analysts be doing? Tukey
+26. This of course begs the question -- what should data analysts be doing? Tukey
 never directly discusses this, but Peng's thesis is that the purpose of data
 analysis is to spark the formulation of better questions. This idea is captured
 in the diagram below. The idea is that algorithms (visual, predictive, and
@@ -261,30 +261,30 @@ asked, even if that means that the answers will be less definitive.
 include_graphics("https://github.com/krisrs1128/stat436_f24/blob/main/docs/figure/question_evidence.png?raw=true")
 ```
 
-4. What does it mean to ask better questions? Peng argues that better questions
+27. What does it mean to ask better questions? Peng argues that better questions
 are "sharper," providing more discriminating information and guiding research to
 more promising directions. In my view, a sharper question is one that helps
 inform decisions that have to be made (all data aside), either by adding to our
 body of beliefs or bringing new uncertainties into focus.
 
-5. The implication is that data analysis is not about finding "the answer."
+28. The implication is that data analysis is not about finding "the answer."
 Instead, it should be about clarifying what can and cannot be answered based on
 the data. But more, it can help clarify what questions we really want answered
 -- in Peng's words, "we can learn more about ourselves by looking at the data."
 
-6. The final example in the reading is that the residuals in an analysis are
+29. The final example in the reading is that the residuals in an analysis are
 themselves data worth examining. They inform whether a model (and the associated
 way of conceptualizing the problem) is really appropriate, or whether a
 reformulation would be beneficial.
 
-7. At the end, the main idea is that data analysis equips us to ask better
+30. At the end, the main idea is that data analysis equips us to ask better
 questions.
 
 ## A History of Data Visualization up to 1900
 
 [Reading](https://datavis.ca/papers/hbook.pdf)
 
-1. There could probably be an entire class taught on the history of data
+31. There could probably be an entire class taught on the history of data
 visualization. The reason it is worth covering in an otherwise
 practically-oriented class is that,
     * Historical study can illuminate the core intellectual foundation on which the
@@ -296,12 +296,12 @@ practically-oriented class is that,
     If it took until 1833 until the first scatterplot was published, then what ideas
     have we yet to find?
 
-2. The reading divides up the history of data visualization into 8 epochs. In
+32. The reading divides up the history of data visualization into 8 epochs. In
 these notes, we will consider the 5 epochs before 1900.
 
 ### Before 1600: Early Maps and Diagrams
 
-3. It might come as a surprise, but visualization has been around since the
+33. It might come as a surprise, but visualization has been around since the
 invention of writing. The Egyptians made maps, and there are examples multiple
 time series plots from the 10th century.
 
@@ -313,14 +313,14 @@ time series plots from the 10th century.
 include_graphics("https://uwmadison.box.com/shared/static/w05yivo6v9dmj14kvjhcbon0de2gg1zl.webp")
 ```
 
-4. However, most visualizations were focused on physical geographical or
+34. However, most visualizations were focused on physical geographical or
 astronomical quantities, and even these quantities were only imprecisely
 measured. Without more formal data gathering instruments, there could not be
 much data visualization.
 
 ### 1600 - 1700: Measurement and Theory
 
-5. The situation begins to change around 1600, at the dawn of the scientific
+35. The situation begins to change around 1600, at the dawn of the scientific
 revolution. All of a sudden, precise measurement of physical space become
 possible. Also, important new mathematical ideas were introduced, like
 probability, calculus, and reasoning about functions. This created the right
@@ -359,22 +359,22 @@ vector field).
 include_graphics("https://upload.wikimedia.org/wikipedia/commons/a/a4/Edmond_Halley%27s_map_of_the_trade_winds%2C_1686.jpg")
 ```
 
-6. During this period, the scientific value of visual thinking was more or less
+36. During this period, the scientific value of visual thinking was more or less
 established. However, there were still only relatively few graphical forms
 available, and the focus continued to remain on visualizing physical quantities,
 rather than more general social, economic, biological, or ecological data.
 
 ### 1700 - 1800
 
-7. During this period, many new graphical forms were invented, including
+37. During this period, many new graphical forms were invented, including
 timelines, cartograms, functional interpolations, line graphs, bar charts, and
 pie charts. Further, forms from earlier, like maps and function plots, became
 more firmly established.
 
-8. This was also when three-color printing was invented. Before this point,
+38. This was also when three-color printing was invented. Before this point,
 color could not be used as an encoding channel.
 
-9. In this century, governments also began large-scale data collection of social
+39. In this century, governments also began large-scale data collection of social
 and economic statistics^[The word "statistics" comes from the same root as
 "state", since it originally focused on data collected for governance.]. One of
 the most prolific inventors of data visualizations, William Playfair^[He has
@@ -391,12 +391,12 @@ include_graphics("https://uwmadison.box.com/shared/static/64v80q1lc8nsa9480i1etn
 
 ### 1800 - 1850
 
-10. This was a period of maturation for the field of data visualization. By this
+40. This was a period of maturation for the field of data visualization. By this
 point, visualization had become standard in scientific publications. Advances in
 printing technology also made it also became easier to mass produce
 visualizations.
 
-11. It was also around this time that the scope of problems studied through
+41. It was also around this time that the scope of problems studied through
 visualization expanded far beyond display of purely physical (geographical and
 astronomical) applications. Two areas in particular flourished, applications to
 social science and to engineering.
@@ -430,13 +430,13 @@ include_graphics("https://upload.wikimedia.org/wikipedia/commons/f/f8/Tableau_fi
 
 ### 1850 - 1900: The Golden Age
 
-12. It might be counterintuitive that there was a golden age of visualization a
+42. It might be counterintuitive that there was a golden age of visualization a
 century before the first computers were invented. However, a look at the
 visualizations from this period demonstrate that this was a period where
 visualizations inspired scientific discoveries, informed commercial decisions,
 and guided social reform.
 
-13. For example, in public health, Florence Nightingale invented new
+43. For example, in public health, Florence Nightingale invented new
 visualizations to demonstrate the impact of sanitary practices in
 hospital-induced infections and death. Similarly, it was a
 [visualization](https://en.wikipedia.org/wiki/The_Ghost_Map) that guided John
@@ -449,7 +449,7 @@ Snow to the source of the 1855 cholera epidemic.
 include_graphics("https://uwmadison.box.com/shared/static/c79fbmfc3mff9ota1tzxtvv4gp7e3pul.jpeg")
 ```
 
-14. Some of the graphical innovations include,
+44. Some of the graphical innovations include,
 
 * 3D function plots. The plot below, by Luigi Perozzo, shows population size
 broken down into age groups and traced over time.
@@ -483,7 +483,7 @@ of anticyclones.
 include_graphics("https://uwmadison.box.com/shared/static/ar82ax7hcatpy99iz2w6opkzl4cdvv2y.jpeg")
 ```
 
-15. This was also an age of state-sponsored atlases. More than sponsoring the
+45. This was also an age of state-sponsored atlases. More than sponsoring the
 collection of data, governments assembled teams to visualize the results for
 official publication. From 1879 to 1897, the French Ministry of Public Works
 published the _Albums de Statistique Graphique_, which under the guidance of

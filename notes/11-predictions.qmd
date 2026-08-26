@@ -44,7 +44,7 @@ are present.
 
 ## Partial Dependence Profiles
 
-1. Let $f$ be the learned black box function. Let $x$ be its $D$-dimensional
+3. Let $f$ be the learned black box function. Let $x$ be its $D$-dimensional
 input. The idea is to ask how $f$ changes as we vary the $d$th coordinate over
 its range. We need to do something with the remaining coordinates; the idea of
 PDP is to average across them.
@@ -58,10 +58,10 @@ setting it to $z$. If we evaluate this average across many different values of
 $z$, we get a PDP curve. Note that for each value $z$, we compute an average
 across the entire dataset -- this can get slow.
 
-2. This definition generalizes to larger-dimensional subsets of variables, but
+4. This definition generalizes to larger-dimensional subsets of variables, but
 we'll stick to one-dimensional curves for simplicity.
 
-3. Here is some geometric intuition. We take the original samples, manually set
+5. Here is some geometric intuition. We take the original samples, manually set
 all their $d$th coordinates to $z$, evaluate the function $f$, and then
 average. We repeat this for many $z$'s to trace out the partial dependence
 curve.
@@ -72,7 +72,7 @@ across many $z$ to trace out the $\text{PDP}_d(x_d)$ curve
 
 ## Individual Conditional Expectations
 
-1. ICE plots consider each term in the PDP formula as its own function of $z$.
+6. ICE plots consider each term in the PDP formula as its own function of $z$.
 
 $$
 h_n(z) := f(x_d = z, x_{n, -d})
@@ -82,7 +82,7 @@ This has the nice "Ceteris Paribus" interpretation. For each sample, it traces
 out the curve where the $d$th coordinate is set to different values $z$ but all
 other coordinates are held fixed.
 
-2. The key insight is that these curves can be meaningful on their own. The
+7. The key insight is that these curves can be meaningful on their own. The
 averaging step in PDP can mask some meaningful variation in model predictions.
 This is especially useful for discovering interactions. For example, here are
 ICE curves for a model trained to predict survival with the Titanic dataset.
@@ -91,7 +91,7 @@ The age effect is very different for crew vs. passengers.
 ![ICE ("Ceteris Paribus") curves for a survival model fit to the Titanic
 dataset, colored by passenger/crew class.](figures/plot_titanic_ice.png)
 
-3. Two common tricks for ICE plots:
+8. Two common tricks for ICE plots:
 
 * We might suspect an interaction with an unmeasured variable. This can
 sometimes be seen as groups of curves with different shapes, but where we
@@ -118,18 +118,18 @@ shapes across curves that start at different levels.](figures/plot_partial_yhat.
 
 ## Effects and Partial Residual Plots
 
-1. Fox and Weisberg (2018) focus on visualizing effects just in the case of
+9. Fox and Weisberg (2018) focus on visualizing effects just in the case of
 linear regression models. Even here, it pays to be careful when thinking about
 the role of interactions.
 
-2. Suppose we are interested in the $d$th predictor in a linear regression
+10. Suppose we are interested in the $d$th predictor in a linear regression
 model. They partition the predictors into $(z, v, u)$:
 
 * $z$ - the predictor we are interested in.
 * $v$ - the predictors that interact with $z$.
 * $u$ - other unrelated predictors.
 
-3. They recommend identifying a grid of values across $v$ and then tracing the
+11. They recommend identifying a grid of values across $v$ and then tracing the
 function of $z$ with $v$ fixed to each of those grid points.
 
 $$
@@ -142,7 +142,7 @@ In this example $z$ = per person GDP and $v$ = country group.
 traced separately for each of a grid of country groups
 (oecd/other/africa).](figures/plot_ppgdp_effect.png)
 
-4. They also suggest overlying the residuals on these effects plots.
+12. They also suggest overlying the residuals on these effects plots.
 
 $$
 \begin{pmatrix}z = x_{nd} \\ v\end{pmatrix}^T \hat\beta + e(x_n)
@@ -162,21 +162,21 @@ across facets suggests a missing interaction between x2 and x3.](figures/plot_x2
 
 ## Probabilistic Models
 
-1. So far, we've been focusing on visualizign black box models. In many
+13. So far, we've been focusing on visualizign black box models. In many
 settings, we might instead want to fit probabilistic models directly informed by
 our conceptual understanding.  Visualization fits nicely into this workflow as
 well, and can help in building up more realistic, but still interpretable,
 models.
 
-1. Exploratory data analysis and model building work synergistically. In
+14. Exploratory data analysis and model building work synergistically. In
 real-world applications, visualization guides selection toward more reasonable
 models.
 
-2. Models' exact forms are typically unknown initially, though several
+15. Models' exact forms are typically unknown initially, though several
 plausible candidates usually exist. Exploratory work eliminates some options
 while revealing unexpected connections.
 
-3. As an illustration, consider PM2.5 monitoring. A researcher is interested in
+16. As an illustration, consider PM2.5 monitoring. A researcher is interested in
 monitoring the level of PM2.5, a type of small air particulate that can be bad
 for public health. High-quality weather station data apply locally; lower
 quality satellite data provide global coverage. A calibration model using
@@ -194,7 +194,7 @@ GM@data <- GM@data |>
     )
 ```
 
-4. The baseline model uses the equation $\text{station} = a + b \times
+17. The baseline model uses the equation $\text{station} = a + b \times
 \text{satellite}$ at co-located measurement points. The Global Burden of
 Disease project employed this approach through 2016.
 
@@ -207,7 +207,7 @@ ggplot(GM@data, aes(log_sat, log_pm25)) +
     coord_fixed()
 ```
 
-5. Plotting reveals substantial heterogeneity and large residuals. The key
+18. Plotting reveals substantial heterogeneity and large residuals. The key
 question: What factors correlate with residuals that could enhance model
 performance?
 
@@ -217,7 +217,7 @@ unmeasured factors determining $x$-$y$ relationships.
 likely correlate with desert locations (PM2.5 underpredicted), suggesting
 inclusion of geographic features improves fit.
 
-6. One hypothesis: country region significance. Fitting separate regression
+19. One hypothesis: country region significance. Fitting separate regression
 lines per WHO super-region reveals slope variation, suggesting models should
 incorporate region-specific slopes.[^interaction]
 
@@ -231,7 +231,7 @@ ggplot(GM@data, aes(log_sat, log_pm25)) +
     coord_fixed()
 ```
 
-7. WHO categorizations are somewhat arbitrary. An alternative approach is to
+20. WHO categorizations are somewhat arbitrary. An alternative approach is to
 cluster ground stations by PM2.5 level to create problem-specific regional
 groupings.
 
@@ -254,7 +254,7 @@ ggplot(GM@data, aes(log_sat, log_pm25)) +
     coord_fixed()
 ```
 
-8. A model network emerges; refined comparison tools become necessary. This
+21. A model network emerges; refined comparison tools become necessary. This
 sets up the subject of our next notes: prior and posterior predictive checks.
 
 [^interaction]: Alternatively, this can be viewed as introducing an
@@ -262,7 +262,7 @@ interaction between satellite measurements and WHO region.
 
 ## Prior and Posterior Predictives
 
-1. How should we go about choosing between the plausible models developed from
+22. How should we go about choosing between the plausible models developed from
 exploratory analysis? An alternative which often brings more insight into the
 structure of the problem than raw test-set error is to use prior and posterior
 predictive distributions for (visual) model comparison.
@@ -272,13 +272,13 @@ predictive distributions for (visual) model comparison.
 library(rstan)
 ```
 
-2. The prior predictive distribution helps decide whether certain model
+23. The prior predictive distribution helps decide whether certain model
 families are reasonable candidates for a problem, before formally
 incorporating the evidence coming from the data. The mechanism is: (a) sample
 parameters from the prior, and (b) simulate data from the model with those
 parameters.
 
-3. Vague priors can produce implausible simulated datasets, despite being
+24. Vague priors can produce implausible simulated datasets, despite being
 "more objective" in some sense.
 
 ```{r}
@@ -312,7 +312,7 @@ ggplot(prior1_data, aes(log_pm25, sim)) +
 Prior predictive samples from this vague prior are on a completely implausible
 scale.
 
-4. Subjective, informative priors instead produce more plausible samples,
+25. Subjective, informative priors instead produce more plausible samples,
 lying in a comparable range to the true data. Note, however, that samples from
 the prior predictive do not need to look exactly like the observed data -- if
 they did, there would be no need to fit model parameters!
@@ -345,12 +345,12 @@ ggplot(prior2_data, aes(log_pm25, sim)) +
     facet_wrap(~replicate, scale = "free_y")
 ```
 
-5. Philosophically, this prior predictive analysis is based on the idea that,
+26. Philosophically, this prior predictive analysis is based on the idea that,
 though probability is subjective, evidence can be used to update our beliefs.
 The idea of the prior predictive is to visually encode subjective beliefs
 about the problem under study before gathering new evidence.
 
-6. After calibrating the prior predictive, models are fit. The posterior
+27. After calibrating the prior predictive, models are fit. The posterior
 predictive is like the prior predictive, except that it samples model
 parameters from the data-informed posterior, rather than the data-ignorant
 prior: it represents the distribution of new datasets when drawing parameters
@@ -407,7 +407,7 @@ ggplot(posterior_samples, aes(log_pm25, log_pm25_sim)) +
 Compared to the prior predictive, the posterior predictive is much more
 closely related to the true underlying dataset.
 
-7. One subtlety is that there is a danger of overfitting features in the
+28. One subtlety is that there is a danger of overfitting features in the
 posterior predictive. It is best to choose features of the data that are not
 directly modeled (e.g., if you use slope in the model estimation, then don't
 evaluate the posterior predictive using the slope, since by definition this

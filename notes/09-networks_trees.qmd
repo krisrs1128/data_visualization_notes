@@ -44,7 +44,7 @@ areas? We'll develop task abstractions that helps us recognize commonalities
 across network analysis.  We'll also develop criteria that can be used to
 evaluate the quality of the resulting visualizations.
 
-1.  Networks and trees are types of *graphs*, which are defined by (a) a set $V$
+2.  Networks and trees are types of *graphs*, which are defined by (a) a set $V$
 of vertices and (b) a set $E$ of edges between pairs of vertices. Some examples
 to keep in mind,
 
@@ -87,24 +87,24 @@ include_graphics("figures/covid-network.png")
 include_graphics("https://uwmadison.box.com/shared/static/erbi39htkgzndhxh8yhvcoq3imfkxdca.png")
 ```
 
-1. Either vertices or edges might have attributes. For example, in the directory
+3. Either vertices or edges might have attributes. For example, in the directory
 tree, we might know the sizes of the files (vertex attribute), and in the
 disease transmission network we might know the duration of contact between
 individuals (edge attribute).
 
-1. An edge may be either undirected or directed. In a directed edge, one vertex
+4. An edge may be either undirected or directed. In a directed edge, one vertex
 leads to the other, while in an undirected edge, there is no sense of ordering.
 
 ### Tasks
 
-1. What visual comparisons do networks and trees facilitate? Viewed narrowly,
+5. What visual comparisons do networks and trees facilitate? Viewed narrowly,
 there are two basic types of queries for graph data. *Topological* queries ask
 how nodes are linked with one another — for example, is node A within three
 steps of node B? *Attributional* queries instead concern the attributes
 associated with nodes and edges — for example, which nodes (or edges) have an
 attribute value above X?
 
-1. More broadly, we often visualize graphs with the goal of developing a more
+6. More broadly, we often visualize graphs with the goal of developing a more
 global view beyond isolated nodes. Our initial examples suggest that trees and
 networks can represent either physical interactions or conceptual relationships,
 and across both, three tasks recur,
@@ -113,7 +113,7 @@ and across both, three tasks recur,
     * Following paths
     * Isolating key nodes
 
-1. By "searching for groupings," we mean finding *clusters* of nodes that are
+7. By "searching for groupings," we mean finding *clusters* of nodes that are
 highly interconnected, but which have few links outside the cluster. This kind
 of modular structure might lend itself to deeper investigation within each of
 the clusters.
@@ -124,7 +124,7 @@ the clusters.
     * Clusters in a recipe network could be used identify different culinary
     techniques or cuisines.
 
-1. By "following paths," we mean tracing the paths out from a particular node,
+8. By "following paths," we mean tracing the paths out from a particular node,
 to see which other nodes it is close to. This is where *connections* between
 nodes or clusters of interest become visible.
 
@@ -140,7 +140,7 @@ nodes or clusters of interest become visible.
 include_graphics("https://psl.linqs.org/assets/images/hyper/fig3.png")
 ```
 
-1. "Isolating key nodes" is a more fuzzy concept, usually referring to the task
+9. "Isolating key nodes" is a more fuzzy concept, usually referring to the task
 of finding nodes that are exceptional in some way. Two recurring notions of
 "exceptional" are *hubs*, which have many more neighbors than other nodes, and
 *central* nodes, which lie on the shortest paths between many pairs of nodes.
@@ -160,13 +160,13 @@ include_graphics("https://www.leydesdorff.net/betweenness/index_files/image008.j
 
 ### What Makes a Good Graph Visualization
 
-1. What distinguishes a good from a bad graph visualization? As in all data
+10. What distinguishes a good from a bad graph visualization? As in all data
 visualization, effectiveness is closely tied to function. The representation and
 interaction should make sure information needed to support the intended task is
 easily accessible, and that superfluous information does not occupy too much of
 the reader's attention.
 
-1. For example, if a visualization has too many edge crossings, then we will
+11. For example, if a visualization has too many edge crossings, then we will
 have trouble answering any topological queries — crossings can make it
 impossible to follow edges. The remainder of these notes works through the main
 alternatives -- node-link diagrams and the layout algorithms that make them
@@ -174,7 +174,7 @@ legible, adjacency matrices, enclosure, and edge bundling. Each one makes a
 different subset of the tasks above easy, and none of them is best for all
 three.
 
-1. In interactive graphs, we should aim to minimize the amount of change in the
+12. In interactive graphs, we should aim to minimize the amount of change in the
 positions of the nodes and edges given any user input -- too much movement
 creates confusion. The same lesson applies to dynamic graphs. It is hard to make
 sense of an evolving graph if the same nodes and edges are unnecessarily jumping
@@ -182,16 +182,16 @@ around.
 
 ## Representing Graphs in R
 
-1. One of the best R packages for graph manipulation is called `tidygraph`. The
+13. One of the best R packages for graph manipulation is called `tidygraph`. The
 goal of this package is to extend the semantics of the tidyverse to
 graph-structured data. We can't simply use the standard `dplyr` functions
 because graphs cannot be stored in a single data.frame -- any graph must be
 represented by a *pair* of data.frames, one for the nodes and one for the edges,
 and the `tidygraph` structure represents graphs in exactly this way.
 
-1. For example, `G` below shows the friendship connections between 70 students
+14. For example, `G` below shows the friendship connections between 70 students
 in a high school over two years, derived from a survey conducted in 1957 and
-1958. The `Node Data` component gives features for each student (in this case,
+15. The `Node Data` component gives features for each student (in this case,
 just the name), while `Edge Data` represents friendship links between students.
 
 ```{r}
@@ -199,7 +199,7 @@ G <- as_tbl_graph(highschool)
 G
 ```
 
-1. The beauty of this data structure is that we can define the analogs of the
+16. The beauty of this data structure is that we can define the analogs of the
 usual tidyverse verbs for it. For example, we can derive a new node attribute
 using `mutate`.
 
@@ -208,7 +208,7 @@ G |>
     mutate(favorite_color = sample(c("red", "blue"), n(), replace = TRUE))
 ```
 
-1. What if we want to mutate the edges instead? We have to tell tidygraph to
+17. What if we want to mutate the edges instead? We have to tell tidygraph to
 "activate" the edge set,
 
 ```{r}
@@ -225,7 +225,7 @@ G %E>%
     mutate(weight = runif(n()))
 ```
 
-1. There are many other verbs that have been defined for tidygraph objects. For
+18. There are many other verbs that have been defined for tidygraph objects. For
 example, we can join two graphs together.
 
 ```{r}
@@ -260,7 +260,7 @@ p_joined <- ggraph(G1 |> graph_join(G2)) +
 p_ring | p_bipartite | p_joined
 ```
 
-1. Similarly, we can filter nodes or edges based on their attributes.
+19. Similarly, we can filter nodes or edges based on their attributes.
 
 ```{r}
 G %E>%
@@ -269,7 +269,7 @@ G %E>%
     arrange(-weight)
 ```
 
-1. It's possible to perform simple graph algorithms using these verbs. For
+20. It's possible to perform simple graph algorithms using these verbs. For
 example, we can cluster nodes based on their connection structure. This is our
 first "searching for groupings" task, solved computationally rather than
 visually.
@@ -293,7 +293,7 @@ G |>
     scale_color_brewer(palette = "Set2")
 ```
 
-1. We can even map over nodes to compute topological queries. For example, the
+21. We can even map over nodes to compute topological queries. For example, the
 block below computes the number of neighbors within two steps of each node,
 using the [`local_size`
 function](https://tidygraph.data-imaginist.com/reference/local_graph.html). More
@@ -310,7 +310,7 @@ G |>
 
 ### Node-Link Diagrams
 
-1. A node-link diagram is a visual encoding strategy for network data, where
+22. A node-link diagram is a visual encoding strategy for network data, where
 nodes are drawn as points and links between nodes are drawn as lines between
 them. The `ggraph` package gives a ggplot2-like design interface for
 graph-structured (rather than tabular) data. Like ggplot2, visualizations are
@@ -329,7 +329,7 @@ ggraph(G_school) +
     geom_node_point()
 ```
 
-1. Attributes of nodes and edges can be encoded using size (node radius or edge
+23. Attributes of nodes and edges can be encoded using size (node radius or edge
 width) or color, exactly as in ggplot2. Above, edge color encoded the survey
 year, while below both node size and node color encode degree.
 
@@ -343,13 +343,13 @@ G_school %N>%
     geom_node_point(aes(col = log_degree, size = log_degree))
 ```
 
-1. The node-link representation is especially effective for the task of
+24. The node-link representation is especially effective for the task of
 following paths. It's an intuitive visualization for examining the local
 neighborhood of one node or describing the shortest path between two nodes.
 
 **Layout algorithms**
 
-1. In node-link diagrams, spatial position is a design choice. It does not
+25. In node-link diagrams, spatial position is a design choice. It does not
 directly encode any attribute in the dataset, but layout algorithms (i.e.,
 algorithms that try to determine the spatial positions of nodes in a node-link
 diagram) try to ensure that nodes that are close to one another in the
@@ -370,7 +370,7 @@ p_fr <- ggraph(G_school, layout = "fr") +
 grid.arrange(p_kk, p_fr, ncol = 2)
 ```
 
-1. One common layout algorithm uses force-directed placement. The edges here are
+26. One common layout algorithm uses force-directed placement. The edges here are
 interpreted as physical springs, and the node positions are iteratively updated
 according to the forces induced by the springs. Here is an interactive
 force-directed layout of the same network, generated using the `networkD3`
@@ -385,14 +385,14 @@ simpleNetwork(school_edges)
 
 **Trees**
 
-1. Formally, trees are a special type of graph which have no cycles (paths
+27. Formally, trees are a special type of graph which have no cycles (paths
 starting at one node that can return without retracing any steps). Informally,
 they can be thought of as hierarchies descending from a "root" node. That extra
 structure means the layout does not have to be discovered by an iterative
 algorithm — we can simply encode each node's depth in the tree using vertical or
 radial position.
 
-1. To illustrate, we'll work with the following dataset, which shows the
+28. To illustrate, we'll work with the following dataset, which shows the
 directory structure of an open source software package called `flare`.
 
 ```{r}
@@ -400,7 +400,7 @@ G_flare <- tbl_graph(flare$vertices, flare$edges)
 G_flare
 ```
 
-1. In ggraph, this kind of visualization is constructed using the same node-link
+29. In ggraph, this kind of visualization is constructed using the same node-link
 geoms as above. We organize nodes by depth (distance from the root) by
 specifying that the layout be `tree`. Setting `circular = TRUE` wraps that same
 layout around a circle, which uses space more efficiently for deep trees.
@@ -422,7 +422,7 @@ p_tree | p_circular
 
 **Scaling**
 
-1. The key drawback of node-link diagrams is that they do not scale well to
+30. The key drawback of node-link diagrams is that they do not scale well to
 networks with a large number of nodes or with a large number of edges per node.
 The nodes and edges begin to overlap too much, and the result looks like a
 ["hairball."](https://www.visual-computing.org/2016/04/18/untangling-networks/)
@@ -434,7 +434,7 @@ The nodes and edges begin to overlap too much, and the result looks like a
 include_graphics("https://www.visual-computing.org/wp-content/uploads/Rice31-hairball2.png")
 ```
 
-1. In this situation, it is possible to use additional structure in the data to
+31. In this situation, it is possible to use additional structure in the data to
 salvage the node-link display. For example, in a large tree, a rectangular or
 BubbleTree layout can be used.
 
@@ -445,7 +445,7 @@ BubbleTree layout can be used.
 include_graphics("https://uwmadison.box.com/shared/static/r9boadgujdkp0xy3hk23n6j2ri13yh6h.png")
 ```
 
-1. If a large network has a modular structure, then it is possible to first lay
+32. If a large network has a modular structure, then it is possible to first lay
 out the separate clusters far apart from one another, before running force
 directed placement.
 
@@ -456,7 +456,7 @@ directed placement.
 include_graphics("https://uwmadison.box.com/shared/static/0zihaty78j8ytmdjwlqetbxpjzbrz8k6.png")
 ```
 
-1. When no such structure is available, it's often useful to try filtering or
+33. When no such structure is available, it's often useful to try filtering or
 aggregating nodes instead. Aggregation works by replacing the original nodes
 with metanodes representing entire clusters; filtering restricts attention to
 one node's neighborhood, as in the ego networks below, where an overview is
@@ -470,17 +470,17 @@ if the degree of filtering or aggregation can be adjusted interactively.
 include_graphics("figures/ego_compare.jpeg")
 ```
 
-1. To summarize, node-link diagrams are very good for characterizing local
+34. To summarize, node-link diagrams are very good for characterizing local
 structure, but struggle with large networks.
 
 ### Adjacency Matrices
 
-1. The adjacency matrix of an undirected graph is the matrix with a 1 in entry
+35. The adjacency matrix of an undirected graph is the matrix with a 1 in entry
 $ij$ if nodes $i$ and $j$ are linked by an edge and 0 otherwise. It has one row
 and one column for every node in the graph. Visually, these 1's and 0's can be
 encoded as black and white squares.
 
-1. The example below shows the node-link and adjacency matrix plots associated
+36. The example below shows the node-link and adjacency matrix plots associated
 with a small toy graph.
 
 ```{r}
@@ -510,7 +510,7 @@ p_toy_matrix <- ggraph(E, "matrix") +
 grid.arrange(p_toy_link, p_toy_matrix, ncol = 2)
 ```
 
-1. In a directed graph, the $ij^{th}$ entry is set to 1 if node $i$ leads
+37. In a directed graph, the $ij^{th}$ entry is set to 1 if node $i$ leads
 directly to node $j$. Unlike the undirected graph, it is not necessarily
 symmetric. The high school friendship network is a directed graph, because the
 students were surveyed about their closest friends, and this was not always
@@ -525,7 +525,7 @@ ggraph(G_school, "matrix") +
     facet_wrap(~year)
 ```
 
-1. Node properties can be encoded along the rows and columns of the matrix. Edge
+38. Node properties can be encoded along the rows and columns of the matrix. Edge
 properties can be encoded by the color or opacity of cells in the matrix. The
 example below simulates clustered data and draws the cluster label for each node
 along rows and columns.
@@ -551,7 +551,7 @@ ggraph(G_islands, "matrix") +
     coord_fixed()
 ```
 
-1. The example below takes a protein network and colors each edge according to
+39. The example below takes a protein network and colors each edge according to
 the weight of experimental evidence behind that interaction.
 
 ```{r}
@@ -573,12 +573,12 @@ ggraph(proteins, "matrix") +
     labs(edge_fill = "Edge Confidence")
 ```
 
-1. The key advantage of visualization using adjacency matrices is that they can
+40. The key advantage of visualization using adjacency matrices is that they can
 scale to large and dense networks. It's possible to perceive structure even when
 the squares are quite small, and there is no risk of edges overlapping with one
 another.
 
-1. Adjacency matrices can be as useful as node-link diagrams for the task of
+41. Adjacency matrices can be as useful as node-link diagrams for the task of
 finding group structure. The example below shows how cliques (fully connected
 subsets), bicliques (sets of nodes that are fully connected between one
 another), and clusters (densely, but not completely, connected subsets) are
@@ -591,7 +591,7 @@ clearly visible in both node-link and adjacency matrix visualizations.
 include_graphics("https://uwmadison.box.com/shared/static/s3hhjcn5nap0gsgaykfv6gbhleqpclnv.png")
 ```
 
-1. The key disadvantage of adjacency matrix visualization is that it's
+42. The key disadvantage of adjacency matrix visualization is that it's
 challenging to make sense of the local topology around a node. Finding the
 "friends of friends" of a node requires effort. For this reason, a number of
 hybrid methods which blend node-link and adjacency matrix representations have
@@ -607,12 +607,12 @@ queries on the matrix revealing the associated, local node-link diagrams.
 include_graphics("figures/adjacency.png")
 ```
 
-1. These visualizations also tend to be less intuitive for audiences that
+43. These visualizations also tend to be less intuitive for audiences that
 haven't viewed them before.
 
 **Ordering**
 
-1. Unlike a node-link diagram, an adjacency matrix requires us to associate each
+44. Unlike a node-link diagram, an adjacency matrix requires us to associate each
 node with a row and a column, so the visualization depends on the choice of
 ordering. Different orderings of rows and columns can have a dramatic effect on
 the structure that's visible^[Though this additional degree of freedom can also
@@ -634,7 +634,7 @@ ggraph(G_islands, "matrix", sort.by = sample(vcount(G_islands))) +
     coord_fixed()
 ```
 
-1. Since ordering matters this much, it is worth choosing it deliberately rather
+45. Since ordering matters this much, it is worth choosing it deliberately rather
 than accepting whatever order the data happened to arrive in. This is also
 beautifully illustrated at this [page](https://bost.ocks.org/mike/miserables/)
 (change the "order" dropdown menu), and in the screen recording below.
@@ -643,7 +643,7 @@ beautifully illustrated at this [page](https://bost.ocks.org/mike/miserables/)
 
 ### Enclosure
 
-1. If nodes can be conceptually organized into a hierarchy, then it's possible
+46. If nodes can be conceptually organized into a hierarchy, then it's possible
 to use enclosure (i.e., the containment of some visual marks within others) to
 encode those relationships. Rather than drawing an edge from parent to child, we
 draw the child *inside* the parent.
@@ -665,7 +665,7 @@ p_circlepack <- ggraph(G_flare, "circlepack", weight = size) +
 grid.arrange(p_nodelink, p_circlepack, ncol = 2)
 ```
 
-1. The most important representation of this kind is the treemap. In the
+47. The most important representation of this kind is the treemap. In the
 visualization below, each node is allocated an area, and all its children are
 drawn within that area (and so on, recursively, down to the leaves). The first
 two lines of code are the most important. The first says that we want to use a
@@ -683,7 +683,7 @@ ggraph(G_flare, "treemap", weight = size) +
     coord_fixed()
 ```
 
-1. This is a particularly useful visualization when it's important to visualize
+48. This is a particularly useful visualization when it's important to visualize
 a continuous attribute associated with each node. In the example above, the size
 of each tile was determined by the `size` variable. A large node might
 correspond to a large part of a budget or a large directory in a filesystem —
@@ -691,13 +691,13 @@ here is an example
 [visualization](https://archive.nytimes.com/www.nytimes.com/interactive/2012/02/13/us/politics/2013-budget-proposal-graphic.html)
 of Obama's 2013 budget proposal.
 
-1. The main difficulty with using enclosure is that it becomes more difficult to
+49. The main difficulty with using enclosure is that it becomes more difficult to
 trace the parent-child structure of the tree, and treemaps are not useful at all
 for topological comparisons, like the distance between two nodes. Connections
 between nodes immediately stand out in the node-link diagram, but they require
 deliberate inspection when using treemaps.
 
-1. Hierarchy most obviously occurs in trees, but it can also be present in
+50. Hierarchy most obviously occurs in trees, but it can also be present in
 networks with clustering structure at several levels. In these situations,
 containment marks can directly represent those relationships. For example, in
 the network below, the red and yellow clusters are contained in a green
@@ -711,7 +711,7 @@ this structure clear.
 include_graphics("https://uwmadison.box.com/shared/static/wy5pw79og5at35rncgn4ep2uuzawoduc.png")
 ```
 
-1. An intermediate between the node-link and the treemap approach is to use an
+51. An intermediate between the node-link and the treemap approach is to use an
 icicle plot. In this approach, the distance from the root is still encoded using
 position, like in a node-link diagram. A continuous value can be associated with
 each descendant node and encoded using the length of the associated rectangle.
@@ -727,7 +727,7 @@ ggraph(G_flare, "partition", weight = size) +
 
 ### Edge Bundling
 
-1. Return to the problem of edge crossings. When many edges travel through a few
+52. Return to the problem of edge crossings. When many edges travel through a few
 shared paths, it may be worthwhile to bundle them together, in the same way that
 cables running along the same route in a server rack are tied together. This
 preserves the key connectivity structure while minimizing the overlap that comes
@@ -740,7 +740,7 @@ with more naive visualizations.
 include_graphics("figures/bundle_compare.png")
 ```
 
-1. Bundled connections can be visualized using the `geom_conn_bundle` geometry
+53. Bundled connections can be visualized using the `geom_conn_bundle` geometry
 in ggraph. Before using this layout, it is necessary to have a hierarchy over
 all the nodes, since shared ancestry among connected nodes is how the proximity
 of paths is determined. This is why edge bundling comes last in these notes — it

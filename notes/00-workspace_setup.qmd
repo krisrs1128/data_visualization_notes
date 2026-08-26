@@ -35,47 +35,47 @@ By the end, you should be able to
 
 1. What does a code notebook look like.
 
-1. How is it run.
+2. How is it run.
 
-1. What types of languages it can run
+3. What types of languages it can run
 
     - how to create an R cell
     - how to create a javascript cell
     - how to create a python cell
 
-1. Why is it useful: rerunning easily
+4. Why is it useful: rerunning easily
 
-1. Quarto notebooks make it possible to combine visualization code with
+5. Quarto notebooks make it possible to combine visualization code with
 commentary within the same plain text file. This is very helpful whenever the
 source data might potentially change (either because new data are generated over
 time or because mistakes are found and fixed). If the code in our notebook...
 
-1. Why it is useful: compiles into several types of output, including HTML for the web
+6. Why it is useful: compiles into several types of output, including HTML for the web
 
-1. Making the notebooks clean
+7. Making the notebooks clean
 
-1. Making the notebook self-contained
+8. Making the notebook self-contained
 
 ## Agentic Coding
 
-1. what is a coding agent, how is it different from using online resource
+9. what is a coding agent, how is it different from using online resource
 
-1. why it's still important to learn: context
+10. why it's still important to learn: context
 
-1. why it's still important to learn: judgment
+11. why it's still important to learn: judgment
 
 ## Submissions
 
-1. quarto render
+12. quarto render
 
-1. embedding resources
+13. embedding resources
 
-1. sharing a server
+14. sharing a server
 
-1. how to do this for the homework
+15. how to do this for the homework
 
 ## Codespaces
 
-1. for testing things out in the meantime
+16. for testing things out in the meantime
 
-1. will eventually want to develop yourself
+17. will eventually want to develop yourself

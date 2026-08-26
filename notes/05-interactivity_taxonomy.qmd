@@ -38,7 +38,7 @@ manipulation. Important actions associated with view specification are,
    - **Coordinate** interactions across related panels.
    - **Organize** views into an easier to understand layout.
 
-1. **Selection** operations are used to direct our attention to subsets of
+2. **Selection** operations are used to direct our attention to subsets of
 particular interest. While we could use a search bar or dropdown widget for this
 purpose, these require a priori knowledge of groups of interest. To highlight
 items based on plot itself, we can instead use click or hover events. These
@@ -59,21 +59,21 @@ Instead of brushes, for some data it makes more sense to define lassos
 
 {{<video figures/lasso-selection-2.mp4>}}
 
-1. Rather than querying the samples directly, we can query properties of the
+3. Rather than querying the samples directly, we can query properties of the
 samples. For example, this version of
 [TimeSearcher](https://www.youtube.com/watch?v=VWx1TMcrb74) lets us we can
 search for all lines with slopes within a certain range.
 
    ![](figures/timesearcher_slope.png)
 
-1. In complex data, we often **navigate** to a particular view of interest. Some
+4. In complex data, we often **navigate** to a particular view of interest. Some
 visualizations act like small viewports into a larger display, in which case
 navigation might mean panning and zooming the viewport to the region of
 interest.
 
    ![](map example)
 
-1. Beyond literal navigation across visualization space, it is often helpful to
+5. Beyond literal navigation across visualization space, it is often helpful to
 navigate across resolutions.  Focus-plus-context visualizations include a
 graphical overview that, when queried, reveals extra details (the focus) without
 losing the context. Some examples,
@@ -84,7 +84,7 @@ losing the context. Some examples,
    This principle is summarized by Shneiderman's Mantra: Overview first, zoom
    and filter, then details-on-demand.
 
-1. Focus-plus-context only makes sense when an overview is useful. A laywer
+6. Focus-plus-context only makes sense when an overview is useful. A laywer
 interested in a particular case doesn't need an overview of all cases ever
 litigated, instead they need to navigate to cases similar to the one they are
 working on. In this case, an alternative to Shneiderman's mantra is "Search,
@@ -92,7 +92,7 @@ Show Context, Expand on Demand"
 
    ![](figures/search_and_expand.png)
 
-1. Interactivity can also be used to **coordinate** views. This is especially
+7. Interactivity can also be used to **coordinate** views. This is especially
 helpful when working with small multiples and multipanel layouts. Dynamic
 linking is a visualization technique where interacting with one view updates
 others. For example, selecting a sample (or group of samples) in one view
@@ -109,13 +109,13 @@ highlights or filters the corresponding samples in the other views.
 
    {{<video figures/crossfilter_flights.mov>}}
 
-1. Finally, interactivity can be used to **organize** displays. We're so used to
+8. Finally, interactivity can be used to **organize** displays. We're so used to
 working with multiple windows open at a time that it's easy to forget that this
 is indeed a form of interactivity. We have to deliberately tell our
 visualization to adjust $x$ and $y$ axis scales so that when the window is
 resized, the plot remains visible.
 
-1. Altogether this taxonomy shows that interactivity entails many design choices
+9. Altogether this taxonomy shows that interactivity entails many design choices
 into visualization, more than we already had with deciding on graphical
 encodings in static visualizations. Which features or samples should be
 queryable, and how (widget vs. graphical, click vs. brush, ...)?  Earlier we saw
@@ -125,12 +125,12 @@ prioritize some queries over others. As designers, it's our responsibility to
 know which queries our users will be most likely to care about and create
 visualizations that help them resolve them accurately and easily.
 
-1. How should we search across the (vast) space of possible visualization
+10. How should we search across the (vast) space of possible visualization
 designs? From a review of design studies, Tamara Munzner recommends ....
 
 ## Implementation Patterns
 
-1. Mosaic can also be used for view manipulation through
+11. Mosaic can also be used for view manipulation through
 [interactors](https://idl.uw.edu/mosaic/api/vgplot/interactors.html). These take
 `Selection` objects whose values will be modified through the plot interactions.
 These interactors are usually paired with `vg.highlight`, so that once the
@@ -152,7 +152,7 @@ vg.plot(...
 )
 ```
 
-1. A similar options works for hover events. In the sketch below, we update the
+12. A similar options works for hover events. In the sketch below, we update the
 `$curr` selection based on the $x$-value of the user's mouse position. The
 `vg.highlight` element then monitors changes in the selection and makes all
 points outside the selection more transparent.
@@ -167,7 +167,7 @@ vg.plot(...
 )
 ```
 
-1. For view coordination, we can use a selection to filter the data shown in
+13. For view coordination, we can use a selection to filter the data shown in
 panels besides the one that's being interacted with. This is done by modifying
 the input data argument, using a `vg.from` call. For example, for a brush
 defined in the first panel to change the data that appears in panel 2, we can
@@ -192,7 +192,7 @@ vg.plot(...
 
 ## Implementation Example
 
-1. Let's use these patterns to build a richer example, one step at a time. Our
+14. Let's use these patterns to build a richer example, one step at a time. Our
 target is the [Seattle weather
 interactive](https://idl.uw.edu/mosaic/examples/weather.html) from the Mosaic
 gallery, shown below. It implements several types of view manipulation,
@@ -253,7 +253,7 @@ vg.vconcat(
 );
 ```
 
-1. Before we construct this plot, let's create the coordinator. We refer to a
+15. Before we construct this plot, let's create the coordinator. We refer to a
 version of the dataset saved in the `parquet` file linked below (you can also
 browse it
 [here](https://raw.githubusercontent.com/uwdata/mosaic/main/data/seattle-weather.parquet)).
@@ -278,7 +278,7 @@ $domain = vg.Param.array(["sun", "fog", "drizzle", "rain", "snow"])
 $colors = vg.Param.array(["#e7ba52", "#a7a7a7", "#aec7e8", "#1f77b4", "#9467bd"])
 ```
 
-1. Before adding interactivity, let's create a static version. This forces us to
+16. Before adding interactivity, let's create a static version. This forces us to
 define the basic graphical marks (like dots) and the associated encodings (e.g.,
 date $\to$ $x$ position, temperature $\to$ $y$ position). We combine the panels
 into a stacked layout using `vconcat`.
@@ -311,7 +311,7 @@ vg.vconcat(
 );
 ```
 
-1. We now add a brushing **selection** to the scatterplot, without attempting to
+17. We now add a brushing **selection** to the scatterplot, without attempting to
 coordinate the views. This is the `intervalX` brushing approach described above.
 Whenever the brush is moved, it triggers a change to `vg.highlight`, which greys
 out all the points that don't fall into the `range_v1`
@@ -366,7 +366,7 @@ vg.vconcat(
 );
 ```
 
-1. Next let's **coordinate** the two plots, so that the barplot reflects the
+18. Next let's **coordinate** the two plots, so that the barplot reflects the
 brushed date range. We can think of this like the conditional distribution of
 weather types given the selected date range. We use the same `vg.from()` pattern
 from the previous section, where we set `filterBy` to the range `Selection`
@@ -443,7 +443,7 @@ vg.vconcat(
 );
 ```
 
-1. Finally, let's support **selection** through clicks on the barplot and the
+19. Finally, let's support **selection** through clicks on the barplot and the
 legend. We define a new `click_v3` selection object. Notice here we're using
 `vg.Selection.single()` rather than `vg.selection.intersect()`, because we only
 want to filter by one bar at a time (the new bar replaces the previous bar's
@@ -510,7 +510,7 @@ coordinated responses at once. Since filtering by weather type removes
 categories with small dot sizes, we also fix the radius scale with
 `vg.rDomain(vg.Fixed)`.
 
-1. This matches the interactive figure at the top of the section — the only
+20. This matches the interactive figure at the top of the section — the only
 remaining differences in the published gallery version are cosmetic
 (`fillOpacity`, month tick formatting, dot size ranges, and figure dimensions).
 Stepping back, the finished example is a small web of dependencies: two
@@ -520,25 +520,25 @@ behind everything. The next section introduces a way of drawing this structure
 
 ## Reactivity
 
-1. The example above looked simple when we only looked at the plot, but the
+21. The example above looked simple when we only looked at the plot, but the
 actual implementation is quite complex. There are two reactive inputs and five
 parts of the plot read from them. To organize our thinking about the
 dependencies between plot components, it helps to draw a reactive graph.
 
-1. Before giving a more abstract definition, let's see how it works in our
+22. Before giving a more abstract definition, let's see how it works in our
 example above.
 
-1. This view immediately suggests some alternatives,
+23. This view immediately suggests some alternatives,
 
    - Instead of filtering the scatterplot, we could have highlighted points in
    or out of the bars.
    - Instead of selecting one bar at a time, we could have selected multiple at once.
 
-1. More abstractly, a reactive graph summarizes how user inputs propagate
+24. More abstractly, a reactive graph summarizes how user inputs propagate
 through the visualization. Nodes mean {} and edges are drawn between two nodes
 whenever {}.
 
-1. Here's toy example that illustrates why thinking of the reactive graph is
+25. Here's toy example that illustrates why thinking of the reactive graph is
 helpful. Consider the app below, which simulates two gaussians and reports a
 $t$-statistic for the difference in means. Suppose we begin with this implementation,
 
@@ -573,13 +573,13 @@ server <- function(input, output) {
 app <- shinyApp(ui, server)
 ```
 
-1. When we draw the reactive graph for this visualization, we can see a problem:
+26. When we draw the reactive graph for this visualization, we can see a problem:
 the code reruns `rnorm` for each output. So, even though the interfaces suggests
 that the printed samples are the same as the ones in the histogram, they are
 actually different. To resolve this, we need a way of storing an intermediate
 computation which (1) depends on the inputs but (2) feeds into several outputs.
 
-1. Therefore, we update the graph to trim away the redundant edges.
+27. Therefore, we update the graph to trim away the redundant edges.
 
 (prepare the mosaic analog of this)
 
@@ -613,7 +613,7 @@ server <- function(input, output) {
 app <- shinyApp(ui, server)
 ```
 
-1. Whenever building an interactive visualization, I find it helpful to work
+28. Whenever building an interactive visualization, I find it helpful to work
 through these steps,
 
    - Implement a static version of the plot.

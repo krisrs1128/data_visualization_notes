@@ -253,19 +253,19 @@ few notes explore alternatives for this and other situations.
 
 ## Distribution Visualization
 
-1. In the last notes, we recommended frequency framing plots as a default
+12. In the last notes, we recommended frequency framing plots as a default
 approach for visualizing uncertainty. If you have ever skimmed through
 scientific publications, though, you might have been surprised by this choice —
 in technical literature, the overwhelming majority of uncertainty visualizations
 are based on error bars.
 
-2. In many of these publications, frequency framing would likely be prefereable,
+13. In many of these publications, frequency framing would likely be prefereable,
 because they give a richer view of the distribution of possible outcomes.
 However, there are two scenarios where error bars are hard to beat: when we need
 to compactly represent uncertainty for many units and when we want to combine
 them with other plots.
 
-3. Since error bars take up so little space, they can be included in highly
+14. Since error bars take up so little space, they can be included in highly
 information dense views. For example, the intervals cover 66, 90, and 95% of the
 central area for each of 10 normal distributions.
 
@@ -278,7 +278,7 @@ ggplot(estimate) +
     labs(title = "95% Confidence Intervals (Randomly Generated)")
 ```
 
-4. Since they are so compact, it is relatively easy to incorporate error bars
+15. Since they are so compact, it is relatively easy to incorporate error bars
 into other visualizations. For example, we can replace points in a scatterplot
 with crosses that summarize uncertainty in each dimension.
 
@@ -298,7 +298,7 @@ ggplot(points, aes(x, y)) +
     labs(title = "95% Error Bars")
 ```
 
-5. One difficulty with error bars is that their interpretations are not
+16. One difficulty with error bars is that their interpretations are not
 self-evident from their appearance — they need to be included in the title or
 caption to the figure. For example, 90 and 99% confidence intervals have
 different meanings, and this needs to be explained clearly.
@@ -317,7 +317,7 @@ ggplot(level_compare) +
     labs(x = "CI for Mean", y = "Significance Level")
 ```
 
-6. A variation on error bars that pack a little more information in nearly as
+17. A variation on error bars that pack a little more information in nearly as
 little space is the graded error bar. This is a type of error bar where
 different levels of thickness are matched with different interpretations. In the
 example below, we are simultaneously showing 90, 95, and 99% confidence
@@ -330,7 +330,7 @@ ggplot(estimate) +
     labs(title = "Graded CIs (66 and 95%)")
 ```
 
-7. These graded error bars can be combined with distribution plots to create eye
+18. These graded error bars can be combined with distribution plots to create eye
 or half-eye plots. This approach benefits from the advantages of both the
 distribution and graded error approaches. From the distribution component, we
 can see the full distribution of uncertainty, not simply summaries. Using the
@@ -350,7 +350,7 @@ p2 <- ggplot(estimate) +
 p1 + p2
 ```
 
-8. A related approach is to fill in subsets of a distribution plot according to
+19. A related approach is to fill in subsets of a distribution plot according to
 more interpretable cutoffs.
 
 ```{r, fig.width = 8, fig.height = 8}
@@ -360,7 +360,7 @@ ggplot(estimate) +
     scale_fill_brewer(na.value = "#f7f7f7")
 ```
 
-9. Two other encodings are worth knowing, but are harder to fit into the rest of
+20. Two other encodings are worth knowing, but are harder to fit into the rest of
 this discussion. In interval plots, the fill opacity is used to encode
 probability. It is harder to evaluate the exact probability values, but it is a
 very compact representation.
@@ -384,7 +384,7 @@ p2 <- ggplot(estimate) +
 p1 + p2
 ```
 
-10. A second encoding is the complementary cumulative distribution (CCDF) plot.
+21. A second encoding is the complementary cumulative distribution (CCDF) plot.
 It represents the probability that the data will lie above a particular value.
 Some studies have found that nontechnical audiences often have better inferences
 when they are presented distributional uncertainty via CCDFs.
@@ -400,7 +400,7 @@ ggplot(estimate) +
     scale_x_continuous(expand = c(0, 0))
 ```
 
-11. All the examples we've worked with in these notes have used the means and
+22. All the examples we've worked with in these notes have used the means and
 standard deviations from hypothetical normal distributions. However, they can
 all be created using the data itself. For example, here are `point_interval` and
 `slab_eye` intervals for a dataset `random_draws` where we draw 100 samples from
@@ -426,13 +426,13 @@ p1 + p2
 
 ## Hypothetical Outcomes
 
-1. From our previous discussions, we now have a rich set of techniques for
+23. From our previous discussions, we now have a rich set of techniques for
 representing uncertainty for either discrete or continuous random values. But
 often, we hope to support inferences for more complex objects, like curves,
 compositions, or networks. How can we visualize uncertainty in these more richly
 structured objects?
 
-2. For example, in linear regression, it’s possible to visualize the uncertainty
+24. For example, in linear regression, it’s possible to visualize the uncertainty
 associated with the fit using a confidence band. The guarantee is that, across
 many random samples from the same population, the line will usually fall
 entirely within the band.
@@ -450,7 +450,7 @@ ggplot(intervals) +
     scale_x_continuous(expand = c(0, 0))
 ```
 
-3. Have you ever wondered why the band is shaped in the way that it is? The
+25. Have you ever wondered why the band is shaped in the way that it is? The
 curvature comes from the fact that there is uncertainty in both the intercept
 and the slope for the fitted line. This is easy to understand by overlaying the
 regression lines obtained from several versions of the same dataset. Formally,
@@ -479,7 +479,7 @@ bootstrap_curves(Magnitude ~ E9, supernova, supernova |> select(E9)) |>
     scale_x_continuous(expand = c(0, 0))
 ```
 
-4. We can generalize this idea to nonlinear fits. For example, below, we are
+26. We can generalize this idea to nonlinear fits. For example, below, we are
 using multiple draws to represent the uncertainty of a smoothing spline
 regression between supernova Magnitude and another oen of the predictor
 variables. One nice aspect of showing multiple realizations is that it shows
@@ -501,7 +501,7 @@ ggplot(outcomes, aes(E3, Magnitude)) +
     scale_x_continuous(expand = c(0, 0))
 ```
 
-5. When we show multiple outcomes overlaid like this, our attention tends to
+27. When we show multiple outcomes overlaid like this, our attention tends to
 focus on the area taken up by the multiple lines. In a true hypothetical outcome
 plot, we animate each outcome one at a time. This draws attention to the
 line-to-line uncertainty, rather than the area taken up by the ensemble. We can
@@ -526,7 +526,7 @@ anim_save("gam_hypo.gif", p, renderer = gifski_renderer())
 
 <img src="https://krisrs1128.github.io/stat679_code/examples/week13/gam_hypo.gif" width=500/>
 
-6. Alternatively, we can animate individual events while displaying the full
+28. Alternatively, we can animate individual events while displaying the full
 distribution in the background.
 
 ```{r}
@@ -550,7 +550,7 @@ anim_save("gam_hypo2.gif", p, renderer = gifski_renderer())
 
 <img src="https://krisrs1128.github.io/stat679_code/examples/week13/gam_hypo2.gif" width=500/>
 
-7. A somewhat less standard, but more interactive, approach would be to use
+29. A somewhat less standard, but more interactive, approach would be to use
 dynamic linking. Each point in the scatterplot below is one hypothetical
 outcome, positioned by a PCA of the 150 bootstrapped curves. Brushing over
 points highlights the corresponding fits in the panel on the right.
@@ -628,7 +628,7 @@ vg.hconcat(
 )
 ```
 
-8. One aspect of hypothetical outcomes is that they represent uncertainty in the
+30. One aspect of hypothetical outcomes is that they represent uncertainty in the
 data space, not the parameter space. For example, in the regression above, we
 could have simply drawn error bars for the intercept and slope parameters of the
 fit. This would be a representation of uncertainty in the parameter space. The
@@ -636,11 +636,11 @@ data space representation, however, is much more evocative, and preliminary
 experimental evidence suggests that this leads to better inferences in practical
 applications.
 
-9. Though we have focused on hypothetical outcomes for relative simple settings,
+31. Though we have focused on hypothetical outcomes for relative simple settings,
 the idea is applicable quite generally. For example, there has been research on
 visualizing hypothetical outcomes on spatial and network data ([NetHOPS](https://arxiv.org/abs/2108.09870) and
 [_Visualizing geospatial information uncertainty_](http://www.tandfonline.com/doi/abs/10.1559/1523040054738936)).
 
-10. A final observation: hypothetical outcome plots can natural build up to
+32. A final observation: hypothetical outcome plots can natural build up to
 distributional visualizations. By layering the outcomes on top of one another,
 we can see the distribution emerge over time.

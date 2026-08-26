@@ -2387,14 +2387,14 @@ window.Quarto = {
 </section>
 <section id="partial-dependence-profiles" class="level2">
 <h2 class="anchored" data-anchor-id="partial-dependence-profiles">Partial Dependence Profiles</h2>
-<ol type="1">
+<ol start="3" type="1">
 <li>Let <span class="math inline">\(f\)</span> be the learned black box function. Let <span class="math inline">\(x\)</span> be its <span class="math inline">\(D\)</span>-dimensional input. The idea is to ask how <span class="math inline">\(f\)</span> changes as we vary the <span class="math inline">\(d\)</span>th coordinate over its range. We need to do something with the remaining coordinates; the idea of PDP is to average across them.</li>
 </ol>
 <p><span class="math display">\[
 \text{PDP}_d(z) = \mathbb{E}_{p(x_{-d})}\left[f(x_d = z, x_{-d})\right] \approx \frac{1}{N}\sum_{n=1}^N f(x_d = z, x_{n, -d})
 \]</span></p>
 <p>The highlighted part refers to manually intervening on the <span class="math inline">\(d\)</span>th coordinate and setting it to <span class="math inline">\(z\)</span>. If we evaluate this average across many different values of <span class="math inline">\(z\)</span>, we get a PDP curve. Note that for each value <span class="math inline">\(z\)</span>, we compute an average across the entire dataset – this can get slow.</p>
-<ol start="2" type="1">
+<ol start="4" type="1">
 <li><p>This definition generalizes to larger-dimensional subsets of variables, but we’ll stick to one-dimensional curves for simplicity.</p></li>
 <li><p>Here is some geometric intuition. We take the original samples, manually set all their <span class="math inline">\(d\)</span>th coordinates to <span class="math inline">\(z\)</span>, evaluate the function <span class="math inline">\(f\)</span>, and then average. We repeat this for many <span class="math inline">\(z\)</span>’s to trace out the partial dependence curve.</p></li>
 </ol>
@@ -2407,14 +2407,14 @@ window.Quarto = {
 </section>
 <section id="individual-conditional-expectations" class="level2">
 <h2 class="anchored" data-anchor-id="individual-conditional-expectations">Individual Conditional Expectations</h2>
-<ol type="1">
+<ol start="6" type="1">
 <li>ICE plots consider each term in the PDP formula as its own function of <span class="math inline">\(z\)</span>.</li>
 </ol>
 <p><span class="math display">\[
 h_n(z) := f(x_d = z, x_{n, -d})
 \]</span></p>
 <p>This has the nice “Ceteris Paribus” interpretation. For each sample, it traces out the curve where the <span class="math inline">\(d\)</span>th coordinate is set to different values <span class="math inline">\(z\)</span> but all other coordinates are held fixed.</p>
-<ol start="2" type="1">
+<ol start="7" type="1">
 <li>The key insight is that these curves can be meaningful on their own. The averaging step in PDP can mask some meaningful variation in model predictions. This is especially useful for discovering interactions. For example, here are ICE curves for a model trained to predict survival with the Titanic dataset. The age effect is very different for crew vs. passengers.</li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
@@ -2423,7 +2423,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <figcaption>ICE (“Ceteris Paribus”) curves for a survival model fit to the Titanic dataset, colored by passenger/crew class.</figcaption>
 </figure>
 </div>
-<ol start="3" type="1">
+<ol start="8" type="1">
 <li>Two common tricks for ICE plots:</li>
 </ol>
 <ul>
@@ -2450,7 +2450,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </section>
 <section id="effects-and-partial-residual-plots" class="level2">
 <h2 class="anchored" data-anchor-id="effects-and-partial-residual-plots">Effects and Partial Residual Plots</h2>
-<ol type="1">
+<ol start="9" type="1">
 <li><p>Fox and Weisberg (2018) focus on visualizing effects just in the case of linear regression models. Even here, it pays to be careful when thinking about the role of interactions.</p></li>
 <li><p>Suppose we are interested in the <span class="math inline">\(d\)</span>th predictor in a linear regression model. They partition the predictors into <span class="math inline">\((z, v, u)\)</span>:</p></li>
 </ol>
@@ -2459,7 +2459,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <li><span class="math inline">\(v\)</span> - the predictors that interact with <span class="math inline">\(z\)</span>.</li>
 <li><span class="math inline">\(u\)</span> - other unrelated predictors.</li>
 </ul>
-<ol start="3" type="1">
+<ol start="11" type="1">
 <li>They recommend identifying a grid of values across <span class="math inline">\(v\)</span> and then tracing the function of <span class="math inline">\(z\)</span> with <span class="math inline">\(v\)</span> fixed to each of those grid points.</li>
 </ol>
 <p><span class="math display">\[
@@ -2472,7 +2472,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <figcaption>The ppgdp predictor effect plot: fitted infant mortality vs. per-capita GDP, traced separately for each of a grid of country groups (oecd/other/africa).</figcaption>
 </figure>
 </div>
-<ol start="4" type="1">
+<ol start="12" type="1">
 <li>They also suggest overlying the residuals on these effects plots.</li>
 </ol>
 <p><span class="math display">\[
@@ -2489,7 +2489,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </section>
 <section id="probabilistic-models" class="level2">
 <h2 class="anchored" data-anchor-id="probabilistic-models">Probabilistic Models</h2>
-<ol type="1">
+<ol start="13" type="1">
 <li><p>So far, we’ve been focusing on visualizign black box models. In many settings, we might instead want to fit probabilistic models directly informed by our conceptual understanding. Visualization fits nicely into this workflow as well, and can help in building up more realistic, but still interpretable, models.</p></li>
 <li><p>Exploratory data analysis and model building work synergistically. In real-world applications, visualization guides selection toward more reasonable models.</p></li>
 <li><p>Models’ exact forms are typically unknown initially, though several plausible candidates usually exist. Exploratory work eliminates some options while revealing unexpected connections.</p></li>
@@ -2505,7 +2505,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">log_sat =</span> <span class="fu">log</span>(sat_2014)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="4" type="1">
+<ol start="17" type="1">
 <li>The baseline model uses the equation <span class="math inline">\(\text{station} = a + b \times
 \text{satellite}\)</span> at co-located measurement points. The Global Burden of Disease project employed this approach through 2016.</li>
 </ol>
@@ -2523,14 +2523,14 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </div>
 </div>
 </div>
-<ol start="5" type="1">
+<ol start="18" type="1">
 <li>Plotting reveals substantial heterogeneity and large residuals. The key question: What factors correlate with residuals that could enhance model performance?</li>
 </ol>
 <ul>
 <li>Error terms <span class="math inline">\(\epsilon_i\)</span> in equations <span class="math inline">\(y_i = f(x_i) + \epsilon_i\)</span> represent unmeasured factors determining <span class="math inline">\(x\)</span>-<span class="math inline">\(y\)</span> relationships.</li>
 <li>Desert sand increases PM2.5 but remains invisible to satellites; residuals likely correlate with desert locations (PM2.5 underpredicted), suggesting inclusion of geographic features improves fit.</li>
 </ul>
-<ol start="6" type="1">
+<ol start="19" type="1">
 <li>One hypothesis: country region significance. Fitting separate regression lines per WHO super-region reveals slope variation, suggesting models should incorporate region-specific slopes.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
 </ol>
 <div class="cell">
@@ -2548,7 +2548,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </div>
 </div>
 </div>
-<ol start="7" type="1">
+<ol start="20" type="1">
 <li>WHO categorizations are somewhat arbitrary. An alternative approach is to cluster ground stations by PM2.5 level to create problem-specific regional groupings.</li>
 </ol>
 <div class="cell">
@@ -2575,19 +2575,19 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </div>
 </div>
 </div>
-<ol start="8" type="1">
+<ol start="21" type="1">
 <li>A model network emerges; refined comparison tools become necessary. This sets up the subject of our next notes: prior and posterior predictive checks.</li>
 </ol>
 </section>
 <section id="prior-and-posterior-predictives" class="level2">
 <h2 class="anchored" data-anchor-id="prior-and-posterior-predictives">Prior and Posterior Predictives</h2>
-<ol type="1">
+<ol start="22" type="1">
 <li>How should we go about choosing between the plausible models developed from exploratory analysis? An alternative which often brings more insight into the structure of the problem than raw test-set error is to use prior and posterior predictive distributions for (visual) model comparison.</li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="2" type="1">
+<ol start="23" type="1">
 <li><p>The prior predictive distribution helps decide whether certain model families are reasonable candidates for a problem, before formally incorporating the evidence coming from the data. The mechanism is: (a) sample parameters from the prior, and (b) simulate data from the model with those parameters.</p></li>
 <li><p>Vague priors can produce implausible simulated datasets, despite being “more objective” in some sense.</p></li>
 </ol>
@@ -2625,7 +2625,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </div>
 </div>
 <p>Prior predictive samples from this vague prior are on a completely implausible scale.</p>
-<ol start="4" type="1">
+<ol start="25" type="1">
 <li>Subjective, informative priors instead produce more plausible samples, lying in a comparable range to the true data. Note, however, that samples from the prior predictive do not need to look exactly like the observed data – if they did, there would be no need to fit model parameters!</li>
 </ol>
 <div class="cell">
@@ -2661,7 +2661,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </div>
 </div>
 </div>
-<ol start="5" type="1">
+<ol start="26" type="1">
 <li><p>Philosophically, this prior predictive analysis is based on the idea that, though probability is subjective, evidence can be used to update our beliefs. The idea of the prior predictive is to visually encode subjective beliefs about the problem under study before gathering new evidence.</p></li>
 <li><p>After calibrating the prior predictive, models are fit. The posterior predictive is like the prior predictive, except that it samples model parameters from the data-informed posterior, rather than the data-ignorant prior: it represents the distribution of new datasets when drawing parameters from the posterior. The simulation mechanism is (a) draw model parameters from the posterior and (b) simulate a dataset using parameters from (a).</p></li>
 </ol>
@@ -2693,8 +2693,8 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <pre><code>
 SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 0.000106 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.06 seconds.
+Chain 1: Gradient evaluation took 8.8e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.88 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -2711,15 +2711,15 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 1.397 seconds (Warm-up)
-Chain 1:                1.654 seconds (Sampling)
-Chain 1:                3.051 seconds (Total)
+Chain 1:  Elapsed Time: 1.567 seconds (Warm-up)
+Chain 1:                1.705 seconds (Sampling)
+Chain 1:                3.272 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 0.000176 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.76 seconds.
+Chain 1: Gradient evaluation took 0.000203 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.03 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -2736,15 +2736,15 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 103.305 seconds (Warm-up)
-Chain 1:                170.536 seconds (Sampling)
-Chain 1:                273.841 seconds (Total)
+Chain 1:  Elapsed Time: 102.466 seconds (Warm-up)
+Chain 1:                170.538 seconds (Sampling)
+Chain 1:                273.004 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 0.000327 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.27 seconds.
+Chain 1: Gradient evaluation took 0.000378 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.78 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -2761,9 +2761,9 @@ Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 170.384 seconds (Warm-up)
-Chain 1:                185.297 seconds (Sampling)
-Chain 1:                355.681 seconds (Total)
+Chain 1:  Elapsed Time: 172.498 seconds (Warm-up)
+Chain 1:                183.526 seconds (Sampling)
+Chain 1:                356.024 seconds (Total)
 Chain 1: </code></pre>
 </div>
 </div>
@@ -2790,7 +2790,7 @@ Chain 1: </code></pre>
 </div>
 </div>
 <p>Compared to the prior predictive, the posterior predictive is much more closely related to the true underlying dataset.</p>
-<ol start="7" type="1">
+<ol start="28" type="1">
 <li>One subtlety is that there is a danger of overfitting features in the posterior predictive. It is best to choose features of the data that are not directly modeled (e.g., if you use slope in the model estimation, then don’t evaluate the posterior predictive using the slope, since by definition this will be well-captured).</li>
 </ol>
 <div class="cell">

@@ -26971,7 +26971,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="26" type="1">
+<ol start="25" type="1">
 <li>Just like we could lengthen a table using <code>pivot_longer()</code>, we can widen it using <code>pivot_wider()</code>.</li>
 </ol>
 <div class="cell">
@@ -27012,7 +27012,7 @@ window.Quarto = {
 </section>
 <section id="deriving-variables" class="level3">
 <h3 class="anchored" data-anchor-id="deriving-variables">Deriving Variables</h3>
-<ol start="27" type="1">
+<ol start="26" type="1">
 <li>In R, we can use the mutate command to derive new variables. For example, this derives rate as the relative number of cases within a populations.</li>
 </ol>
 <div class="cell">
@@ -27114,7 +27114,7 @@ window.Quarto = {
 </section>
 <section id="scaling-to-large-datasets" class="level3">
 <h3 class="anchored" data-anchor-id="scaling-to-large-datasets">Scaling to Large Datasets</h3>
-<ol start="30" type="1">
+<ol start="27" type="1">
 <li><p>Sometimes, it’s interesting to visualize very large datasets. Of course, there’s only so many pixels on any given screen, So we typically need to filter to reasonable subsets or perform some aggregation before graphical encoding. This is a setting where using a database becomes very helpful.</p></li>
 <li><p>To illustrate, below we’ve created a database using the NYC taxi data. This has a million rows, each representing the starting and end points of a taxi trip in New York City , so visualizing every trip directly would be too overwhelming. But we can easily filter and aggregate to get some interesting findings.</p></li>
 <li><p>As a first step let’s add a new table (which we call <code>taxi</code>) to our existing database by reading in the <code>trips.parquet</code> file. This uses the same coordinator we set up earlier, which is why we don’t need all the extra boilerplate code about creating the database.</p></li>
@@ -27130,7 +27130,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="33" type="1">
+<ol start="30" type="1">
 <li>Now we can look at the first ten rows without having to read in the entire dataset.</li>
 </ol>
 <div class="cell">
@@ -27204,7 +27204,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="34" type="1">
+<ol start="31" type="1">
 <li>To summarize, these are the main functions that we need to know for tidying data. Usually we’ll be working with the R column, but it’s good to know about the equivalent versions in SQL.</li>
 </ol>
 <table class="caption-top table">
@@ -27259,6 +27259,18 @@ window.Quarto = {
 </tbody>
 </table>
 </section>
+</section>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<p>By the end of this week, you should be able to,</p>
+<ul>
+<li>Determine whether a data set is tidy, and if it isn’t, describe how it would need to be reshaped to make it so.</li>
+<li>Compare and contrast deriving vs. aggregation operations in general, and the <code>mutate</code> and <code>group_by</code> + <code>summarize</code> patterns for defining new data variables in particular.</li>
+<li>Given a raw data set and a downstream test that requires it to be transformed, outline the R tidying code necessary to transform the dataset to answer the question of interest.</li>
+<li>Given a pair of data sets before and after a sequence of transformations, sketch the code necessary to implement the transformation.</li>
+<li>Given code that applies the data tidying functions <code>pivot_longer</code>, <code>pivot_wider</code>, <code>mutate</code>, <code>group_by</code>, and <code>summarize</code>, explain what each step in the code does and how it transforms inputs to outputs.</li>
+<li>Given a CSV file, be able to load it directly into an R data.frame or a mosaic database, and compare and contrast the memory requirements of each approach on large-scale data.</li>
+</ul>
 </section>
 
 </main>

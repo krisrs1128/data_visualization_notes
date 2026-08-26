@@ -2419,7 +2419,7 @@ window.Quarto = {
 <p><a href="https://juliasilge.com/blog/cocktail-recipes-umap/">Reading</a></p>
 <section id="definition" class="level3">
 <h3 class="anchored" data-anchor-id="definition">Definition</h3>
-<ol type="1">
+<ol start="7" type="1">
 <li><p>In the previous section, we saw how we could organize a collection of images based on average pixel brightness. We can think of average pixel brightness as a derived feature that can be used to build a low-dimensional map.</p></li>
 <li><p>We can partially automate the process of deriving new features. Though, in general, finding the best way to combine raw features into derived ones is a complicated problem, we can simplify things by restricting attention to,</p></li>
 </ol>
@@ -2428,7 +2428,7 @@ window.Quarto = {
 <li>Features that are orthogonal to one another.</li>
 <li>Features that have high variance.</li>
 </ul>
-<ol start="3" type="1">
+<ol start="9" type="1">
 <li><p>Restricting to <em>linear combinations</em> allows for an analytical solution. We will relax this requirement when discussing UMAP.</p></li>
 <li><p><em>Orthogonality</em> means that the derived features will be uncorrelated with one another. This is a nice property, because it would be wasteful if features were redundant.</p></li>
 <li><p><em>High variance</em> is desirable because it means we preserve more of the essential structure of the underlying data. For example, if you look at this 2D representation of a 3D object, it’s hard to tell what it is,</p></li>
@@ -2454,7 +2454,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="6" type="1">
+<ol start="12" type="1">
 <li><p>Principal Components Analysis (PCA) is the optimal dimensionality reduction under these three restrictions, in the sense that it finds derived features with the highest variance. Formally, PCA finds a matrix <span class="math inline">\(\Phi \in \mathbb{R}^{D
 \times K}\)</span> and a set of vector <span class="math inline">\(z_{i} \in \mathbb{R}^{K}\)</span> such that <span class="math inline">\(x_{i}
 \approx \Phi z_{i}\)</span> for all <span class="math inline">\(i\)</span>. The columns of <span class="math inline">\(\Phi\)</span> are called principal components, and they specify the structure of the derived linear features. The vector <span class="math inline">\(z_{i}\)</span> is called the score of <span class="math inline">\(x_{i}\)</span> with respect to these components. The top component explains the most variance, the second captures the next most, and so on.</p></li>
@@ -2475,7 +2475,7 @@ window.Quarto = {
 </section>
 <section id="implementation-in-r" class="level3">
 <h3 class="anchored" data-anchor-id="implementation-in-r">Implementation in R</h3>
-<ol start="9" type="1">
+<ol start="15" type="1">
 <li>In R, PCA can be conveniently implemented using the tidymodels package. We will see a base R implementation below. The <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-26/readme.md">dataset</a> below contains properties of a variety of cocktails, from the Boston Bartender’s guide. The first two columns are qualitative descriptors, while the rest give numerical ingredient information.</li>
 </ol>
 <div class="cell">
@@ -2498,7 +2498,7 @@ window.Quarto = {
 # ℹ 927 more rows</code></pre>
 </div>
 </div>
-<ol start="10" type="1">
+<ol start="16" type="1">
 <li>The <code>pca_rec</code> object below defines a tidymodels recipe for performing PCA. Computation of the lower-dimensional representation is deferred until <code>prep()</code> is called. This delineation between workflow definition and execution helps clarify the overall workflow, and it is typical of the tidymodels package.</li>
 </ol>
 <div class="cell">
@@ -2509,7 +2509,7 @@ window.Quarto = {
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>pca_prep <span class="ot">&lt;-</span> <span class="fu">prep</span>(pca_rec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="11" type="1">
+<ol start="17" type="1">
 <li><p>The <code>step_normalize</code> call is used to center and scale all the columns. This is needed because otherwise columns with larger variance will have more weight in the final dimensionality reduction, but this is not conceptually meaningful. For example, if one of the columns in a dataset were measuring length in kilometers, then we could artificially increase its influence in a PCA by expressing the same value in meters. To achieve invariance to this change in units, it would be important to normalize first.</p></li>
 <li><p>We can <code>tidy</code> each element of the workflow object. Since PCA was the second step in the workflow, the PCA components can be obtained by calling tidy with the argument “2.” The scores of each sample with respect to these components can be extracted using <code>juice.</code> The amount of variance explained by each dimension is also given by <code>tidy</code>, but with the argument <code>type = &quot;variance&quot;</code>. We’ll see how to visualize and interpret these results next.</p></li>
 </ol>
@@ -2573,7 +2573,7 @@ window.Quarto = {
 </section>
 <section id="visualizing-and-interpreting-components" class="level3">
 <h3 class="anchored" data-anchor-id="visualizing-and-interpreting-components">Visualizing and Interpreting Components</h3>
-<ol start="13" type="1">
+<ol start="19" type="1">
 <li>How should we visualize the results from PCA? There are three artifacts produced by the procedure worth considering — components, scores, and variances. The components describe derived features, the scores lay samples out on a map, and the variances summarize how much information was preserved by each dimension.</li>
 </ol>
 <div class="cell">
@@ -2584,7 +2584,7 @@ window.Quarto = {
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>variances <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://uwmadison.box.com/shared/static/ye125xf8800zc5eh3rfeyzszagqkaswf.csv&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(terms <span class="sc">==</span> <span class="st">&quot;percent variance&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="14" type="1">
+<ol start="20" type="1">
 <li>First, let’s see how much variance is explained by each dimension of the PCA. Without detouring into the mathematical explanation, the main idea is that, the more rapid the dropoff in variance explained, the better the low-dimensional approximation. For example, if the data actually lie on a 2D plane in a high-dimensional space, then the first two bars would contain all the variance (the rest would be zero).</li>
 </ol>
 <div class="cell">
@@ -2599,7 +2599,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="15" type="1">
+<ol start="21" type="1">
 <li>We can interpret components by looking at the linear coefficients of the variables used to define them. From the plot below, we see that the first PC mostly captures variation related to whether the drink is made with powdered sugar or simple syrup. Drinks with high values of PC1 are usually to be made from simple syrup, those with low values of PC1 are usually made from powdered sugar. From the two largest bars in PC2, we can see that it highlights the vermouth vs. non-vermouth distinction.</li>
 </ol>
 <div class="cell">
@@ -2617,7 +2617,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="16" type="1">
+<ol start="22" type="1">
 <li>It is often easier read the components when the bars are sorted according to their magnitude. The usual ggplot approach to reordering axes labels, using either <code>reorder()</code> or releveling the associated factor, will reorder all the facets in the same way. If we want to reorder each facet on its own, we can use the <code>reorder_within</code> function coupled with <code>scale_*_reordered</code>, both from the tidytext package.</li>
 </ol>
 <div class="cell">
@@ -2639,7 +2639,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="17" type="1">
+<ol start="23" type="1">
 <li>Next, we can visualize the scores of each sample with respect to these components. The plot below shows <span class="math inline">\(\left(z_{i1}, z_{i2}\right)\)</span>. Suppose that the columns of <span class="math inline">\(\Phi\)</span> are <span class="math inline">\(\varphi_{1}, \dots, \varphi_{K}\)</span>. Then, since <span class="math inline">\(x_{i}
 \approx \varphi_{1}z_{i1} + \varphi_{2} z_{i2}\)</span>, the samples have large values for variables with large component values in the coordinate directions where <span class="math inline">\(z_{i}\)</span> is farther along.</li>
 </ol>
@@ -2657,7 +2657,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="18" type="1">
+<ol start="24" type="1">
 <li><p>For example, El Nino has high value for PC1, which means it has a high value of variables that are positive for PC1 (like simple syrup) and low value for those variables that are negative (like powdered sugar). Similarly, since <span class="math inline">\(\varphi_{2}\)</span> puts high positive weight on vermouth-related variables, so H. P. W. Cocktail has many vermouth-related ingredients.</p></li>
 <li><p>In practice, it will often be important to visualize several pairs of PC dimensions against one another, not just the top 2.</p></li>
 <li><p>Let’s examine the original code in a little more detail. We are using tidymodels, which is a package for decoupling the definition and execution of a data pipeline. This compartmentalization makes it easier to design and reuse across settings.</p></li>
@@ -2688,7 +2688,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="22" type="1">
+<ol start="28" type="1">
 <li>The equivalent tidymodels implementation handles the difference between supplementary and modeling data less bluntly, setting the <code>name</code> and <code>category</code> variables to <code>id</code> roles, so that <code>all_predictors()</code> knows to skip them.</li>
 </ol>
 </section>
@@ -2709,7 +2709,7 @@ window.Quarto = {
 <p><a href="https://pair-code.github.io/understanding-umap">Reading</a></p>
 <section id="motivation-and-graph-construction" class="level3">
 <h3 class="anchored" data-anchor-id="motivation-and-graph-construction">Motivation and Graph Construction</h3>
-<ol type="1">
+<ol start="29" type="1">
 <li><p>Nonlinear dimension reduction methods can give a more faithful representation than PCA when the data don’t lie on a low-dimensional linear subspace.</p></li>
 <li><p>For example, suppose the data were shaped like this. There is no one-dimensional line through these data that separate the groups well. We will need an alternative approach to reducing dimensionality if we want to preserve nonlinear structure.</p></li>
 </ol>
@@ -2727,7 +2727,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="3" type="1">
+<ol start="31" type="1">
 <li><p>From a high-level, the intuition behind UMAP is to (a) build a graph joining nearby neighbors in the original high-dimensional space, and then (b) layout the graph in a lower-dimensional space.</p></li>
 <li><p>For example, consider the 2-dimensional sine wave below. If we build a graph, we can try to layout the resulting nodes and edges on a 1-dimensional line in a way that approximately preserves the ordering.</p></li>
 </ol>
@@ -2741,7 +2741,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="5" type="1">
+<ol start="33" type="1">
 <li>A natural way to build a graph is to join each node to its <span class="math inline">\(K\)</span> closest neighbors. The choice of <span class="math inline">\(K\)</span> will influence the final reduction, and it is treated as a hyperparameter of UMAP.</li>
 </ol>
 <div class="cell">
@@ -2754,7 +2754,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="6" type="1">
+<ol start="34" type="1">
 <li>Larger values of <span class="math inline">\(K\)</span> prioritize preservation of global structure, while smaller <span class="math inline">\(K\)</span> will better reflect local differences. This property is not obvious a priori, but is suggested by the simulations described in the reading.</li>
 </ol>
 <div class="cell">
@@ -2767,7 +2767,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="7" type="1">
+<ol start="35" type="1">
 <li><p>One detail in the graph construction: In UMAP, the edges are assigned weights depending on the distance they span, normalized by the distance to the closest neighbor. Neighbors that are close, relative to the nearest neighbors, are assigned higher weights than those that are far away, and points that are linked by high weight edges are pulled together with larger force in the final graph layout. This is what the authors mean by using a “fuzzy” nearest neighbor graph. The fuzziness allows the algorithm to distinguish neighbors that are very close from those that are far, even though they all lie within a <span class="math inline">\(K\)</span>-nearest-neighborhood.</p></li>
 <li><p>Once the graph is constructed, there is the question of how the graph layout should proceed. UMAP uses a variant of force-directed layout, and the global strength of the springs is another hyperparameter. Lower tension on the springs allow the points to spread out more loosely, higher tension forces points closer together. This is a second hyperparameter of UMAP.</p></li>
 </ol>
@@ -2787,14 +2787,14 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="9" type="1">
+<ol start="37" type="1">
 <li><p>These two hyperparameters — the number of nearest neighbors <span class="math inline">\(K\)</span> and the layout tension — are the only two hyperparameters of UMAP.</p></li>
 <li><p>You can see more examples of what this algorithm does to toy datasets in the <a href="https://pair-code.github.io/understanding-umap">reading</a>. Note in particular the properties that the algorithm <em>does not</em> preserve. The distance between clusters should not be interpreted, since it just means that the graph components were not connected. Similarly, the density of points is not preserved.</p></li>
 </ol>
 </section>
 <section id="implementation-in-r-1" class="level3">
 <h3 class="anchored" data-anchor-id="implementation-in-r-1">Implementation in R</h3>
-<ol start="11" type="1">
+<ol start="39" type="1">
 <li>In R, we can implement this using almost the same code as we used for PCA. The <code>step_umap</code> command is available through the embed package.</li>
 </ol>
 <div class="cell">
@@ -2804,7 +2804,7 @@ window.Quarto = {
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_umap</span>(<span class="fu">all_predictors</span>(), <span class="at">neighbors =</span> <span class="dv">20</span>, <span class="at">min_dist =</span> <span class="fl">0.1</span>)</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>umap_prep <span class="ot">&lt;-</span> <span class="fu">prep</span>(umap_rec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="12" type="1">
+<ol start="40" type="1">
 <li>UMAP returns a low-dimensional atlas relating the points, but it does not provide any notion of derived features.</li>
 </ol>
 <div class="cell">
@@ -2837,7 +2837,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <section id="from-two-dimensions-to-one" class="level3">
 <h3 class="anchored" data-anchor-id="from-two-dimensions-to-one">From Two Dimensions to One</h3>
-<ol type="1">
+<ol start="41" type="1">
 <li>We presented the two moons dataset earlier as an example where UMAP, but not PCA, would be able to discover a one-dimensional representation that separates the groups. The implication is that, if we anticipate some sort of nonlinearity in higher-dimensions (which we can’t directly visualize), then UMAP would be a more suitable choice.</li>
 </ol>
 <div class="cell">
@@ -2854,7 +2854,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="2" type="1">
+<ol start="42" type="1">
 <li>The code block below defines both the PCA and UMAP recipes. There is no need to normalize the data, since the two dimensions are already on the same scale.</li>
 </ol>
 <div class="cell">
@@ -2864,7 +2864,7 @@ window.Quarto = {
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>pca_rec <span class="ot">&lt;-</span> <span class="fu">step_pca</span>(moons_, <span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="dv">1</span>)</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>umap_rec <span class="ot">&lt;-</span> <span class="fu">step_umap</span>(moons_, <span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="3" type="1">
+<ol start="43" type="1">
 <li>The block below shows both the UMAP and PCA representations. The PCA representation seems to mostly reflect the variation on the <span class="math inline">\(x\)</span>-axis of the original data, and the two classes mix together. On the other hand, the UMAP clearly separates the groups. This is expected, since the nearest neighborhood graph that defines UMAP is likely separated into two major components, one for each moon.</li>
 </ol>
 <div class="cell">
@@ -2889,14 +2889,14 @@ window.Quarto = {
 </section>
 <section id="antibiotics-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="antibiotics-dataset">Antibiotics Dataset</h3>
-<ol start="4" type="1">
+<ol start="44" type="1">
 <li>We can apply dimensionality reduction to the antibiotics dataset described in <a href="https://krisrs1128.github.io/stat479/posts/2021-01-20-week2-1/">lecture 2 - 1</a>. There, we had filtered down to the 6 most abundant bacteria. Now we will consider 147 most abundant, which means that each sample can be imagined as a vector in a 147-dimensional space. Ideally, a dimensionality-reduction procedure should be able to place samples close to one another when they have similar species profiles. In addition to loading species counts, we load taxonomic information about each species, in the <code>taxa</code> variable.</li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>antibiotic <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://uwmadison.box.com/shared/static/t1lifegdz8s0a8lgckber32ytyh9hu4r.csv&quot;</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://uwmadison.box.com/shared/static/ng6y6etk79lrm0gtsgw2u0yq6gqcozze.csv&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="5" type="1">
+<ol start="45" type="1">
 <li>We now define a PCA recipe. Since the counts are relatively skewed, we log-transform<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, using <code>step_log</code>. The rest of the definition is like the 2D example above.</li>
 </ol>
 <div class="cell">
@@ -2908,7 +2908,7 @@ window.Quarto = {
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>pca_rec <span class="ot">&lt;-</span> <span class="fu">step_pca</span>(antibiotic_, <span class="fu">all_predictors</span>())</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>pca_prep <span class="ot">&lt;-</span> <span class="fu">prep</span>(pca_rec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="6" type="1">
+<ol start="46" type="1">
 <li>We generate a map of the PCA scores below. The primary difference is between the three study participants – D, E, and F. Within each person, there is some variation between the antibiotic periods, as indicated by the points’ colors.</li>
 </ol>
 <div class="cell">
@@ -2928,7 +2928,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="7" type="1">
+<ol start="47" type="1">
 <li>Which species contribute the most to the principal components? We can analyze this like we did with the cocktails dataset. In addition to plotting the raw component value, we also join in the taxa information. This allows us to color in each bar by the species group that each bacteria belongs to. For example, we see that samples on the right side of the plot above (i.e., high PC1) likely have more Firmicutes than Bacteroidetes. PC2 seems to pick up on two species that have higher abundance when the rest drop-off.</li>
 </ol>
 <div class="cell">
@@ -2955,7 +2955,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="8" type="1">
+<ol start="48" type="1">
 <li>We can use similar code to compute a UMAP embedding. The UMAP seems to separate the different timepoints more clearly. However, there is no analog of <code>components</code> with which to interpret the different axes. Instead, a typical approach to interpret the representation is to find points that are close together (e.g., using <span class="math inline">\(K\)</span>-means) and take their average species profile.</li>
 </ol>
 <div class="cell">
@@ -2979,7 +2979,7 @@ window.Quarto = {
 </section>
 <section id="image-data" class="level3">
 <h3 class="anchored" data-anchor-id="image-data">Image Data</h3>
-<ol start="9" type="1">
+<ol start="49" type="1">
 <li>Both PCA and UMAP can be used on image data. Here, each pixel in an image is considered a different feature. For example, the FashionMNIST dataset includes 60,000 28 x 28 images of fashion objects. We can think of image as a vector<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math inline">\(x_{i} \in \mathbb{R}^{784}\)</span>. The goal of dimensionality reduction in this context is to build an atlas of images, where images with similar overall pixel values should be located next to one another. First, we read in the data and subsample it, so the code doesn’t take so long to run.</li>
 </ol>
 <div class="cell">
@@ -2990,7 +2990,7 @@ window.Quarto = {
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">as.factor</span>(label)</span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="10" type="1">
+<ol start="50" type="1">
 <li>Each row of the matrix above is a separate image. We can prepare a PCA recipe just like in the two examples above. Note that we are not normalizing the features – the pixels are already on a common scale.</li>
 </ol>
 <div class="cell">
@@ -3000,7 +3000,7 @@ window.Quarto = {
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>pca_rec <span class="ot">&lt;-</span> <span class="fu">step_pca</span>(fashion_, <span class="fu">all_predictors</span>())</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>pca_prep <span class="ot">&lt;-</span> <span class="fu">prep</span>(pca_rec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol start="11" type="1">
+<ol start="51" type="1">
 <li>The code below extracts the PCA scores and visualizes them as a cloud of points. Each point corresponds to an image, and the different types of fashion items are indicated by color. It seems that the types are well separated, but the labels are not informative… to understand what the colors mean, we need to look at the images.</li>
 </ol>
 <div class="cell">
@@ -3019,7 +3019,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="12" type="1">
+<ol start="52" type="1">
 <li>The block below overlays the first 300 images from the dataset at the locations from the previous plot. We have prepared a function to generate this sort of image using ggplot2; however, we have hidden it to avoid cluttering these notes.</li>
 </ol>
 <div class="cell">
@@ -3034,7 +3034,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="13" type="1">
+<ol start="53" type="1">
 <li>Finally, we can repeat the exercise above with UMAP. The first plot shows the UMAP scores and the second overlays the same set of 300 images onto these new coordinates. It seems that UMAP can more clearly separate shoes and pants from shirts and sweaters.</li>
 </ol>
 <div class="cell">

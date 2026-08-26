@@ -26525,7 +26525,7 @@ window.Quarto = {
 </ol>
 <section id="working-with-a-single-sample." class="level3">
 <h3 class="anchored" data-anchor-id="working-with-a-single-sample.">Working with a single sample.</h3>
-<ol type="1">
+<ol start="6" type="1">
 <li><p>Deep learning models chain together many parametrized modules, each which slightly modifies the representation of an input to extract more meaningful features from it. Formally, let <span class="math inline">\(x\)</span> be the input, define modules (“layers”),</p>
 <p><span class="math inline">\(h^{l} = f_{l}\left(h^{l - 1}; \theta_{l}\right)\)</span></p>
 <p>and chain them together,</p>
@@ -26561,7 +26561,7 @@ window.Quarto = {
 <pre><code>[&#39;[CLS]&#39;, &#39;hello&#39;, &#39;there&#39;, &#39;i&#39;, &#39;am&#39;, &#39;an&#39;, &#39;example&#39;, &#39;sentence&#39;, &#39;.&#39;, &#39;[SEP]&#39;]</code></pre>
 </div>
 </div>
-<ol type="1">
+<ol start="8" type="1">
 <li><p>Aside: In this note we’re going to be mixing Python and R code. The reason is that the most mature pretrained models are hosted in Python packages but the most infomrative visualizations can be made with R. Fortunately the reticulate package makes it very easy to transfer objects back and forth. We’ll see this when we call <code>py$</code> and <code>r.</code> to fetch information from the two languages</p></li>
 <li><p>At each layer the modules <span class="math inline">\(f_l\)</span> extract high-dimensional representations of the token. There are seven layers in this pre-trained model.</p></li>
 </ol>
@@ -26627,11 +26627,13 @@ window.Quarto = {
 </div>
 </div>
 <p>In the terminology of deep learning, the pattern of neuron activations has learned to represent the specific characteristics of the sample.</p>
-<ol start="4" type="1">
-<li><p>A well-known phenomenon is that layers lower in the network tend to find surface-level features of the input while those near the end of the network identify higher-level, more semantically meaningful features. For example the figure below comes from this paper which visualized neuron activations. They find neurons that activate inside of quotes or depending on the position between newline characters, both of which are non-obvious features that were never explicitly fed into the model. Neurons in the initial layers don’t exhibit this behavior.</p>
+<ol start="10" type="1">
+<li>A well-known phenomenon is that layers lower in the network tend to find surface-level features of the input while those near the end of the network identify higher-level, more semantically meaningful features. For example the figure below comes from this paper which visualized neuron activations. They find neurons that activate inside of quotes or depending on the position between newline characters, both of which are non-obvious features that were never explicitly fed into the model. Neurons in the initial layers don’t exhibit this behavior.</li>
+</ol>
 <p>[toy picture]</p>
-<p>We will see something similar with our pretrained model once we give it more examples.</p></li>
-<li><p>Even though the discussion so far has been about text, similar logic applies to images. Instead of tokenizing by breaking a sentence into words, we break an image into patches. Then each patch has an activation in each neuron. To illustrate, let’s download a painting from the wikiart dataset, <em>Pine Trees in the Fen</em> by Vincent Van Gogh.</p></li>
+<p>We will see something similar with our pretrained model once we give it more examples.</p>
+<ol start="11" type="1">
+<li>Even though the discussion so far has been about text, similar logic applies to images. Instead of tokenizing by breaking a sentence into words, we break an image into patches. Then each patch has an activation in each neuron. To illustrate, let’s download a painting from the wikiart dataset, <em>Pine Trees in the Fen</em> by Vincent Van Gogh.</li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> io <span class="im">import</span> BytesIO</span>
@@ -26681,18 +26683,18 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="7" type="1">
+<ol start="12" type="1">
 <li><p>I’ve slightly simplified the situation here. It turns out that many neurons aren’t really that interpretable. They seem to activate on images that have nothing to do with each other, and the examples are the paper above where cherrypicked (the authors acknowledged this and even highlighted this specific issue). We need slightly more sophisticated machinery to be able to deal with this issue, which is sometimes called the “superposition hypothesis” (the hypothesis is that to make sense of a particular representation, we need to understand the entire pattern of neuron activations, not just the neurons in isolation).</p></li>
 <li><p>Nonetheless, these patterns of activations turn out to be the key ingredient for visualization in a deep learning context. We can think about the neuron activations across as being like features in an ordinary data table. Unlike our naive approach using raw word or pixel identity, these neuron activations will capture meaningful features about the original sample. It doesn’t matter what specific view we have. If we have a graphite-sketch sensitive neuron, then that neuron will activate on all such paintings.</p></li>
 </ol>
 </section>
 <section id="working-with-a-collection" class="level2">
 <h2 class="anchored" data-anchor-id="working-with-a-collection">Working with a Collection</h2>
-<ol type="1">
+<ol start="14" type="1">
 <li>Arrange the activations across samples for a particular layer into a matrix with this format. Each row represents a sample. The columns give activations across all neurons in that layer. This is a high-dimensional matrix and we can methods like PCA or UMAP.</li>
 </ol>
 <p>[cartoon sketch]</p>
-<ol start="2" type="1">
+<ol start="15" type="1">
 <li>Analyzing a large collection might be unwieldy but let’s see how dimensionality reduction is already useful in answering more targeted questions. Here I’ve downloaded the AG News Corp text corpus. The full collection samples articles across a variety of topics, including politics, sports, business, and technology.</li>
 </ol>
 <div class="cell">
@@ -26727,7 +26729,7 @@ window.Quarto = {
 # ℹ 986 more rows</code></pre>
 </div>
 </div>
-<ol start="3" type="1">
+<ol start="16" type="1">
 <li>We can now extract all the final representations from a BERT model. The first step instantiates the tokenizer and pre-trained model. The eval call ensures that training-specific adjustments (e.g., from dropout regularization) are omitted.</li>
 </ol>
 <div class="cell">
@@ -26792,7 +26794,7 @@ window.Quarto = {
 [6,] 0.07704063 -0.2004127 -0.31819242 -0.5811222</code></pre>
 </div>
 </div>
-<ol start="4" type="1">
+<ol start="17" type="1">
 <li>Next I’ve run UMAP reduction on this matrix. The scores plot below shows some clear clusters, and they do seem related to (but not totally redundant with) the overall news sections.</li>
 </ol>
 <div class="cell">
@@ -26824,7 +26826,7 @@ window.Quarto = {
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;data/polysemy_scores.csv&quot;</span></span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol type="1">
+<ol start="18" type="1">
 <li>Our visualization above doesn’t really tell us what it is that’s different between the clusters. We can create an interactive version where brushing the article shows the associated text.</li>
 </ol>
 <div class="cell">
@@ -26904,7 +26906,7 @@ window.Quarto = {
 </div>
 </div>
 <p>We can see clearly that even within a specific topic, the clusters represent different uses of the word “pitch”. Some of them are related to the pitching a ball in baseball. Others are like “sales pitch” and others still are like “pitch black.” So the model can disambiguate the different contexts within which the same word can be used. This is much more powerful than simply tabulating word counts or word co-occurrences, which is how someone might have analyzed a text document before deep learning (not that we were hopeless back then. There are some beautiful papers on using word statistics to decide whether Shakespeare wrote all of his plays and similar methods were also used to break the enigma during World War).</p>
-<ol start="6" type="1">
+<ol start="19" type="1">
 <li>Let’s apply similar methodology to analyzing an image collection. This example is inspired by the Artography project. We won’t build up the entire interactive interface but we will build a similar kind of “atlas” of different artwork styles. This involves a some tedious preprocessing to handle the data downloads and extract relevant metadata . I’ve hidden most of the complicated code below, but you can see it in the original quarto source. But at least in the block below you can see where we got the images from.</li>
 </ol>
 <div class="cell">
@@ -26947,21 +26949,21 @@ window.Quarto = {
 <pre><code># A tibble: 240 × 10
    success status_code resumefrom url   destfile error type  modified           
    &lt;lgl&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;dttm&gt;             
- 1 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-14 23:59:57
+ 1 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-24 22:05:03
  2 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-22 11:42:53
- 3 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-14 23:59:57
- 4 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-15 20:34:27
+ 3 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-24 22:06:56
+ 4 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-22 21:29:26
  5 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-22 21:29:26
- 6 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-15 20:34:27
- 7 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-15 20:34:27
- 8 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-15 20:34:27
- 9 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-15 20:34:27
+ 6 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-25 22:23:27
+ 7 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-25 22:23:27
+ 8 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-25 22:23:27
+ 9 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-25 22:23:27
 10 TRUE            200          0 http… /Users/… &lt;NA&gt;  bina… 2026-08-22 11:42:53
 # ℹ 230 more rows
 # ℹ 2 more variables: time &lt;dbl&gt;, headers &lt;list&gt;</code></pre>
 </div>
 </div>
-<ol type="1">
+<ol start="20" type="1">
 <li><p>Let’s load in all the original images and plot a few just to get some intuition. Let’s get all the web pages where these artworks live.</p></li>
 <li><p>Next we need a pretrained model from which we can extract activations. The processor below serves the exact same role as the tokenizer in the earlier blocks.</p></li>
 </ol>
@@ -27045,7 +27047,7 @@ window.Quarto = {
 [5,] -0.6682650 3.402954  1.3868699</code></pre>
 </div>
 </div>
-<ol start="8" type="1">
+<ol start="22" type="1">
 <li>We can apply our exact same dimensionality reduction ideas to create a UMAP of these high-dimensional representations.</li>
 </ol>
 <div class="cell">
@@ -27102,7 +27104,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol type="1">
+<ol start="23" type="1">
 <li><p>While in theory we could associate each of these points with an ID and look up the associated painting separately, it’s more efficient to show the images themselves. Here we’ve used the ggimage package, which allows us to overlay an image layer similarly to geom_point, for example.</p></li>
 <li><p>Alternatively we can apply dynamic linking. On the left we have the original scatter plot and as we hover within the neighborhood of a new painting, the associated display panel updates. The advantage is that now the painting can be shown at larger size. The downside is that we lose the context about the original images.</p></li>
 </ol>
@@ -27154,12 +27156,14 @@ window.Quarto = {
 </div>
 <section id="sparse-autoencoders" class="level3">
 <h3 class="anchored" data-anchor-id="sparse-autoencoders">Sparse Autoencoders</h3>
-<ol type="1">
+<ol start="25" type="1">
 <li><p>In the examples we’ve looked at so far, there’s actually not that much variation so it’s reasonable to imagine a two-dimensional view being enough. But what if we had considered all the articles in the news corpus instead of just those that contained the word “pitch”? Or what if instead of just paintings we considered photographs, sculptures, ancient work, and modern ones too? The idea that we could reduce this to a two-dimensional atlas becomes a little bit dubious.</p></li>
 <li><p>A relatively recent alternative is to use a model called a sparse autoencoder. While PCA and UMAP reduce dimension, sparse autoencoders expand dimensions. This might seem counterintuitive but the logic is that in this expanded space each dimension has a very clear interpretation (this is unlike the original activation space). For a mathematical analogy think of this as learning a new coordinate system. Just like how sometimes polar coordinates can be more useful than Cartesian coordinates, the autoencoder coordinate scan be more meaningful than the original representation’s coordinates.</p></li>
-<li><p>Concretely we can think of the original activations as being expanded into two matrices, analogous to the PCA scores and loadings. Each row of the scores and each column of the loadings is considered one factor, just like in PCA.</p>
-<p>Besides having a larger k than the original data, the key difference with PCA and UMAP is that most of the entries in the scores will be zero. This is a by-product of how sparse autoencoder models are trained and it’s beyond the scope of this class. But the consequences are clear. We can now think of each sample as only activating on some small subset of associated factors.</p></li>
-<li><p>Properly training an SAE can be a bit complicated because it requires many more samples than a simple PCA. However, there are many pre-trained SAEs available in repositories like HuggingFace. We have to match it to the original model that creates activations, so intead of analyzing BERT embeddings like above, we’re using embeddings from a smaller model (<code>EleutherAI/pythia-70m</code>).</p></li>
+<li><p>Concretely we can think of the original activations as being expanded into two matrices, analogous to the PCA scores and loadings. Each row of the scores and each column of the loadings is considered one factor, just like in PCA.</p></li>
+</ol>
+<p>Besides having a larger k than the original data, the key difference with PCA and UMAP is that most of the entries in the scores will be zero. This is a by-product of how sparse autoencoder models are trained and it’s beyond the scope of this class. But the consequences are clear. We can now think of each sample as only activating on some small subset of associated factors.</p>
+<ol start="28" type="1">
+<li>Properly training an SAE can be a bit complicated because it requires many more samples than a simple PCA. However, there are many pre-trained SAEs available in repositories like HuggingFace. We have to match it to the original model that creates activations, so intead of analyzing BERT embeddings like above, we’re using embeddings from a smaller model (<code>EleutherAI/pythia-70m</code>).</li>
 </ol>
 <p>We will have to extract the raw activations from the pythia model, then we pass those to extract the associated SAE activations. As a first step, let’s load the pretrained model (and its associated tokenizer).</p>
 <div class="cell">
@@ -27188,7 +27192,7 @@ window.Quarto = {
 <pre><code>torch.Size([15, 512])</code></pre>
 </div>
 </div>
-<ol type="1">
+<ol start="29" type="1">
 <li>The block below loads an accompanying SAE model that has already been trained on the layer 4 representations from that larger model. The final SAE has <span class="math inline">\(K =
 32,000\)</span> latent factors.</li>
 </ol>
@@ -27207,7 +27211,7 @@ window.Quarto = {
 <pre><code>32768 torch.Size([15, 16])</code></pre>
 </div>
 </div>
-<ol type="1">
+<ol start="30" type="1">
 <li>We care about all the articles, not just an individual sentence. The code below loops over the articles and saves the associated SAE scores. The representations are made at the individual token level, but we will want summaries of entire articles. For this, we’ll sum up all the scores for each factor across all tokens in an article. One subtlety is that we merge all the factors into one tall matrix. This is going to make it easier to filter our DuckDB database by factor label when build our visualizations later.</li>
 </ol>
 <div class="cell">
@@ -27243,7 +27247,7 @@ window.Quarto = {
 <span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">saveRDS</span>(scores_long, pertoken_scores_file)</span>
 <span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol type="1">
+<ol start="31" type="1">
 <li>Working with 30,000 dimensions is a little bit tedious, even when we have dimensionality reduction methods like UMAP and PCA. To narrow our search, let’s focus on factors that seem most promising. The idea is to look for those factors which are most concentrated within individual news sections, for example, those that are only ever active in articles related to sports. Our approach is relatively heuristic, but the results will make sense later. We’ll compute the total factor score among articles for each topic (e.g., 800 for Sports, 200 for Business, 100 for World, …) and then compare the maximum with the sum. If a large fraction of the total is concentrated in one topic, we will call that factor pure.</li>
 </ol>
 <div class="cell">
@@ -27272,7 +27276,7 @@ window.Quarto = {
 <span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>scores_top <span class="ot">&lt;-</span> scores_long <span class="sc">|&gt;</span></span>
 <span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(factor_id <span class="sc">%in%</span> factor_summary<span class="sc">$</span>factor_id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol type="1">
+<ol start="32" type="1">
 <li>Next, we save both the scores and the original articles to the file so that we can load them directly from disk in our mosaic visualizations later.</li>
 </ol>
 <div class="cell">
@@ -27290,7 +27294,7 @@ window.Quarto = {
 <span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(factor_summary, <span class="st">&quot;data/sae_factors.csv&quot;</span>)</span>
 <span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(sae_articles, <span class="st">&quot;data/sae_articles.csv&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<ol type="1">
+<ol start="33" type="1">
 <li>In our BERT example above, we made a UMAP of the original neuron activations. In the SAE literature, however, it’s also common to make UMAPs of the associated SAE scores. The intuition is that the distances defined in this SAE space might be more meaningful than those in the original full representation space, making it easier to interpret the relationship between articles in the resulting UMAP. To that end, the UMAP below is constructed from a matrix of all scores across articles. One subtlety is that this matrix was constructed using only factors that passed the purity filter above. We shouldn’t be too surprised that the articles separate by topic, because we deliberately chose only those factors that are concentrated within topics.</li>
 </ol>
 <p>Nonetheless, we do seem to find some interesting subgroups when we use this UMAP representation. Brushing some of the clusters, we see very narrow collections of articles related to Enron or Mozilla, for example.</p>
@@ -27380,7 +27384,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="4" type="1">
+<ol start="34" type="1">
 <li>To interpret the factors we simply look for the samples which have the highest magnitudes in that factor. Those samples should be most representative of what that factor means. This is an admittedly heuristic approach but is often enough to start drawing useful conclusions about the data.</li>
 </ol>
 <div class="cell">
@@ -27462,7 +27466,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="6" type="1">
+<ol start="35" type="1">
 <li><p>A similar process can be used to auto-encode imagery, and the motivation is similar. It gives us an objective way of finding more sharply defined features within samples, rather than just relying on low-dimensional (but rather coarse) atlases.</p></li>
 <li><p>You can imagine that we can now understand a much larger number of factors than we could have with PCA. There each sample was somewhat related to each factor dimension, and those dimensions are mainly related to global characteristics that reflect shared variation across the data. Now there’s only a small subset and the meaning of each factor is relatively narrow. This turns out to be extremely useful in building a more granular view of larger data sets.</p></li>
 <li><p>These models have been used more recently to understand popular large language models and biological sequence model representations. It is beyond the scope of this class but once the models are represented in this way, it also becomes possible to apply certain kinds of “surgery” to modify the representations in downstream tasks. This can be useful in controlling proteins for protein design or removing sensitive information for AI safety.</p></li>

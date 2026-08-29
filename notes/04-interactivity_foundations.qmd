@@ -20,7 +20,8 @@ execute:
 #| label: setup
 #| echo: false
 library(tidyverse)
-theme_set(theme_classic() + theme(panel.border= element_rect(fill = NA, linewidth = .5)))
+library(nanoparquet)
+theme_set(theme_classic() + theme(panel.border = element_rect(fill = NA, linewidth = .5)))
 set.seed(2026)
 ```
 
@@ -110,7 +111,7 @@ characters in Les Miserables (we'll study networks in much more depth later).
 Notice how many of the purple connections are collected in the same block when
 using the Bray Curtis, but not Euclidean, sorting option.
 
-   {{<video figures/sorting_reorder.mp4>}}
+   {{<video figures/sorting_reorderjs.mp4>}}
 
 8. Finally, it's possible to compute new variables based on interactive user
 queries. This is the least common form of interactive data/view specification,
@@ -147,7 +148,7 @@ same object as it transitions between views. For example, the plot below shows
 the population breakdown of different states according to age groups. It's easy
 to see which states had stable rankings.
 
-   {{<video figures/object_constancy.mp4}}
+   {{<video figures/object_constancy.mp4>}}
 
    It's important that the transitions track the same object. For example, it
    makes no sense to transition between views showing different datasets.
@@ -176,67 +177,94 @@ visualization. Let's focus on an example. The visualization below responds to
 two slider inputs. When we set `batch = n`, it will filter to the first `10n`
 rows of the data and recompute the confidence intervals. The confidence interval
 widths depend on the confidence level, which itself can be set by a slider
-(larger CI levels are more conservative, so lead to wider intervals).
+(larger CI levels are more conservative, so lead to wider intervals). As with the
+movies example, we compute the `batch` column and drop missing heights in R first,
+and write the result to a CSV that the coordinator loads.
+
+```{r}
+athletes_tmp <- tempfile()
+download.file("https://github.com/uwdata/mosaic/raw/main/data/athletes.parquet", athletes_tmp, quiet = TRUE)
+
+athletes <- read_parquet(athletes_tmp) |>
+    filter(!is.na(height)) |>
+    group_by(sport) |>
+    mutate(batch = 10 * ceiling(row_number() / 10))
+
+write_csv(athletes, "data/athletes.csv")
+```
 
 ```{ojs}
-import * as vg from "@uwdata/vgplot";
+path = (p) => new URL(`data/${p}`, document.baseURI).href
 
-await vg.coordinator().exec([
-    vg.loadParquet("https://github.com/uwdata/mosaic/raw/main/data/athletes.parquet", {
-    select: ["*", "10 * CEIL(ROW_NUMBER() OVER (PARTITION BY sport) / 10) AS batch"],
-    where: "height IS NOT NULL"
-    })
-]);
+// setup the data coordinator
+vg = {
+    const vg = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm");
+    const wasm = await vg.wasmConnector();
+    vg.coordinator().databaseConnector(wasm);
+    await vg.coordinator().exec([
+      vg.loadCSV("athletesBatched", path("athletes.csv"))
+    ]);
+    return vg;
+}
 
-const $ci = vg.Param.value(0.95);
-const $query = vg.Selection.single();
+// Parameters and selection
+$ci = vg.Param.value(0.95)
+$query = vg.Selection.single()
 
 vg.vconcat(
-    vg.hconcat(
-        vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
-        vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"})
-    ),
+    // user inputs
+    vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
+    vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"}),
+
+    // graphical encodings
     vg.plot(
         vg.errorbarX(
         vg.from("athletesBatched", {filterBy: $query}),
-        {
+          {
             ci: $ci,
             x: "height",
             y: "sport",
-            stroke: "sex"
-        }
+            stroke: "sex",
+          }
         ),
+        vg.xLabel("Height"),
+        vg.marginLeft(120), // keep labels visible
+        vg.width(500),
+        vg.height(400)
     ),
-    vg.colorLegend({for: "heights"})
+    vg.colorLegend({for: "heights"}),
 )
 ```
 
 ### Coordinator
 
-15. The first, probably most mysterious, part of the program defines a
-coordinator. This reads in the data and stores it in a database that's hidden
-from our view.  The SQL query on load defines a new column `batch` that groups
-every 10 consecutive rows in the `athletes.parquet` dataset.
+15. The first defines the database coordinator, like we introduced in week 2.
+Remember that this reads in the data and stores it in a database that's hidden
+from our view. We already did all the preprocessing in R, so this step can
+simply load the CSV. Remember that the `path` helper function constructs the
+absolute path to the data that we are interested in.
 
-```{ojs}
-//| eval: false
+```js
+const wasm = await vg.wasmConnector();
+vg.coordinator().databaseConnector(wasm);
 await vg.coordinator().exec([
-    vg.loadParquet("https://github.com/uwdata/mosaic/raw/main/data/athletes.parquet", {
-    select: ["*", "10 * CEIL(ROW_NUMBER() OVER (PARTITION BY sport) / 10) AS batch"],
-    where: "height IS NOT NULL"
-    })
+    vg.loadCSV("athletesBatched", path("athletes.csv"))
 ]);
 ```
 
 The coordinator object is actually a wrapper of the databases we defined when
-discussing data management. We can query it like this.
+discussing data management. We can see what tables are available using this query.
 
 ```{ojs}
-vg.coordinator().query({sql: "SHOW TABLES"})
+table_names = vg.coordinator().query("SHOW TABLES")
+Inputs.table(table_names)
 ```
 
+Here are the first few rows from `athletesBatches`.
+
 ```{ojs}
-vg.coordinator().query({sql: "SELECT * FROM athletesBatched LIMIT 5"})
+athletes_head = vg.coordinator().query("SELECT * FROM athletesBatched LIMIT 5")
+Inputs.table(athletes_head)
 ```
 
 When we interact with the visualization, queries like this will be automatically
@@ -269,20 +297,20 @@ There are a few reconciliation approaches defined in mosaic.
 0.95. This changes the width of the intervals in the visualization, but we can
 change its value without needing to query the data.
 
-   ```{ojs}
-   //| eval: false
-   const $ci = vg.Param.value(0.95);
-   ```
+```{ojs}
+//| eval: false
+$ci = vg.Param.value(0.95)
+```
 
-   For the number of batches to use, we instead need a selection. The code below
-   doesn't specify what data query will be run every time it is changed. We're
-   using `.single()` reconciliation strategy, but this could have been choice,
-   because we only have one selection in this visualization.
+For the number of batches to use, we instead need a selection. The code below
+doesn't specify what data query will be run every time it is changed. We're
+using `.single()` reconciliation strategy, but this could have been choice,
+because we only have one selection in this visualization.
 
-   ```{ojs}
-   //| eval: false
-   const $query = vg.Selection.single();
-   ```
+```{ojs}
+//| eval: false
+$query = vg.Selection.single()
+```
 
 ### Inputs
 
@@ -301,7 +329,7 @@ value in the `batch` column is less than `query`.
 
 ```{ojs}
 //| eval: false
-vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
+vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" })
 ```
 
 The arguments mean:
@@ -311,11 +339,10 @@ The arguments mean:
    - `column`: Which column of the dataset do we use when defining the query?
    - `select`: Should we keep only the rows where `batch` equals the slider value, or should we consider any value less than the selected slider value? Interval means we should use the latter.
 
-Given this information, the slider will construct the SQL query,
+Given this information, the slider will internally construct the SQL query,
 
-```{ojs}
-//| eval: false
-SELECT * WHERE batch < {slider value} from athletesBatched
+```sql
+SELECT * FROM athletesBatched WHERE batch < {slider value}
 ```
 
    The definition of the `Param`-based slider slider is more straightforward, because it never needs to refer to the data.
@@ -386,7 +413,133 @@ vg.hconcat(
             stroke: "sex"
         }
         ),
+        vg.xLabel("Height"),
+        vg.marginLeft(120), // keep labels visible
+        vg.width(500),
+        vg.height(400)
     ),
-    vg.colorLegend({for: "heights"})
+    vg.colorLegend({for: "heights"}),
 )
+```
+
+### Application: Filtering Movie Ratings
+
+25. Let's work through another example inspired by the classic
+[FilmFinder](https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&t=141)
+visualization. We first prepare a CSV file that we can load into our mosaic
+coordinator. First, we need to handle the missing values present in the raw
+data. If the genre or MPAA rating were unknown, we replace them with a new
+category level called "Missing". Since the focus of the plot is the IMDB and
+Rotten Tomatoes ratings, we drop the movie if either of those is missing.
+
+```{r}
+library(lubridate)
+
+movies <- read_csv("https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/apps/data/movies.csv") |>
+    mutate(
+        year = year(as_date(Release_Date, format = "%b %d %Y")),
+        Major_Genre = fct_explicit_na(Major_Genre),
+        MPAA_Rating = fct_explicit_na(MPAA_Rating)
+    ) |>
+    filter(!is.na(IMDB_Rating)) |>
+    filter(!is.na(Rotten_Tomatoes_Rating))
+
+write_csv(movies, "data/movies.csv")
+```
+
+26. The entire app is given in the block below. We've written two helper
+functions, `movie_controls` and `movie_plot,` to support the interactivity and
+graphical encodings, respectively. The use case of the app is relatively simple,
+but it already reveals some interesting patterns. For example, dramas tend to
+have higher ratings than horror. Also, what do you think is going on with the
+fact that movies released before 1995 seem to have higher ratings in general?
+
+```{ojs}
+movie_app = {
+    await vg.coordinator().exec([
+        vg.loadCSV("movies", path("movies.csv"))
+    ]);
+
+    const movieQuery = vg.Selection.intersect();
+
+    return vg.vconcat(
+        movie_controls(movieQuery),
+        movie_plot(movieQuery)
+    );
+}
+```
+
+27. Let's study those two functions. `movie_controls` defines the three user
+interface inputs. The `from` argument tells us to always look at the `movies`
+database within the coordinator. `column` says which column should be used to
+define the selector. Notice the interaction types have to match the data types.
+For example, it's not be possible to use a slider for genre.
+
+The argument `query` is a `vg.Selection.intersect()` object.  This ensures that
+only the movies that satisfy all these selections will be returned from the
+database.
+
+_Exercise: What would happen if we had used `vg.Selection.single()` instead?  What about `vg.Selection.union()`?_
+
+```{ojs}
+function movie_controls(query) {
+    return vg.hconcat(
+        vg.menu({
+            as: query,
+            from: "movies",
+            column: "Major_Genre",
+            value: "Drama",
+            label: "Genre"
+        }),
+        vg.menu({
+            as: query,
+            from: "movies",
+            column: "MPAA_Rating",
+            label: "MPAA Rating"
+        }),
+        vg.slider({
+            as: query,
+            from: "movies",
+            column: "year",
+            min: 1928,
+            max: 2046,
+            select: "interval",
+            value: 2020,
+            step: 1,
+            label: "Released Through"
+        })
+    );
+}
+```
+
+27. The function below draws the actual plot. Notice that we have two dot
+layers.  The first shows everything in a faint background, and the second shows
+those that pass the query. The `tip: true` call ensures that we can see the
+movie title when we hover our mouse near the highlighted point.
+
+```{ojs}
+function movie_plot(query) {
+     return vg.plot(
+       vg.dot(vg.from("movies"), {
+         x: "Rotten_Tomatoes_Rating",
+         y: "IMDB_Rating",
+         r: 1.5,
+         fill: "#777",
+         fillOpacity: 0.1
+       }),
+       vg.dot(vg.from("movies", {filterBy: query}), {
+         x: "Rotten_Tomatoes_Rating",
+         y: "IMDB_Rating",
+         r: 3,
+         fill: "#c84f4f",
+         title: "Title",
+         tip: true
+       }),
+       vg.xyDomain(vg.Fixed),
+       vg.xLabel("Rotten Tomatoes Rating"),
+       vg.yLabel("IMDB Rating"),
+       vg.width(680),
+       vg.height(400)
+     );
+}
 ```

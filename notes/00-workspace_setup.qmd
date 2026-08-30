@@ -226,18 +226,36 @@ continue to change over time, and having a single platform that interfaces with
 all of them will make sure that your skills remain relevant despite these
 changes in model.
 
-1.
+1. You can use pi from the terminal. In the recording below, I've used a free
+model to add a new histogram of random numbers. Notice how I used the `@` symbol
+to refer to a file. This guided the model towards the context that it needed for
+the task. While here the `@` symbol specifies the file we want to edit, it can
+also be used to refer to any information that helps solve the task, like related
+files or documentation. Also, a minor point -- at the start, I rearranged my
+terminal window so that it appears on the right. This is not really needed, I
+just did that so we can see more of the output.
 
 {{<video figures/pi_example.mov>}}
 
+1. At the very end of that recording, I use the `/export` command to save the
+session. The result is a plain HTML file that I could share with anyone who was
+interested in the prompts or intermediate outputs.
+
 {{<video figures/pi_export.mov>}}
 
-## Submissions
+1. If you are done with a task and want to move on to another problem, you can
+use the `/clear` command to clear all the context from the interactions so far.
+This can keep the previous interactions from inadvertently influencing with the
+next set of edits.
 
-12. quarto render
+1. Another important Pi command is `/model`. This lets you switch between
+different models. The example in the video above is simple and could be done
+successfully with a free model. For slightly more complex tasks, even a very
+cheap model will often be preferable For slightly more complex tasks, even a
+very cheap model will often be preferable.
 
-13. embedding resources
+1. I will give you an openrouter API key that gives you access to a a few
+openrouter models. Please use this for the assignments in the class. Once you
+have the API key, you can add it to Pi using the steps in the video below.
 
-14. sharing a server
-
-15. how to do this for the homework
+{{<video figures/pi_api_key.mov>}}

@@ -5,7 +5,6 @@ date: 2026-09-01
 bibliography: references.bib
 format:
   html:
-    embed-resources: true
     html-math-method: mathjax
     fig-align: center
 execute:
@@ -30,7 +29,7 @@ system.
 
 ## Code Editors
 
-1. We will be making visualizations directly within programming languages. This
+2. We will be making visualizations directly within programming languages. This
 is different from creating visualizations in software like Excel, Power BI, or
 Tableau, because our visualizations will be defined by writing out code in text
 files rather than interacting with a GUI (clicking on buttons, selecting from
@@ -38,36 +37,36 @@ dropdown menus, etc.).
 
 Contrast the excel approach,
 
-{{<video figures/excel_plot.mov>}}
+{{<video figures/excel_plot.mp4>}}
 
 With a version written in code,
 
-{{<video figures/vscode_plot.mov>}}
+{{<video figures/vscode_plot.mp4>}}
 
-1. Since programming is all done by editing text files, it helps to have
+3. Since programming is all done by editing text files, it helps to have
 efficient ways of navigating across, typing in, and monitoring changes to text
 files. This is what modern code editors support. This note describes vscode, but
 Rstudio and positron are similar (and I'm happy to go over that one-on-one).
 
-1. To open an existing directory, go to "File > Open Folder." This will make the
+4. To open an existing directory, go to "File > Open Folder." This will make the
 editor aware of all the files in that folder.
 
-{{<video figures/opening_folder.mov>}}
+{{<video figures/opening_folder.mp4>}}
 
 You can navigate all the files in a project using the stack of paper icon at
 the top left of the editor. If you have directories, clicking on them will open
 all the files within. You can also create new files and directories by right
 clicking in this space.
 
-1. We'll mainly be working with quarto files (described in detail below).  These
+5. We'll mainly be working with quarto files (described in detail below).  These
 files have a bit of boilerplate text that always has to be present, and it's
 annoying to copy that in manually each time. Instead, you can can type `Cntl +
 Shift + p` (windows) or `Cmd + Shift + p` (mac) to bring up the "Command
 Palette," where you can request a quarto file with the basic text already included^[This works for other types of files too, like python notebooks.]
 
-{{<video figures/new_quarto.mov>}}
+{{<video figures/new_quarto.mp4>}}
 
-1. Modern code editors have built-in support for `git`, a program for
+6. Modern code editors have built-in support for `git`, a program for
 checkpointing progress in your code projects. It's essentially "track changes"
 for code. The program is helpful because,
 
@@ -78,27 +77,27 @@ Describing everything git can do is beyond the scope of this course (and I
 believe it is taught in the introductory R courses). But for our purposes, it's
 enough to know that you can initialize a repository inside a folder.
 
-{{<video figures/new_repo.mov>}}
+{{<video figures/new_repo.mp4>}}
 
 Commit a change, which acts like a checkpoint for your later review.
 
-{{<video figures/committing_a_change.mov>}}
+{{<video figures/committing_a_change.mp4>}}
 
 And track any changes made since the last commit.
 
-{{<video figures/git_track_changes.mov>}}
+{{<video figures/git_track_changes.mp4>}}
 
-1. It's not as important, but you know that you can customize your code editor.
+7. It's not as important, but you know that you can customize your code editor.
 You can change the layout of the different panels, the color
 themes^[The examples below are mostly from the Chalice extension.], even the
 fonts. There are also extensions (blocks icon on the left) that other people
 have written that give even more options.
 
-{{<video figures/color_themes.mov>}}
+{{<video figures/color_themes.mp4>}}
 
 ## Quarto Notebooks
 
-1. Literate programming is the idea that code from a programming language code
+8. Literate programming is the idea that code from a programming language code
 can be embedded within a documentation language. This places the emphasis back
 on why we are writing the code, what exactly we're supposed to learn
 from/accomplish with it.
@@ -107,20 +106,20 @@ from/accomplish with it.
 >
 > -- Donald Knuth, in _Literate Programming_
 
-1. Quarto is an implementation of literate programming that's well suited to
+9. Quarto is an implementation of literate programming that's well suited to
 data visualization. It supports R, python, and javascript programming languages,
 and those code blocks are embedded within the markdown documentation language.
 Python is helpful for the machine learning-related visualization topics at the
 end of the course, and javascript will help us make interactive plots, but for
 this course we only assume prior experience with R.
 
-1. If you are using vscode, make sure to install the Quarto extension. This will
+10. If you are using vscode, make sure to install the Quarto extension. This will
 make it easier to run code without leaving the editor. If you use Rstudio,
 quarto is supported by default.
 
-{{<video figures/install_quarto.mov>}}
+{{<video figures/install_quarto.mp4>}}
 
-1. You can create a code block using three backticks and the name of the
+11. You can create a code block using three backticks and the name of the
 language. For example, this is what an R code block looks like.
 
 ```{r}
@@ -140,7 +139,7 @@ x = [1, 2, 3]
 x = [1, 2, 3] // js arrays are written the same was as python
 ```
 
-1. You can modify options within each block. These won't appear in the rendered
+12. You can modify options within each block. These won't appear in the rendered
 document but control the appearance of the output. For example, you can name
 your chunks, which is useful for debugging.
 
@@ -169,7 +168,7 @@ Contrast that with,
 plot(1:3)
 ```
 
-7. Sometimes code prints lots of messages that can clutter the document.
+13. Sometimes code prints lots of messages that can clutter the document.
 
 ```{r}
 #| echo: fenced
@@ -185,40 +184,40 @@ To keep things clean, I often set the messages and warnings code chunk options t
 library(tidyverse)
 ```
 
-1. It can be annoying to copy these options to every single chunk. Instead, you
+14. It can be annoying to copy these options to every single chunk. Instead, you
 can modify the metadata at the top of the document so that the option will apply
 to every single chunk below.
 
 ![](figures/global_chunk_options.png)
 
-1. To render a document, you can go to the command palette and enter `Quarto Preview` to pull up that option. You can also render from the command line with the terminal command `quarto preview your-document.qmd`.
+15. To render a document, you can go to the command palette and enter `Quarto Preview` to pull up that option. You can also render from the command line with the terminal command `quarto preview your-document.qmd`.
 
-{{<video figures/quarto_preview.mov>}}
+{{<video figures/quarto_preview.mp4>}}
 
-1. A common pitfall when using quarto is that if you take the rendered HTML
+16. A common pitfall when using quarto is that if you take the rendered HTML
 document outside of its original directory, the figures won't render properly.
 For example, if we take the previous document and move it to a new folder, we'll
 see this.
 
-{{<video figures/not_self_contained.mov>}}
+{{<video figures/not_self_contained.mp4>}}
 
-1. To solve this, add the option `self-contained: true` to the file header. This
+17. To solve this, add the option `self-contained: true` to the file header. This
 will make sure that all images and file styling will be carried along with the
 HTML directly.
 
 ## Agentic Coding
 
-1. Coding agents are programs that you can call from your command line that are
+18. Coding agents are programs that you can call from your command line that are
 able to edit and run computer programs. Unlike simply typing prompts into a web
 interface, they can have much more context and run preliminary checks locally on
 your machine.
 
-1. These tools can be helpful in visualization, especially if you think very
+19. These tools can be helpful in visualization, especially if you think very
 carefully through what you are trying to accomplish, have built up an effective
 vocabulary for communicating technical concepts, and can review the intermediate
 outputs critically.
 
-1. In this class, I'll be asking you to be using the Pi agent for all the work
+20. In this class, I'll be asking you to be using the Pi agent for all the work
 you submit. This is so that everyone has the access to the same models, which
 keeps things fair. It's also because the software is open source and compatible
 with many different underlying models. It's likely that the best models will
@@ -226,7 +225,7 @@ continue to change over time, and having a single platform that interfaces with
 all of them will make sure that your skills remain relevant despite these
 changes in model.
 
-1. You can use pi from the terminal. In the recording below, I've used a free
+21. You can use pi from the terminal. In the recording below, I've used a free
 model to add a new histogram of random numbers. Notice how I used the `@` symbol
 to refer to a file. This guided the model towards the context that it needed for
 the task. While here the `@` symbol specifies the file we want to edit, it can
@@ -235,27 +234,27 @@ files or documentation. Also, a minor point -- at the start, I rearranged my
 terminal window so that it appears on the right. This is not really needed, I
 just did that so we can see more of the output.
 
-{{<video figures/pi_example.mov>}}
+{{<video figures/pi_example.mp4>}}
 
-1. At the very end of that recording, I use the `/export` command to save the
+22. At the very end of that recording, I use the `/export` command to save the
 session. The result is a plain HTML file that I could share with anyone who was
 interested in the prompts or intermediate outputs.
 
-{{<video figures/pi_export.mov>}}
+{{<video figures/pi_export.mp4>}}
 
-1. If you are done with a task and want to move on to another problem, you can
+23. If you are done with a task and want to move on to another problem, you can
 use the `/clear` command to clear all the context from the interactions so far.
 This can keep the previous interactions from inadvertently influencing with the
 next set of edits.
 
-1. Another important Pi command is `/model`. This lets you switch between
+24. Another important Pi command is `/model`. This lets you switch between
 different models. The example in the video above is simple and could be done
 successfully with a free model. For slightly more complex tasks, even a very
 cheap model will often be preferable For slightly more complex tasks, even a
 very cheap model will often be preferable.
 
-1. I will give you an openrouter API key that gives you access to a a few
+25. I will give you an openrouter API key that gives you access to a a few
 openrouter models. Please use this for the assignments in the class. Once you
 have the API key, you can add it to Pi using the steps in the video below.
 
-{{<video figures/pi_api_key.mov>}}
+{{<video figures/pi_api_key.mp4>}}

@@ -119,70 +119,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><em>This note won’t be tested in the exam but helps set you up for running in class exercises and solving homework programs.</em></p>
+<p><em>This note won’t be tested on the exam but prepares you for running in-class exercises and solving homework problems.</em></p>
 <ol type="1">
 <li><p>This note describes the development environment we’ll use throughout the class. By the end, you should be able to</p>
 <ul>
 <li>Navigate a modern code editor.</li>
 <li>Use quarto notebooks to combine code, visualizations, and commentary.</li>
-<li>Run the pi coding agent to create a ggplot2 visualization</li>
+<li>Run the pi coding agent to create a ggplot2 visualization.</li>
 <li>Check that your code notebooks are formatted properly for submission.</li>
 </ul></li>
 </ol>
-<p>Before we get started, please make sure to the install quarto and pi. The instructions below describe how to do this for different types of operating system.</p>
+<p>Before we get started, please make sure to the install quarto and pi. The instructions below describe how to do this for different operating systems.</p>
 <section id="code-editors" class="level2">
 <h2 class="anchored" data-anchor-id="code-editors">Code Editors</h2>
 <ol start="2" type="1">
-<li>We will be making visualizations directly within programming languages. This is different from creating visualizations in software like Excel, Power BI, or Tableau, because our visualizations will be defined by writing out code in text files rather than interacting with a GUI (clicking on buttons, selecting from dropdown menus, etc.).</li>
+<li>We will create visualizations in a programming language. This is different from creating visualizations in software like Excel, Power BI, or Tableau, because our visualizations will be defined by writing code rather than interacting with a GUI (clicking buttons, selecting from dropdown menus, etc.).</li>
 </ol>
 <p>Contrast the excel approach,</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/excel_plot.mp4"></video></div>
-<p>With a version written in code,</p>
+<p>With the coded version,</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/vscode_plot.mp4"></video></div>
 <ol start="3" type="1">
-<li><p>Since programming is all done by editing text files, it helps to have efficient ways of navigating across, typing in, and monitoring changes to text files. This is what modern code editors support. This note describes vscode, but Rstudio and positron are similar (and I’m happy to go over that one-on-one).</p></li>
-<li><p>To open an existing directory, go to “File &gt; Open Folder.” This will make the editor aware of all the files in that folder.</p></li>
+<li><p>Since programming is all done by editing text files, it helps to have efficient ways to navigate, type in, and monitoring changes to text files. This is what modern code editors support. This note describes vscode, but Rstudio and positron are similar (and I’m happy to go over that one-on-one).</p></li>
+<li><p>To open an existing folder, go to “File &gt; Open Folder.” This will make the editor aware of all the files in that folder.</p></li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video3" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/opening_folder.mp4"></video></div>
-<p>You can navigate all the files in a project using the stack of paper icon at the top left of the editor. If you have directories, clicking on them will open all the files within. You can also create new files and directories by right clicking in this space.</p>
+<p>You can navigate all the files in a project using the stack-of-paper icon at the top left of the editor. If you have directories, clicking on them will expand all the files within. You can also create new files and directories by right-clicking in this space</p>
 <ol start="5" type="1">
-<li>We’ll mainly be working with quarto files (described in detail below). These files have a bit of boilerplate text that always has to be present, and it’s annoying to copy that in manually each time. Instead, you can can type <code>Cntl + Shift + p</code> (windows) or <code>Cmd + Shift + p</code> (mac) to bring up the “Command Palette,” where you can request a quarto file with the basic text already included<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>We’ll mainly work with quarto files (described in detail below). These files have boilerplate text that is always present, and it’s tedious to copy each time. Instead, you can type <code>Ctrl + Shift + p</code> (windows) or <code>Cmd + Shift + p</code> (mac) to bring up the “Command Palette,” where you can create a quarto file with the boilerplate in place<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/new_quarto.mp4"></video></div>
 <ol start="6" type="1">
-<li><p>Modern code editors have built-in support for <code>git</code>, a program for checkpointing progress in your code projects. It’s essentially “track changes” for code. The program is helpful because,</p>
+<li><p>Modern code editors have built-in support for <code>git</code>, a program for checkpointing progress in your code projects. It’s essentially “track changes” for code. It’s helpful because,</p>
 <ul>
-<li>It makes sure you don’t accidentally lose all your work.</li>
-<li>When using AI agents, it makes it easier to highlight the changes they make.</li>
+<li>It keeps you from accidentally losing your work.</li>
+<li>When using AI agents, it clearly highlights the changes they make.</li>
 </ul></li>
 </ol>
-<p>Describing everything git can do is beyond the scope of this course (and I believe it is taught in the introductory R courses). But for our purposes, it’s enough to know that you can initialize a repository inside a folder.</p>
+<p>Describing everything git can do is beyond the scope of this course (and I believe it’s taught in the introductory R courses). But for our purposes, it’s enough to know that you can initialize a repository in a folder.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video5" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/new_repo.mp4"></video></div>
 <p>Commit a change, which acts like a checkpoint for your later review.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video6" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/committing_a_change.mp4"></video></div>
-<p>And track any changes made since the last commit.</p>
+<p>And track any changes since the last commit.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video7" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/git_track_changes.mp4"></video></div>
 <ol start="7" type="1">
-<li>It’s not as important, but you know that you can customize your code editor. You can change the layout of the different panels, the color themes<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, even the fonts. There are also extensions (blocks icon on the left) that other people have written that give even more options.</li>
+<li>It’s not as important, but know that you can customize your editor. You can change the panel layout, the color themes<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, even the fonts. There are also extensions (blocks icon on the left) give even more options.</li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video8" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/color_themes.mp4"></video></div>
 </section>
 <section id="quarto-notebooks" class="level2">
 <h2 class="anchored" data-anchor-id="quarto-notebooks">Quarto Notebooks</h2>
 <ol start="8" type="1">
-<li>Literate programming is the idea that code from a programming language code can be embedded within a documentation language. This places the emphasis back on why we are writing the code, what exactly we’re supposed to learn from/accomplish with it.</li>
+<li>Literate programming is the idea that code from a programming language can be embedded within a documentation language. This places the emphasis back on why we are writing the code, what exactly we’re meant to learn from or accomplish with it.</li>
 </ol>
 <blockquote class="blockquote">
 <p>The main idea is to treat a program as a piece of literature, addressed to human beings rather than to a computer.</p>
-<p>– Donald Knuth, in <em>Literate Programming</em></p>
+<p>– Donald Knuth, <em>Literate Programming</em></p>
 </blockquote>
 <ol start="9" type="1">
-<li><p>Quarto is an implementation of literate programming that’s well suited to data visualization. It supports R, python, and javascript programming languages, and those code blocks are embedded within the markdown documentation language. Python is helpful for the machine learning-related visualization topics at the end of the course, and javascript will help us make interactive plots, but for this course we only assume prior experience with R.</p></li>
-<li><p>If you are using vscode, make sure to install the Quarto extension. This will make it easier to run code without leaving the editor. If you use Rstudio, quarto is supported by default.</p></li>
+<li><p>Quarto is an implementation of literate programming that’s well suited to data visualization. It supports R, python, and javascript, and those code blocks are embedded within the markdown. Python is helpful for the machine learning visualization topics at the end of the course, and javascript will help us make interactive plots, but the only prior experience we assume is with R.</p></li>
+<li><p>If you are using vscode, to install the quarto extension so you can run code without leaving the editor. If you use Rstudio, quarto is supported by default.</p></li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video9" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/install_quarto.mp4"></video></div>
 <ol start="11" type="1">
-<li>You can create a code block using three backticks and the name of the language. For example, this is what an R code block looks like.</li>
+<li>You can create a code block with three backticks and the name of the language. This is what an R code block looks like,</li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
@@ -196,10 +196,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-startfrom="137" data-source-offset="9"><pre class="sourceCode java code-with-copy"><code class="sourceCode java" style="counter-reset: source-line 136;"><span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>```<span class="op">{</span>ojs<span class="op">}</span></span>
-<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a><span class="co">//| echo: fenced</span></span>
-<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="op">[</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">]</span> <span class="co">// js arrays are written the same was as python</span></span>
-<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>```</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-startfrom="134" data-source-offset="9"><pre class="sourceCode java code-with-copy"><code class="sourceCode java" style="counter-reset: source-line 133;"><span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>```<span class="op">{</span>ojs<span class="op">}</span></span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="co">//| echo: fenced</span></span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="op">[</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">]</span> <span class="co">// js arrays are written the same way as python</span></span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>```</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-1" data-nodetype="declaration">
 
@@ -207,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <ol start="12" type="1">
-<li>You can modify options within each block. These won’t appear in the rendered document but control the appearance of the output. For example, you can name your chunks, which is useful for debugging.</li>
+<li>You can set options within each block. They won’t appear in the rendered document but control how the output looks. For example, you can name your chunks, which helps debugging.</li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
@@ -215,17 +215,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>One trick that’s very useful for our course – you can resize figures and write captions this way.</p>
+<p>One trick that’s worth knowing for our course – you can resize figures and write captions this way.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 6</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 3.5</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Here is a caption.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="00-workspace_setup_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="576"></p>
+<figcaption>Here is a caption.</figcaption>
 </figure>
 </div>
 </div>
@@ -235,18 +237,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 3</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: Here is a caption.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="00-workspace_setup_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="288"></p>
+<figcaption>Here is a caption.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <ol start="13" type="1">
-<li>Sometimes code prints lots of messages that can clutter the document.</li>
+<li>Sometimes code prints many messages that clutter the document.</li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
@@ -265,47 +269,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
-<p>To keep things clean, I often set the messages and warnings code chunk options to false.</p>
-<div class="cell" data-warnings="false">
+<p>To keep things clean, I set the <code>message</code> and <code>warning</code> code chunk options to false.</p>
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| warnings: false</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="14" type="1">
-<li>It can be annoying to copy these options to every single chunk. Instead, you can modify the metadata at the top of the document so that the option will apply to every single chunk below.</li>
+<li>Copying these options to every chunk is tedious. Instead, you can set the metadata at the top of the document so that they will apply to every chunk below.</li>
 </ol>
 <p><img src="figures/global_chunk_options.png" class="img-fluid"></p>
 <ol start="15" type="1">
-<li>To render a document, you can go to the command palette and enter <code>Quarto Preview</code> to pull up that option. You can also render from the command line with the terminal command <code>quarto preview your-document.qmd</code>.</li>
+<li>To render a document, open the command palette and enter <code>Quarto Preview</code>. You can also render from terminal with <code>quarto preview your-document.qmd</code>.</li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video10" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/quarto_preview.mp4"></video></div>
 <ol start="16" type="1">
-<li>A common pitfall when using quarto is that if you take the rendered HTML document outside of its original directory, the figures won’t render properly. For example, if we take the previous document and move it to a new folder, we’ll see this.</li>
+<li>A common pitfall is that if you move the rendered HTML document outside its original folder, the figures won’t render. For example, if we move the previous document to a new folder, we’ll see this.</li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video11" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/not_self_contained.mp4"></video></div>
 <ol start="17" type="1">
-<li>To solve this, add the option <code>self-contained: true</code> to the file header. This will make sure that all images and file styling will be carried along with the HTML directly.</li>
+<li>To fix this, add <code>self-contained: true</code> to the file header. This embeds all images and styling embedded directly in the HTML.</li>
 </ol>
 </section>
 <section id="agentic-coding" class="level2">
 <h2 class="anchored" data-anchor-id="agentic-coding">Agentic Coding</h2>
 <ol start="18" type="1">
-<li><p>Coding agents are programs that you can call from your command line that are able to edit and run computer programs. Unlike simply typing prompts into a web interface, they can have much more context and run preliminary checks locally on your machine.</p></li>
-<li><p>These tools can be helpful in visualization, especially if you think very carefully through what you are trying to accomplish, have built up an effective vocabulary for communicating technical concepts, and can review the intermediate outputs critically.</p></li>
-<li><p>In this class, I’ll be asking you to be using the Pi agent for all the work you submit. This is so that everyone has the access to the same models, which keeps things fair. It’s also because the software is open source and compatible with many different underlying models. It’s likely that the best models will continue to change over time, and having a single platform that interfaces with all of them will make sure that your skills remain relevant despite these changes in model.</p></li>
-<li><p>You can use pi from the terminal. In the recording below, I’ve used a free model to add a new histogram of random numbers. Notice how I used the <code>@</code> symbol to refer to a file. This guided the model towards the context that it needed for the task. While here the <code>@</code> symbol specifies the file we want to edit, it can also be used to refer to any information that helps solve the task, like related files or documentation. Also, a minor point – at the start, I rearranged my terminal window so that it appears on the right. This is not really needed, I just did that so we can see more of the output.</p></li>
+<li><p>Coding agents are programs that you call from your command line that can edit and run other programs. Unlike typing prompts into a web interface, they can draw on more context and run checks locally on your machine.</p></li>
+<li><p>These tools can help with visualization, especially if you think carefully through what you are trying to accomplish, have built a working vocabulary for technical concepts, and can review the intermediate output critically.</p></li>
+<li><p>In this class, I’ll ask you to use the Pi agent for all the work you submit. This gives everyone access to the same models, which keeps things fair. It’s also open source and works with with many underlying models. The best models will keep changing, and a single platform that interfaces with all of them will make sure that your skills remain relevant.</p></li>
+<li><p>You can run pi from the terminal. In the recording below, I’ve use a free model to add a new histogram of random numbers. Notice how I used the <code>@</code> symbol to refer to a file. This guides the model to the context that it needs. Here it specifies the file we want to edit, but it can point to anything that helps solve the task, like related files or documentation. A minor point – at the start, I moved my terminal panel to the right. This is not necessary, I just did it so we can see more output.</p></li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video12" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_example.mp4"></video></div>
 <ol start="22" type="1">
-<li>At the very end of that recording, I use the <code>/export</code> command to save the session. The result is a plain HTML file that I could share with anyone who was interested in the prompts or intermediate outputs.</li>
+<li>At the end of that recording, I use the <code>/export</code> command to save the session. The result is a plain HTML file I could share with anyone interested in the prompts or intermediate outputs.</li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video13" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_export.mp4"></video></div>
 <ol start="23" type="1">
-<li><p>If you are done with a task and want to move on to another problem, you can use the <code>/clear</code> command to clear all the context from the interactions so far. This can keep the previous interactions from inadvertently influencing with the next set of edits.</p></li>
-<li><p>Another important Pi command is <code>/model</code>. This lets you switch between different models. The example in the video above is simple and could be done successfully with a free model. For slightly more complex tasks, even a very cheap model will often be preferable For slightly more complex tasks, even a very cheap model will often be preferable.</p></li>
-<li><p>I will give you an openrouter API key that gives you access to a a few openrouter models. Please use this for the assignments in the class. Once you have the API key, you can add it to Pi using the steps in the video below.</p></li>
+<li><p>When you finish a task and want to move on to another, you can use <code>/clear</code> to clear the context from all interactions so far. This keeps earlier interactions from inadvertently influencing the next set of edits.</p></li>
+<li><p>Another important Pi command is <code>/model</code>. This lets you switch between models. The example in the video above is simple enough for a free model. For slightly more complex tasks, even a very cheap model is often preferable.</p></li>
+<li><p>I will give you an OpenRouter API key with access to a a few models. Please use it class assignments. Once you have the key, add it to Pi with the steps in the video below.</p></li>
 </ol>
 <div class="quarto-video"><video id="video_shortcode_videojs_video14" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_api_key.mp4"></video></div>
 </section>
@@ -314,19 +318,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>This works for other types of files too, like python notebooks.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>This works for other file types too, like python notebooks.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>The examples below are mostly from the Chalice extension.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InggPSBbMSwgMiwgM10gLy8ganMgYXJyYXlzIGFyZSB3cml0dGVuIHRoZSBzYW1lIHdhcyBhcyBweXRob25cbiJ9XX0=
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InggPSBbMSwgMiwgM10gLy8ganMgYXJyYXlzIGFyZSB3cml0dGVuIHRoZSBzYW1lIHdheSBhcyBweXRob25cbiJ9XX0=
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
 window._ojs.paths.runtimeToDoc = "../../..";
-window._ojs.paths.runtimeToRoot = "../../../..";
-window._ojs.paths.docToRoot = "..";
+window._ojs.paths.runtimeToRoot = "../../..";
+window._ojs.paths.docToRoot = "";
 window._ojs.selfContained = false;
 window._ojs.runtime.interpretFromScriptTags();
 </script>

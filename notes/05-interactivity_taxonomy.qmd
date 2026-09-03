@@ -25,6 +25,7 @@ set.seed(2026)
 ```
 
 reading:
+
 - https://mastering-shiny.org/basic-reactivity.html
 - https://homes.cs.washington.edu/~jheer/files/idfva-draft.pdf
 
@@ -45,7 +46,7 @@ items based on plot itself, we can instead use click or hover events. These
 types of inputs (based on the plot rather than external widgets) are called
 graphical queries.
 
-{{<video figures/unemployment_select.mp4.mov>}}
+{{<video figures/unemployment_select.mp4>}}
 
 Hover and click are useful for individual samples. For groups, we can instead
 use brushes (interactive rectangular selections).  This examples uses brushes on
@@ -102,12 +103,12 @@ highlights or filters the corresponding samples in the other views.
    the delays histogram, we can see that the most delayed flights often depart
    later in the day.
 
-   {{<video figures/crossfilter_flights.mov>}}
+   {{<video figures/crossfilter_flights.mp4>}}
 
    Here is a multipanel example. We can see which departure/dropoff combinations
    are most common and they change over the course of the day.
 
-   {{<video figures/crossfilter_flights.mov>}}
+   {{<video figures/crossfilter_flights.mp4>}}
 
 8. Finally, interactivity can be used to **organize** displays. We're so used to
 working with multiple windows open at a time that it's easy to forget that this

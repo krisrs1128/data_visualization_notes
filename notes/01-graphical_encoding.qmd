@@ -39,14 +39,14 @@ Readings: [1](https://rafalab.dfci.harvard.edu/dsbook/ggplot2.html), [2 (Chapter
 
 4. Every plot is made from three parts,
 
-    - Data: These are the raw measurements that we want to visualize.
-    - Graphical Marks: These are the basic graphical elements in an image (e.g., circles, lines) that appear on the page. The appearance of the marks are determined by visual _channels_, like position, color, or shape.
-    - Graphical Encoding: This is the mapping that ties the data to the graphical marks' channels.
+    - **Data**: These are the raw measurements that we want to visualize.
+    - **Graphical Marks**: These are the basic graphical elements in an image (e.g., circles, lines) that appear on the page. The appearance of the marks are determined by visual _channels_, like position, color, or shape.
+    - **Graphical Encoding**: This is the mapping that ties the data to the graphical marks' channels.
 
-   When we construct a data visualization, we are imprint marks on a page in the
+   When we construct a data visualization, we are imprinting marks on a page in the
    same way that an artist creates a work from a blank canvas. The properties of
-   these marks that we can vary are called visual channels. For example,
-   position and color are both channels that we can control in circle marks .
+   these marks that we can vary are called _visual channels_. For example,
+   position and color are both channels that we can control in circle marks.
    Compared to an artist, the only difference is that we arrange the marks to
    encode meaning derived directly from precisely recorded and easily shareable
    data.
@@ -123,15 +123,15 @@ You should memorize the hierarchy below (at least, given a pair of channels, you
 
 ![](figures/hierarchy_munzner.png)
 
-8. One immediate implication of this is summarized as the Effectiveness
-Principle. For any given visualization task, we should prioritize the top of the
+8. One immediate implication of this is summarized as the
+**Effectiveness Principle**. For any given visualization task, we should prioritize the top of the
 hierarchy for the comparisons that are the most important. E.g., position and
-color should be reserved for the features that are most to compare.  This means
+color should be reserved for the features that are most important to compare.  This means
 that even for the exact same data set, depending on the question, different
-approaches might be more appropriate.  An example of this is discussed in
-[@mackinlay]. If we  want to compare mileage with price across all cars. It's
-most appropriate to use a scatterplot, while if we want to compare individual
-cars of interest, it's easier to find this information in matched bar plots.
+approaches might be more appropriate.  An example of this is discussed below. If
+we  want to compare mileage with price across all cars. It's most appropriate to
+use a scatterplot, while if we want to compare individual cars of interest, it's
+easier to find this information in matched bar plots.
 
 ![](figures/mackinlay_matched.png)
 
@@ -209,12 +209,12 @@ by recombining a few basic building blocks. This is in contrast to systems with
 prespecified chart types, where the user is forced to pick from a limited
 dropdown menu of plots. The hope is to make visualization design feel more like
 ordinary language (hence _grammar_), even though each sentence is just a
-combination of words, we're able to express a vast array of meanings. `
+combination of words, we're able to express a vast array of meanings.
 
 13. We will use two software packages that implement a version of the grammar of
 graphics. The `ggplot2` package is based in R and is well suited to creating
 rich, static visualizations.  The package has been around for nearly 20 years
-and is extremely widely used in practice.  Mosaic vegaplot is a relative
+and is extremely widely used in practice.  Mosaic vgplot is a relative
 newcomer, but it is well suited to interactive visualization design. We'll see
 how both handle data, marks, and encodings.
 
@@ -248,7 +248,7 @@ ggplot(murders, aes(x = population, y = total)) +
     )
 ```
 
-15. Data: The first argument to `ggplot()` must be a data.frame where each row is an observation and each column is an attribute describing the observation. This is important because each mark that you see on a ggplot figure – a line, a point, a rectanlge, ... – had to start out as a row within an R data.frame. The visual properties of the mark (e.g., color) are determined by the values along columns.
+15. Data: The first argument to `ggplot()` must be a data.frame where each row is an observation and each column is an attribute describing the observation. This is important because each mark that you see on a ggplot figure – a line, a point, a rectangle, ... – had to start out as a row within an R data.frame. The visual properties of the mark (e.g., color) are determined by the values along columns.
 
 ```{r}
 data(murders)
@@ -271,7 +271,7 @@ You can see all the types of geoms in the [cheat sheet](https://github.com/rstud
 
 17. Encodings: In ggplot2, we use `aes()` to implement the graphical encoding.
 `aes()` stands for aesthetic mapping, which is a synonym for graphical encoding.
-Analyzing the original graph, we recognize these specific encoding,
+Analyzing the original graph, we recognize these specific encodings,
 
    - State Population → x-axis coordinate
    - Number of murders → y-axis coordinate
@@ -377,12 +377,12 @@ of your thinking, I encourage you to iterate on the design, building it up over
 several stages and being precise in your specification.  
 
 Here's an example that built up the visualization above from a few prompts. You
-can read the prompts and the intermediate outputs [here](lhttps://drive.google.com/drive/folders/1DROl3TK9XpsPWdD3FMczOZbenLZQc4NE?usp=drive_link). One point of
+can read the prompts and the intermediate outputs [here](https://drive.google.com/drive/folders/1DROl3TK9XpsPWdD3FMczOZbenLZQc4NE?usp=drive_link). One point of
 caution is that this is a very common dataset, and you can see, even from the
 reasoning traces, that it referred to the book from which the notes are drawn.
 And even at the very end, I decided to change the appearance of the rate line so
 that it lay below the points (the layers are added in the order they appear in
-the code) and was a little bit lighter (instesad of "gray50" I set it to
+the code) and was a little bit lighter (instead of "gray50" I set it to
 "#d4d4d4").
 
 ```{r}
@@ -614,7 +614,7 @@ ggplot(gap2000) +
 ```
 
 31. This seems like a lot of work for just a lowly bar plot! But I think it's
-amazing customizable the figure is -- we can give it our own sense of style.
+amazing how customizable the figure is -- we can give it our own sense of style.
 With practice, these sorts of modifications will become second nature.
 And
 really, even though we spent some time on this plot, there are still many things
@@ -624,7 +624,7 @@ appearance, maybe even splitting the countries into two panels.
 32. In the plot above, each bar is anchored at 0. Instead, we could have each
 bar encode *two* continuous attributes, a left and right, along with a
 categorical attribute as in bar plots. This is called a
-**segment** mark. To illustrate, let's compare the minimum and maximimum life
+**segment** mark. To illustrate, let's compare the minimum and maximum life
 expectancies within each country cluster.  We'll need to create a new
 `data.frame` with just the summary information. For this, we `group_by` each
 cluster, so that a `summarise` call finds the minimum and maximum life

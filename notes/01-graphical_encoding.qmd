@@ -27,38 +27,27 @@ theme_set(theme_classic() + theme(panel.border = element_rect(fill = NA, linewid
 set.seed(2026)
 ```
 
-Readings: [1](https://rafalab.dfci.harvard.edu/dsbook/ggplot2.html), [2 (Chapter 5.1 - 5.4 and 5.5.4)](https://search.library.wisc.edu/catalog/9910211448302121).
+Readings: [1 (Chapter 5.1 - 5.4 and 5.5.4)](https://search.library.wisc.edu/catalog/9910211448302121), [2 (optional)](https://rafalab.dfci.harvard.edu/dsbook/ggplot2.html).
 
-1. If you are interested in data science, you're probably already convinced that to understand something deeply it really helps to measure. All the different data that we gather, the counts of different molecules in developing tissues, the electromagnetic readouts from astronomical observatories, the likes and dislikes of a billion online videos.... these are all attempts made by people to make sense of a world that is far too complicated to grasp all at once. And if you've already stepped into this area, you've probably heard about the advanced algorithms and statistical theories that have been developed to help us navigate the recurring patterns that help us summarize and make decisions from these data.
+1. If you are interested in data science, you're probably already convinced that to understand something deeply it helps to measure. All the different data that we gather, the counts of different molecules in developing tissues, the spectral readouts from astronomical observatories, the likes and dislikes on a billions online videos.... these are attempts to make sense of a world that is too complicated to grasp all at once. All our advanced algorithms and statistical theories are designed to help us find the recurring patterns among these data.
 
-2. A common misconception is that to use these data science methods you have to be clever. That a trained data scientist will be able to hear about a problem and data set and immediately conjure the appropriate methodology. In my experience this is not actually how things work. You don't have to be clever, you just have to look at the data. Everything that happens downstream, all the modeling and inference, can be guided by a very clear view of how the data actually look. To really know whether our assumptions are reliable or our conclusions can be trusted, the default summaries are rarely enough, and we usually have to do extra detective work.
-
-3. The purpose of this class is to introduce you to the timeless concepts and modern methods of data visualization to help you do this detective work well. By the end you should have the intellectual foundation to make informed judgments about your visualization designs. More than conceptual knowledge, this class will give you an opportunity to practice. There are a surprising number of problem-solving techniques that apply to entire classes of problems, like methods for linking views or making maps, but it's hard to really internalize them without repetition.
+2. A common misconception is that to use these data science methods you have to be clever. That a trained data scientist can hear about a problem and data set and immediately conjure the appropriate methodology. In my experience this is not how things work. You don't have to be clever, you only have to look at the data. A clear data of how the data look guides everything that happens later, all the modeling and inference. To know whether assumptions are reliable or conclusions can be trusted, we have to do some patient detective work.  This class introduces you to the timeless concepts and modern methods of data visualization to help you do this detective work well.
 
 ### Graphical Encoding
 
-4. Every plot is made from three parts,
+3. Every plot has three parts. The first two are,
 
-    - **Data**: These are the raw measurements that we want to visualize.
-    - **Graphical Marks**: These are the basic graphical elements in an image (e.g., circles, lines) that appear on the page. The appearance of the marks are determined by visual _channels_, like position, color, or shape.
-    - **Graphical Encoding**: This is the mapping that ties the data to the graphical marks' channels.
+    - **Data**: The measurements that we want to visualize.
+    - **Graphical marks**: The basic graphical elements in an image (e.g., circles, lines) that appear on the page.
 
-   When we construct a data visualization, we are imprinting marks on a page in the
-   same way that an artist creates a work from a blank canvas. The properties of
-   these marks that we can vary are called _visual channels_. For example,
-   position and color are both channels that we can control in circle marks.
-   Compared to an artist, the only difference is that we arrange the marks to
-   encode meaning derived directly from precisely recorded and easily shareable
-   data.
+   When we construct a data visualization, we are imprinting marks on a page.  The properties of these marks that we can vary are called _visual channels_.  For example, position and color are both channels that we can control in circle marks. This gives the third part,
 
-5. For example, below we will make this bar chart of country population in the
-year 2000, made using the gapminder dataset. The raw data are country names
-(categorical variable), their populations (numerical variable), and a country
-group giving the broader geographical region (categorical variable). The visual
-marks are colored rectangles. The graphical encoding is,
+    - **Graphical encoding**: The mapping from the data to the graphical marks' visual channels
 
-   - `x`-axis position $\iff$ Population size.
-   - `y`-axis position $\iff$ Country name. Notice also that these have been sorted, so it also encodes country rank.
+4. For example, the bar chart below shows country populations in 2000, from the gapminder dataset. The raw data are country names (categorical variable), their populations (numerical variable), and a country group giving the broader geographical region (categorical variable). The visual marks are colored rectangles. The graphical encoding is,
+
+   - Bar length $\iff$ Population size.
+   - `y`-axis position $\iff$ Country name. These have been sorted, so $y$-axisx position also encodes country rank.
    - `color` $\iff$ Country group.
 
 ```{r}
@@ -78,7 +67,7 @@ ggplot(gap2000) +
 
 ### Hierarchy of Encodings
 
-6. How many times larger (in terms of area) is the circle on the right?
+5. How many times larger (in terms of area) is the circle on the right?
 
 ```{r}
 #| fig-width: 6
@@ -117,41 +106,21 @@ ggplot(bars, aes(x, height)) +
     theme_void()
 ```
 
-7. What we are seeing here is a special case of a more general phenomenon called the hierarchy of encodings. Not all differences between visual channels can be compared with the same accuracy and speed. This is a limitation of basic human perception. Moreover, for either ordered or categorical attributes, these differences are very generalizable -- it's not like some people are very accurate at perceiving areas, while other people can easily position. In both controlled lab experimental settings and large-scale crowd-sourcing experiments, the same general hierarchy tends to recur^[If you didn't make it to this lecture, the answer is that for both circles and bars the answer is seven. When we vote in class, the judgments are much more accurate for the bars than for the circles. Incidentally, when I've given this lecture to different audiences, the group that does this the best are the biologists, at one lab I went to (~ 20 people), everyone said either 7 or 8 for the bar chart.].
+6. This is a special case of the hierarchy of encodings. Not all differences between visual channels can be compared with the same accuracy and speed. This is a limitation of human perception. In both laboratory and crowdsourcing experiments, the same orderings recur^[If you didn't make it to this lecture, the answer is that for both circles and bars the answer is seven. When we vote in class, the judgments are much more accurate for the bars than for the circles. Incidentally, when I've given this lecture to different audiences, the group that does this the best are the biologists, at one lab I went to (~ 20 people), everyone said either 7 or 8 for the bar chart.].
 
-You should memorize the hierarchy below (at least, given a pair of channels, you should be able to say which is more effective).
+You should remember the hierarchy below (at least, given a pair of channels, you should know which is more effective).
 
 ![](figures/hierarchy_munzner.png)
 
-8. One immediate implication of this is summarized as the
-**Effectiveness Principle**. For any given visualization task, we should prioritize the top of the
-hierarchy for the comparisons that are the most important. E.g., position and
-color should be reserved for the features that are most important to compare.  This means
-that even for the exact same data set, depending on the question, different
-approaches might be more appropriate.  An example of this is discussed below. If
-we  want to compare mileage with price across all cars. It's most appropriate to
-use a scatterplot, while if we want to compare individual cars of interest, it's
-easier to find this information in matched bar plots.
+7. An implication of the hierarchy is the **Effectiveness Principle**. For any visualization task, we should use the top of the hierarchy for the most important comparisons. The best design always depends on the question. For example, to compare mileage with price across cars, use a scatterplot, but to analyze specific cars, use bar plots sorted by name, because we can then use position to look up car name.
 
 ![](figures/mackinlay_matched.png)
 
 ![](figures/mackinlay_scatter.png)
 
-This also gives a more formal criterion for evaluating visualizations.  For a
-given task, one visualization's design is more _effective_ than another if the
-associated comparisons are more easily and accurately perceived by the reader
-compared to the alternatives.
+This gives a formal evaluation method. For a given task, one design is more _effective_ than another if it lets the reader make the task's comparisons more accurately.
 
-9. A related principle is the expressiveness principle. An expressive
-visualization is faithful to the underlying data. It shows all the relevant data
-(it doesn't suppress anything meaningful) but also doesn't suggest facts that
-aren't present (it doesn't mislead).  For example, the visualization below is
-not expressive because it suggests cars from some countries have more or less of
-some quantity.
-
-![](figures/mackinlay_expressiveness.png)
-
-10. Here is another exercise. How long does it take you to find the circle?
+8. Here is another exercise. How long does it take you to find the circle?
 
 ```{r}
 #| label: popout
@@ -200,27 +169,17 @@ Now, can you find the red circle?
 popout_plot(n_blue_circles = 25, n_red_squares = 25)
 ```
 
-11. What we have seen is the phenomenon called "visual popout" or, more formally, preattentive processing. Some properties in visual channels can be perceived immediately without any cognitive effort. Others (like shape in the example above) require us to deliberately scan over the visualization.  Unfortunately, it's not so straightforward to combine popout across channels. Once we have both red squares and circles, it's no longer easy to find the red circle.
+9. What we have seen is the phenomenon called "visual popout" or, more formally, preattentive processing. Some properties in visual channels can be perceived immediately without any cognitive effort. Others (like shape in the example above) require us to deliberately scan over the visualization.  Unfortunately, it's not so straightforward to combine popout across channels. Once we have both red squares and circles, it's no longer easy to find the red circle.
 
 ### Grammar of Graphics
 
-12. The _Grammar of Graphics_ is the idea that we can compose rich visualizations
-by recombining a few basic building blocks. This is in contrast to systems with
-prespecified chart types, where the user is forced to pick from a limited
-dropdown menu of plots. The hope is to make visualization design feel more like
-ordinary language (hence _grammar_), even though each sentence is just a
-combination of words, we're able to express a vast array of meanings.
+10. The _Grammar of Graphics_ is the idea that we can compose rich visualizations by combining a few basic building blocks. This is in contrast to systems with prespecified chart types, where the user is forced to pick from a limited dropdown menu of plots. The hope is to make visualization design feel more like ordinary language (hence _grammar_), even though each sentence is just a combination of words, we're able to express infinite meanings.
 
-13. We will use two software packages that implement a version of the grammar of
-graphics. The `ggplot2` package is based in R and is well suited to creating
-rich, static visualizations.  The package has been around for nearly 20 years
-and is extremely widely used in practice.  Mosaic vgplot is a relative
-newcomer, but it is well suited to interactive visualization design. We'll see
-how both handle data, marks, and encodings.
+11. We will use two implementations of the grammar of graphics. `ggplot2` is a twenty year old R package that is very widely used for static plots.  `mosaic vgplot` is newer and built for interactivity. We'll see how both handle data, marks, and encodings.
 
 **`ggplot2`**
 
-14. Let's use the grammar of graphics to construct this plot.
+12. Let's use the grammar of graphics to construct this plot.
 
 ```{r}
 #| echo: false
@@ -248,14 +207,14 @@ ggplot(murders, aes(x = population, y = total)) +
     )
 ```
 
-15. Data: The first argument to `ggplot()` must be a data.frame where each row is an observation and each column is an attribute describing the observation. This is important because each mark that you see on a ggplot figure – a line, a point, a rectangle, ... – had to start out as a row within an R data.frame. The visual properties of the mark (e.g., color) are determined by the values along columns.
+13. Data: The first argument to `ggplot()` must be a data.frame where each row is an observation and each column is an attribute describing the observation. Each mark that you see on a ggplot figure – a line, a point, a rectangle, ... – started as a row within an R `data.frame`. The visual channels of the mark are determined by the column values.
 
 ```{r}
 data(murders)
 head(murders)
 ```
 
-16. Marks: The words in the grammar of graphics are the geometry layers, called "geoms." We can associate each row of a data frame with points, lines, rectangles, etc., by referring to the appropriate geom. A typical plot will compose a chain of layers on top of a dataset,
+14. Marks: The words in the grammar of graphics are the geometry layers, called "geoms." We can associate each row of a data frame with points, lines, rectangles, etc., by referring to the appropriate geom. A typical plot will compose a chain of layers on top of a dataset,
 
 > ggplot(data) + [layer 1] + [layer 2] + …
 
@@ -269,7 +228,7 @@ ggplot(murders) +
 
 You can see all the types of geoms in the [cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf). We will go over this more detail below.
 
-17. Encodings: In ggplot2, we use `aes()` to implement the graphical encoding.
+15. Encodings: In ggplot2, we use `aes()` to implement the graphical encoding.
 `aes()` stands for aesthetic mapping, which is a synonym for graphical encoding.
 Analyzing the original graph, we recognize these specific encodings,
 
@@ -277,17 +236,14 @@ Analyzing the original graph, we recognize these specific encodings,
    - Number of murders → y-axis coordinate
    - Geographical region → color
 
-  And this is formalized through the code.
+  Formalizing this with code,
 
 ```{r}
 ggplot(murders) +
     geom_point(aes(x = population, y = total, col = region))
 ```
 
-18.  The specific mapping from data values to physical mark properties are
-implemented through scales. These are also basic "words" in the ggplot2 grammar.
-For example, the original plot used log scales for population and total, it also
-used a custom color scale, and this was achieved by simply adding new scale layers.
+16.  The exact mappings from data values to visual channels are implemented through scales.  For example, the original plot used log scales for population and total, it also used a custom color scale, set with `scale_color_brewer`.
 
 ```{r}
 ggplot(murders) +
@@ -297,11 +253,7 @@ ggplot(murders) +
     scale_y_log10()
 ```
 
-19. Notice that the original visualization also had text labeling all the states
-and a reference line giving the nationwide murder rate (so we could see whether
-a state was above or below the national rate given its population size).  These
-can again be implemented simply by adding more layers. For the text labels, we
-can use `geom_text_repel` from the `ggrepel` package,
+17. Notice that the original visualization also had text labeling all the states and a reference line giving the nationwide murder rate (so we could see whether a state was above or below the national rate given its population size).  These are implemented simply by adding more layers. For the text labels, we used `geom_text_repel` from the `ggrepel` package,
 
 ```{r}
 ggplot(murders) +
@@ -312,10 +264,7 @@ ggplot(murders) +
     scale_color_brewer(palette = "Set2")
 ```
 
- This code is actually unnecessarily verbose. It copies x- and y-encoding for
- both the text and the point layers.  A clearer approach is to set these
- encodings into a global aesthetic encoding. This can be set using the second
- argument to ggplot.
+ This code is actually unnecessarily verbose. It copies x- and y-encoding for both the text and the point layers.  A clearer approach is to set these encodings into a global aesthetic encoding, the second argument on the first line.
 
 ```{r}
 ggplot(murders, aes(x = population, y = total)) +
@@ -326,11 +275,7 @@ ggplot(murders, aes(x = population, y = total)) +
     scale_color_brewer(palette = "Set2")
 ```
 
-20. The overlay line giving the national rate is actually a bit subtle to
-construct. Unlike all the other marks on this plot, it isn't defined by any row
-in the murders data frame. It turns out that you can also overlay marks by
-setting their properties directly. These kinds of layers no longer have `aes()`
-in them.
+18. The overlay line giving the national rate is actually a bit subtle to construct. Unlike all the other marks on this plot, it isn't defined by any row in the murders data frame. It turns out that you can overlay marks by setting their properties directly. These layers no longer have `aes()`.
 
 ```{r}
 r <- murders |>
@@ -346,10 +291,7 @@ ggplot(murders, aes(x = population, y = total)) +
     scale_color_brewer(palette = "Set2")
 ```
 
-21. Finally, we can add layers that customize the plot appearance and improve the
-annotation. `theme()` can be used to fine tune plot properties, like whether to
-include a background grid or the position of the legend. `labs()` can be used to
-come up with new legend or axis titles.
+19. Finally, we can customize the plot appearance and annotation. `theme()` fine tunes plot properties, like where to place the legend. `labs()` can be used to add better labels.
 
 ```{r}
 ggplot(murders, aes(x = population, y = total)) +
@@ -368,22 +310,9 @@ ggplot(murders, aes(x = population, y = total)) +
     theme(legend.position = "top")
 ```
 
-22. With agentic coding, it is not so necessary to write each of these layers by
-hand, but you should be very careful in specifying your encodings and the types
-of layers you want. We just saw that even for this simple plot, there are so
-many subtle choices that can improve it. Even if you get lucky and the plot
-looks reasonable starting from a vague prompt, in order to sharpen the quality
-of your thinking, I encourage you to iterate on the design, building it up over
-several stages and being precise in your specification.  
+20. With agentic coding, you don't need to manually write the layers.  But you must still think carefully about your encodings.  Even our simple plot above involves many subtle judgments. Even if you get lucky with a vague prompt, to sharpen the quality of your thinking, you should iterate on the design and experiment with alternative specifications.
 
-Here's an example that built up the visualization above from a few prompts. You
-can read the prompts and the intermediate outputs [here](https://drive.google.com/drive/folders/1DROl3TK9XpsPWdD3FMczOZbenLZQc4NE?usp=drive_link). One point of
-caution is that this is a very common dataset, and you can see, even from the
-reasoning traces, that it referred to the book from which the notes are drawn.
-And even at the very end, I decided to change the appearance of the rate line so
-that it lay below the points (the layers are added in the order they appear in
-the code) and was a little bit lighter (instead of "gray50" I set it to
-"#d4d4d4").
+  Here's an example that built up the visualization above from a few prompts ([link](https://drive.google.com/drive/folders/1DROl3TK9XpsPWdD3FMczOZbenLZQc4NE?usp=drive_link)).  One caution is that this is a common dataset, and the reasoning traces show that it referred to the book used in these notes.  Even then, I made two manual changes. The rate line was drawn over the points, so I switched the layer order. I then lightened it "#d4d4d4" from "gray50".
 
 ```{r}
 #| echo: false
@@ -418,13 +347,14 @@ murders |>
 
 **Mosaic vgplot**
 
-23. A similar grammar of graphics is implemented by Mosaic vgplot. One nuance is
+21. A similar grammar of graphics is implemented by Mosaic vgplot. One nuance is
 that this is done in JavaScript, rather than R, and requires a different data
-loading procedure. We have hidden the code below, and we'll go over that step in
-detail in our "Data Management" lecture (though if you're curious, you can look
-at the source code for these notes linked at the very top).
+loading procedure. I've included the code below, but we won't go over it. For
+now you can just copy and paste it for any visualization you want to make, and
+we'll go over it in detail in our "Data Management" notes.
 
 ```{r}
+# save R data frames to CSV
 write_csv(murders, "data/murders.csv")
 write_csv(gap2000, "data/gap2000.csv")
 write_csv(gapminder, "data/gapminder.csv")
@@ -432,9 +362,10 @@ ojs_define(national_rate = national_rate)
 ```
 
 ```{ojs}
-//| echo: false
+//| echo: true
 path = (p) => new URL(`data/${p}`, document.baseURI).href
 
+// load CSVs to javascript
 vg = {
   const vg = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm");
   const wasm = await vg.wasmConnector();
@@ -448,13 +379,13 @@ vg = {
 }
 ```
 
-24. We can read the analogy to ggplot2 even from a minimal scatter plot example.
+22. We can read the analogy to ggplot2 even from a minimal scatter plot example.
 
-    - `vg.from` specifies which dataset to use. I've hidden the code, but `murders` is a database that's accessible to all javascript cells in this notebook.
-    - `vg.dot` is analogous to `geom_point` and specifies the visual mark to use.
+    - `vg.from` specifies which dataset to use.
+    - `vg.dot` is analogous to `geom_point` and specifies the graphical mark to use.
     - The dictionary in the second argument to `vg.from` describes the graphical encoding.
 
-The `r` argument is not part of the encoding and simply fixes the size of all the points to 5 pixels across. It is analogous to how in a ggplot layer you can specify properties without referring to the original data. For example, `geom_point(aes(x = population, y = total), size = 5)`. The width and height parameters just rescale the overall canvas size to be 650 pixels across and 400 pixels tall.
+The `r` argument is not part of the encoding and simply fixes the size of all the points to 5 pixels across. The width and height parameters just rescale the overall canvas size to be 650 pixels across and 400 pixels tall.
 
 ```{ojs}
 vg.plot(
@@ -464,7 +395,7 @@ vg.plot(
 )
 ```
 
-25. As before, we can customize the scales. Here, `xScale` and `yScale` allow us to use a log scale while the color scheme allows us to switch to a colorbrewer palette.
+23. As before, we can customize the scales. Here, `xScale` and `yScale` allow us to use a log scale while the color scheme allows us to switch to a colorbrewer palette.
 
 ```{ojs}
 vg.plot(
@@ -496,7 +427,7 @@ vg.plot(
 )
 ```
 
-26. Finally, we overlay a line giving the national rate. The syntax here differs
+24. Finally, we overlay a line giving the national rate. The syntax here differs
 slightly from ggplot. Instead of specifying the intercept and slope, we specify
 the end points of the line in length two array. We've also added some annotation
 using `xLabel` and `yLabel` and a legend with `vg.colorLegend()`.
@@ -536,11 +467,11 @@ vg.plot(
 
 ### Graphical Marks
 
-27. Depending on the data and problem at hand, it helps to have a wide vocabulary of potential graphical marks to apply. We've already seen *point* and **text marks**, though we've only used them to encode continuous $x, y$ position (and for the text, the associated label). They actually support encoding for even more visual channels -- alpha, color, size, and shape (for points) --, as documented in the ggplot2 [cheat sheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf)^[You're responsible for knowing the encodings for the marks we discuss in this note, but not everything in this cheat sheet.].
+25. Depending on the data and problem at hand, it helps to have a wide vocabulary of potential graphical marks to apply. We've already seen *point* and **text marks**, though we've only used them to encode continuous $x, y$ position (and for the text, the associated label). They actually support encoding for even more visual channels -- alpha, color, size, and shape (for points) --, as documented in the ggplot2 [cheat sheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf)^[You're responsible for knowing the encodings for the marks we discuss in this note, but not everything in this cheat sheet.].
 
 Let's review a few of the other common marks, potential pitfalls, and how you can avoid them.
 
-28. We'll illustrate marks with the gapminder dataset, which describes the
+26. We'll illustrate marks with the gapminder dataset, which describes the
 changes in standard of living around the world over the last few decades.
 
 ```{r}
@@ -548,7 +479,7 @@ gapminder <- read_csv("https://uwmadison.box.com/shared/static/dyz0qohqvgake2ghm
 gap2000 <- filter(gapminder, year == 2000) # keep only year 2000
 ```
 
-29. **Bar Marks** associate a continuous field with a categorical one. They also support alpha, color (border of the bar), fill (inside of the bar), and linetype (e.g., solid vs dashed borders) visual channels.
+27. **Bar Marks** associate a continuous field with a categorical one. They also support alpha, color (border of the bar), fill (inside of the bar), and linetype (e.g., solid vs dashed borders) visual channels.
 
 ```{r}
 #| fig-height: 4.5
@@ -591,7 +522,7 @@ ggplot(gap2000) +
     geom_col(aes(pop, reorder(country, pop), fill = cluster))
 ```
 
-30. A few other points that I think are worth improving
+28. A few other points that I think are worth improving
 
     * The axis titles are not meaningful.
     * There is a strange gap between the left hand edge of the plot and the start of the bars.
@@ -613,7 +544,7 @@ ggplot(gap2000) +
     labs(x = "Population", y = "Country", fill = "Country Group", color = "Country Group") # adds labels
 ```
 
-31. This seems like a lot of work for just a lowly bar plot! But I think it's
+29. This seems like a lot of work for just a lowly bar plot! But I think it's
 amazing how customizable the figure is -- we can give it our own sense of style.
 With practice, these sorts of modifications will become second nature.
 And
@@ -621,7 +552,7 @@ really, even though we spent some time on this plot, there are still many things
 that could be interesting to experiment with, like font styles, background
 appearance, maybe even splitting the countries into two panels.
 
-32. In the plot above, each bar is anchored at 0. Instead, we could have each
+30. In the plot above, each bar is anchored at 0. Instead, we could have each
 bar encode *two* continuous attributes, a left and right, along with a
 categorical attribute as in bar plots. This is called a
 **segment** mark. To illustrate, let's compare the minimum and maximum life
@@ -653,7 +584,7 @@ ggplot(life_ranges) +
     xlim(0, 85) # otherwise would only range from 42 to 82
 ```
 
-33. **Line marks** are useful for comparing changes. Our eyes naturally focus on
+31. **Line marks** are useful for comparing changes. Our eyes naturally focus on
 rates of change when we see lines. They support continuous x and y channels, as
 well as linetype and linewidth. Below, we'll plot the fertility over time, colored
 in by country cluster.
@@ -683,7 +614,7 @@ ggplot(gapminder) +
     scale_color_manual(values = c("#80BFA2", "#7EB6D9", "#3E428C", "#D98BB6", "#BF2E21", "#F23A29"))
 ```
 
-34. **Area marks** have a flavor of both bar and line marks. The encodings are
+32. **Area marks** have a flavor of both bar and line marks. The encodings are
 the same as for lines. The filled area supports absolute comparisons, while the
 changes in shape suggest derivatives.
 
@@ -721,7 +652,7 @@ ggplot(population_ranges) +
     scale_fill_manual(values = c("#80BFA2", "#7EB6D9", "#3E428C", "#D98BB6", "#BF2E21", "#F23A29"))
 ```
 
-35. All those examples were made with ggplot2. Mosaic doesn't support segment or
+33. All those examples were made with ggplot2. Mosaic doesn't support segment or
 ribbon marks. But we can easily generate the analogous bar and line plots. Here
 is the analogous bar plot. `barX` defines a bar mark, the `sort` option orders
 countries, and the remaining layers customize the annotation and scales.
@@ -754,7 +685,7 @@ using `x => what to do with x`. This is exactly like R's `\(x) { what to do with
 x}`. The `${d / 1e6} million` substitutes the result of `d / 1e6` into the
 string "{result} million", just like R's `glue({result}, million)`.
 
-36. Here is the analogous lineplot. The `z` encoding groups each country's
+34. Here is the analogous lineplot. The `z` encoding groups each country's
 observations, and `stroke` is the mosaic equivalent of ggplot2's `color`.
 
 ```{ojs}
@@ -784,8 +715,8 @@ vg.plot(
 
 By the end of this week, you should be able to,
 
-- Define the hierarchy of encodings, rank visual channels according to their perceptual efficiency, and use these concepts to evaluate visualiations (on their own, and in comparison with one another).
+- Define the hierarchy of encodings, rank visual channels according to their perceptual efficiency, and use these concepts to evaluate visualizations (on their own, and in comparison with one another).
 - Define graphical marks, visual encodings, and the grammar of graphics and discuss these concepts in the context of ggplot2 and mosaic vgplot code.
-- Given a practical visualization goal, describe the graphical marks, graphical encodings, and scales that could be used to achieve them and justify your choices in terms of concepts like the hierarchy of encodings, popout, the expressiveness principle, and the effectiveness principle.
-- Recognize when an input data set or visualiation task is/isn't appropriate for a particular graphical mark, like point, line, bar, segment, text, or ribbon marks .
+- Given a practical visualization goal, describe the graphical marks, graphical encodings, and scales that could be used to achieve them and justify your choices in terms of concepts like the hierarchy of encodings, popout, and the effectiveness principle.
+- Recognize when an input data set or visualization task is/isn't appropriate for a particular graphical mark, like point, line, bar, segment, text, or ribbon marks .
 - Suggest improvements for a specific plot, justify the design choices, and outline the implementation in ggplot2 and mosaic.

@@ -22,9 +22,9 @@ Items marked with $^\dagger$ will not be tested on exams.
 
 ```{r}
 #| label: setup
-#| echo: false
+#| echo: true
 library(tidyverse)
-theme_set(theme_classic() + theme(panel.border= element_rect(fill = NA, linewidth = .5)))
+theme_set(theme_classic(base_size=14) + theme(panel.border= element_rect(fill = NA, linewidth = .5)))
 set.seed(2026)
 ```
 
@@ -41,22 +41,20 @@ columns correspond to distinct variables.
 to particular subsets of rows ("filtering") or columns ("selecting").
 
 3. For visualization, it is important that data be in tidy format. This is
-because (a) each visual mark will be associated with a row of the dataset and
-(b) properties of the visual marks will determined by values within the columns.
+because (a) each visual mark will be associated with a row of the dataset and (b) properties of the visual marks will determined by values within the columns.
 A plot that is easy to create when the data are in tidy format might be very
 hard to create otherwise.
 
 4. The tidy data might seem like an idea so natural that it’s not worth teaching
 (let alone formalizing). However, exceptions are encountered frequently, and
 it’s important that you be able to spot them. We'll start the notes by
-explaining the core data tidying concepts with R code, then we'll see that all
-these operations have analogs for creating observable plot or mosaic
-visualizations.
+explaining the core data tidying concepts, then we'll see how they can be
+implemented in code.
 
 5. Here is an example of a tidy dataset.
 
 ```{r}
-#| echo: false
+#| echo: true
 table1
 ```
 
@@ -70,7 +68,7 @@ the overall population. It's not really possible to create the plot above using
 the data in this format.
 
 ```{r}
-#| echo: false
+#| echo: true
 table4a # cases
 table4b # population
 ```
@@ -80,7 +78,7 @@ row is associated with a different variable. Here, the observations are the
 country by year combinations.
 
 ```{r}
-#| echo: false
+#| echo: true
 table2
 ```
 
@@ -88,15 +86,17 @@ table2
 used to store both the population and case count variables.
 
 ```{r}
-#| echo: false
+#| echo: true
 table3
 ```
 
-The trouble is that this variable has to be stored as a character; otherwise, we
+The trouble is that this variable has to be stored as a character. Otherwise, we
 lose access to the original population and case variable. But, this makes the
 plot useless.
 
 ```{r}
+#| fig-height: 4
+#| fig-width: 6
 ggplot(table3, aes(x = year, y = rate)) +
   geom_point() +
   geom_line(aes(group = country))
@@ -108,18 +108,19 @@ ggplot(table3, aes(x = year, y = rate)) +
 a data frame. There are two types of pivoting: lengthening and widening.
 
 8. Lengthening a dataset allows us to take an implicitly stored variable from a
-column name and explicitly store it in a column. The example below tidies one of
-the non-tidy tuberculosis datasets. Note that the data has doubled in length,
-because there are now two rows per country (one per year).
+column name and explicitly store it in a column.  For example, to tidy the
+tuberculosis data below, we have to make sure the year is stored as its own
+column.  Note that the data has doubled in length, because there are now two
+rows per country (one per year).
 
-For reference, these are the original data.
+This is the original (non-tidy) data.
 
 ```{r}
-#| echo: false
+#| echo: true
 table4a
 ```
 
-This is what the "long" form of the same data look like.
+This is what the tidy, long form of the same data look like.
 ```{r}
 #| echo: false
 table4a_longer <- table4a |>
@@ -128,18 +129,43 @@ table4a_longer <- table4a |>
 table4a_longer
 ```
 
-The number of rows got doubled since there were two columns that now each get
-lengthened into distinct rows.
+9. Conversely, if the same observation is split across multiple rows, then we
+have to _widen_ the data.  For example, here is `table2` before widening.
 
 ```{r}
-#| echo: true
-dim(table4a)
-dim(table4a_longer)
+table2
 ```
 
-9. We can pivot both the population and the cases table, then combine them using
-a join operation. A join operation matches rows across two tables according to
-their shared ID columns.
+Now, we spread the `cases` and `population` variables into their own columns.
+
+```{r}
+#| echo: false
+table2 |>
+    pivot_wider(names_from = type, values_from = count)
+```
+
+10. More generally, pivoting has this form.
+
+<img src="figures/pivoting_figures.jpg" width=500/>
+
+Caveat: what is or is not tidy may be context dependent. Maybe you want to
+treat each week as an observation, rather than each day. Second, know that there
+are sometimes computational reasons to prefer non-tidy data. For example, "long"
+data often require more memory, since column names that were originally stored
+once now have to be copied onto each row. Certain statistical models are also
+sometimes best framed as matrix operations on non-tidy datasets.
+
+11. Pivoting is often useful when _joining_ tables, because it makes sure the
+meaning of the rows is compatible. A join operation matches rows across two
+tables according to their shared ID columns. Depending on how we handle the rows
+that are present in only one of the two tables, we get different types of joins.
+
+<img src="figures/example_joins.jpeg" width=700/>
+
+For example, suppose we want to combine the population and cases tables, so that
+we can get the per capita cases for each country over time. The first step is to
+pivot so that year is stored as its own variable. Then we join cases and
+population into the same table using the country-year combinations as the ID.
 
 ```{r}
 #| echo: false
@@ -158,37 +184,16 @@ table4
 ```
 
 This lets us make the year vs. rate plot that we had tried to put together
-before.  It's much easier to recognize trends when comparing the rates, than
-when looking at the raw case counts.
+before. It's much easier to recognize trends when comparing the rates, than when
+looking at the raw case counts.
 
 ```{r}
+#| fig-height: 4
+#| fig-width: 6
 ggplot(table4, aes(x = year, y = cases / population, col = country)) +
   geom_point() +
   geom_line(aes(group = country))
 ```
-
-10. Conversely, if the same observation is split across multiple rows, then we
-have to _widen_ the data.  For example, here is `table2` before widening.
-
-```{r}
-table2
-```
-
-Now, we spread the `cases` and `population` variables into their own columns.
-
-```{r}
-#| echo: false
-table2 |>
-    pivot_wider(names_from = type, values_from = count)
-```
-
-11. Caveat: what is or is not tidy may be context dependent. Maybe you want to
-treat each week as an observation, rather than each day. Second, know that there
-are sometimes computational reasons to prefer non-tidy data. For example, "long"
-data often require more memory, since column names that were originally stored
-once now have to be copied onto each row. Certain statistical models are also
-sometimes best framed as matrix operations on non-tidy datasets.
-
 
 ### Derive
 
@@ -206,7 +211,7 @@ example, the block below separates the `rate` column, which had been stored as a
 string rather than numerical value. The original table was,
 
 ```{r}
-#| echo: false
+#| echo: true
 table3
 ```
 and the separated version is,
@@ -217,11 +222,10 @@ table3 |>
 ```
 
 14. Splitting a column is a special case of deriving new columns as functions of
-existing ones. This is called "mutating" or "deriving" a column, depending on
-the software package. We have used this is in previous lectures, but now we can
-philosophically justify it: the variables we want to encode need to be defined
-in advance.  For example, we may want to create a column `rate` that includes
-cases over population,
+existing ones. This is called "mutating" a column in R.  We have used this is in
+previous lectures, but now we can philosophically justify it: the variables we
+want to encode need to be defined in advance.  For example, we may want to
+create a column `rate` that includes cases over population,
 
 ```{r}
 #| echo: false
@@ -230,15 +234,24 @@ table3 |>
   mutate(rate = cases / year)
 ```
 
-Try seeing what happens if you omit the `convert` argument. Can you see why it was added?
+<img src="figures/mutate_example1.jpg" width=600/>
+
+Here's an example of deriving more than one column in the same command.
+
+<img src="figures/mutate_example2.jpeg" width=600/>
 
 ### Aggregation
 
-15. Sometimes, the variables of interest are functions of several rows. For
-example, perhaps we want to visualize averages of a variable across age groups.
+15. Sometimes, the variables of interest are functions of several rows.
 In this case, we can derive a summary across groups of rows using a group +
-summarize pattern (also called "map (across groups) + reduce (within groups)").
-For example, perhaps we want the average rate over both years.
+summarize pattern (also called "map  + reduce").  We need to specify both the
+group over which to aggregate and the function to aggregate with (e.g., mean or
+maximum)
+
+<img src="figures/group_by_summarize.jpg" width=500/>
+
+This code block illustrates the idea by computing average rates within each
+country.
 
 ```{r}
 #| echo: false
@@ -258,11 +271,10 @@ small part of the large stored collection. We might have ten years of logs but
 only need to look at the last three days. Or, we might have thousands of
 features but only want to make a plot with three.
 
-(create visual summary from existing docs)
-
 17. Databases come with operations that are more restricted than full programming
 languages but are very fast. Operations like select, filter, and aggregate can
-be done much faster in a database than in a console.
+be done much faster in a database than in an interpreted programming language
+like R or python.
 
 18. This makes a difference in visualization because people have limited
 perceptual capacity. We cannot look at a million marks in a plot and distinguish
@@ -271,6 +283,8 @@ observations or an aggregation across groups. Interactivity can help quickly
 navigate between reductions. Since a database can efficiently compute each
 reduction "on demand" without ever reading in the entire dataset, they are
 well-suited to interactive visualization.
+
+<img src="figures/cancer_reduction.jpg" width=800/>
 
 ## Implementation
 
@@ -282,7 +296,7 @@ are rendering the Quarto document.
 
 ```{r}
 library(tidyverse)
-
+table3
 table3 <- read_csv("data/table3.csv")
 table4a <- read_csv("data/table4a.csv")
 ```
@@ -293,13 +307,13 @@ These data frame objects will be the main inputs we give to ggplot2.
 table4a
 ```
 
-20. Mosaic doesn't actually load the data directly into memory. Instead, it
-creates a database. Everything that we visualize starts as a query to this
-database, which might hold many more rows than are actually shown in any one
-view. As mentioned above, this has the advantage of allowing us to visualize
-large data sets on small machines. The downside is that the setup becomes a
-little bit more complicated. Fortunately, we can use something like the block
-below in essentially every mosaic application.
+20. Mosaic doesn't load the data directly into memory. Instead, it creates a
+database. Everything that we visualize starts as a query to this database, which
+might hold many more rows than are actually shown in any one view. As mentioned
+above, this has the advantage of allowing us to visualize large data sets on
+small machines. The downside is that the setup becomes a little bit more
+complicated. Fortunately, we can use something like the block below in
+essentially every mosaic application.
 
 ```{ojs}
 path = (p) => new URL(`data/${p}`, document.baseURI).href
@@ -309,7 +323,7 @@ vg = {
   const wasm = await vg.wasmConnector();
   vg.coordinator().databaseConnector(wasm);
   await vg.coordinator().exec([
-    vg.loadCSV("table3", path("table3.csv"), { header: true }),
+    vg.loadCSV("table3", path("table3_rates.csv"), { header: true }),
     vg.loadCSV("table4a", path("table4a.csv"), { header: true })
   ]);
   return vg;
@@ -326,7 +340,7 @@ underlying database, which we specify using the `.databaseConnector(wasm)`
 call. We'll discuss the coordinator in more detail when we discuss
 interactivity. It will allow data queries depending on user interactions.
 -`vg.loadCSV("name", url)` creates a table in our database starting from a
-CSV file. The first argument "name" Becomes the table name in the database.
+CSV file. The first argument "name" becomes the table name in the database.
 The second argument is the path on disk where our data should be loaded
 from. There are analogous versions of this function for different kinds of
 data. For example, we can load spatial data using `vg.loadSpatial` and
@@ -379,13 +393,15 @@ table4a |>
     pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "cases")
 ```
 
-25$^{\dagger}$. It turns out that you can also apply pivoting in SQL (in fact, much
-of R's tidyverse is based on SQL database concepts). For example, the block
+25$^{\dagger}$. It turns out that you can also apply pivoting in SQL (in fact,
+much of R's tidyverse is based on SQL database concepts). For example, the block
 below does the exact same operation as `pivot_longer` above. For homework
 involving mosaic, it's still typically easier to do preprocessing in R and then
 load the already reshaped data directly into your database. However, if your
 visualization requires many transformations to be applied depending on the user
-query, it is good to know that this pattern can apply.
+query (e.g., show different subsets of data each time a different dropdown menu
+is selected), it is good to know that this can often be done in the database
+before being read into memory.
 
 ```{ojs}
 lengthen_query = `
@@ -409,9 +425,51 @@ table2 |>
     pivot_wider(names_from = type, values_from = count)
 ```
 
+26. Joins can be implemented using the `left_join`, `right_join`, `inner_join`,
+and `full_join` commands. They each take two data.frames as input, and they
+must share at least one column name (or else, the colums to match by have to be
+provided by). For example, here are hte pivoted versions of the cases and
+populations tables.
+
+```{r}
+table4a_pivoted <- table4a |>
+    pivot_longer(-country, names_to = "year", values_to = "cases")
+
+table4b_pivoted <- table4b |>
+    pivot_longer(-country, names_to = "year", values_to = "population")
+
+table4a_pivoted
+table4b_pivoted
+```
+
+Here they are joined. Since all the rows perfectly overlap, the different types
+of joins are equivalent.
+
+```{r}
+table4a_pivoted |>
+    left_join(table4b_pivoted)
+```
+
 ### Deriving Variables
 
-26. In R, we can use the mutate command to derive new variables. For example,
+27. For some special types of derivation, there are built-in functions in the
+tidyverse. For example, to split the rate variable into two cases in population
+columns, we could use `separate`.
+
+```{r}
+#| echo: true
+library(tidyverse)
+data(table3)
+```
+
+```{r}
+table3 <- table3 |>
+  separate(rate, into = c("cases", "population"), convert = TRUE) # try without convert, and compare the data types of the columns
+
+table3
+```
+
+28. In R, we can use the `mutate` command to derive new variables. For example,
 this derives rate as the relative number of cases within a populations.
 
 ```{r}
@@ -421,7 +479,7 @@ table3_rates <- table3 |>
 table3_rates
 ```
 
-We can implement the groupby summarize pattern using one line to define the
+We can implement the `group_by + summarize` pattern using one line to define the
 groups and another to define the summarization operation. For example, this
 defines the average rate within each country.
 
@@ -465,17 +523,13 @@ Inputs.table(groupby_result, {format: { avg_rate: x => x.toFixed(5) }})
 
 ### Scaling to Large Datasets
 
-27. Sometimes, it's interesting to visualize very large datasets. Of course,
-there's only so many pixels on any given screen, So we typically need to filter
-to reasonable subsets or perform some aggregation before graphical encoding.
-This is a setting where using a database becomes very helpful.
+29. To illustrate how to work with a large dataset, below we've created a
+database using the NYC taxi data. This has a million rows, each representing the
+starting and end points of a taxi trip in New York City , so visualizing every
+trip directly would be too overwhelming. But we can easily filter and aggregate
+to get some interesting findings.
 
-28. To illustrate, below we've created a database using the NYC taxi data. This
-has a million rows, each representing the starting and end points of a taxi trip
-in New York City , so visualizing every trip directly would be too overwhelming.
-But we can easily filter and aggregate to get some interesting findings.
-
-29. As a first step let's add a new table (which we call `taxi`) to our existing
+30. As a first step let's add a new table (which we call `taxi`) to our existing
 database by reading in the `trips.parquet` file. This uses the same coordinator
 we set up earlier, which is why we don't need all the extra boilerplate code
 about creating the database.
@@ -487,7 +541,7 @@ taxi_db = {
 }
 ```
 
-30. Now we can look at the first ten rows without having to read in the entire
+31. Now we can look at the first ten rows without having to read in the entire
 dataset.
 
 ```{ojs}
@@ -503,8 +557,8 @@ Inputs.table(total_rows)
 ```
 
 Here's an example of the kind of query we might use in a visualiation. It finds
-the average fare and average distance at different hours of the day. It has to
-derive four variables to accomplish this.
+the average fare and distance at different hours of the day. It has to derive
+four variables to accomplish this.
 
    - `ROUND(time) as hour`: This takes a raw minute-by-minute time and turns it into integer hours.
    - `AVG(fare_comount) as avg_fare`: This derives an `avg_fare` variable as the average fare within each hour, since we've grouped by hour.
@@ -529,8 +583,7 @@ taxi_hourly = taxi_db.query(
 Inputs.table(taxi_hourly)
 ```
 
-
-31. To summarize, these are the main functions that we need to know for tidying
+32. To summarize, these are the main functions that we need to know for tidying
 data. Usually we'll be working with the R column, but it's good to know about
 the equivalent versions in SQL.
 

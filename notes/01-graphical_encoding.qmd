@@ -14,8 +14,8 @@ execute:
     warning: false
     cache: false
     eval: true
-editor: 
-  markdown: 
+editor:
+  markdown:
     wrap: 72
 ---
 

@@ -265,16 +265,16 @@ table3 |>
 ### Databases
 
 16. A database is a way of representing data that lies between static files
-(CSVs, used for storage) and in-memory structures (data frames, actively
-computed upon). They are helpful because many analysis questions require only a
-small part of the large stored collection. We might have ten years of logs but
-only need to look at the last three days. Or, we might have thousands of
-features but only want to make a plot with three.
+(CSVs, used for storage) and in-memory structures (data frames, we compute on
+this). They are helpful because many analysis questions require only a small
+part of the large stored collection. We might have ten years of logs but only
+need to look at the last three days. Or, we might have thousands of features but
+only want to make a plot with three.
 
-17. Databases come with operations that are more restricted than full programming
-languages but are very fast. Operations like select, filter, and aggregate can
-be done much faster in a database than in an interpreted programming language
-like R or python.
+17. Databases come with operations that are more restricted than full
+programming languages but are very fast. Operations like filtering and
+aggregating can be done much faster in a database than in an interpreted
+programming language like R or python.
 
 18. This makes a difference in visualization because people have limited
 perceptual capacity. We cannot look at a million marks in a plot and distinguish
@@ -324,7 +324,8 @@ vg = {
   vg.coordinator().databaseConnector(wasm);
   await vg.coordinator().exec([
     vg.loadCSV("table3", path("table3_rates.csv"), { header: true }),
-    vg.loadCSV("table4a", path("table4a.csv"), { header: true })
+    vg.loadCSV("table4a", path("table4a.csv"), { header: true }),
+    vg.loadParquet("taxi", path("trips.parquet"))
   ]);
   return vg;
 }
@@ -332,24 +333,27 @@ vg = {
 
 Let's parse this line by line.
 
+- The link `https://cdn.jsdelivr.net/npm/@uwdata/vgplot` is where the package is
+stored. This line loads the mosaic package, similar to `library()` in R.
 - `vg.wasmConnector()` set up a DuckDB database. It's very similar to a SQL
 database, but much more lightweight. It's run in the background in our web
 browser.
 - `vg.coordinator()` links the queries needed by the visualization with the
-underlying database, which we specify using the `.databaseConnector(wasm)`
-call. We'll discuss the coordinator in more detail when we discuss
-interactivity. It will allow data queries depending on user interactions.
--`vg.loadCSV("name", url)` creates a table in our database starting from a
+underlying database, which we specify using the `.databaseConnector(wasm)` call.
+We'll discuss the coordinator in more detail when we discuss interactivity. It
+will allow data queries that depend on user interactions.
+- `vg.loadCSV("name", url)` creates a table in our database starting from a
 CSV file. The first argument "name" becomes the table name in the database.
 The second argument is the path on disk where our data should be loaded
 from. There are analogous versions of this function for different kinds of
 data. For example, we can load spatial data using `vg.loadSpatial` and
 parquet files using `vg.loadParquet`.
 
-21. One subtlety is that the data loader needs access to the absolute file path
-(not the relative path).  We've created a small helper function, `path`, which
-looks up the current document's path (`document.baseURI`) and uses that to
-construct the absolute path
+21. One subtlety is that the data loader needs access to the path relative to
+the document's server
+(quarto launches a web server when you run `quarto preview`).  We've created a
+small helper function, `path`, which looks up the current document's path
+(`document.baseURI`) and uses that to construct the absolute path
 
 ```{ojs}
 document.baseURI
@@ -523,36 +527,25 @@ Inputs.table(groupby_result, {format: { avg_rate: x => x.toFixed(5) }})
 
 ### Scaling to Large Datasets
 
-29. To illustrate how to work with a large dataset, below we've created a
-database using the NYC taxi data. This has a million rows, each representing the
-starting and end points of a taxi trip in New York City , so visualizing every
-trip directly would be too overwhelming. But we can easily filter and aggregate
-to get some interesting findings.
+29.$^\dagger$ To illustrate how to work with a large dataset, below we've
+created a database using the NYC taxi data. This has a million rows, each
+representing the starting and end points of a taxi trip in New York City , so
+visualizing every trip directly would be too overwhelming. But we can easily
+filter and aggregate to get some interesting findings.
 
-30. As a first step let's add a new table (which we call `taxi`) to our existing
-database by reading in the `trips.parquet` file. This uses the same coordinator
-we set up earlier, which is why we don't need all the extra boilerplate code
-about creating the database.
-
-```{ojs}
-taxi_db = {
-    await vg.coordinator().exec([vg.loadParquet("taxi", path("trips.parquet"))]);
-    return vg.coordinator();
-}
-```
-
-31. Now we can look at the first ten rows without having to read in the entire
-dataset.
+30.$^\dagger$ We already read the `trips.parquet` file into our database when we
+initially created our coordinator.  Now we can look at the first ten rows
+without having to read in the entire dataset.
 
 ```{ojs}
-taxi_head = taxi_db.query("SELECT * FROM taxi LIMIT 10")
+taxi_head = vg.coordinator().query("SELECT * FROM taxi LIMIT 10")
 Inputs.table(taxi_head)
 ```
 
 Similarly, we can see the total number of rows directly.
 
 ```{ojs}
-total_rows = taxi_db.query("SELECT COUNT(*) AS n_samples FROM taxi")
+total_rows = vg.coordinator().query("SELECT COUNT(*) AS n_samples FROM taxi")
 Inputs.table(total_rows)
 ```
 
@@ -571,7 +564,7 @@ form.
 
 ```{ojs}
 // Query: get average fare by hour of day (across 1M trips)
-taxi_hourly = taxi_db.query(
+taxi_hourly = vg.coordinator().query(
      `SELECT
             ROUND(time) as hour,
             COUNT(*) as num_trips,
@@ -583,9 +576,10 @@ taxi_hourly = taxi_db.query(
 Inputs.table(taxi_hourly)
 ```
 
-32. To summarize, these are the main functions that we need to know for tidying
-data. Usually we'll be working with the R column, but it's good to know about
-the equivalent versions in SQL.
+31. To summarize, these are the main functions that we need to know for tidying
+data. You are only responsible for being able to explain what the functions in
+the R column do. But in some cases, you may want to perform a similar operation
+in the database directly, which is why we included the SQL column.
 
 | Operation            | R               | SQL                          |
 |---------------------|----------------------|-------------------------------|

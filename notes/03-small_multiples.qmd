@@ -44,6 +44,10 @@ display at a time. While there are many types of encodings we could in theory
 use, only a few them are very effective, and they can interfere with one
 another.
 
+<div style="text-align: center;">
+<img src="figures/hierarchy_munzner.png" width="700" />
+</div>
+
 2. There are several ways around this, though. One of the most effective is to
 combine multiple views, either in parallel (small multiples) or which complement
 one another (multiform views). We'll study why this works and the design
@@ -72,7 +76,9 @@ subsets. Each subset is associated with a small panel within the larger plot.
 5. Here's a historical example, by Francis Walker for the 1870 US Census.  Note
 the simplicity of each component, which keeps the overall display readable.
 
-   ![](figures/Persons_With_Gainful_Occupations_and_Attending_School_in_1870.jpg)
+<div style="text-align: center;">
+<img src="figures/Persons_With_Gainful_Occupations_and_Attending_School_in_1870.jpg" width="550" />
+</div>
 
 6. Keep these kinds of plots in mind as a potential alternative to
 interactivity. When we cover interactive visualization, we will show how to use
@@ -85,17 +91,28 @@ looked like, while with small multiples we can make the comparison directly.
 Here's a famous historical example to highlight the benefit of small multiples
 in reducing memory burden, from Muybridge.
 
-   ![](figures/The_Horse_in_Motion.jpg)
+<div style="text-align: center;">
+<img src="figures/The_Horse_in_Motion.jpg" width="600" />
+</div>
 
 7. Ridge plots are a special case of small multiples that are particularly
-suited to displaying multiple parallel time series or densities.  An example
-ridge plot for the gapminder dataset is shown below. The effectiveness of this
-plot comes from the fact that multiple densities can be displayed in close
-proximity to one another, making it possible to facet across many variables in a
-space-efficient way.
+suited to displaying multiple parallel time series or densities. The plot shows
+traffic over the course of a week in 38 German cities
+([source data](https://gist.github.com/chrtze/c74efb46cadb6a908bbbf5227934bfea)).
+
+<div style="text-align: center;">
+<img src="figures/ridgeline_traffic.png" width="500"/>
+</div>
+
+8. An example ridge plot for the gapminder dataset is shown below. The
+effectiveness of this plot comes from the fact that multiple densities can be
+displayed close to one another, making it possible to facet across many
+variables in a space-efficient way.
 
 ```{r}
 #| echo: FALSE
+#| fig-width: 600
+#| fig-height: 350
 data(gapminder)
 gapminder <- gapminder |>
   mutate(
@@ -115,6 +132,8 @@ gapminder <- gapminder |>
 
 ```{r}
 #| echo: FALSE
+#| fig-width: 600
+#| fig-height: 350
 past_year <- 1970
 gapminder_subset <- gapminder |>
   filter(year == past_year, !is.na(dollars_per_day))
@@ -155,7 +174,7 @@ ggplot(gapminder_subset, aes(dollars_per_day, group)) +
 9. Another special case are sparklines. These are small, simplified line plots
 that are integrated directly into text.
 
-![](figures/sparklines_d3.png)
+![](figures/sparklines_d3.png){width="80%"}
 
 They show trends without any axes or labels, which keeps them from feeling
 too cluttered. At most, selective annotation can be used highlight a few
@@ -275,7 +294,7 @@ that female repeatedly appears on the right of male.
     (p[["bar"]] + p[["scatter"]]) / p[["box"]]
 ```
 
-    The improved, visually consistent approach is given below.
+The improved, visually consistent approach is given below.
 
 ```{r}
 #| echo: FALSE
@@ -354,16 +373,15 @@ into the disaster.
    which makes the relationship between temperature and O-ring damage much
    clearer. Tufte argues that had these clearer visualization designs been part
    of standard practice at NASA, then the disaster might have been prevented. We
-   should take this with a grain of salt, though.  [viegaswattenberg] point out
+   should take this with a grain of salt, though.  [@DesignRedesign] point out
    that the safety of the launch could be affected by many components of the
    shuttle, each of which could be damaged by environmental or engineering
    factors. We only know to plot temperature against O-ring damage after the
    disaster already happened.
 
-18. Nonetheless, increasing information density (and removing irrelevant marks)
-is something always worth considering. One corrolary is that we should avoid
-"premature summarization." By reducing data to aggregate statistics, we reduce
-the amount of information available to the viewer. For example, instead of showing "dynamite plot",
+18. One corrollary is that we should avoid "premature summarization." By
+reducing data to aggregate statistics, we reduce the amount of information
+available to the viewer. For example, instead of showing "dynamite plot",
 
    it is more informative to show the points,
 
@@ -422,13 +440,13 @@ ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = species)) +
 use `facet_wrap`. It enforces a maximum number of panels per row and wraps extra
 panels onto new rows.
 
-   ```{r}
+```{r}
 #| echo: true
 #| fig-height: 2.5
 ggplot(penguins, aes(bill_length_mm, bill_depth_mm, color = species)) +
   geom_point() +
   facet_wrap(~island)
-   ```
+```
 
 21. By default, the panels are sorted alphabetically. But to increase information
 density, it helps to instead sort by a property of the data. We can use
@@ -520,20 +538,14 @@ read as strings.
 
 ```{ojs}
 path = (p) => new URL(`data/${p}`, document.baseURI).href
-
 vg = {
-  const mod = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm");
-  const wasm = await mod.wasmConnector();
-  mod.coordinator().databaseConnector(wasm);
-  return mod;
-}
-
-// load the penguins data
-penguins_db = {
+  const vg = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm");
+  const wasm = await vg.wasmConnector();
+  vg.coordinator().databaseConnector(wasm);
   await vg.coordinator().exec([
     vg.loadCSV("penguins", path("penguins.csv"), { header: true })
   ]);
-  return true;
+  return vg;
 }
 ```
 
@@ -543,31 +555,29 @@ can be used to manually create faceted plots, but the subsets and component
 plots have to be created manualy.
 
 ```{ojs}
-{
-  await penguins_db;
+scatterPlot = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm", fill: "species"}
+    ),
+    vg.width(300),
+    vg.height(250)
+);
+```
 
-    // define two component plots
-    const scatterPlot = vg.plot(
-        vg.dot(
-            vg.from("penguins"),
-            {x: "bill_length_mm", y: "bill_depth_mm", fill: "species"}
-        ),
-        vg.width(300),
-        vg.height(250)
-    );
+```{ojs}
+barChart = vg.plot(
+    vg.rectY(
+        vg.from("penguins"),
+        {x: vg.bin("body_mass_g"), y: vg.count(), fill: "species"}
+    ),
+    vg.width(300),
+    vg.height(250)
+);
+```
 
-    const barChart = vg.plot(
-        vg.rectY(
-            vg.from("penguins"),
-            {x: vg.bin("body_mass_g"), y: vg.count(), fill: "species"}
-        ),
-        vg.width(300),
-        vg.height(250)
-    );
-
-    // combine with hconcat
-    return vg.hconcat(scatterPlot, barChart);
-}
+```{ojs}
+vg.hconcat(scatterPlot, barChart);
 ```
 
 ### Objectives

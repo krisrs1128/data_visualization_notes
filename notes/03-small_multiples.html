@@ -177,20 +177,15 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="small-multiples">Small Multiples</h3>
 <ol start="3" type="1">
 <li><p>Our eyes are good at making sense of many small plots, as long as there is shared structure across the plots. We can quickly scan the collection and spot meaningful relationships. Formally, a small multiples plot first partitions the data into disjoint subsets and then applies the same encoding to each of the subsets. Each subset is associated with a small panel within the larger plot.</p></li>
-<li><p>Here’s a historical example, by Francis Walker for the 1870 US Census. Note the simplicity of each component, which keeps the overall display readable.</p></li>
-</ol>
+<li><p>Here’s a historical example, by Francis Walker for the 1870 US Census. Note the simplicity of each component, which keeps the overall display readable.</p>
 <div style="text-align: center;">
 <p><img src="figures/Persons_With_Gainful_Occupations_and_Attending_School_in_1870.jpg" width="550"></p>
-</div>
-<ol start="6" type="1">
-<li>These are a useful alternative to interactivity. When we cover interactive visualization, we will show how to use user-controlled inputs to filter down to different subsets and update the visual display. This serves a similar purpose as small multiples and takes up less space than small multiple plots. However, interactivity has the downside of creating a large memory burden (the same problem applies to animation). We have remember what the previous subset looked like, while with small multiples we can make the comparison directly. Here’s a famous historical example to highlight the benefit of small multiples in reducing memory burden, from Edwaerd Muybridge’s <em>The Horse in Motion</em>.</li>
-</ol>
+</div></li>
+<li><p>These are a useful alternative to interactivity. When we cover interactive visualization, we will show how to use user-controlled inputs to filter down to different subsets and update the visual display. This serves a similar purpose as small multiples and takes up less space than small multiple plots. However, interactivity has the downside of creating a large memory burden (the same problem applies to animation). We have remember what the previous subset looked like, while with small multiples we can make the comparison directly. Here’s a famous historical example to highlight the benefit of small multiples in reducing memory burden, from Edwaerd Muybridge’s <em>The Horse in Motion</em>.</p>
 <div style="text-align: center;">
 <p><img src="figures/The_Horse_in_Motion.jpg" width="600"></p>
-</div>
-<ol start="7" type="1">
-<li>Both ggplot and mosaic support faceted plots. These are a special case of small multiples where a single type of plot is split into many parallel panels, each containing a different subset of the data. We’ll see code for this below.</li>
-</ol>
+</div></li>
+<li><p>Both ggplot and mosaic support faceted plots. These are a special case of small multiples where a single type of plot is split into many parallel panels, each containing a different subset of the data. We’ll see code for this below.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -200,7 +195,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>The analogous mosaic plot:</p>
+<p>The analogous mosaic plot:</p></li>
+</ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="99" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 98;"><span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">plot</span>(</span>
 <span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
@@ -220,21 +216,18 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="4" type="1">
+<ol start="7" type="1">
 <li><p>Two important decisions we need to make in any faceted plot are,</p>
 <ul>
 <li>Should the views share the same axes? Sharing axes makes panels directly comparable, but if the data ranges are very different, it might be difficult to read differences within some of the panels.</li>
 <li>How should the panels be arranged? If the subsets are determined by a categorical variable, we could always use sort alphabetically to help with direct lookups. Alternatively, we could sort by some property of the data within each panel (e.g., averages or correlations).</li>
 </ul>
 <p>The basic downside of this approach is that it takes up a lot of space, since we are repeating an base visualization many times. When there are many subsets, we either have to shrink the individual panels (which can become illegible) or make the visualization very large (which we may not want to do if it’s not the most important message to communicate).</p></li>
-<li><p>Ridge plots are a form of small multiples plot that are well suited to displaying multiple parallel time series or densities. The plot shows traffic over the course of a week in 38 German cities (<a href="https://gist.github.com/chrtze/c74efb46cadb6a908bbbf5227934bfea">source data</a>).</p></li>
-</ol>
+<li><p>Ridge plots are a form of small multiples plot that are well suited to displaying multiple parallel time series or densities. The plot shows traffic over the course of a week in 38 German cities (<a href="https://gist.github.com/chrtze/c74efb46cadb6a908bbbf5227934bfea">source data</a>).</p>
 <div style="text-align: center;">
 <p><img src="figures/ridgeline_traffic.png" width="500"></p>
-</div>
-<ol start="9" type="1">
-<li>An example ridge plot for the gapminder dataset is shown below. Since the densities can overlap, we can see many groups in less space than a faceted visualization.</li>
-</ol>
+</div></li>
+<li><p>An example ridge plot for the gapminder dataset is shown below. Since the densities can overlap, we can see many groups in less space than a faceted visualization.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -243,10 +236,8 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
-<ol start="10" type="1">
-<li>We could instead plot the raw data using <code>geom_point</code>. The result isn’t as satisfying, because, while the shape of the ridges popped out immediately in the original plot, we have to invest a bit more effort to find the regions of higher density in the raw data plot. Also, when there are many samples, we risk “overplotting,” where so many points overlap one another that finer differences in point density become impossible to see.</li>
-</ol>
+</div></li>
+<li><p>We could instead plot the raw data using <code>geom_point</code>. The result isn’t as satisfying, because, while the shape of the ridges popped out immediately in the original plot, we have to invest a bit more effort to find the regions of higher density in the raw data plot. Also, when there are many samples, we risk “overplotting,” where so many points overlap one another that finer differences in point density become impossible to see.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -265,27 +256,23 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
-<ol start="11" type="1">
-<li>Another special case of small multiples are sparklines. These are small, simplified line plots that are integrated directly into text.</li>
-</ol>
+</div></li>
+<li><p>Another special case of small multiples are sparklines. These are small, simplified line plots that are integrated directly into text.</p>
 <div style="text-align: center;">
 <p><img src="figures/sparklines_d3.png" width="900/"></p>
 </div>
-<p>They show trends without any axes or labels, which keeps them from feeling cluttered. Selective annotation can be used highlight a few points of interest.</p>
-<ol start="12" type="1">
-<li>Besides direct integration into text, it’s common to see sparklines combined in tables. Even though there are many lines, the fact that they all share the same encoding means our eyes quickly recognize groupings and exceptions.</li>
-</ol>
+<p>They show trends without any axes or labels, which keeps them from feeling cluttered. Selective annotation can be used highlight a few points of interest.</p></li>
+<li><p>Besides direct integration into text, it’s common to see sparklines combined in tables. Even though there are many lines, the fact that they all share the same encoding means our eyes quickly recognize groupings and exceptions.</p>
 <div style="text-align: center;">
 <p><img src="figures/0001OS-15741.gif" width="700/"></p>
-</div>
+</div></li>
+</ol>
 </section>
 <section id="multiform-plots" class="level3">
 <h3 class="anchored" data-anchor-id="multiform-plots">Multiform Plots</h3>
 <ol start="13" type="1">
 <li><p>Small multiples are useful whenever we want different subsets (rows) of the data to appear in different parts of the plot. What if we want to compare different features (columns), or work with several datasets? An alternative is to use multiform plots. The idea is to construct plots separately and then combine them only at the very end. This is the opposite of small multiples: Instead of applying the same encoding to different data subsets, we show different encodings of the same data.</p></li>
-<li><p>The main advantage of multiform plots is that individual panels can be tailored to specific visual comparisons, but relationships across panels can also be studied. For example, the plot below shows change in the total number and composition of undergraduate majors over the last few decades. In principle, the same information could be communicated using a stacked area plot. However, comparing the percentages for 1970 and 2015 is much more straightforward using a line plot, and we can still see changes in the overall number of degrees using the area plot.</p></li>
-</ol>
+<li><p>The main advantage of multiform plots is that individual panels can be tailored to specific visual comparisons, but relationships across panels can also be studied. For example, the plot below shows change in the total number and composition of undergraduate majors over the last few decades. In principle, the same information could be communicated using a stacked area plot. However, comparing the percentages for 1970 and 2015 is much more straightforward using a line plot, and we can still see changes in the overall number of degrees using the area plot.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -304,8 +291,7 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
-<ol start="15" type="1">
+</div></li>
 <li><p>There are a few considerations that can substantially improve the quality of a multiform plot,</p>
 <ul>
 <li>Consistent visual encodings for shared variables</li>
@@ -313,8 +299,7 @@ window.Quarto = {
 <li>Proper alignment in figure baselines</li>
 </ul>
 <p>We will discuss each point separately.</p></li>
-<li><p>The figures below are multiform plots of a dataset of athlete physiology. They are very similar, but the second is better because it enforces a more strict consistency in encodings across panels. Specifically, the male / female variable is (1) encoded using the same color scheme across all panels and (2) ordered so that female repeatedly appears on the right of male.</p></li>
-</ol>
+<li><p>The figures below are multiform plots of a dataset of athlete physiology. They are very similar, but the second is better because it enforces a more strict consistency in encodings across panels. Specifically, the male / female variable is (1) encoded using the same color scheme across all panels and (2) ordered so that female repeatedly appears on the right of male.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -333,10 +318,8 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
-<ol start="17" type="1">
-<li>Effective annotation can be used to refer to different subpanels of the data without drawing too much attention to itself. Labels should be visible but subtle – not too large, similar fonts as the figures, and logically ordered ((a) on top left). A nice heuristic is to think of these annotations like page numbers. They are useful for making references, but aren’t something that is actively read.</li>
-</ol>
+</div></li>
+<li><p>Effective annotation can be used to refer to different subpanels of the data without drawing too much attention to itself. Labels should be visible but subtle – not too large, similar fonts as the figures, and logically ordered ((a) on top left). A nice heuristic is to think of these annotations like page numbers. They are useful for making references, but aren’t something that is actively read.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -345,25 +328,21 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
-<ol start="18" type="1">
-<li>For alignment, figure baselines / borders should be consistent. Misalignment can be distracting. This is a problem when multiform plots are made from manually (e.g., in a illustrator app). If we follow the programmatic approach discussed below, we won’t have this issue.</li>
-</ol>
+</div></li>
+<li><p>For alignment, figure baselines / borders should be consistent. Misalignment can be distracting. This is a problem when multiform plots are made from manually (e.g., in a illustrator app). If we follow the programmatic approach discussed below, we won’t have this issue.</p>
 <div style="text-align: center;">
 <p><img src="https://clauswilke.com/dataviz/multi-panel_figures_files/figure-html/athletes-composite-misaligned-1.png" width="650"></p>
-</div>
+</div></li>
+</ol>
 </section>
 <section id="information-density" class="level3">
 <h3 class="anchored" data-anchor-id="information-density">Information Density</h3>
 <ol start="19" type="1">
-<li>Small multiples (especially sparklines) are most legible when they trim away extraneous marks, allowing us to focus on the data itself. This principle applies to other figures and has been called <em>information density</em> or the <em>data-to-ink ratio</em>. We can increase information density by trimming away grid lines, reducing the number of digits in axes labels, removing borders from legends, etc. In the plots below, the second version has higher information density.</li>
-</ol>
+<li><p>Small multiples (especially sparklines) are most legible when they trim away extraneous marks, allowing us to focus on the data itself. This principle applies to other figures and has been called <em>information density</em> or the <em>data-to-ink ratio</em>. We can increase information density by trimming away grid lines, reducing the number of digits in axes labels, removing borders from legends, etc. In the plots below, the second version has higher information density.</p>
 <div style="display: flex; justify-content: center; gap: 20px;">
 <p><img src="figures/data_ink2.png" width="500"> <img src="figures/data_ink1.png" width="500"></p>
-</div>
-<ol start="20" type="1">
-<li>A startling example is this visualization redesign related to the Space Shuttle Challenger disaster, which was caused by damage to the shuttle’s O-rings during unusually cold weather. Here is a version from the official investigation into the disaster.</li>
-</ol>
+</div></li>
+<li><p>A startling example is this visualization redesign related to the Space Shuttle Challenger disaster, which was caused by damage to the shuttle’s O-rings during unusually cold weather. Here is a version from the official investigation into the disaster.</p>
 <div style="text-align: center;">
 <p><img src="figures/challenger-o-rings-v1.png" width="300"></p>
 </div>
@@ -371,10 +350,8 @@ window.Quarto = {
 <div style="text-align: center;">
 <p><img src="figures/challenger-o-rings-v2.png" width="600"></p>
 </div>
-<p>which makes the relationship between temperature and O-ring damage much clearer. Tufte argues that had these clearer visualization designs been part of standard practice at NASA, then the disaster might have been prevented. We should take this with a grain of salt, though. <span class="citation" data-cites="DesignRedesign">(<a href="#ref-DesignRedesign" role="doc-biblioref">Martin 2015</a>)</span> point out that the safety of the launch could be affected by many components of the shuttle, each of which could be damaged by environmental or engineering factors. We only know to plot temperature against O-ring damage after the disaster already happened.</p>
-<ol start="21" type="1">
-<li>One corrollary is that we should avoid “premature summarization.” By reducing data to aggregate statistics, we reduce the amount of information available to the viewer. For example, instead of showing “dynamite plot”,</li>
-</ol>
+<p>which makes the relationship between temperature and O-ring damage much clearer. Tufte argues that had these clearer visualization designs been part of standard practice at NASA, then the disaster might have been prevented. We should take this with a grain of salt, though. <span class="citation" data-cites="DesignRedesign">(<a href="#ref-DesignRedesign" role="doc-biblioref">Martin 2015</a>)</span> point out that the safety of the launch could be affected by many components of the shuttle, each of which could be damaged by environmental or engineering factors. We only know to plot temperature against O-ring damage after the disaster already happened.</p></li>
+<li><p>One corrollary is that we should avoid “premature summarization.” By reducing data to aggregate statistics, we reduce the amount of information available to the viewer. For example, instead of showing “dynamite plot”,</p>
 <div style="text-align: center;">
 <p><img src="figures/dynamite-1.png" width="300"></p>
 </div>
@@ -385,7 +362,8 @@ window.Quarto = {
 <p>If summaries make comparison easier, then we could alternatively superimpose them over the raw data <span class="citation" data-cites="irizarry2019">(<a href="#ref-irizarry2019" role="doc-biblioref">Irizarry 2019</a>)</span> using a boxplot or ridgeplot.</p>
 <div style="text-align: center;">
 <p><img src="figures/points-and-boxplot-1.png" width="500"></p>
-</div>
+</div></li>
+</ol>
 </section>
 </section>
 <section id="implementation" class="level2">
@@ -393,8 +371,7 @@ window.Quarto = {
 <section id="ggplot2" class="level3">
 <h3 class="anchored" data-anchor-id="ggplot2"><code>ggplot2</code></h3>
 <ol start="22" type="1">
-<li>There are two ggplot2 layers for creating faceted plots. The first, <code>facet_grid</code> uses formula syntax to split the data into subsets, each of which is associated with a panel. For example, <code>~ island</code> splits the three islands into columns.</li>
-</ol>
+<li><p>There are two ggplot2 layers for creating faceted plots. The first, <code>facet_grid</code> uses formula syntax to split the data into subsets, each of which is associated with a panel. For example, <code>~ island</code> splits the three islands into columns.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
@@ -434,10 +411,8 @@ window.Quarto = {
 </div>
 </div>
 <p><em>Exercise: How might we facet with a continuous variable? Hint: Consider <code>cut()</code>.</em></p>
-<p><em>Exercise: What about more complicated formulas? Try <code>sex + island ~ year</code></em></p>
-<ol start="23" type="1">
-<li>If we have many very many panels and don’t want them all in one row, we can use <code>facet_wrap</code>. It sets a maximum number of panels per row and wraps extra panels onto new rows.</li>
-</ol>
+<p><em>Exercise: What about more complicated formulas? Try <code>sex + island ~ year</code></em></p></li>
+<li><p>If we have many very many panels and don’t want them all in one row, we can use <code>facet_wrap</code>. It sets a maximum number of panels per row and wraps extra panels onto new rows.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
@@ -449,14 +424,25 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
-<ol start="24" type="1">
-<li>By default, the panels are sorted alphabetically. But to increase information density, it helps to instead sort by a property of the data. We can use <code>reorder</code> within our formula to sort the categories by a variable of interest.</li>
-</ol>
+</div></li>
+<li><p>If we have subgroups with quite different <span class="math inline">\(x\)</span> or <span class="math inline">\(y\)</span>-axis ranges, we can use the scales argument to <code>facet_grid</code> or <code>facet_wrap</code>. The options are <code>free_x</code>, <code>free_y</code>, or <code>free</code>, which allow the <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>, or both axes scales to differ across panels. The code below illustrates the idea for the penguins data, but in this case it seems better to keep the scales fixed.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">reorder</span>(island, bill_length_mm))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>island, <span class="at">scales =</span> <span class="st">"free"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-small_multiples_files/figure-html/facet-scales-free-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>By default, the panels are sorted alphabetically. But to increase information density, it helps to instead sort by a property of the data. We can use <code>reorder</code> within our formula to sort the categories by a variable of interest.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">reorder</span>(island, bill_length_mm))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -465,16 +451,16 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p><em>Exercise: By default <code>reorder</code> sorts using the mean of the second argument within each group of the first. It’s possible to sort by other properties, like median or variance. Find documentation to see how this is done.</em></p>
+<p><em>Exercise: By default <code>reorder</code> sorts using the mean of the second argument within each group of the first. It’s possible to sort by other properties, like median or variance. Find documentation to see how this is done.</em></p></li>
+</ol>
 </section>
 <section id="ggridges" class="level3">
 <h3 class="anchored" data-anchor-id="ggridges"><code>ggridges</code></h3>
-<ol start="25" type="1">
-<li>The ggridges package creates ridge plots. If we want to organize many densities according to a ridge plot, we can use <code>geom_density_ridges</code>.</li>
-</ol>
+<ol start="26" type="1">
+<li><p>The ggridges package creates ridge plots. If we want to organize many densities according to a ridge plot, we can use <code>geom_density_ridges</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(body_mass_g, species, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_ridges</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(body_mass_g, species, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_ridges</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -482,19 +468,17 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
-<ol start="26" type="1">
-<li>Sometimes we want a ridge plot and already have the height values for the ridges computed in advance. In this case, we can use <code>geom_ridgeline</code> with a height encoding.</li>
-</ol>
+</div></li>
+<li><p>Sometimes we want a ridge plot and already have the height values for the ridges computed in advance. In this case, we can use <code>geom_ridgeline</code> with a height encoding.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">`</span><span class="at">y = x</span><span class="st">`</span> <span class="ot">=</span> x,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">`</span><span class="at">y = x^2</span><span class="st">`</span> <span class="ot">=</span> x<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>x, <span class="at">names_to =</span> <span class="st">"f"</span>, <span class="at">values_to =</span> <span class="st">"y"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, f, <span class="at">height =</span> y)) <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ridgeline</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">10</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">`</span><span class="at">y = x</span><span class="st">`</span> <span class="ot">=</span> x,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">`</span><span class="at">y = x^2</span><span class="st">`</span> <span class="ot">=</span> x<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>x, <span class="at">names_to =</span> <span class="st">"f"</span>, <span class="at">values_to =</span> <span class="st">"y"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, f, <span class="at">height =</span> y)) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ridgeline</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -502,23 +486,23 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
+</div></li>
+</ol>
 </section>
 <section id="patchwork" class="level3">
 <h3 class="anchored" data-anchor-id="patchwork"><code>patchwork</code></h3>
-<ol start="27" type="1">
-<li><code>patchwork</code> can be used to merge ggplot2 components into multiform plots. It uses <code>a + b</code> to place ggplot objects <code>a</code> and <code>b</code> side-by-side and <code>/</code> to place them vertically. The <code>plot_layout</code> command can be used to customize the theme of the overall plot, for example, <code>guides = "collect"</code> gathers all the legend into one place. We can also use the <code>widths</code> and <code>heights</code> argument of this function to control the relative sizes of the components.</li>
-</ol>
+<ol start="28" type="1">
+<li><p><code>patchwork</code> can be used to merge ggplot2 components into multiform plots. It uses <code>a + b</code> to place ggplot objects <code>a</code> and <code>b</code> side-by-side and <code>/</code> to place them vertically. The <code>plot_layout</code> command can be used to customize the theme of the overall plot, for example, <code>guides = "collect"</code> gathers all the legend into one place. We can also use the <code>widths</code> and <code>heights</code> argument of this function to control the relative sizes of the components.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(body_mass_g, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span> <span class="st">"none"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(body_mass_g, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_discrete</span>(<span class="at">guide =</span> <span class="st">"none"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -527,16 +511,14 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p><em>Exercise: We removed the color legend for the histogram <code>p2</code> using <code>guide = "none"</code> in the <code>scale_fill_discrete</code> layer. Why? What would have happened to the plot if we removed this layer?</em></p>
-<ol start="28" type="1">
-<li>We can use <code>+</code> and <code>/</code> like algebraic symbols to compose more complex layouts. For example, below we place two plots side-by-side and both of those on top of a third.</li>
-</ol>
+<p><em>Exercise: We removed the color legend for the histogram <code>p2</code> using <code>guide = "none"</code> in the <code>scale_fill_discrete</code> layer. Why? What would have happened to the plot if we removed this layer?</em></p></li>
+<li><p>We can use <code>+</code> and <code>/</code> like algebraic symbols to compose more complex layouts. For example, below we place two plots side-by-side and both of those on top of a third.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(flipper_length_mm, body_mass_g, <span class="at">color =</span> species)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> p3 <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(flipper_length_mm, body_mass_g, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> p3 <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -544,24 +526,25 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div>
+</div></li>
+</ol>
 </section>
 <section id="vgplot-faceting-and-concat" class="level3">
 <h3 class="anchored" data-anchor-id="vgplot-faceting-and-concat">vgplot faceting and concat</h3>
-<ol start="29" type="1">
+<ol start="30" type="1">
 <li>Mosaic can also be used to created faceted and and multiform plots. Let’s first read in the penguins dataset. We use a version that was saved to the <code>data</code> subdirectory in advance.</li>
 </ol>
 <div id="vg-setup" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-startfrom="604" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 603;"><span id="cb11-604"><a href="#cb11-604" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
-<span id="cb11-605"><a href="#cb11-605" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
-<span id="cb11-606"><a href="#cb11-606" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
-<span id="cb11-607"><a href="#cb11-607" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
-<span id="cb11-608"><a href="#cb11-608" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
-<span id="cb11-609"><a href="#cb11-609" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
-<span id="cb11-610"><a href="#cb11-610" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"penguins"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"penguins.csv"</span>)<span class="op">,</span> { <span class="dt">header</span><span class="op">:</span> <span class="kw">true</span> })</span>
-<span id="cb11-611"><a href="#cb11-611" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
-<span id="cb11-612"><a href="#cb11-612" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
-<span id="cb11-613"><a href="#cb11-613" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-startfrom="620" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 619;"><span id="cb12-620"><a href="#cb12-620" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
+<span id="cb12-621"><a href="#cb12-621" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
+<span id="cb12-622"><a href="#cb12-622" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
+<span id="cb12-623"><a href="#cb12-623" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
+<span id="cb12-624"><a href="#cb12-624" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
+<span id="cb12-625"><a href="#cb12-625" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
+<span id="cb12-626"><a href="#cb12-626" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"penguins"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"penguins.csv"</span>)<span class="op">,</span> { <span class="dt">header</span><span class="op">:</span> <span class="kw">true</span> })</span>
+<span id="cb12-627"><a href="#cb12-627" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb12-628"><a href="#cb12-628" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
+<span id="cb12-629"><a href="#cb12-629" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="vg-setup-1">
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -577,40 +560,40 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<ol start="30" type="1">
+<ol start="31" type="1">
 <li>Mosaic doesn’t use a separate layer to define facets. Instead, it treats faceting as an encoding channel. The <code>fx</code> channel splits the plot into horizontally adjacent panels according to the unique levels of the variable it encodes. <code>fy</code> does the analogous vertical split.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-startfrom="622" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 621;"><span id="cb12-622"><a href="#cb12-622" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb12-623"><a href="#cb12-623" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb12-624"><a href="#cb12-624" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb12-625"><a href="#cb12-625" aria-hidden="true" tabindex="-1"></a>        {</span>
-<span id="cb12-626"><a href="#cb12-626" aria-hidden="true" tabindex="-1"></a>            <span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span></span>
-<span id="cb12-627"><a href="#cb12-627" aria-hidden="true" tabindex="-1"></a>            <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">fx</span><span class="op">:</span> <span class="st">"island"</span></span>
-<span id="cb12-628"><a href="#cb12-628" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb12-629"><a href="#cb12-629" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb12-630"><a href="#cb12-630" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorLegend</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"species"</span>})<span class="op">,</span></span>
-<span id="cb12-631"><a href="#cb12-631" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">650</span>)<span class="op">,</span></span>
-<span id="cb12-632"><a href="#cb12-632" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">250</span>)</span>
-<span id="cb12-633"><a href="#cb12-633" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" data-startfrom="638" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 637;"><span id="cb13-638"><a href="#cb13-638" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb13-639"><a href="#cb13-639" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb13-640"><a href="#cb13-640" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb13-641"><a href="#cb13-641" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb13-642"><a href="#cb13-642" aria-hidden="true" tabindex="-1"></a>            <span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span></span>
+<span id="cb13-643"><a href="#cb13-643" aria-hidden="true" tabindex="-1"></a>            <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">fx</span><span class="op">:</span> <span class="st">"island"</span></span>
+<span id="cb13-644"><a href="#cb13-644" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb13-645"><a href="#cb13-645" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb13-646"><a href="#cb13-646" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorLegend</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"species"</span>})<span class="op">,</span></span>
+<span id="cb13-647"><a href="#cb13-647" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">650</span>)<span class="op">,</span></span>
+<span id="cb13-648"><a href="#cb13-648" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">250</span>)</span>
+<span id="cb13-649"><a href="#cb13-649" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="vg-facet-columns" class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="expression">
 
 </div>
 </div>
 </div>
-<ol start="31" type="1">
+<ol start="32" type="1">
 <li>For multiform plots, we can use <code>hconcat</code> and <code>vconcat</code>. These are analogous to patchwork’s <code>+</code> and <code>/</code>. First, let’s create the two mosaic plots on their own.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" data-startfrom="642" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 641;"><span id="cb13-642"><a href="#cb13-642" aria-hidden="true" tabindex="-1"></a>scatterPlot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb13-643"><a href="#cb13-643" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb13-644"><a href="#cb13-644" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb13-645"><a href="#cb13-645" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span>}</span>
-<span id="cb13-646"><a href="#cb13-646" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb13-647"><a href="#cb13-647" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
-<span id="cb13-648"><a href="#cb13-648" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">250</span>)</span>
-<span id="cb13-649"><a href="#cb13-649" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" data-startfrom="658" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 657;"><span id="cb14-658"><a href="#cb14-658" aria-hidden="true" tabindex="-1"></a>scatterPlot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb14-659"><a href="#cb14-659" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb14-660"><a href="#cb14-660" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb14-661"><a href="#cb14-661" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span>}</span>
+<span id="cb14-662"><a href="#cb14-662" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb14-663"><a href="#cb14-663" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
+<span id="cb14-664"><a href="#cb14-664" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">250</span>)</span>
+<span id="cb14-665"><a href="#cb14-665" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="vg-scatter" class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -618,14 +601,14 @@ window.Quarto = {
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" data-startfrom="654" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 653;"><span id="cb14-654"><a href="#cb14-654" aria-hidden="true" tabindex="-1"></a>barChart <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb14-655"><a href="#cb14-655" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">rectY</span>(</span>
-<span id="cb14-656"><a href="#cb14-656" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb14-657"><a href="#cb14-657" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">bin</span>(<span class="st">"body_mass_g"</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">count</span>()<span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span>}</span>
-<span id="cb14-658"><a href="#cb14-658" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb14-659"><a href="#cb14-659" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
-<span id="cb14-660"><a href="#cb14-660" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">250</span>)</span>
-<span id="cb14-661"><a href="#cb14-661" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" data-startfrom="670" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 669;"><span id="cb15-670"><a href="#cb15-670" aria-hidden="true" tabindex="-1"></a>barChart <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb15-671"><a href="#cb15-671" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">rectY</span>(</span>
+<span id="cb15-672"><a href="#cb15-672" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb15-673"><a href="#cb15-673" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">bin</span>(<span class="st">"body_mass_g"</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">count</span>()<span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span>}</span>
+<span id="cb15-674"><a href="#cb15-674" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb15-675"><a href="#cb15-675" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
+<span id="cb15-676"><a href="#cb15-676" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">250</span>)</span>
+<span id="cb15-677"><a href="#cb15-677" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="vg-bar" class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -634,7 +617,7 @@ window.Quarto = {
 </div>
 <p>Next we combine them horizontally using <code>hconcat</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" data-startfrom="668" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 667;"><span id="cb15-668"><a href="#cb15-668" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(scatterPlot<span class="op">,</span> barChart)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" data-startfrom="684" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 683;"><span id="cb16-684"><a href="#cb16-684" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(scatterPlot<span class="op">,</span> barChart)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="vg-concat" class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="expression">
 
@@ -646,11 +629,12 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
 <p>By the end of this week, you should be able to,</p>
 <ul>
-<li>Compare and contrast faceting with multiform visualizations.</li>
+<li>Compare and contrast situations when we should use faceting vs.&nbsp;multiform visualizations.</li>
+<li>Evaluate the advantages of disadvantages of small multiples visualization compared to alternatives like animation and interactivity.</li>
 <li>Critique and suggest improvements to a visualization from the information density perspective.</li>
 <li>Describe best practices for ensuring readability of multiform plots.</li>
-<li>Given examples of ggplot2 faceting or Mosaic faceting and concatenation code, describe what each element means and what the output would look like.</li>
-<li>Given examples of patchwork code, describe what the syntax means and what the output would look like.</li>
+<li>Given examples of ggplot2 faceting and mosaic faceting code code, describe what each element means and what the output would look like.</li>
+<li>Given examples of patchwork and mosaic concatenation code, describe what the syntax means and what the output would look like.</li>
 </ul>
 
 </section>

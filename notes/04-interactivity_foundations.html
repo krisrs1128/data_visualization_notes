@@ -200,6 +200,7 @@ window.Quarto = {
 </figure>
 </div></li>
 </ol>
+<p><em>Exercise: What was the last interactive visualization you saw before class? Did it use data and view specification? If so, what actions did it use? If not, did it support view manipulation or analysis process/provenance?</em></p>
 <section id="gulfs-constancy-and-memory" class="level3">
 <h3 class="anchored" data-anchor-id="gulfs-constancy-and-memory">Gulfs, Constancy, and Memory</h3>
 <ol start="9" type="1">
@@ -225,20 +226,20 @@ window.Quarto = {
 <li><p>We’ll discuss how Mosaic monitors for user interactions and triggers updates to the visualization. First, let’s setup a database with the datasets we’ll use in our illustrations below.</p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" data-startfrom="182" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 181;"><span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
-<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a><span class="co">// setup the data coordinator</span></span>
-<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
-<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
-<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
-<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
-<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>    <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
-<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"penguins"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"penguins.csv"</span>))<span class="op">,</span></span>
-<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"athletesBatched"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"athletes.csv"</span>))<span class="op">,</span></span>
-<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"movies"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"movies.csv"</span>))</span>
-<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>    ])<span class="op">;</span></span>
-<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">;</span></span>
-<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" data-startfrom="184" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 183;"><span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a><span class="co">// setup the data coordinator</span></span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>    <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"penguins"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"penguins.csv"</span>))<span class="op">,</span></span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"athletesBatched"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"athletes.csv"</span>))<span class="op">,</span></span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"movies"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"movies.csv"</span>))</span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>    ])<span class="op">;</span></span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">;</span></span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -260,19 +261,19 @@ window.Quarto = {
 <li>In mosaic, <code>Params</code> are used for interactive view specification. They are the link between user inputs and the visual rendering code that needs to be rerun based on the user input. For example, the scatterplot below allows us to change point color using a menu. The user can provide inputs through <code>vg.menu</code>. The <code>vg.dot</code> layer uses whatever color is passed to the <code>fill</code> argument. <code>$color</code> appears in both the <code>vg.menu</code> and <code>vg.dot</code> code is and ensures the visualization is rerendered every time the input changes.</li>
 </ol>
 <div id="param-minimal-plot" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-startfrom="210" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 209;"><span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>$color <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="st">"red"</span>)</span>
-<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>menu <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $color<span class="op">,</span> <span class="dt">options</span><span class="op">:</span> [<span class="st">"red"</span><span class="op">,</span> <span class="st">"blue"</span><span class="op">,</span> <span class="st">"green"</span>]<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Point color"</span>})</span>
-<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> $color}</span>
-<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([menu<span class="op">,</span> plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-startfrom="212" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 211;"><span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>$color <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="st">"red"</span>)</span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>menu <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $color<span class="op">,</span> <span class="dt">options</span><span class="op">:</span> [<span class="st">"red"</span><span class="op">,</span> <span class="st">"blue"</span><span class="op">,</span> <span class="st">"green"</span>]<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Point color"</span>})</span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> $color}</span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([menu<span class="op">,</span> plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="param-minimal-plot-1">
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -306,21 +307,21 @@ window.Quarto = {
 <li>In this example, <code>Param</code> simply controls the view and never refers to the underlying dataset. If instead we want to use interactivity for data specification, we need to use mosaic’s <code>Selection</code> object. Like <code>Param</code>, this serves as a link between user inputs and visual rendering. However, the <code>Selection</code> object can query the underlying database. For example, we can filter to different species using the <code>filterBy</code> argument of <code>from</code>.</li>
 </ol>
 <div id="selection-minimal-plot" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-startfrom="234" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 233;"><span id="cb3-234"><a href="#cb3-234" aria-hidden="true" tabindex="-1"></a>$species <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
-<span id="cb3-235"><a href="#cb3-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a>speciesMenu <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $species<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span>})</span>
-<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a>speciesPlot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $species})<span class="op">,</span></span>
-<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}</span>
-<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xDomain</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">60</span>])<span class="op">,</span> <span class="co">// keeps the window ranges fixed</span></span>
-<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yDomain</span>([<span class="dv">12</span><span class="op">,</span> <span class="dv">22</span>])<span class="op">,</span></span>
-<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([speciesMenu<span class="op">,</span> speciesPlot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-startfrom="236" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 235;"><span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a>$species <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
+<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a>speciesMenu <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $species<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span>})</span>
+<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a>speciesPlot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $species})<span class="op">,</span></span>
+<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}</span>
+<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xDomain</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">60</span>])<span class="op">,</span> <span class="co">// keeps the window ranges fixed</span></span>
+<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yDomain</span>([<span class="dv">12</span><span class="op">,</span> <span class="dv">22</span>])<span class="op">,</span></span>
+<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-249"><a href="#cb3-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-250"><a href="#cb3-250" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([speciesMenu<span class="op">,</span> speciesPlot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="selection-minimal-plot-1">
 <div id="ojs-cell-3-1" data-nodetype="declaration">
@@ -354,20 +355,20 @@ window.Quarto = {
 <li>Filtering completely removes points from the plot. We can instead highlight one group and fade the rest into the background using <code>vg.highlight</code>. This again requires a <code>Selection</code> object, because we need to refer to the underlying data.</li>
 </ol>
 <div id="selection-highlight-plot" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-startfrom="257" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 256;"><span id="cb4-257"><a href="#cb4-257" aria-hidden="true" tabindex="-1"></a>$species2 <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
-<span id="cb4-258"><a href="#cb4-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-259"><a href="#cb4-259" aria-hidden="true" tabindex="-1"></a>speciesMenu2 <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $species2<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span>})</span>
-<span id="cb4-260"><a href="#cb4-260" aria-hidden="true" tabindex="-1"></a>speciesPlot2 <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb4-261"><a href="#cb4-261" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb4-262"><a href="#cb4-262" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb4-263"><a href="#cb4-263" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}<span class="op">,</span></span>
-<span id="cb4-264"><a href="#cb4-264" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb4-265"><a href="#cb4-265" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> $species2<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
-<span id="cb4-266"><a href="#cb4-266" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb4-267"><a href="#cb4-267" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb4-268"><a href="#cb4-268" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-269"><a href="#cb4-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-270"><a href="#cb4-270" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([speciesMenu2<span class="op">,</span> speciesPlot2])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-startfrom="259" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 258;"><span id="cb4-259"><a href="#cb4-259" aria-hidden="true" tabindex="-1"></a>$species2 <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
+<span id="cb4-260"><a href="#cb4-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-261"><a href="#cb4-261" aria-hidden="true" tabindex="-1"></a>speciesMenu2 <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $species2<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span>})</span>
+<span id="cb4-262"><a href="#cb4-262" aria-hidden="true" tabindex="-1"></a>speciesPlot2 <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb4-263"><a href="#cb4-263" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb4-264"><a href="#cb4-264" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb4-265"><a href="#cb4-265" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}<span class="op">,</span></span>
+<span id="cb4-266"><a href="#cb4-266" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb4-267"><a href="#cb4-267" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> $species2<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
+<span id="cb4-268"><a href="#cb4-268" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb4-269"><a href="#cb4-269" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb4-270"><a href="#cb4-270" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-271"><a href="#cb4-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-272"><a href="#cb4-272" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([speciesMenu2<span class="op">,</span> speciesPlot2])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="selection-highlight-plot-1">
 <div id="ojs-cell-4-1" data-nodetype="declaration">
@@ -406,23 +407,23 @@ window.Quarto = {
 </ul></li>
 </ol>
 <div id="selection-reconcilation-plot" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-startfrom="285" data-source-offset="-80"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 284;"><span id="cb5-285"><a href="#cb5-285" aria-hidden="true" tabindex="-1"></a>$filter <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
-<span id="cb5-286"><a href="#cb5-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-287"><a href="#cb5-287" aria-hidden="true" tabindex="-1"></a>speciesMenu3 <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $filter<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span>})</span>
-<span id="cb5-288"><a href="#cb5-288" aria-hidden="true" tabindex="-1"></a>islandMenu <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $filter<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"island"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Island"</span>})</span>
-<span id="cb5-289"><a href="#cb5-289" aria-hidden="true" tabindex="-1"></a>speciesIslandPlot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb5-291"><a href="#cb5-291" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span>}</span>
-<span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb5-294"><a href="#cb5-294" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> $filter<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
-<span id="cb5-295"><a href="#cb5-295" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xDomain</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">60</span>])<span class="op">,</span></span>
-<span id="cb5-296"><a href="#cb5-296" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yDomain</span>([<span class="dv">12</span><span class="op">,</span> <span class="dv">22</span>])<span class="op">,</span></span>
-<span id="cb5-297"><a href="#cb5-297" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb5-298"><a href="#cb5-298" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb5-299"><a href="#cb5-299" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-300"><a href="#cb5-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-301"><a href="#cb5-301" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([vg<span class="op">.</span><span class="fu">hconcat</span>([speciesMenu3<span class="op">,</span> islandMenu])<span class="op">,</span> speciesIslandPlot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-startfrom="287" data-source-offset="-80"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 286;"><span id="cb5-287"><a href="#cb5-287" aria-hidden="true" tabindex="-1"></a>$filter <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
+<span id="cb5-288"><a href="#cb5-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-289"><a href="#cb5-289" aria-hidden="true" tabindex="-1"></a>speciesMenu3 <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $filter<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span>})</span>
+<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a>islandMenu <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> $filter<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"island"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Island"</span>})</span>
+<span id="cb5-291"><a href="#cb5-291" aria-hidden="true" tabindex="-1"></a>speciesIslandPlot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb5-294"><a href="#cb5-294" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span>}</span>
+<span id="cb5-295"><a href="#cb5-295" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb5-296"><a href="#cb5-296" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> $filter<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
+<span id="cb5-297"><a href="#cb5-297" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xDomain</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">60</span>])<span class="op">,</span></span>
+<span id="cb5-298"><a href="#cb5-298" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yDomain</span>([<span class="dv">12</span><span class="op">,</span> <span class="dv">22</span>])<span class="op">,</span></span>
+<span id="cb5-299"><a href="#cb5-299" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb5-300"><a href="#cb5-300" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb5-301"><a href="#cb5-301" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-302"><a href="#cb5-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-303"><a href="#cb5-303" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([vg<span class="op">.</span><span class="fu">hconcat</span>([speciesMenu3<span class="op">,</span> islandMenu])<span class="op">,</span> speciesIslandPlot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="selection-reconcilation-plot-1">
 <div id="ojs-cell-5-1" data-nodetype="declaration">
@@ -459,6 +460,13 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<p><em>Exercise: For the settings below, decide whether it is more appropriate to use a <code>Param</code> or a <code>Selection</code>.</em></p>
+<ul>
+<li><em>You plan to overlay a 2D density on a scatterplot and would like a slider that allows the user to adjust the bandwidth.</em></li>
+<li><em>You are creating a map of study spots on campus and want to filter to those that have separate rooms for conversation.</em></li>
+<li><em>You have a scatterplot of tree height vs.&nbsp;canopy size and want to use a search box to highlight those within a given taxonomic group.</em></li>
+<li><em>You want to give users the option to report your measurements in either mm or cm using a button.</em></li>
+</ul>
 </section>
 <section id="inputs" class="level3">
 <h3 class="anchored" data-anchor-id="inputs">Inputs</h3>
@@ -473,19 +481,19 @@ window.Quarto = {
 <li><p>These work with both <code>Param</code> and <code>Selection</code> objects. For example, we can change point sizes using a <code>Param</code> object.</p></li>
 </ol>
 <div id="param-minimal-slider" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" data-startfrom="319" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 318;"><span id="cb6-319"><a href="#cb6-319" aria-hidden="true" tabindex="-1"></a>$size <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="dv">5</span>)</span>
-<span id="cb6-320"><a href="#cb6-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-321"><a href="#cb6-321" aria-hidden="true" tabindex="-1"></a>size_slider <span class="op">=</span> vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $size<span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="dv">25</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"point size"</span>})</span>
-<span id="cb6-322"><a href="#cb6-322" aria-hidden="true" tabindex="-1"></a>size_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb6-323"><a href="#cb6-323" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb6-324"><a href="#cb6-324" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb6-325"><a href="#cb6-325" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> $size}</span>
-<span id="cb6-326"><a href="#cb6-326" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb6-327"><a href="#cb6-327" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb6-328"><a href="#cb6-328" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb6-329"><a href="#cb6-329" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-330"><a href="#cb6-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-331"><a href="#cb6-331" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([size_slider<span class="op">,</span> size_plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" data-startfrom="328" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 327;"><span id="cb6-328"><a href="#cb6-328" aria-hidden="true" tabindex="-1"></a>$size <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="dv">5</span>)</span>
+<span id="cb6-329"><a href="#cb6-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-330"><a href="#cb6-330" aria-hidden="true" tabindex="-1"></a>size_slider <span class="op">=</span> vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $size<span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="dv">25</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"point size"</span>})</span>
+<span id="cb6-331"><a href="#cb6-331" aria-hidden="true" tabindex="-1"></a>size_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb6-332"><a href="#cb6-332" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb6-333"><a href="#cb6-333" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb6-334"><a href="#cb6-334" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> $size}</span>
+<span id="cb6-335"><a href="#cb6-335" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb6-336"><a href="#cb6-336" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb6-337"><a href="#cb6-337" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb6-338"><a href="#cb6-338" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-339"><a href="#cb6-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-340"><a href="#cb6-340" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([size_slider<span class="op">,</span> size_plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="param-minimal-slider-1">
 <div id="ojs-cell-6-1" data-nodetype="declaration">
@@ -517,20 +525,20 @@ window.Quarto = {
 </div>
 <p>We can alternatively use a slider to highlight samples with flipper sizes between a given range.</p>
 <div id="param-slider-selection" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-startfrom="338" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 337;"><span id="cb7-338"><a href="#cb7-338" aria-hidden="true" tabindex="-1"></a>$flipper_selection <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
-<span id="cb7-339"><a href="#cb7-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-340"><a href="#cb7-340" aria-hidden="true" tabindex="-1"></a>flipper_slider <span class="op">=</span> vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $flipper_selection<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"flipper_length_mm"</span><span class="op">,</span> <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Flipper length"</span>})</span>
-<span id="cb7-341"><a href="#cb7-341" aria-hidden="true" tabindex="-1"></a>flipper_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb7-342"><a href="#cb7-342" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb7-343"><a href="#cb7-343" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb7-344"><a href="#cb7-344" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}</span>
-<span id="cb7-345"><a href="#cb7-345" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb7-346"><a href="#cb7-346" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> $flipper_selection<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
-<span id="cb7-347"><a href="#cb7-347" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb7-348"><a href="#cb7-348" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb7-349"><a href="#cb7-349" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-350"><a href="#cb7-350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-351"><a href="#cb7-351" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([flipper_slider<span class="op">,</span> flipper_plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-startfrom="347" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 346;"><span id="cb7-347"><a href="#cb7-347" aria-hidden="true" tabindex="-1"></a>$flipper_selection <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
+<span id="cb7-348"><a href="#cb7-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-349"><a href="#cb7-349" aria-hidden="true" tabindex="-1"></a>flipper_slider <span class="op">=</span> vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $flipper_selection<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"flipper_length_mm"</span><span class="op">,</span> <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Flipper length"</span>})</span>
+<span id="cb7-350"><a href="#cb7-350" aria-hidden="true" tabindex="-1"></a>flipper_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb7-351"><a href="#cb7-351" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb7-352"><a href="#cb7-352" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb7-353"><a href="#cb7-353" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}</span>
+<span id="cb7-354"><a href="#cb7-354" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb7-355"><a href="#cb7-355" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> $flipper_selection<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
+<span id="cb7-356"><a href="#cb7-356" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb7-357"><a href="#cb7-357" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb7-358"><a href="#cb7-358" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-359"><a href="#cb7-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-360"><a href="#cb7-360" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([flipper_slider<span class="op">,</span> flipper_plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="param-slider-selection-1">
 <div id="ojs-cell-7-1" data-nodetype="declaration">
@@ -571,30 +579,30 @@ window.Quarto = {
 <li>This is an example table selection. We create a table based on the <code>penguins</code> data. We draw two layers of dots, one grey and another red. If we hover over a row in the table, then we filter the red layer to show only the hovered penguin.</li>
 </ol>
 <div id="selection-table" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" data-startfrom="368" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 367;"><span id="cb8-368"><a href="#cb8-368" aria-hidden="true" tabindex="-1"></a>$table_selection <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
-<span id="cb8-369"><a href="#cb8-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-370"><a href="#cb8-370" aria-hidden="true" tabindex="-1"></a><span class="co">// define the table input</span></span>
-<span id="cb8-371"><a href="#cb8-371" aria-hidden="true" tabindex="-1"></a>penguin_table <span class="op">=</span> vg<span class="op">.</span><span class="fu">table</span>({</span>
-<span id="cb8-372"><a href="#cb8-372" aria-hidden="true" tabindex="-1"></a>    <span class="dt">as</span><span class="op">:</span> $table_selection<span class="op">,</span></span>
-<span id="cb8-373"><a href="#cb8-373" aria-hidden="true" tabindex="-1"></a>    <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span></span>
-<span id="cb8-374"><a href="#cb8-374" aria-hidden="true" tabindex="-1"></a>    <span class="dt">columns</span><span class="op">:</span> [<span class="st">"species"</span><span class="op">,</span> <span class="st">"island"</span><span class="op">,</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="st">"flipper_length_mm"</span>]</span>
-<span id="cb8-375"><a href="#cb8-375" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb8-376"><a href="#cb8-376" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-377"><a href="#cb8-377" aria-hidden="true" tabindex="-1"></a><span class="co">// Define the plot from two dot layers (background and foreground)</span></span>
-<span id="cb8-378"><a href="#cb8-378" aria-hidden="true" tabindex="-1"></a>table_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb8-379"><a href="#cb8-379" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb8-380"><a href="#cb8-380" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
-<span id="cb8-381"><a href="#cb8-381" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">2</span>}</span>
-<span id="cb8-382"><a href="#cb8-382" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb8-383"><a href="#cb8-383" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb8-384"><a href="#cb8-384" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $table_selection})<span class="op">,</span></span>
-<span id="cb8-385"><a href="#cb8-385" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span>}</span>
-<span id="cb8-386"><a href="#cb8-386" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb8-387"><a href="#cb8-387" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb8-388"><a href="#cb8-388" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb8-389"><a href="#cb8-389" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-390"><a href="#cb8-390" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-391"><a href="#cb8-391" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([table_plot<span class="op">,</span> penguin_table<span class="op">,</span> vg<span class="op">.</span><span class="fu">vspace</span>(<span class="dv">10</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" data-startfrom="377" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 376;"><span id="cb8-377"><a href="#cb8-377" aria-hidden="true" tabindex="-1"></a>$table_selection <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
+<span id="cb8-378"><a href="#cb8-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-379"><a href="#cb8-379" aria-hidden="true" tabindex="-1"></a><span class="co">// define the table input</span></span>
+<span id="cb8-380"><a href="#cb8-380" aria-hidden="true" tabindex="-1"></a>penguin_table <span class="op">=</span> vg<span class="op">.</span><span class="fu">table</span>({</span>
+<span id="cb8-381"><a href="#cb8-381" aria-hidden="true" tabindex="-1"></a>    <span class="dt">as</span><span class="op">:</span> $table_selection<span class="op">,</span></span>
+<span id="cb8-382"><a href="#cb8-382" aria-hidden="true" tabindex="-1"></a>    <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span></span>
+<span id="cb8-383"><a href="#cb8-383" aria-hidden="true" tabindex="-1"></a>    <span class="dt">columns</span><span class="op">:</span> [<span class="st">"species"</span><span class="op">,</span> <span class="st">"island"</span><span class="op">,</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="st">"flipper_length_mm"</span>]</span>
+<span id="cb8-384"><a href="#cb8-384" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-385"><a href="#cb8-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-386"><a href="#cb8-386" aria-hidden="true" tabindex="-1"></a><span class="co">// Define the plot from two dot layers (background and foreground)</span></span>
+<span id="cb8-387"><a href="#cb8-387" aria-hidden="true" tabindex="-1"></a>table_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb8-388"><a href="#cb8-388" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb8-389"><a href="#cb8-389" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb8-390"><a href="#cb8-390" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">2</span>}</span>
+<span id="cb8-391"><a href="#cb8-391" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb8-392"><a href="#cb8-392" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb8-393"><a href="#cb8-393" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $table_selection})<span class="op">,</span></span>
+<span id="cb8-394"><a href="#cb8-394" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span>}</span>
+<span id="cb8-395"><a href="#cb8-395" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb8-396"><a href="#cb8-396" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb8-397"><a href="#cb8-397" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb8-398"><a href="#cb8-398" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-399"><a href="#cb8-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-400"><a href="#cb8-400" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([table_plot<span class="op">,</span> penguin_table<span class="op">,</span> vg<span class="op">.</span><span class="fu">vspace</span>(<span class="dv">10</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="selection-table-1">
 <div id="ojs-cell-8-1" data-nodetype="declaration">
@@ -652,8 +660,8 @@ window.Quarto = {
 <li>The example below comes from the mosaic documentation and shows how confidence intervals become narrower when we have more samples. It illustrates this by computing a confidence interval for the height of athletes within each sport. Let’s take a look at the original data. The batch column is defined so that, within each sport, every 10 rows gets labeled with a new batch number.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" data-startfrom="433" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 432;"><span id="cb9-433"><a href="#cb9-433" aria-hidden="true" tabindex="-1"></a>athletes_preview <span class="op">=</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">query</span>(<span class="st">"SELECT * FROM athletesBatched"</span>)</span>
-<span id="cb9-434"><a href="#cb9-434" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(athletes_preview)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" data-startfrom="442" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 441;"><span id="cb9-442"><a href="#cb9-442" aria-hidden="true" tabindex="-1"></a>athletes_preview <span class="op">=</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">query</span>(<span class="st">"SELECT * FROM athletesBatched"</span>)</span>
+<span id="cb9-443"><a href="#cb9-443" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(athletes_preview)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-9-1" data-nodetype="declaration">
@@ -673,27 +681,27 @@ window.Quarto = {
 <li><p>The visualization has two slider inputs. <code>$query</code> controls a <code>Selection</code> that filters rows with less then the specified batch number. When a smaller dataset is passed into the <code>errorbarX</code> layer, the associated error bars get wider. <code>ci</code> controls a <code>Param</code> governing the confidence level. Confidence levels that are larger (e.g., 99%) require wider intervals, but this doesn’t reference the underlying data, so we can get away with a <code>Param</code>.</p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" data-startfrom="458" data-source-offset="-28"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 457;"><span id="cb10-458"><a href="#cb10-458" aria-hidden="true" tabindex="-1"></a>$ci <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="fl">0.95</span>)</span>
-<span id="cb10-459"><a href="#cb10-459" aria-hidden="true" tabindex="-1"></a>$query <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
-<span id="cb10-460"><a href="#cb10-460" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-461"><a href="#cb10-461" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
-<span id="cb10-462"><a href="#cb10-462" aria-hidden="true" tabindex="-1"></a>    <span class="co">// user inputs</span></span>
-<span id="cb10-463"><a href="#cb10-463" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({ <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span> <span class="dt">as</span><span class="op">:</span> $query<span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"batch"</span><span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"athletesBatched"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Max Samples"</span> })<span class="op">,</span></span>
-<span id="cb10-464"><a href="#cb10-464" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="fl">0.999</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.001</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Conf. Level"</span>})<span class="op">,</span></span>
-<span id="cb10-465"><a href="#cb10-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-466"><a href="#cb10-466" aria-hidden="true" tabindex="-1"></a>    <span class="co">// graphical encodings</span></span>
-<span id="cb10-467"><a href="#cb10-467" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb10-468"><a href="#cb10-468" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">errorbarX</span>(</span>
-<span id="cb10-469"><a href="#cb10-469" aria-hidden="true" tabindex="-1"></a>            vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"athletesBatched"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $query})<span class="op">,</span></span>
-<span id="cb10-470"><a href="#cb10-470" aria-hidden="true" tabindex="-1"></a>            {<span class="dt">ci</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"height"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"sport"</span>}</span>
-<span id="cb10-471"><a href="#cb10-471" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
-<span id="cb10-472"><a href="#cb10-472" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Height"</span>)<span class="op">,</span></span>
-<span id="cb10-473"><a href="#cb10-473" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">marginLeft</span>(<span class="dv">120</span>)<span class="op">,</span> <span class="co">// keep labels visible</span></span>
-<span id="cb10-474"><a href="#cb10-474" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb10-475"><a href="#cb10-475" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
-<span id="cb10-476"><a href="#cb10-476" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb10-477"><a href="#cb10-477" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorLegend</span>({<span class="dt">for</span><span class="op">:</span> <span class="st">"heights"</span>})<span class="op">,</span></span>
-<span id="cb10-478"><a href="#cb10-478" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" data-startfrom="467" data-source-offset="-28"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 466;"><span id="cb10-467"><a href="#cb10-467" aria-hidden="true" tabindex="-1"></a>$ci <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="fl">0.95</span>)</span>
+<span id="cb10-468"><a href="#cb10-468" aria-hidden="true" tabindex="-1"></a>$query <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
+<span id="cb10-469"><a href="#cb10-469" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-470"><a href="#cb10-470" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb10-471"><a href="#cb10-471" aria-hidden="true" tabindex="-1"></a>    <span class="co">// user inputs</span></span>
+<span id="cb10-472"><a href="#cb10-472" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({ <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span> <span class="dt">as</span><span class="op">:</span> $query<span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"batch"</span><span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"athletesBatched"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Max Samples"</span> })<span class="op">,</span></span>
+<span id="cb10-473"><a href="#cb10-473" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="fl">0.999</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.001</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Conf. Level"</span>})<span class="op">,</span></span>
+<span id="cb10-474"><a href="#cb10-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-475"><a href="#cb10-475" aria-hidden="true" tabindex="-1"></a>    <span class="co">// graphical encodings</span></span>
+<span id="cb10-476"><a href="#cb10-476" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb10-477"><a href="#cb10-477" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">errorbarX</span>(</span>
+<span id="cb10-478"><a href="#cb10-478" aria-hidden="true" tabindex="-1"></a>            vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"athletesBatched"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $query})<span class="op">,</span></span>
+<span id="cb10-479"><a href="#cb10-479" aria-hidden="true" tabindex="-1"></a>            {<span class="dt">ci</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"height"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"sport"</span>}</span>
+<span id="cb10-480"><a href="#cb10-480" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
+<span id="cb10-481"><a href="#cb10-481" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Height"</span>)<span class="op">,</span></span>
+<span id="cb10-482"><a href="#cb10-482" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">marginLeft</span>(<span class="dv">120</span>)<span class="op">,</span> <span class="co">// keep labels visible</span></span>
+<span id="cb10-483"><a href="#cb10-483" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb10-484"><a href="#cb10-484" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
+<span id="cb10-485"><a href="#cb10-485" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb10-486"><a href="#cb10-486" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorLegend</span>({<span class="dt">for</span><span class="op">:</span> <span class="st">"heights"</span>})<span class="op">,</span></span>
+<span id="cb10-487"><a href="#cb10-487" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-10-1" data-nodetype="declaration">
@@ -724,12 +732,12 @@ window.Quarto = {
 <li><p>The entire app is given in the block below. We’ve written two helper functions, <code>movie_controls</code> and <code>movie_plot,</code> to support the interactivity and graphical encodings, respectively. The use case of the app is relatively simple, but it already reveals some interesting patterns. For example, dramas tend to have higher ratings than horror. Also, what do you think is going on with the fact that movies released before 1995 seem to have higher ratings in general?</p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-startfrom="516" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 515;"><span id="cb11-516"><a href="#cb11-516" aria-hidden="true" tabindex="-1"></a>movieQuery <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
-<span id="cb11-517"><a href="#cb11-517" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-518"><a href="#cb11-518" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
-<span id="cb11-519"><a href="#cb11-519" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_controls</span>(movieQuery)<span class="op">,</span></span>
-<span id="cb11-520"><a href="#cb11-520" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_plot</span>(movieQuery)</span>
-<span id="cb11-521"><a href="#cb11-521" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-startfrom="525" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 524;"><span id="cb11-525"><a href="#cb11-525" aria-hidden="true" tabindex="-1"></a>movieQuery <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
+<span id="cb11-526"><a href="#cb11-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-527"><a href="#cb11-527" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb11-528"><a href="#cb11-528" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_controls</span>(movieQuery)<span class="op">,</span></span>
+<span id="cb11-529"><a href="#cb11-529" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_plot</span>(movieQuery)</span>
+<span id="cb11-530"><a href="#cb11-530" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-11-1" data-nodetype="declaration">
@@ -750,34 +758,34 @@ window.Quarto = {
 <p><em>Exercise: What would happen if we had used <code>vg.Selection.single()</code> instead? What about <code>vg.Selection.union()</code>?</em></p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-startfrom="533" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 532;"><span id="cb12-533"><a href="#cb12-533" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_controls</span>(query) {</span>
-<span id="cb12-534"><a href="#cb12-534" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
-<span id="cb12-535"><a href="#cb12-535" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
-<span id="cb12-536"><a href="#cb12-536" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb12-537"><a href="#cb12-537" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb12-538"><a href="#cb12-538" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"Major_Genre"</span><span class="op">,</span></span>
-<span id="cb12-539"><a href="#cb12-539" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="st">"Drama"</span><span class="op">,</span></span>
-<span id="cb12-540"><a href="#cb12-540" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Genre"</span></span>
-<span id="cb12-541"><a href="#cb12-541" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb12-542"><a href="#cb12-542" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
-<span id="cb12-543"><a href="#cb12-543" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb12-544"><a href="#cb12-544" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb12-545"><a href="#cb12-545" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"MPAA_Rating"</span><span class="op">,</span></span>
-<span id="cb12-546"><a href="#cb12-546" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"MPAA Rating"</span></span>
-<span id="cb12-547"><a href="#cb12-547" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb12-548"><a href="#cb12-548" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">slider</span>({</span>
-<span id="cb12-549"><a href="#cb12-549" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb12-550"><a href="#cb12-550" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb12-551"><a href="#cb12-551" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"year"</span><span class="op">,</span></span>
-<span id="cb12-552"><a href="#cb12-552" aria-hidden="true" tabindex="-1"></a>            <span class="dt">min</span><span class="op">:</span> <span class="dv">1928</span><span class="op">,</span></span>
-<span id="cb12-553"><a href="#cb12-553" aria-hidden="true" tabindex="-1"></a>            <span class="dt">max</span><span class="op">:</span> <span class="dv">2046</span><span class="op">,</span></span>
-<span id="cb12-554"><a href="#cb12-554" aria-hidden="true" tabindex="-1"></a>            <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span></span>
-<span id="cb12-555"><a href="#cb12-555" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="dv">2020</span><span class="op">,</span></span>
-<span id="cb12-556"><a href="#cb12-556" aria-hidden="true" tabindex="-1"></a>            <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
-<span id="cb12-557"><a href="#cb12-557" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Released Through"</span></span>
-<span id="cb12-558"><a href="#cb12-558" aria-hidden="true" tabindex="-1"></a>        })</span>
-<span id="cb12-559"><a href="#cb12-559" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
-<span id="cb12-560"><a href="#cb12-560" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-startfrom="542" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 541;"><span id="cb12-542"><a href="#cb12-542" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_controls</span>(query) {</span>
+<span id="cb12-543"><a href="#cb12-543" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
+<span id="cb12-544"><a href="#cb12-544" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
+<span id="cb12-545"><a href="#cb12-545" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb12-546"><a href="#cb12-546" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb12-547"><a href="#cb12-547" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"Major_Genre"</span><span class="op">,</span></span>
+<span id="cb12-548"><a href="#cb12-548" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="st">"Drama"</span><span class="op">,</span></span>
+<span id="cb12-549"><a href="#cb12-549" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Genre"</span></span>
+<span id="cb12-550"><a href="#cb12-550" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb12-551"><a href="#cb12-551" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
+<span id="cb12-552"><a href="#cb12-552" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb12-553"><a href="#cb12-553" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb12-554"><a href="#cb12-554" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"MPAA_Rating"</span><span class="op">,</span></span>
+<span id="cb12-555"><a href="#cb12-555" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"MPAA Rating"</span></span>
+<span id="cb12-556"><a href="#cb12-556" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb12-557"><a href="#cb12-557" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">slider</span>({</span>
+<span id="cb12-558"><a href="#cb12-558" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb12-559"><a href="#cb12-559" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb12-560"><a href="#cb12-560" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"year"</span><span class="op">,</span></span>
+<span id="cb12-561"><a href="#cb12-561" aria-hidden="true" tabindex="-1"></a>            <span class="dt">min</span><span class="op">:</span> <span class="dv">1928</span><span class="op">,</span></span>
+<span id="cb12-562"><a href="#cb12-562" aria-hidden="true" tabindex="-1"></a>            <span class="dt">max</span><span class="op">:</span> <span class="dv">2046</span><span class="op">,</span></span>
+<span id="cb12-563"><a href="#cb12-563" aria-hidden="true" tabindex="-1"></a>            <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span></span>
+<span id="cb12-564"><a href="#cb12-564" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="dv">2020</span><span class="op">,</span></span>
+<span id="cb12-565"><a href="#cb12-565" aria-hidden="true" tabindex="-1"></a>            <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb12-566"><a href="#cb12-566" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Released Through"</span></span>
+<span id="cb12-567"><a href="#cb12-567" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb12-568"><a href="#cb12-568" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb12-569"><a href="#cb12-569" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-12" data-nodetype="declaration">
 
@@ -788,29 +796,29 @@ window.Quarto = {
 <li>The function below draws the actual plot. Notice that we have two dot layers. The first shows everything in a faint background, and the second shows those that pass the query. The <code>tip: true</code> call ensures that we can see the movie title when we hover our mouse near the highlighted point.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" data-startfrom="569" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 568;"><span id="cb13-569"><a href="#cb13-569" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_plot</span>(query) {</span>
-<span id="cb13-570"><a href="#cb13-570" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb13-571"><a href="#cb13-571" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span>)<span class="op">,</span> {</span>
-<span id="cb13-572"><a href="#cb13-572" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
-<span id="cb13-573"><a href="#cb13-573" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
-<span id="cb13-574"><a href="#cb13-574" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="fl">1.5</span><span class="op">,</span></span>
-<span id="cb13-575"><a href="#cb13-575" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span></span>
-<span id="cb13-576"><a href="#cb13-576" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
-<span id="cb13-577"><a href="#cb13-577" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> query})<span class="op">,</span> {</span>
-<span id="cb13-578"><a href="#cb13-578" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
-<span id="cb13-579"><a href="#cb13-579" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
-<span id="cb13-580"><a href="#cb13-580" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
-<span id="cb13-581"><a href="#cb13-581" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span></span>
-<span id="cb13-582"><a href="#cb13-582" aria-hidden="true" tabindex="-1"></a>         <span class="dt">title</span><span class="op">:</span> <span class="st">"Title"</span><span class="op">,</span></span>
-<span id="cb13-583"><a href="#cb13-583" aria-hidden="true" tabindex="-1"></a>         <span class="dt">tip</span><span class="op">:</span> <span class="kw">true</span></span>
-<span id="cb13-584"><a href="#cb13-584" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
-<span id="cb13-585"><a href="#cb13-585" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xyDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
-<span id="cb13-586"><a href="#cb13-586" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Rotten Tomatoes Rating"</span>)<span class="op">,</span></span>
-<span id="cb13-587"><a href="#cb13-587" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">yLabel</span>(<span class="st">"IMDB Rating"</span>)<span class="op">,</span></span>
-<span id="cb13-588"><a href="#cb13-588" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">680</span>)<span class="op">,</span></span>
-<span id="cb13-589"><a href="#cb13-589" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
-<span id="cb13-590"><a href="#cb13-590" aria-hidden="true" tabindex="-1"></a>     )<span class="op">;</span></span>
-<span id="cb13-591"><a href="#cb13-591" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" data-startfrom="578" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 577;"><span id="cb13-578"><a href="#cb13-578" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_plot</span>(query) {</span>
+<span id="cb13-579"><a href="#cb13-579" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb13-580"><a href="#cb13-580" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span>)<span class="op">,</span> {</span>
+<span id="cb13-581"><a href="#cb13-581" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
+<span id="cb13-582"><a href="#cb13-582" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
+<span id="cb13-583"><a href="#cb13-583" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="fl">1.5</span><span class="op">,</span></span>
+<span id="cb13-584"><a href="#cb13-584" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span></span>
+<span id="cb13-585"><a href="#cb13-585" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
+<span id="cb13-586"><a href="#cb13-586" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> query})<span class="op">,</span> {</span>
+<span id="cb13-587"><a href="#cb13-587" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
+<span id="cb13-588"><a href="#cb13-588" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
+<span id="cb13-589"><a href="#cb13-589" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
+<span id="cb13-590"><a href="#cb13-590" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span></span>
+<span id="cb13-591"><a href="#cb13-591" aria-hidden="true" tabindex="-1"></a>         <span class="dt">title</span><span class="op">:</span> <span class="st">"Title"</span><span class="op">,</span></span>
+<span id="cb13-592"><a href="#cb13-592" aria-hidden="true" tabindex="-1"></a>         <span class="dt">tip</span><span class="op">:</span> <span class="kw">true</span></span>
+<span id="cb13-593"><a href="#cb13-593" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
+<span id="cb13-594"><a href="#cb13-594" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xyDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
+<span id="cb13-595"><a href="#cb13-595" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Rotten Tomatoes Rating"</span>)<span class="op">,</span></span>
+<span id="cb13-596"><a href="#cb13-596" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">yLabel</span>(<span class="st">"IMDB Rating"</span>)<span class="op">,</span></span>
+<span id="cb13-597"><a href="#cb13-597" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">680</span>)<span class="op">,</span></span>
+<span id="cb13-598"><a href="#cb13-598" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
+<span id="cb13-599"><a href="#cb13-599" aria-hidden="true" tabindex="-1"></a>     )<span class="op">;</span></span>
+<span id="cb13-600"><a href="#cb13-600" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-13" data-nodetype="declaration">
 

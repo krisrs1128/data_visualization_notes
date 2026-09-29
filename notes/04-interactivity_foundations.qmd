@@ -125,6 +125,8 @@ plot below.
 
    ![From the [scSketch demo](https://github.com/colabobio/scsketch).](figures/diff_exp_analysis_demo.gif)
 
+_Exercise: What was the last interactive visualization you saw before class?  Did it use data and view specification? If so, what actions did it use? If not, did it support view manipulation or analysis process/provenance?_
+
 ### Gulfs, Constancy, and Memory
 
 9. As we've seen above, interactivity opens up many possibilities for
@@ -300,6 +302,13 @@ speciesIslandPlot = vg.plot(
 
 vg.vconcat([vg.hconcat([speciesMenu3, islandMenu]), speciesIslandPlot])
 ```
+
+_Exercise: For the settings below, decide whether it is more appropriate to use a `Param` or a `Selection`._
+
+- _You plan to overlay a 2D density on a scatterplot and would like a slider that allows the user to adjust the bandwidth._
+- _You are creating a map of study spots on campus and want to filter to those that have separate rooms for conversation._
+- _You have a scatterplot of tree height vs. canopy size and want to use a search box to highlight those within a given taxonomic group._
+- _You want to give users the option to report your measurements in either mm or cm using a button._
 
 ### Inputs
 

@@ -36,7 +36,7 @@ static. The visualization designer was responsible for a particular data and
 view that would be broadcast verbatim to all their readers.  A particularly
 ambitious team might prepare a few related visualizations mean to be viewed
 together, like an atlas. A few visionaries explored the idea of interactivity
-using mechanical devices, like the Bertin Loom,
+using mechanical devices, like the Bertin Loom.
 
    {{<video https://www.youtube.com/watch?v=EUoaEwxUeQ0>}}
 
@@ -77,9 +77,10 @@ These notes focus on group (1), which can be further broken into four actions,
    - Sort: Reorder where the the samples appear on the display.
    - Derive: Introduce new variables to the display.
 
-   all of which are made accessible to the user.
+    Basically, we can use interactivity to decide what data to show (data
+    specification) and how we show it (view specification).
 
-5. From our study of static visualizations, we know that different visual
+5. _Visualize._ From our study of static visualizations, we know that different visual
 encodings prioritize different comparisons. An interactive visualization that
 supports the "visualize" action allows the user to modify the encodings directly
 within the interface. This can be done through excel-style dropdowns,
@@ -94,9 +95,9 @@ within the interface. This can be done through excel-style dropdowns,
 
    ![](figures/tableau_specification.png)
 
-6. Filters allow users to query for particular subsets of the data. They can be
-specified through input widgets, like dropdown menus, sliders, radio buttons, or
-search bars.
+6. _Filter._ Filters allow users to query for particular subsets of the data.
+They can be specified through input widgets, like dropdown menus, sliders, radio
+buttons, or search bars.
 
    ![A (too...) complicated interface that uses many filter inputs.](figures/filter_inputs.png)
 
@@ -106,20 +107,21 @@ search bars.
 
    ![](figures/scented_widgets.png)
 
-7. Often the ordering of the datapoints can make a difference in the patterns
-that we perceive. The visualization below shows the relationships between
-characters in Les Miserables (we'll study networks in much more depth later).
-Notice how many of the purple connections are collected in the same block when
-using the Bray Curtis, but not Euclidean, sorting option.
+7. _Sort._ Often the ordering of the datapoints can make a difference in the
+patterns that we perceive. The visualization below shows the relationships
+between characters in Les Miserables (we'll study networks in much more depth
+later).  Notice how many of the purple connections are collected in the same
+block when using the Bray Curtis, but not Euclidean, sorting option.
 
    {{<video figures/sorting_reorderjs.mp4>}}
 
-8. Finally, it's possible to compute new variables based on interactive user
-queries. This is the least common form of interactive data/view specification,
-but it has a lot of potential, especially in data science, where statistical
-algorithms often return new numerical summaries related to the analysis. For
-example, we can fit a linear regression over a subset of interest, or compute
-$p$-values contrasting selected vs. unselected points, like in the plot below.
+8. _Derive._ Finally, it's possible to compute new variables based on
+interactive user queries. This is the least common form of interactive data/view
+specification, but it has a lot of potential, especially in data science, where
+statistical algorithms often return new numerical summaries related to the
+analysis. For example, we can fit a linear regression over a subset of interest,
+or compute $p$-values contrasting selected vs. unselected points, like in the
+plot below.
 
    ![From the [scSketch demo](https://github.com/colabobio/scsketch).](figures/diff_exp_analysis_demo.gif)
 
@@ -154,15 +156,15 @@ to see which states had stable rankings.
     It's important that the transitions track the same object. For example, it
     makes no sense to transition between views showing different datasets.
     Further, if there is very little shared between two adjacent views, then the
-    animations can become very hard to follow.
+    animations can become hard to follow.
 
 12. This highlights the basic tradeoff between static and interactive
 visualization. While interactive visualization allows us to explore many related
-views, it relies heavily on our memory. In contrast, a small multiples plot
-doesn't place as much burden on memory, though it doesn't scale well to many
-views. This basic trade-off is summarized by Tamara Munzner's rule of thumb:
-"eyes beat memory." We should only use interactivity when it's really not
-possible to gather the same insights from a static view.
+views, it relies heavily on memory. In contrast, a small multiples plot doesn't
+place as much burden on memory, but don't scale well to many views. This basic
+trade-off is summarized by Tamara Munzner's rule of thumb: "eyes beat memory."
+We should only use interactivity when it's not possible to gather the same
+insights from a static view.
 
 ## Mosaic
 
@@ -357,76 +359,87 @@ the `flipper_length_mm` column of the dataset.
 - `column`: Which column of the dataset do we use when defining the query?
 - `select`: Should we keep only the rows where `flipper_length_mm` equals the slider value? Or anything up to this value?
 
-### Visual Layers
-
-22. Finally, we relate these reactive variables to the visualization. Any part of
-a Mosaic plot that refers to a reactive variable will be recomputed whenever the
-user inputs are changed. Whenever `query` selection is changed, we requery the
-`athletesBatched` dataset (the first argument in any mosaic layer describes the
-dataset of interest). The `ci` parameter controls the `ci` visual encoding in
-the error bar layer.
+21. This is an example table selection. We create a table based on the `penguins`
+data. We draw two layers of dots, one grey and another red. If we hover over a
+row in the table, then we filter the red layer to show only the hovered penguin.
 
 ```{ojs}
-//| eval: false
-vg.plot(
-    vg.errorbarX(
-    vg.from("athletesBatched", {filterBy: $query}),
-    {
-        ci: $ci,
-        x: "height",
-        y: "sport",
-        stroke: "sex"
-    }
+//| label: selection-table
+$table_selection = vg.Selection.single()
+
+// define the table input
+penguin_table = vg.table({
+    as: $table_selection,
+    from: "penguins",
+    columns: ["species", "island", "bill_length_mm", "bill_depth_mm", "flipper_length_mm"]
+})
+
+// Define the plot from two dot layers (background and foreground)
+table_plot = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm", fill: "#CDB4BB", r: 2}
     ),
+    vg.dot(
+        vg.from("penguins", {filterBy: $table_selection}),
+        {x: "bill_length_mm", y: "bill_depth_mm", fill: "#7D323D", r: 3}
+    ),
+    vg.width(500),
+    vg.height(300)
 )
+
+vg.vconcat([table_plot, penguin_table, vg.vspace(10)])
 ```
 
-_Exercise: What are the reactive variables in this program? When they are changed, do they affect the displayed data or the visual encoding?_
+22. $^\dagger$ By default, the menu, slider, and table inputs aren't really that
+pretty. But you can customize their appearance using CSS. For example, I created
+the alternating light/dark row highlighting and sticky header using the CSS code
+below.
 
-23. We can organize the interface using `vconcat` (vertical concatenation) and
-`hconcat` (horizontal concatenation). They are analogous to `/` and `+` for
-combining panels in patchwork. They have no influence on the computation or
-interaction dynamics, just where the components appear on the display.
+    ```{=html}
+    <style>
+      thead th {
+        position: sticky;
+        top: 0;
+      }
+      tbody tr:nth-child(even) {
+        background: #f3f3f3;
+      }
+    </style>
+    ```
 
-24. For example, if we had wanted to place the sliders on the side of the main
-visualization, we can use
+    Here are some other CSS rules to ensure the menu labels have aren't squeeezd
+    too tightly next to the dropdown.
 
-```{ojs}
-vg.hconcat(
-    vg.vconcat(
-        vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
-        vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"})
-    ),
-    vg.plot(
-        vg.errorbarX(
-        vg.from("athletesBatched", {filterBy: $query}),
-        {
-            ci: $ci,
-            x: "height",
-            y: "sport",
-            stroke: "sex"
-        }
-        ),
-        vg.xLabel("Height"),
-        vg.marginLeft(120), // keep labels visible
-        vg.width(500),
-        vg.height(400)
-    ),
-    vg.colorLegend({for: "heights"}),
-)
-```
+    ```{=html}
+    <style>
+      .input { margin-right: 1em; }
+      .input > * { vertical-align: middle; }
+      .input label:first-of-type { margin-right: .5em; }
+    </style>
+    ```
 
 ## Examples
 
 ### Athlete Heights
 
-25. The visualization below responds to two slider inputs. When we set `batch =
-n`, it will filter to the first `10n` rows of the data and recompute the
-confidence intervals. The confidence interval widths depend on the confidence
-level, which itself can be set by a slider (larger CI levels are more
-conservative, so lead to wider intervals). As with the movies example, we
-compute the `batch` column and drop missing heights in R first, and write the
-result to a CSV that the coordinator loads.
+23. The example below comes from the mosaic documentation and shows how
+confidence intervals become narrower when we have more samples. It illustrates
+this by computing a confidence interval for the height of athletes within each
+sport. Let's take a look at the original data. The batch column is defined so
+that, within each sport, every 10 rows gets labeled with a new batch number.
+
+```{ojs}
+athletes_preview = vg.coordinator().query("SELECT * FROM athletesBatched")
+Inputs.table(athletes_preview)
+```
+
+24. The visualization has two slider inputs. `$query` controls a `Selection`
+that filters rows with less then the specified batch number. When a smaller
+dataset is passed into the `errorbarX` layer, the associated error bars get
+wider. `ci` controls a `Param` governing the confidence level. Confidence levels
+that are larger (e.g., 99%) require wider intervals, but this doesn't reference
+the underlying data, so we can get away with a `Param`.
 
     ```{r}
     #| echo: false
@@ -453,13 +466,8 @@ vg.vconcat(
     // graphical encodings
     vg.plot(
         vg.errorbarX(
-        vg.from("athletesBatched", {filterBy: $query}),
-          {
-            ci: $ci,
-            x: "height",
-            y: "sport",
-            stroke: "sex",
-          }
+            vg.from("athletesBatched", {filterBy: $query}),
+            {ci: $ci, x: "height", y: "sport"}
         ),
         vg.xLabel("Height"),
         vg.marginLeft(120), // keep labels visible
@@ -470,20 +478,10 @@ vg.vconcat(
 )
 ```
 
-Here are the first few rows from `athletesBatches`.
-
-```{ojs}
-athletes_head = vg.coordinator().query("SELECT * FROM athletesBatched LIMIT 5")
-Inputs.table(athletes_head)
-```
-
-When we interact with the visualization, queries like this will be automatically
-constructed and sent to the coordinator to fetch relevant data.
-
 
 ### Movie Ratings
 
-26. Let's work through another example inspired by the classic
+25. Let's work through another example inspired by the classic
 [FilmFinder](https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&t=141)
 visualization. We first prepare a CSV file that we can load into our mosaic
 coordinator. First, we need to handle the missing values present in the raw
@@ -507,7 +505,7 @@ Rotten Tomatoes ratings, we drop the movie if either of those is missing.
     write_csv(movies, "data/movies.csv")
     ```
 
-27. The entire app is given in the block below. We've written two helper
+26. The entire app is given in the block below. We've written two helper
 functions, `movie_controls` and `movie_plot,` to support the interactivity and
 graphical encodings, respectively. The use case of the app is relatively simple,
 but it already reveals some interesting patterns. For example, dramas tend to
@@ -523,15 +521,12 @@ vg.vconcat(
 );
 ```
 
-28. Let's study those two functions. `movie_controls` defines the three user
+27. Let's study those two functions. `movie_controls` defines the three user
 interface inputs. The `from` argument tells us to always look at the `movies`
-database within the coordinator. `column` says which column should be used to
-define the selector. Notice the interaction types have to match the data types.
-For example, it's not be possible to use a slider for genre.
-
-    The argument `query` is a `vg.Selection.intersect()` object.  This ensures that
-    only the movies that satisfy all these selections will be returned from the
-    database.
+dataset in our database. `column` says which column should be used to define the
+selector. The argument `query` is a `vg.Selection.intersect()` object.  This
+ensures that only the movies that satisfy all these selections will be returned
+from the database.
 
     _Exercise: What would happen if we had used `vg.Selection.single()` instead?  What about `vg.Selection.union()`?_
 
@@ -566,7 +561,7 @@ function movie_controls(query) {
 }
 ```
 
-29. The function below draws the actual plot. Notice that we have two dot
+28. The function below draws the actual plot. Notice that we have two dot
 layers.  The first shows everything in a faint background, and the second shows
 those that pass the query. The `tip: true` call ensures that we can see the
 movie title when we hover our mouse near the highlighted point.
@@ -578,14 +573,13 @@ function movie_plot(query) {
          x: "Rotten_Tomatoes_Rating",
          y: "IMDB_Rating",
          r: 1.5,
-         fill: "#777",
-         fillOpacity: 0.1
+         fill: "#CDB4BB"
        }),
        vg.dot(vg.from("movies", {filterBy: query}), {
          x: "Rotten_Tomatoes_Rating",
          y: "IMDB_Rating",
          r: 3,
-         fill: "#c84f4f",
+         fill: "#7D323D",
          title: "Title",
          tip: true
        }),

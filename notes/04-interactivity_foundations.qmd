@@ -5,7 +5,6 @@ date: 2026-09-01
 bibliography: references.bib
 format:
   html:
-    embed-resources: true
     html-math-method: mathjax
     fig-align: center
 execute:
@@ -25,6 +24,8 @@ theme_set(theme_classic() + theme(panel.border = element_rect(fill = NA, linewid
 set.seed(2026)
 ```
 
+Readings [1](https://homes.cs.washington.edu/~jheer/files/idfva-draft.pdf) (Sections 1 - 2), [2](https://idl.uw.edu/mosaic/what-is-mosaic/)
+
 ## History
 
 1. Interactive visualizations are visualizations that respond to user input. We
@@ -37,13 +38,13 @@ ambitious team might prepare a few related visualizations mean to be viewed
 together, like an atlas. A few visionaries explored the idea of interactivity
 using mechanical devices, like the Bertin Loom,
 
-    {{<video https://www.youtube.com/watch?v=EUoaEwxUeQ0>}}
+   {{<video https://www.youtube.com/watch?v=EUoaEwxUeQ0>}}
 
-  These were impractical, but they set the stage for what was to come.
+   These were impractical, but they set the stage for what was to come.
 
-2. The situation changed dramatically with the arrival of computers in the 1970s
-- 1980s. Compared to print, computer displays can cheaply show many views in
-sequence. Through new interfaces, users could also direct the particular
+2. The situation changed dramatically with the arrival of computers in the
+1970s - 1980s. Compared to print, computer displays can cheaply show many views
+in sequence. Through new interfaces, users could also direct the particular
 sequence that was shown to them. There might be thousands of options for what
 data, visual encodings, and annotation to include in a particular visualization.
 An well-designed interactive visualization lets users explore many options
@@ -71,10 +72,10 @@ visualization can be categorized into three groups: (1) data and view
 specification, (2) view manipulation, and (3) analysis process and provenance.
 These notes focus on group (1), which can be further broken into four actions,
 
-    - Visualize: Decide on a set of visual encodings.
-    - Filter: Modify which samples are shown.
-    - Sort: Reorder where the the samples appear on the display.
-    - Derive: Introduce new variables to the display.
+   - Visualize: Decide on a set of visual encodings.
+   - Filter: Modify which samples are shown.
+   - Sort: Reorder where the the samples appear on the display.
+   - Derive: Introduce new variables to the display.
 
    all of which are made accessible to the user.
 
@@ -83,7 +84,7 @@ encodings prioritize different comparisons. An interactive visualization that
 supports the "visualize" action allows the user to modify the encodings directly
 within the interface. This can be done through excel-style dropdowns,
 
-    ![](figures/excel_selection.png)
+   ![](figures/excel_selection.png)
 
    but this is less expressive than a full grammar of graphics (e.g., we can't
    overlay regression lines over a scatterplot). Alternatively, some systems
@@ -91,13 +92,13 @@ within the interface. This can be done through excel-style dropdowns,
    essentially interactive, code-free versions of ggplot2; the most famous
    example is tableau.
 
-    ![](figures/tableau_specification.png)
+   ![](figures/tableau_specification.png)
 
 6. Filters allow users to query for particular subsets of the data. They can be
 specified through input widgets, like dropdown menus, sliders, radio buttons, or
 search bars.
 
-   ![A (too...) complicated interface that many types of filter inputs.](figures/filter_inputs.png)
+   ![A (too...) complicated interface that uses many filter inputs.](figures/filter_inputs.png)
 
    Further, the filter input can itself be augmented by small visualizations,
    called scented widgets (because they give a "scent" about the information
@@ -131,16 +132,16 @@ to use. What can go wrong?
 10. One useful abstraction idea is that interactive systems must bridge the two
 interaction gulfs.
 
-   - Gulf of execution: The time it takes to specify a query and update the display.
-   - Gulf of evaluation: How long it takes to understand the updated display.
+    - Gulf of execution: The time it takes to specify a query and update the display.
+    - Gulf of evaluation: How long it takes to understand the updated display.
 
-   If either of the gulfs takes too long to cross, then the system starts
-   becoming difficult to use. Updates that take less than 0.1 seconds feel
-   smooth, between 0.1 and 1 second will have a noticeable lag but still support
-   continuous train of thought. 10 seconds is generally considered the limit
-   before users actively change their interaction behaviors.
+    If either of the gulfs takes too long to cross, then the system starts
+    becoming difficult to use. Updates that take less than 0.1 seconds feel
+    smooth, between 0.1 and 1 second will have a noticeable lag but still support
+    continuous train of thought. 10 seconds is generally considered the limit
+    before users actively change their interaction behaviors.
 
-   ![](figures/interaction_gulfs.png)
+    ![](figures/interaction_gulfs.png)
 
 11. Animation can help reduce the gulf of evaluation. Instead of having to
 manually scan plot labels or marks to see how it has changed, we can follow the
@@ -148,12 +149,12 @@ same object as it transitions between views. For example, the plot below shows
 the population breakdown of different states according to age groups. It's easy
 to see which states had stable rankings.
 
-   {{<video figures/object_constancy.mp4>}}
+    {{<video figures/object_constancy.mp4>}}
 
-   It's important that the transitions track the same object. For example, it
-   makes no sense to transition between views showing different datasets.
-   Further, if there is very little shared between two adjacent views, then the
-   animations can become very hard to follow.
+    It's important that the transitions track the same object. For example, it
+    makes no sense to transition between views showing different datasets.
+    Further, if there is very little shared between two adjacent views, then the
+    animations can become very hard to follow.
 
 12. This highlights the basic tradeoff between static and interactive
 visualization. While interactive visualization allows us to explore many related
@@ -171,27 +172,9 @@ is different from traditional computer programs, which execute code from the top
 to the bottom of a file, and is often called "reactive programming," because the
 program's state reacts to user inputs.
 
-14. There are different ways to handle the resulting coordination problem. We'll
-discuss how Mosaic monitors for user interactions and triggers updates to the
-visualization. Let's focus on an example. The visualization below responds to
-two slider inputs. When we set `batch = n`, it will filter to the first `10n`
-rows of the data and recompute the confidence intervals. The confidence interval
-widths depend on the confidence level, which itself can be set by a slider
-(larger CI levels are more conservative, so lead to wider intervals). As with the
-movies example, we compute the `batch` column and drop missing heights in R first,
-and write the result to a CSV that the coordinator loads.
-
-```{r}
-athletes_tmp <- tempfile()
-download.file("https://github.com/uwdata/mosaic/raw/main/data/athletes.parquet", athletes_tmp, quiet = TRUE)
-
-athletes <- read_parquet(athletes_tmp) |>
-    filter(!is.na(height)) |>
-    group_by(sport) |>
-    mutate(batch = 10 * ceiling(row_number() / 10))
-
-write_csv(athletes, "data/athletes.csv")
-```
+14. We'll discuss how Mosaic monitors for user interactions and triggers updates
+to the visualization. First, let's setup a database with the datasets we'll use
+in our illustrations below.
 
 ```{ojs}
 path = (p) => new URL(`data/${p}`, document.baseURI).href
@@ -202,166 +185,177 @@ vg = {
     const wasm = await vg.wasmConnector();
     vg.coordinator().databaseConnector(wasm);
     await vg.coordinator().exec([
-      vg.loadCSV("athletesBatched", path("athletes.csv"))
+      vg.loadCSV("penguins", path("penguins.csv")),
+      vg.loadCSV("athletesBatched", path("athletes.csv")),
+      vg.loadCSV("movies", path("movies.csv"))
     ]);
     return vg;
 }
+```
 
-// Parameters and selection
-$ci = vg.Param.value(0.95)
-$query = vg.Selection.single()
+### `Param` and `Selection`
 
-vg.vconcat(
-    // user inputs
-    vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
-    vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"}),
+15. In mosaic, `Params` are used for interactive view specification. They are the
+link between user inputs and the visual rendering code that needs to be rerun
+based on the user input. For example, the scatterplot below allows us to change
+point color using a menu. The user can provide inputs through `vg.menu`. The
+`vg.dot` layer uses whatever color is passed to the `fill` argument.  `$color`
+appears in both the `vg.menu` and `vg.dot` code is and ensures the visualization
+is rerendered every time the input changes.
 
-    // graphical encodings
-    vg.plot(
-        vg.errorbarX(
-        vg.from("athletesBatched", {filterBy: $query}),
-          {
-            ci: $ci,
-            x: "height",
-            y: "sport",
-            stroke: "sex",
-          }
-        ),
-        vg.xLabel("Height"),
-        vg.marginLeft(120), // keep labels visible
-        vg.width(500),
-        vg.height(400)
+```{ojs}
+//| label: param-minimal-plot
+$color = vg.Param.value("red")
+
+menu = vg.menu({as: $color, options: ["red", "blue", "green"], label: "Point color"})
+plot = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm", fill: $color}
     ),
-    vg.colorLegend({for: "heights"}),
+    vg.width(500),
+    vg.height(300)
 )
+
+vg.vconcat([menu, plot])
 ```
 
-### Coordinator
-
-15. The first defines the database coordinator, like we introduced in week 2.
-Remember that this reads in the data and stores it in a database that's hidden
-from our view. We already did all the preprocessing in R, so this step can
-simply load the CSV. Remember that the `path` helper function constructs the
-absolute path to the data that we are interested in.
-
-```js
-const wasm = await vg.wasmConnector();
-vg.coordinator().databaseConnector(wasm);
-await vg.coordinator().exec([
-    vg.loadCSV("athletesBatched", path("athletes.csv"))
-]);
-```
-
-The coordinator object is actually a wrapper of the databases we defined when
-discussing data management. We can see what tables are available using this query.
+16. In this example, `Param` simply controls the view and never refers to the
+underlying dataset. If instead we want to use interactivity for data
+specification, we need to use mosaic's `Selection` object. Like `Param`, this
+serves as a link between user inputs and visual rendering. However, the
+`Selection` object can query the underlying database. For example, we can filter
+to different species using the `filterBy` argument of `from`.
 
 ```{ojs}
-table_names = vg.coordinator().query("SHOW TABLES")
-Inputs.table(table_names)
+//| label: selection-minimal-plot
+$species = vg.Selection.single()
+
+speciesMenu = vg.menu({as: $species, from: "penguins", column: "species", label: "Species"})
+speciesPlot = vg.plot(
+    vg.dot(
+        vg.from("penguins", {filterBy: $species}),
+        {x: "bill_length_mm", y: "bill_depth_mm"}
+    ),
+    vg.xDomain([30, 60]), // keeps the window ranges fixed
+    vg.yDomain([12, 22]),
+    vg.width(500),
+    vg.height(300)
+)
+
+vg.vconcat([speciesMenu, speciesPlot])
 ```
 
-Here are the first few rows from `athletesBatches`.
+17. Filtering completely removes points from the plot. We can instead highlight
+one group and fade the rest into the background using `vg.highlight`. This again
+requires a `Selection` object, because we need to refer to the underlying data.
 
 ```{ojs}
-athletes_head = vg.coordinator().query("SELECT * FROM athletesBatched LIMIT 5")
-Inputs.table(athletes_head)
+//| label: selection-highlight-plot
+$species2 = vg.Selection.single()
+
+speciesMenu2 = vg.menu({as: $species2, from: "penguins", column: "species", label: "Species"})
+speciesPlot2 = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm"},
+    ),
+    vg.highlight({by: $species2, opacity: 0.1}),
+    vg.width(500),
+    vg.height(300)
+)
+
+vg.vconcat([speciesMenu2, speciesPlot2])
 ```
 
-When we interact with the visualization, queries like this will be automatically
-constructed and sent to the coordinator to fetch relevant data.
+18. We can also combine several user inputs into the same selection. For
+example, below we have one menu for species and another for island, and they
+both point to the same `Selection` object. Mosaic defines a few ways to
+reconcile the competing user inputs.
 
-### Reactives
-
-16. The reactive variables are stored as either `Param`s or `Selection`s. We have
-a `Param` for the confidence interval level and a `Selection` for the number of
-data batches to use in the visualization. What they have in common is that any
-changes to their values (via user inputs, discussed below) will trigger changes
-on all visualization components that refer to them. In mosaic, both these types
-of variables are prefixed with a `$`. The key difference is:
-
-   * `Selection` define SQL queries that are used to filter the rows that end up in the visualization.
-   * `Params` are variables that influence visual appearance or any computational steps after the data has been queried.
-
-   You can think of this as data and view specification.
-
-17. An important aspect of `Selection`s is that a visualization might define
-multiple selections which later need to be reconciled. E.g., we might have two
-sliders defining filters using two columns, like Height > c_1, Weight > c_2.
-There are a few reconciliation approaches defined in mosaic.
-
-   * `vg.Selection.intersection()`: Consider only samples that pass both conditions.
-   * `vg.Selection.union()`: Consider samples that pass either condition.
-   * `vg.Selection.single()`: Consider samples that pass the condition that was most recently changed by the user.
-
-18. In our example, we define a parameter for confidence level initialized at
-0.95. This changes the width of the intervals in the visualization, but we can
-change its value without needing to query the data.
+    * `vg.Selection.intersect()`: Consider only samples that pass both conditions.
+    * `vg.Selection.union()`: Consider samples that pass either condition.
+    * `vg.Selection.single()`: Consider samples that pass the condition that was most recently changed by the user.
 
 ```{ojs}
-//| eval: false
-$ci = vg.Param.value(0.95)
-```
+//| label: selection-reconcilation-plot
+// one Selection shared by both menus; swap intersect() for union() or single()
+$filter = vg.Selection.intersect()
 
-For the number of batches to use, we instead need a selection. The code below
-doesn't specify what data query will be run every time it is changed. We're
-using `.single()` reconciliation strategy, but this could have been choice,
-because we only have one selection in this visualization.
+speciesMenu3 = vg.menu({as: $filter, from: "penguins", column: "species", label: "Species"})
+islandMenu = vg.menu({as: $filter, from: "penguins", column: "island", label: "Island"})
+speciesIslandPlot = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm", fill: "species"}
+    ),
+    vg.highlight({by: $filter, opacity: 0.1}),
+    vg.xDomain([30, 60]),
+    vg.yDomain([12, 22]),
+    vg.width(500),
+    vg.height(300)
+)
 
-```{ojs}
-//| eval: false
-$query = vg.Selection.single()
+vg.vconcat([vg.hconcat([speciesMenu3, islandMenu]), speciesIslandPlot])
 ```
 
 ### Inputs
 
-19. Mosaic allows the user to modify these reactive variables using `Inputs`.
-The package implements,
+19. Menus are just one way that the user can provide inputs. Mosaic package
+implements,
 
     * [`menu`](https://idl.uw.edu/mosaic/api/inputs/menu.html): Select rows by the category levels in a column.
-    * [`slider`](https://idl.uw.edu/mosaic/api/inputs/slider.html): There are either point or interval sliders. Point sliders let you filter rows where a column is above (or below) a given threshold. Interval sliders filter rows where a column has values between the interval boundaries.
+    * [`slider`](https://idl.uw.edu/mosaic/api/inputs/slider.html): There are two types of sliders. Point sliders refer to a single value while interval sliders refer to lower and upper bounds.
     * [`search`](https://idl.uw.edu/mosaic/api/inputs/search.html): Select rows where the search text appears in a column.
     * [`table`](https://idl.uw.edu/mosaic/api/inputs/table.html): Select rows where the user has hovered their mouse.
 
-20. In our example, there are two sliders. The syntax is different because the
-first modifies a `Selection` while the second modifies a `Param`. The first
-slider is requerying the `athletesBatched` dataset to retrieve rows where the
-value in the `batch` column is less than `query`.
+20. These work with both `Param` and `Selection` objects. For example, we can
+change point sizes using a `Param` object.
 
 ```{ojs}
-//| eval: false
-vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" })
+//| label: param-minimal-slider
+$size = vg.Param.value(5)
+
+size_slider = vg.slider({as: $size, min: 1, max: 25, label: "point size"})
+size_plot = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm", r: $size}
+    ),
+    vg.width(500),
+    vg.height(300)
+)
+
+vg.vconcat([size_slider, size_plot])
 ```
 
-The arguments mean:
-
-   - `as`: The `Selection` object. This ties the user inputs to subsequent visual changes.
-   - `from`: Which dataset do we draw the query from?
-   - `column`: Which column of the dataset do we use when defining the query?
-   - `select`: Should we keep only the rows where `batch` equals the slider value, or should we consider any value less than the selected slider value? Interval means we should use the latter.
-
-Given this information, the slider will internally construct the SQL query,
-
-```sql
-SELECT * FROM athletesBatched WHERE batch < {slider value}
-```
-
-   The definition of the `Param`-based slider slider is more straightforward, because it never needs to refer to the data.
+We can alternatively use a slider to highlight samples with flipper sizes between a given range.
 
 ```{ojs}
-//| eval: false
-vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"})
+//| label: param-slider-selection
+$flipper_selection = vg.Selection.single()
+
+flipper_slider = vg.slider({as: $flipper_selection, from: "penguins", column: "flipper_length_mm", select: "interval", label: "Flipper length"})
+flipper_plot = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm"}
+    ),
+    vg.highlight({by: $flipper_selection, opacity: 0.1}),
+    vg.width(500),
+    vg.height(300)
+)
+
+vg.vconcat([flipper_slider, flipper_plot])
 ```
 
-   - `as`: The `Param` object. Like in the slider above, this makes sure inputs
-   trigger changes in the downstream visualization.
-   - `min, max, step`: Controls the endpoints and resolution of the slider. When we used a `Selection`, this information was automatically inferred^[We could have also set it manually.].
+The arguments to `slider` are more complicated now because we have to refer to
+the `flipper_length_mm` column of the dataset.
 
-21. Different inputs have different arguments controlling their appearance and
-what they make possible to the user, and when working on a new visualization,
-it's helpful to have the documentation open. But they all have the same
-`Selection` vs. `Param` distinction, with different specifications depending on
-whether they are used to define new data queries (`Selection`) or simply set
-variables that will be used downstream (`Param`).
+- `as`: The `Selection` object. This ties the user inputs to rendered visual changes.
+- `from`: Which dataset do we draw the query from?
+- `column`: Which column of the dataset do we use when defining the query?
+- `select`: Should we keep only the rows where `flipper_length_mm` equals the slider value? Or anything up to this value?
 
 ### Visual Layers
 
@@ -422,9 +416,74 @@ vg.hconcat(
 )
 ```
 
-### Application: Filtering Movie Ratings
+## Examples
 
-25. Let's work through another example inspired by the classic
+### Athlete Heights
+
+25. The visualization below responds to two slider inputs. When we set `batch =
+n`, it will filter to the first `10n` rows of the data and recompute the
+confidence intervals. The confidence interval widths depend on the confidence
+level, which itself can be set by a slider (larger CI levels are more
+conservative, so lead to wider intervals). As with the movies example, we
+compute the `batch` column and drop missing heights in R first, and write the
+result to a CSV that the coordinator loads.
+
+    ```{r}
+    #| echo: false
+    athletes_tmp <- tempfile()
+    download.file("https://github.com/uwdata/mosaic/raw/main/data/athletes.parquet", athletes_tmp, quiet = TRUE)
+    athletes <- read_parquet(athletes_tmp) |>
+        filter(!is.na(height)) |>
+        group_by(sport) |>
+        mutate(batch = 10 * ceiling(row_number() / 10))
+
+    write_csv(athletes, "data/athletes.csv")
+    ```
+
+```{ojs}
+// Parameters and selection
+$ci = vg.Param.value(0.95)
+$query = vg.Selection.single()
+
+vg.vconcat(
+    // user inputs
+    vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
+    vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"}),
+
+    // graphical encodings
+    vg.plot(
+        vg.errorbarX(
+        vg.from("athletesBatched", {filterBy: $query}),
+          {
+            ci: $ci,
+            x: "height",
+            y: "sport",
+            stroke: "sex",
+          }
+        ),
+        vg.xLabel("Height"),
+        vg.marginLeft(120), // keep labels visible
+        vg.width(500),
+        vg.height(400)
+    ),
+    vg.colorLegend({for: "heights"}),
+)
+```
+
+Here are the first few rows from `athletesBatches`.
+
+```{ojs}
+athletes_head = vg.coordinator().query("SELECT * FROM athletesBatched LIMIT 5")
+Inputs.table(athletes_head)
+```
+
+When we interact with the visualization, queries like this will be automatically
+constructed and sent to the coordinator to fetch relevant data.
+
+
+### Movie Ratings
+
+26. Let's work through another example inspired by the classic
 [FilmFinder](https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&t=141)
 visualization. We first prepare a CSV file that we can load into our mosaic
 coordinator. First, we need to handle the missing values present in the raw
@@ -432,22 +491,23 @@ data. If the genre or MPAA rating were unknown, we replace them with a new
 category level called "Missing". Since the focus of the plot is the IMDB and
 Rotten Tomatoes ratings, we drop the movie if either of those is missing.
 
-```{r}
-library(lubridate)
+    ```{r}
+    #| echo: false
+    library(lubridate)
 
-movies <- read_csv("https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/apps/data/movies.csv") |>
-    mutate(
-        year = year(as_date(Release_Date, format = "%b %d %Y")),
-        Major_Genre = fct_explicit_na(Major_Genre),
-        MPAA_Rating = fct_explicit_na(MPAA_Rating)
-    ) |>
-    filter(!is.na(IMDB_Rating)) |>
-    filter(!is.na(Rotten_Tomatoes_Rating))
+    movies <- read_csv("https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/apps/data/movies.csv") |>
+        mutate(
+            year = year(as_date(Release_Date, format = "%b %d %Y")),
+            Major_Genre = fct_explicit_na(Major_Genre),
+            MPAA_Rating = fct_explicit_na(MPAA_Rating)
+        ) |>
+        filter(!is.na(IMDB_Rating)) |>
+        filter(!is.na(Rotten_Tomatoes_Rating))
 
-write_csv(movies, "data/movies.csv")
-```
+    write_csv(movies, "data/movies.csv")
+    ```
 
-26. The entire app is given in the block below. We've written two helper
+27. The entire app is given in the block below. We've written two helper
 functions, `movie_controls` and `movie_plot,` to support the interactivity and
 graphical encodings, respectively. The use case of the app is relatively simple,
 but it already reveals some interesting patterns. For example, dramas tend to
@@ -455,31 +515,25 @@ have higher ratings than horror. Also, what do you think is going on with the
 fact that movies released before 1995 seem to have higher ratings in general?
 
 ```{ojs}
-movie_app = {
-    await vg.coordinator().exec([
-        vg.loadCSV("movies", path("movies.csv"))
-    ]);
+movieQuery = vg.Selection.intersect();
 
-    const movieQuery = vg.Selection.intersect();
-
-    return vg.vconcat(
-        movie_controls(movieQuery),
-        movie_plot(movieQuery)
-    );
-}
+vg.vconcat(
+    movie_controls(movieQuery),
+    movie_plot(movieQuery)
+);
 ```
 
-27. Let's study those two functions. `movie_controls` defines the three user
+28. Let's study those two functions. `movie_controls` defines the three user
 interface inputs. The `from` argument tells us to always look at the `movies`
 database within the coordinator. `column` says which column should be used to
 define the selector. Notice the interaction types have to match the data types.
 For example, it's not be possible to use a slider for genre.
 
-The argument `query` is a `vg.Selection.intersect()` object.  This ensures that
-only the movies that satisfy all these selections will be returned from the
-database.
+    The argument `query` is a `vg.Selection.intersect()` object.  This ensures that
+    only the movies that satisfy all these selections will be returned from the
+    database.
 
-_Exercise: What would happen if we had used `vg.Selection.single()` instead?  What about `vg.Selection.union()`?_
+    _Exercise: What would happen if we had used `vg.Selection.single()` instead?  What about `vg.Selection.union()`?_
 
 ```{ojs}
 function movie_controls(query) {
@@ -512,7 +566,7 @@ function movie_controls(query) {
 }
 ```
 
-27. The function below draws the actual plot. Notice that we have two dot
+29. The function below draws the actual plot. Notice that we have two dot
 layers.  The first shows everything in a faint background, and the second shows
 those that pass the query. The `tip: true` call ensures that we can see the
 movie title when we hover our mouse near the highlighted point.

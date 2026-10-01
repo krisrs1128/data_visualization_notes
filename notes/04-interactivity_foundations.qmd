@@ -77,8 +77,8 @@ These notes focus on group (1), which can be further broken into four actions,
    - Sort: Reorder where the the samples appear on the display.
    - Derive: Introduce new variables to the display.
 
-    Basically, we can use interactivity to decide what data to show (data
-    specification) and how we show it (view specification).
+   Basically, we can use interactivity to decide what data to show (data
+   specification) and how we show it (view specification).
 
 5. _Visualize._ From our study of static visualizations, we know that different visual
 encodings prioritize different comparisons. An interactive visualization that
@@ -125,7 +125,7 @@ plot below.
 
    ![From the [scSketch demo](https://github.com/colabobio/scsketch).](figures/diff_exp_analysis_demo.gif)
 
-_Exercise: What was the last interactive visualization you saw before class?  Did it use data and view specification? If so, what actions did it use? If not, did it support view manipulation or analysis process/provenance?_
+   _Exercise: What was the last interactive visualization you saw before class?  Did it use data and view specification? If so, what actions did it use? If not, did it support view manipulation or analysis process/provenance?_
 
 ### Gulfs, Constancy, and Memory
 
@@ -189,9 +189,9 @@ vg = {
     const wasm = await vg.wasmConnector();
     vg.coordinator().databaseConnector(wasm);
     await vg.coordinator().exec([
-      vg.loadCSV("penguins", path("penguins.csv")),
-      vg.loadCSV("athletesBatched", path("athletes.csv")),
-      vg.loadCSV("movies", path("movies.csv"))
+        vg.loadCSV("penguins", path("penguins.csv")),
+        vg.loadCSV("athletes_batched", path("athletes.csv")),
+        vg.loadCSV("movies", path("movies.csv"))
     ]);
     return vg;
 }
@@ -209,13 +209,13 @@ is rerendered every time the input changes.
 
 ```{ojs}
 //| label: param-minimal-plot
-$color = vg.Param.value("red")
+color = vg.Param.value("red")
 
-menu = vg.menu({as: $color, options: ["red", "blue", "green"], label: "Point color"})
+menu = vg.menu({as: color, options: ["red", "blue", "green"], label: "Point color"})
 plot = vg.plot(
     vg.dot(
         vg.from("penguins"),
-        {x: "bill_length_mm", y: "bill_depth_mm", fill: $color}
+        {x: "bill_length_mm", y: "bill_depth_mm", fill: color}
     ),
     vg.width(500),
     vg.height(300)
@@ -233,12 +233,12 @@ to different species using the `filterBy` argument of `from`.
 
 ```{ojs}
 //| label: selection-minimal-plot
-$species = vg.Selection.single()
+species = vg.Selection.single()
 
-speciesMenu = vg.menu({as: $species, from: "penguins", column: "species", label: "Species"})
-speciesPlot = vg.plot(
+species_menu = vg.menu({as: species, from: "penguins", column: "species", label: "Species"})
+species_plot = vg.plot(
     vg.dot(
-        vg.from("penguins", {filterBy: $species}),
+        vg.from("penguins", {filterBy: species}),
         {x: "bill_length_mm", y: "bill_depth_mm"}
     ),
     vg.xDomain([30, 60]), // keeps the window ranges fixed
@@ -247,7 +247,7 @@ speciesPlot = vg.plot(
     vg.height(300)
 )
 
-vg.vconcat([speciesMenu, speciesPlot])
+vg.vconcat([species_menu, species_plot])
 ```
 
 17. Filtering completely removes points from the plot. We can instead highlight
@@ -256,20 +256,20 @@ requires a `Selection` object, because we need to refer to the underlying data.
 
 ```{ojs}
 //| label: selection-highlight-plot
-$species2 = vg.Selection.single()
+species2 = vg.Selection.single()
 
-speciesMenu2 = vg.menu({as: $species2, from: "penguins", column: "species", label: "Species"})
-speciesPlot2 = vg.plot(
+species_menu_2 = vg.menu({as: species2, from: "penguins", column: "species", label: "Species"})
+species_plot_2 = vg.plot(
     vg.dot(
         vg.from("penguins"),
         {x: "bill_length_mm", y: "bill_depth_mm"},
     ),
-    vg.highlight({by: $species2, opacity: 0.1}),
+    vg.highlight({by: species2, opacity: 0.1}),
     vg.width(500),
     vg.height(300)
 )
 
-vg.vconcat([speciesMenu2, speciesPlot2])
+vg.vconcat([species_menu_2, species_plot_2])
 ```
 
 18. We can also combine several user inputs into the same selection. For
@@ -284,23 +284,23 @@ reconcile the competing user inputs.
 ```{ojs}
 //| label: selection-reconcilation-plot
 // one Selection shared by both menus; swap intersect() for union() or single()
-$filter = vg.Selection.intersect()
+filter = vg.Selection.intersect()
 
-speciesMenu3 = vg.menu({as: $filter, from: "penguins", column: "species", label: "Species"})
-islandMenu = vg.menu({as: $filter, from: "penguins", column: "island", label: "Island"})
-speciesIslandPlot = vg.plot(
+species_menu_3 = vg.menu({as: filter, from: "penguins", column: "species", label: "Species"})
+island_menu = vg.menu({as: filter, from: "penguins", column: "island", label: "Island"})
+species_island_plot = vg.plot(
     vg.dot(
         vg.from("penguins"),
         {x: "bill_length_mm", y: "bill_depth_mm", fill: "species"}
     ),
-    vg.highlight({by: $filter, opacity: 0.1}),
+    vg.highlight({by: filter, opacity: 0.1}),
     vg.xDomain([30, 60]),
     vg.yDomain([12, 22]),
     vg.width(500),
     vg.height(300)
 )
 
-vg.vconcat([vg.hconcat([speciesMenu3, islandMenu]), speciesIslandPlot])
+vg.vconcat([vg.hconcat([species_menu_3, island_menu]), species_island_plot])
 ```
 
 _Exercise: For the settings below, decide whether it is more appropriate to use a `Param` or a `Selection`._
@@ -325,13 +325,13 @@ change point sizes using a `Param` object.
 
 ```{ojs}
 //| label: param-minimal-slider
-$size = vg.Param.value(5)
+size = vg.Param.value(5)
 
-size_slider = vg.slider({as: $size, min: 1, max: 25, label: "point size"})
+size_slider = vg.slider({as: size, min: 1, max: 25, label: "point size"})
 size_plot = vg.plot(
     vg.dot(
         vg.from("penguins"),
-        {x: "bill_length_mm", y: "bill_depth_mm", r: $size}
+        {x: "bill_length_mm", y: "bill_depth_mm", r: size}
     ),
     vg.width(500),
     vg.height(300)
@@ -344,15 +344,15 @@ We can alternatively use a slider to highlight samples with flipper sizes betwee
 
 ```{ojs}
 //| label: param-slider-selection
-$flipper_selection = vg.Selection.single()
+flipper_selection = vg.Selection.single()
 
-flipper_slider = vg.slider({as: $flipper_selection, from: "penguins", column: "flipper_length_mm", select: "interval", label: "Flipper length"})
+flipper_slider = vg.slider({as: flipper_selection, from: "penguins", column: "flipper_length_mm", select: "interval", label: "Flipper length"})
 flipper_plot = vg.plot(
     vg.dot(
         vg.from("penguins"),
         {x: "bill_length_mm", y: "bill_depth_mm"}
     ),
-    vg.highlight({by: $flipper_selection, opacity: 0.1}),
+    vg.highlight({by: flipper_selection, opacity: 0.1}),
     vg.width(500),
     vg.height(300)
 )
@@ -374,11 +374,11 @@ row in the table, then we filter the red layer to show only the hovered penguin.
 
 ```{ojs}
 //| label: selection-table
-$table_selection = vg.Selection.single()
+table_selection = vg.Selection.single()
 
 // define the table input
 penguin_table = vg.table({
-    as: $table_selection,
+    as: table_selection,
     from: "penguins",
     columns: ["species", "island", "bill_length_mm", "bill_depth_mm", "flipper_length_mm"]
 })
@@ -390,7 +390,7 @@ table_plot = vg.plot(
         {x: "bill_length_mm", y: "bill_depth_mm", fill: "#CDB4BB", r: 2}
     ),
     vg.dot(
-        vg.from("penguins", {filterBy: $table_selection}),
+        vg.from("penguins", {filterBy: table_selection}),
         {x: "bill_length_mm", y: "bill_depth_mm", fill: "#7D323D", r: 3}
     ),
     vg.width(500),
@@ -409,67 +409,74 @@ site](https://www.quackit.com/html/html_editors/scratchpad/?example=/html/templa
 whose code I copied to make the tables in these notes prettier (a few minor
 modifications are commented on below).
 
-````{.tiny}
-```{=html}
-<style>
-table { /* change ".table-hover" to "table", so the rule applies to every table */
-    width: 100%;
-    border-collapse: collapse;
-    font-family: sans-serif;
-    font-size: 0.9rem;
-}
+    ````{.tiny}
+    ```{=html}
+    <style>
+    table { /* change ".table-hover" to "table", so the rule applies to every table */
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+        font-size: 0.9rem;
+    }
 
-table thead th {
-    padding: 12px 15px;
-    background-color: #f4f4f4;
-    box-shadow: inset 0 -2px 0 #ccc;
-    text-align: left;
-    position: sticky; /* always show header at the top */
-    top: 0;
-}
+    table thead th {
+        padding: 12px 15px;
+        background-color: #f4f4f4;
+        box-shadow: inset 0 -2px 0 #ccc;
+        text-align: left;
+        position: sticky; /* always show header at the top */
+        top: 0;
+    }
 
-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #e0e0e0;
-}
+    table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+    }
 
-table tbody tr:hover {
-    background-color: #f5f5f5;
-}
-</style>
-```
-````
+    table tbody tr:hover {
+        background-color: #f5f5f5;
+    }
 
-```{=html}
-<style>
-table { /* change ".table-hover" to "table", so the rule applies to every table */
-    width: 100%;
-    border-collapse: collapse;
-    font-family: sans-serif;
-    font-size: 0.9rem;
-}
+    /* pad the text around menus */
+    .input { margin-right: 1em; }
+    .input > * { vertical-align: middle; }
+    .input label:first-of-type { margin-right: .5em; }
+    </style>
+    ```
+    ````
 
-table thead th {
-    padding: 12px 15px;
-    background-color: #f4f4f4;
-    box-shadow: inset 0 -2px 0 #ccc;
-    text-align: left;
-    position: sticky; /* always show header at the top */
-    top: 0;
-}
+    ```{=html}
+    <style>
+    table { /* change ".table-hover" to "table", so the rule applies to every table */
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+        font-size: 0.9rem;
+    }
 
-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #e0e0e0;
-}
+    table thead th {
+        padding: 12px 15px;
+        background-color: #f4f4f4;
+        box-shadow: inset 0 -2px 0 #ccc;
+        text-align: left;
+        position: sticky; /* always show header at the top */
+        top: 0;
+    }
 
-table tbody tr:hover {
-    background-color: #f5f5f5;
-}
-</style>
-```
+    table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+    }
 
-1. $^\dagger$ Mosaic is designed to fit into the wider javascript visualization
+    table tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+    .input { margin-right: 1em; }
+    .input label:first-of-type { margin-right: .5em; }
+    </style>
+    ```
+
+23. $^\dagger$ Mosaic is designed to fit into the wider javascript visualization
 ecosystem^[For this reason it's a good gateway to more advanced libraries like D3.] and
 it actually is not hard to connect it to other packages. For example, we may
 want to have access to a wider catalog of inputs, like those implemented in
@@ -486,7 +493,7 @@ which support multi-checkbox and date inputs.
    or
    [geographic brushes](https://observablehq.com/@awhitty/fips-county-code-brush).
 
-1. $^\dagger$ Even though they're not built in, it's possible to connect these
+24. $^\dagger$ Even though they're not built in, it's possible to connect these
 custom inputs with mosaic. The key observation is that, under the hood, the
 built-in inputs (e.g., `vg.menu` and `vg.slider`) are defining SQL filter
 statements from the input value. These statements are passed to `Selection`
@@ -495,17 +502,17 @@ custom inputs, we need a way to update the `Selection` objects to point to the
 right rows. This was anticipated by the mosaic developers, and every selection
 provides an `.update` method. Abstractly, it has the form,
 
-```js
-selection.update({
-  source: input object
-  value: javascript variables created by the input
-  predicate: SQL expression defining which rows to select
-})
-```
+   ```js
+   selection.update({
+       source: input object
+       value: javascript variables created by the input
+       predicate: SQL expression defining which rows to select
+   })
+   ```
 
-We will illustrate using both checkbox inputs and range sliders.
+   We will illustrate using both checkbox inputs and range sliders.
 
-1. $^\dagger$. Checkboxes are useful if we want to select multiple species in
+25. $^\dagger$. Checkboxes are useful if we want to select multiple species in
 our scatterplot. This isn't supported by `vg.menu`, but it is supported by
 `Inputs.checkbox` from the Observable library, which is automatically loaded by
 quarto. To define an Observable checkbox input in this package, we can use this
@@ -513,9 +520,9 @@ syntax.
 
 ```{ojs}
 //| output: true
-penguinCheckbox = Inputs.checkbox(
-  ["Adelie", "Gentoo", "Chinstrap"], // options
-  {label: "Species", value: ["Adelie", "Gentoo", "Chinstrap"]} // label and initial values
+penguin_checkbox = Inputs.checkbox(
+    ["Adelie", "Gentoo", "Chinstrap"], // options
+    {label: "Species", value: ["Adelie", "Gentoo", "Chinstrap"]} // label and initial values
 );
 ```
 
@@ -526,15 +533,15 @@ selected species, and `predicate` transforms that array into a SQL filter
 command.
 
 ```{ojs}
-$speciesCheck = vg.Selection.single();
+species_check = vg.Selection.single();
 
-penguinCheckbox.addEventListener("input", () => {
-  const current = penguinCheckbox.value; // e.g., ["Adelie", "Gentoo"]
-  $speciesCheck.update({
-    source: penguinCheckbox,
-    value: current,
-    predicate: vg.sql`species IN (${current.map(vg.literal)})`
-  });
+penguin_checkbox.addEventListener("input", () => {
+    const current = penguin_checkbox.value; // e.g., ["Adelie", "Gentoo"]
+    species_check.update({
+        source: penguin_checkbox,
+        value: current,
+        predicate: vg.sql`species IN (${current.map(vg.literal)})`
+    });
 });
 ```
 
@@ -544,7 +551,7 @@ checkbox inputs were built into the mosaic library.
 ```{ojs}
 checkbox_plot = vg.plot(
     vg.dot(
-        vg.from("penguins", {filterBy: $speciesCheck}),
+        vg.from("penguins", {filterBy: species_check}),
         {x: "bill_length_mm", y: "bill_depth_mm"}
     ),
     vg.xDomain([30, 60]), // keeps the window ranges fixed
@@ -553,10 +560,10 @@ checkbox_plot = vg.plot(
     vg.height(300)
 )
 
-vg.vconcat([penguinCheckbox, checkbox_plot])
+vg.vconcat([penguin_checkbox, checkbox_plot])
 ```
 
-1. $^\dagger$. Here's another example. Suppose instead of simply selecting
+26. $^\dagger$. Here's another example. Suppose instead of simply selecting
 penguins with flipper length below a given value, we wanted to identify those
 with flipper length within a given range. This isn't supported by the default
 `vg.slider`, but it's supported by this
@@ -571,10 +578,10 @@ The block below defines the slider object, just like we defined the checkbox
 output above.
 
 ```{ojs}
-flipperRangeSlider = interval([170, 235], { // min and max range
-  label: "Flipper length",
-  value: [170, 235], // initial values
-  format: ([lo, hi]) => `${Math.round(lo)} - ${Math.round(hi)}` // hide decimals
+flipper_range_slider = interval([170, 235], { // min and max range
+    label: "Flipper length",
+    value: [170, 235], // initial values
+    format: ([lo, hi]) => `${Math.round(lo)} - ${Math.round(hi)}` // hide decimals
 })
 ```
 
@@ -583,15 +590,15 @@ slider every time its values are changed. the `vg.isBetween` command is a helper
 that automatically constructs a SQL filter based on minimum and maximum values.
 
 ```{ojs}
-$flipperRange = vg.Selection.single();
+flipper_range = vg.Selection.single();
 
-flipperRangeSlider.addEventListener("input", () => {
-  const [lo, hi] = flipperRangeSlider.value;
-  $flipperRange.update({
-    source: flipperRangeSlider,
-    value: [lo, hi],
-    predicate: vg.isBetween("flipper_length_mm", [lo, hi])
-  });
+flipper_range_slider.addEventListener("input", () => {
+    const [lo, hi] = flipper_range_slider.value;
+    flipper_range.update({
+        source: flipper_range_slider,
+        value: [lo, hi],
+        predicate: vg.isBetween("flipper_length_mm", [lo, hi])
+    });
 });
 ```
 
@@ -599,17 +606,17 @@ We can highlight the penguins within the selected range as if it were an
 ordinary `vg.slider` input.
 
 ```{ojs}
-flipperRangePlot = vg.plot(
+flipper_range_plot = vg.plot(
     vg.dot(
         vg.from("penguins"),
         {x: "bill_length_mm", y: "bill_depth_mm"}
     ),
-    vg.highlight({by: $flipperRange, opacity: 0.1}),
+    vg.highlight({by: flipper_range, opacity: 0.1}),
     vg.width(500),
     vg.height(300)
 )
 
-vg.vconcat([flipperRangeSlider, flipperRangePlot])
+vg.vconcat([flipper_range_slider, flipper_range_plot])
 ```
 
 
@@ -617,18 +624,18 @@ vg.vconcat([flipperRangeSlider, flipperRangePlot])
 
 ### Athlete Heights
 
-23. The example below comes from the mosaic documentation and shows how
+27. The example below comes from the mosaic documentation and shows how
 confidence intervals become narrower when we have more samples. It illustrates
 this by computing a confidence interval for the height of athletes within each
 sport. Let's take a look at the original data. The batch column is defined so
 that, within each sport, every 10 rows gets labeled with a new batch number.
 
 ```{ojs}
-athletes_preview = vg.coordinator().query("SELECT * FROM athletesBatched")
+athletes_preview = vg.coordinator().query("SELECT * FROM athletes_batched")
 Inputs.table(athletes_preview)
 ```
 
-24. The visualization has two slider inputs. `$query` controls a `Selection`
+28. The visualization has two slider inputs. `query` controls a `Selection`
 that filters rows with less then the specified batch number. When a smaller
 dataset is passed into the `errorbarX` layer, the associated error bars get
 wider. `ci` controls a `Param` governing the confidence level. Confidence levels
@@ -649,19 +656,19 @@ the underlying data, so we can get away with a `Param`.
 
 ```{ojs}
 // Parameters and selection
-$ci = vg.Param.value(0.95)
-$query = vg.Selection.single()
+ci = vg.Param.value(0.95)
+query = vg.Selection.single()
 
 vg.vconcat(
     // user inputs
-    vg.slider({ select: "interval", as: $query, column: "batch", from: "athletesBatched", label: "Max Samples" }),
-    vg.slider({as: $ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"}),
+    vg.slider({ select: "interval", as: query, column: "batch", from: "athletes_batched", label: "Max Samples" }),
+    vg.slider({as: ci, min: 0.5, max: 0.999, step: 0.001, label: "Conf. Level"}),
 
     // graphical encodings
     vg.plot(
         vg.errorbarX(
-            vg.from("athletesBatched", {filterBy: $query}),
-            {ci: $ci, x: "height", y: "sport"}
+            vg.from("athletes_batched", {filterBy: query}),
+            {ci: ci, x: "height", y: "sport"}
         ),
         vg.xLabel("Height"),
         vg.marginLeft(120), // keep labels visible
@@ -675,7 +682,7 @@ vg.vconcat(
 
 ### Movie Ratings
 
-25. Let's work through another example inspired by the classic
+29. Let's work through another example inspired by the classic
 [FilmFinder](https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&t=141)
 visualization. We first prepare a CSV file that we can load into our mosaic
 coordinator. First, we need to handle the missing values present in the raw
@@ -699,7 +706,7 @@ Rotten Tomatoes ratings, we drop the movie if either of those is missing.
     write_csv(movies, "data/movies.csv")
     ```
 
-26. The entire app is given in the block below. We've written two helper
+30. The entire app is given in the block below. We've written two helper
 functions, `movie_controls` and `movie_plot,` to support the interactivity and
 graphical encodings, respectively. The use case of the app is relatively simple,
 but it already reveals some interesting patterns. For example, dramas tend to
@@ -707,15 +714,15 @@ have higher ratings than horror. Also, what do you think is going on with the
 fact that movies released before 1995 seem to have higher ratings in general?
 
 ```{ojs}
-movieQuery = vg.Selection.intersect();
+movie_query = vg.Selection.intersect();
 
 vg.vconcat(
-    movie_controls(movieQuery),
-    movie_plot(movieQuery)
+    movie_controls(movie_query),
+    movie_plot(movie_query)
 );
 ```
 
-27. Let's study those two functions. `movie_controls` defines the three user
+31. Let's study those two functions. `movie_controls` defines the three user
 interface inputs. The `from` argument tells us to always look at the `movies`
 dataset in our database. `column` says which column should be used to define the
 selector. The argument `query` is a `vg.Selection.intersect()` object.  This
@@ -755,33 +762,33 @@ function movie_controls(query) {
 }
 ```
 
-28. The function below draws the actual plot. Notice that we have two dot
+32. The function below draws the actual plot. Notice that we have two dot
 layers.  The first shows everything in a faint background, and the second shows
 those that pass the query. The `tip: true` call ensures that we can see the
 movie title when we hover our mouse near the highlighted point.
 
 ```{ojs}
 function movie_plot(query) {
-     return vg.plot(
-       vg.dot(vg.from("movies"), {
-         x: "Rotten_Tomatoes_Rating",
-         y: "IMDB_Rating",
-         r: 1.5,
-         fill: "#CDB4BB"
-       }),
-       vg.dot(vg.from("movies", {filterBy: query}), {
-         x: "Rotten_Tomatoes_Rating",
-         y: "IMDB_Rating",
-         r: 3,
-         fill: "#7D323D",
-         title: "Title",
-         tip: true
-       }),
-       vg.xyDomain(vg.Fixed),
-       vg.xLabel("Rotten Tomatoes Rating"),
-       vg.yLabel("IMDB Rating"),
-       vg.width(680),
-       vg.height(400)
-     );
+    return vg.plot(
+        vg.dot(vg.from("movies"), {
+            x: "Rotten_Tomatoes_Rating",
+            y: "IMDB_Rating",
+            r: 1.5,
+            fill: "#CDB4BB"
+        }),
+        vg.dot(vg.from("movies", {filterBy: query}), {
+            x: "Rotten_Tomatoes_Rating",
+            y: "IMDB_Rating",
+            r: 3,
+            fill: "#7D323D",
+            title: "Title",
+            tip: true
+        }),
+        vg.xyDomain(vg.Fixed),
+        vg.xLabel("Rotten Tomatoes Rating"),
+        vg.yLabel("IMDB Rating"),
+        vg.width(680),
+        vg.height(400)
+    );
 }
 ```

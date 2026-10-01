@@ -474,7 +474,7 @@ window.Quarto = {
 <li><p>Menus are just one way that the user can provide inputs. Mosaic package implements,</p>
 <ul>
 <li><a href="https://idl.uw.edu/mosaic/api/inputs/menu.html"><code>menu</code></a>: Select rows by the category levels in a column.</li>
-<li><a href="https://idl.uw.edu/mosaic/api/inputs/slider.html"><code>slider</code></a>: There are two types of sliders. Point sliders refer to a single value while interval sliders refer to lower and upper bounds.</li>
+<li><a href="https://idl.uw.edu/mosaic/api/inputs/slider.html"><code>slider</code></a>: There are two types of sliders. Point sliders refer to a single value while interval sliders refer to upper bounds.</li>
 <li><a href="https://idl.uw.edu/mosaic/api/inputs/search.html"><code>search</code></a>: Select rows where the search text appears in a column.</li>
 <li><a href="https://idl.uw.edu/mosaic/api/inputs/table.html"><code>table</code></a>: Select rows where the user has hovered their mouse.</li>
 </ul></li>
@@ -523,7 +523,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>We can alternatively use a slider to highlight samples with flipper sizes between a given range.</p>
+<p>We can alternatively use a slider to highlight samples with flipper sizes below a certain value.</p>
 <div id="param-slider-selection" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" data-startfrom="347" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 346;"><span id="cb7-347"><a href="#cb7-347" aria-hidden="true" tabindex="-1"></a>flipper_selection <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
 <span id="cb7-348"><a href="#cb7-348" aria-hidden="true" tabindex="-1"></a></span>
@@ -695,22 +695,18 @@ table tbody tr:hover {
 .input { margin-right: 1em; }
 .input label:first-of-type { margin-right: .5em; }
 </style></li>
-<li><p><span class="math inline">\(^\dagger\)</span> Mosaic is designed to fit into the wider javascript visualization ecosystem<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and it actually is not hard to connect it to other packages. For example, we may want to have access to a wider catalog of inputs, like those implemented in <a href="https://observablehq.github.io/documentation/inputs/overview">Observable JS</a>, which support multi-checkbox and date inputs.</p></li>
-</ol>
+<li><p><span class="math inline">\(^\dagger\)</span> Mosaic is designed to fit into the wider javascript visualization ecosystem<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and it actually is not hard to connect it to other packages. For example, we may want to have access to a wider catalog of inputs, like those implemented in <a href="https://observablehq.github.io/documentation/inputs/overview">Observable JS</a>, which support multi-checkbox and date inputs.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video3" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="https://observablehq.github.io/documentation/assets/input-checkbox.CMtQJ6D1.mp4"></video></div>
 <div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="https://observablehq.github.io/documentation/assets/input-date.BSh4Phhy.mp4"></video></div>
-<p>Similarly, some open source programmers release libraries for specific use cases, like <a href="https://observablehq.com/@mootari/-/collection/widgets">range sliders</a> or <a href="https://observablehq.com/@awhitty/fips-county-code-brush">geographic brushes</a>.</p>
-<ol start="24" type="1">
-<li><span class="math inline">\(^\dagger\)</span> Even though they’re not built in, it’s possible to connect these custom inputs with mosaic. The key observation is that, under the hood, the built-in inputs (e.g., <code>vg.menu</code> and <code>vg.slider</code>) are defining SQL filter statements from the input value. These statements are passed to <code>Selection</code> objects that allow the visualization to show different data subsets. So to use custom inputs, we need a way to update the <code>Selection</code> objects to point to the right rows. This was anticipated by the mosaic developers, and every selection provides an <code>.update</code> method. Abstractly, it has the form,</li>
-</ol>
+<p>Similarly, some open source programmers release libraries for specific use cases, like <a href="https://observablehq.com/@mootari/-/collection/widgets">range sliders</a> or <a href="https://observablehq.com/@awhitty/fips-county-code-brush">geographic brushes</a>.</p></li>
+<li><p><span class="math inline">\(^\dagger\)</span> Even though they’re not built in, it’s possible to connect these custom inputs with mosaic. The key observation is that, under the hood, the built-in inputs (e.g., <code>vg.menu</code> and <code>vg.slider</code>) are defining SQL filter statements from the input value. These statements are passed to <code>Selection</code> objects that allow the visualization to show different data subsets. So to use custom inputs, we need a way to update the <code>Selection</code> objects to point to the right rows. This was anticipated by the mosaic developers, and every selection provides an <code>.update</code> method. Abstractly, it has the form,</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>selection<span class="op">.</span><span class="fu">update</span>({</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">source</span><span class="op">:</span> input object</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">value</span><span class="op">:</span> javascript variables created by the input</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">predicate</span><span class="op">:</span> SQL expression defining which rows to select</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>We will illustrate using both checkbox inputs and range sliders.</p>
-<ol start="25" type="1">
-<li><span class="math inline">\(^\dagger\)</span>. Checkboxes are useful if we want to select multiple species in our scatterplot. This isn’t supported by <code>vg.menu</code>, but it is supported by <code>Inputs.checkbox</code> from the Observable library, which is automatically loaded by quarto. To define an Observable checkbox input in this package, we can use this syntax.</li>
+<p>We will illustrate using both checkbox inputs and range sliders.</p></li>
+<li><p><span class="math inline">\(^\dagger\)</span>. Checkboxes are useful if we want to select multiple species in our scatterplot. This isn’t supported by <code>vg.menu</code>, but it is supported by <code>Inputs.checkbox</code> from the Observable library, which is automatically loaded by quarto. To define an Observable checkbox input in this package, we can use this syntax.</p></li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-startfrom="522" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 521;"><span id="cb11-522"><a href="#cb11-522" aria-hidden="true" tabindex="-1"></a>penguin_checkbox <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>(</span>
@@ -936,16 +932,15 @@ table tbody tr:hover {
 <section id="movie-ratings" class="level3">
 <h3 class="anchored" data-anchor-id="movie-ratings">Movie Ratings</h3>
 <ol start="29" type="1">
-<li><p>Let’s work through another example inspired by the classic <a href="https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&amp;t=141">FilmFinder</a> visualization. We first prepare a CSV file that we can load into our mosaic coordinator. First, we need to handle the missing values present in the raw data. If the genre or MPAA rating were unknown, we replace them with a new category level called “Missing”. Since the focus of the plot is the IMDB and Rotten Tomatoes ratings, we drop the movie if either of those is missing.</p></li>
-<li><p>The entire app is given in the block below. We’ve written two helper functions, <code>movie_controls</code> and <code>movie_plot,</code> to support the interactivity and graphical encodings, respectively. The use case of the app is relatively simple, but it already reveals some interesting patterns. For example, dramas tend to have higher ratings than horror. Also, what do you think is going on with the fact that movies released before 1995 seem to have higher ratings in general?</p></li>
+<li><p>Let’s work through another example inspired by the classic <a href="https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&amp;t=141">FilmFinder</a> visualization. The entire app is given in the block below. We’ve written two helper functions, <code>movie_controls</code> and <code>movie_plot,</code> to support the interactivity and graphical encodings, respectively. The use case of the app is relatively simple, but it already reveals some interesting patterns. For example, dramas tend to have higher ratings than horror. Also, what do you think is going on with the fact that movies released before 1995 seem to have higher ratings in general?</p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" data-startfrom="717" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 716;"><span id="cb20-717"><a href="#cb20-717" aria-hidden="true" tabindex="-1"></a>movie_query <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
-<span id="cb20-718"><a href="#cb20-718" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-719"><a href="#cb20-719" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
-<span id="cb20-720"><a href="#cb20-720" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_controls</span>(movie_query)<span class="op">,</span></span>
-<span id="cb20-721"><a href="#cb20-721" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_plot</span>(movie_query)</span>
-<span id="cb20-722"><a href="#cb20-722" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" data-startfrom="712" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 711;"><span id="cb20-712"><a href="#cb20-712" aria-hidden="true" tabindex="-1"></a>movie_query <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
+<span id="cb20-713"><a href="#cb20-713" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-714"><a href="#cb20-714" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb20-715"><a href="#cb20-715" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_controls</span>(movie_query)<span class="op">,</span></span>
+<span id="cb20-716"><a href="#cb20-716" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_plot</span>(movie_query)</span>
+<span id="cb20-717"><a href="#cb20-717" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-18-1" data-nodetype="declaration">
@@ -961,72 +956,72 @@ table tbody tr:hover {
 </div>
 </div>
 </div>
-<ol start="31" type="1">
+<ol start="30" type="1">
 <li><p>Let’s study those two functions. <code>movie_controls</code> defines the three user interface inputs. The <code>from</code> argument tells us to always look at the <code>movies</code> dataset in our database. <code>column</code> says which column should be used to define the selector. The argument <code>query</code> is a <code>vg.Selection.intersect()</code> object. This ensures that only the movies that satisfy all these selections will be returned from the database.</p>
 <p><em>Exercise: What would happen if we had used <code>vg.Selection.single()</code> instead? What about <code>vg.Selection.union()</code>?</em></p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" data-startfrom="734" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 733;"><span id="cb21-734"><a href="#cb21-734" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_controls</span>(query) {</span>
-<span id="cb21-735"><a href="#cb21-735" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
-<span id="cb21-736"><a href="#cb21-736" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
-<span id="cb21-737"><a href="#cb21-737" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb21-738"><a href="#cb21-738" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb21-739"><a href="#cb21-739" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"Major_Genre"</span><span class="op">,</span></span>
-<span id="cb21-740"><a href="#cb21-740" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="st">"Drama"</span><span class="op">,</span></span>
-<span id="cb21-741"><a href="#cb21-741" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Genre"</span></span>
-<span id="cb21-742"><a href="#cb21-742" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb21-743"><a href="#cb21-743" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
-<span id="cb21-744"><a href="#cb21-744" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb21-745"><a href="#cb21-745" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb21-746"><a href="#cb21-746" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"MPAA_Rating"</span><span class="op">,</span></span>
-<span id="cb21-747"><a href="#cb21-747" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"MPAA Rating"</span></span>
-<span id="cb21-748"><a href="#cb21-748" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb21-749"><a href="#cb21-749" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">slider</span>({</span>
-<span id="cb21-750"><a href="#cb21-750" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb21-751"><a href="#cb21-751" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb21-752"><a href="#cb21-752" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"year"</span><span class="op">,</span></span>
-<span id="cb21-753"><a href="#cb21-753" aria-hidden="true" tabindex="-1"></a>            <span class="dt">min</span><span class="op">:</span> <span class="dv">1928</span><span class="op">,</span></span>
-<span id="cb21-754"><a href="#cb21-754" aria-hidden="true" tabindex="-1"></a>            <span class="dt">max</span><span class="op">:</span> <span class="dv">2046</span><span class="op">,</span></span>
-<span id="cb21-755"><a href="#cb21-755" aria-hidden="true" tabindex="-1"></a>            <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span></span>
-<span id="cb21-756"><a href="#cb21-756" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="dv">2020</span><span class="op">,</span></span>
-<span id="cb21-757"><a href="#cb21-757" aria-hidden="true" tabindex="-1"></a>            <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
-<span id="cb21-758"><a href="#cb21-758" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Released Through"</span></span>
-<span id="cb21-759"><a href="#cb21-759" aria-hidden="true" tabindex="-1"></a>        })</span>
-<span id="cb21-760"><a href="#cb21-760" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
-<span id="cb21-761"><a href="#cb21-761" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" data-startfrom="729" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 728;"><span id="cb21-729"><a href="#cb21-729" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_controls</span>(query) {</span>
+<span id="cb21-730"><a href="#cb21-730" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
+<span id="cb21-731"><a href="#cb21-731" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
+<span id="cb21-732"><a href="#cb21-732" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb21-733"><a href="#cb21-733" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb21-734"><a href="#cb21-734" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"Major_Genre"</span><span class="op">,</span></span>
+<span id="cb21-735"><a href="#cb21-735" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="st">"Drama"</span><span class="op">,</span></span>
+<span id="cb21-736"><a href="#cb21-736" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Genre"</span></span>
+<span id="cb21-737"><a href="#cb21-737" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb21-738"><a href="#cb21-738" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
+<span id="cb21-739"><a href="#cb21-739" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb21-740"><a href="#cb21-740" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb21-741"><a href="#cb21-741" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"MPAA_Rating"</span><span class="op">,</span></span>
+<span id="cb21-742"><a href="#cb21-742" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"MPAA Rating"</span></span>
+<span id="cb21-743"><a href="#cb21-743" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb21-744"><a href="#cb21-744" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">slider</span>({</span>
+<span id="cb21-745"><a href="#cb21-745" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb21-746"><a href="#cb21-746" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb21-747"><a href="#cb21-747" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"year"</span><span class="op">,</span></span>
+<span id="cb21-748"><a href="#cb21-748" aria-hidden="true" tabindex="-1"></a>            <span class="dt">min</span><span class="op">:</span> <span class="dv">1928</span><span class="op">,</span></span>
+<span id="cb21-749"><a href="#cb21-749" aria-hidden="true" tabindex="-1"></a>            <span class="dt">max</span><span class="op">:</span> <span class="dv">2046</span><span class="op">,</span></span>
+<span id="cb21-750"><a href="#cb21-750" aria-hidden="true" tabindex="-1"></a>            <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span></span>
+<span id="cb21-751"><a href="#cb21-751" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="dv">2020</span><span class="op">,</span></span>
+<span id="cb21-752"><a href="#cb21-752" aria-hidden="true" tabindex="-1"></a>            <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb21-753"><a href="#cb21-753" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Released Through"</span></span>
+<span id="cb21-754"><a href="#cb21-754" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb21-755"><a href="#cb21-755" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb21-756"><a href="#cb21-756" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-19" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
-<ol start="32" type="1">
+<ol start="31" type="1">
 <li>The function below draws the actual plot. Notice that we have two dot layers. The first shows everything in a faint background, and the second shows those that pass the query. The <code>tip: true</code> call ensures that we can see the movie title when we hover our mouse near the highlighted point.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" data-startfrom="770" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 769;"><span id="cb22-770"><a href="#cb22-770" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_plot</span>(query) {</span>
-<span id="cb22-771"><a href="#cb22-771" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb22-772"><a href="#cb22-772" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span>)<span class="op">,</span> {</span>
-<span id="cb22-773"><a href="#cb22-773" aria-hidden="true" tabindex="-1"></a>            <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
-<span id="cb22-774"><a href="#cb22-774" aria-hidden="true" tabindex="-1"></a>            <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
-<span id="cb22-775"><a href="#cb22-775" aria-hidden="true" tabindex="-1"></a>            <span class="dt">r</span><span class="op">:</span> <span class="fl">1.5</span><span class="op">,</span></span>
-<span id="cb22-776"><a href="#cb22-776" aria-hidden="true" tabindex="-1"></a>            <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span></span>
-<span id="cb22-777"><a href="#cb22-777" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb22-778"><a href="#cb22-778" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> query})<span class="op">,</span> {</span>
-<span id="cb22-779"><a href="#cb22-779" aria-hidden="true" tabindex="-1"></a>            <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
-<span id="cb22-780"><a href="#cb22-780" aria-hidden="true" tabindex="-1"></a>            <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
-<span id="cb22-781"><a href="#cb22-781" aria-hidden="true" tabindex="-1"></a>            <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
-<span id="cb22-782"><a href="#cb22-782" aria-hidden="true" tabindex="-1"></a>            <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span></span>
-<span id="cb22-783"><a href="#cb22-783" aria-hidden="true" tabindex="-1"></a>            <span class="dt">title</span><span class="op">:</span> <span class="st">"Title"</span><span class="op">,</span></span>
-<span id="cb22-784"><a href="#cb22-784" aria-hidden="true" tabindex="-1"></a>            <span class="dt">tip</span><span class="op">:</span> <span class="kw">true</span></span>
-<span id="cb22-785"><a href="#cb22-785" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb22-786"><a href="#cb22-786" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xyDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
-<span id="cb22-787"><a href="#cb22-787" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Rotten Tomatoes Rating"</span>)<span class="op">,</span></span>
-<span id="cb22-788"><a href="#cb22-788" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">yLabel</span>(<span class="st">"IMDB Rating"</span>)<span class="op">,</span></span>
-<span id="cb22-789"><a href="#cb22-789" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">680</span>)<span class="op">,</span></span>
-<span id="cb22-790"><a href="#cb22-790" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
-<span id="cb22-791"><a href="#cb22-791" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
-<span id="cb22-792"><a href="#cb22-792" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" data-startfrom="765" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 764;"><span id="cb22-765"><a href="#cb22-765" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_plot</span>(query) {</span>
+<span id="cb22-766"><a href="#cb22-766" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb22-767"><a href="#cb22-767" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span>)<span class="op">,</span> {</span>
+<span id="cb22-768"><a href="#cb22-768" aria-hidden="true" tabindex="-1"></a>            <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
+<span id="cb22-769"><a href="#cb22-769" aria-hidden="true" tabindex="-1"></a>            <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
+<span id="cb22-770"><a href="#cb22-770" aria-hidden="true" tabindex="-1"></a>            <span class="dt">r</span><span class="op">:</span> <span class="fl">1.5</span><span class="op">,</span></span>
+<span id="cb22-771"><a href="#cb22-771" aria-hidden="true" tabindex="-1"></a>            <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span></span>
+<span id="cb22-772"><a href="#cb22-772" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb22-773"><a href="#cb22-773" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> query})<span class="op">,</span> {</span>
+<span id="cb22-774"><a href="#cb22-774" aria-hidden="true" tabindex="-1"></a>            <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
+<span id="cb22-775"><a href="#cb22-775" aria-hidden="true" tabindex="-1"></a>            <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
+<span id="cb22-776"><a href="#cb22-776" aria-hidden="true" tabindex="-1"></a>            <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
+<span id="cb22-777"><a href="#cb22-777" aria-hidden="true" tabindex="-1"></a>            <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span></span>
+<span id="cb22-778"><a href="#cb22-778" aria-hidden="true" tabindex="-1"></a>            <span class="dt">title</span><span class="op">:</span> <span class="st">"Title"</span><span class="op">,</span></span>
+<span id="cb22-779"><a href="#cb22-779" aria-hidden="true" tabindex="-1"></a>            <span class="dt">tip</span><span class="op">:</span> <span class="kw">true</span></span>
+<span id="cb22-780"><a href="#cb22-780" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb22-781"><a href="#cb22-781" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xyDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
+<span id="cb22-782"><a href="#cb22-782" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Rotten Tomatoes Rating"</span>)<span class="op">,</span></span>
+<span id="cb22-783"><a href="#cb22-783" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">yLabel</span>(<span class="st">"IMDB Rating"</span>)<span class="op">,</span></span>
+<span id="cb22-784"><a href="#cb22-784" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">680</span>)<span class="op">,</span></span>
+<span id="cb22-785"><a href="#cb22-785" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
+<span id="cb22-786"><a href="#cb22-786" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb22-787"><a href="#cb22-787" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-20" data-nodetype="declaration">
 

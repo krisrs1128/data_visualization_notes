@@ -316,7 +316,7 @@ _Exercise: For the settings below, decide whether it is more appropriate to use 
 implements,
 
     * [`menu`](https://idl.uw.edu/mosaic/api/inputs/menu.html): Select rows by the category levels in a column.
-    * [`slider`](https://idl.uw.edu/mosaic/api/inputs/slider.html): There are two types of sliders. Point sliders refer to a single value while interval sliders refer to lower and upper bounds.
+    * [`slider`](https://idl.uw.edu/mosaic/api/inputs/slider.html): There are two types of sliders. Point sliders refer to a single value while interval sliders refer to upper bounds.
     * [`search`](https://idl.uw.edu/mosaic/api/inputs/search.html): Select rows where the search text appears in a column.
     * [`table`](https://idl.uw.edu/mosaic/api/inputs/table.html): Select rows where the user has hovered their mouse.
 
@@ -340,7 +340,7 @@ size_plot = vg.plot(
 vg.vconcat([size_slider, size_plot])
 ```
 
-We can alternatively use a slider to highlight samples with flipper sizes between a given range.
+We can alternatively use a slider to highlight samples with flipper sizes below a certain value.
 
 ```{ojs}
 //| label: param-slider-selection
@@ -483,15 +483,15 @@ want to have access to a wider catalog of inputs, like those implemented in
 [Observable JS](https://observablehq.github.io/documentation/inputs/overview),
 which support multi-checkbox and date inputs.
 
-   {{<video https://observablehq.github.io/documentation/assets/input-checkbox.CMtQJ6D1.mp4>}}
+    {{<video https://observablehq.github.io/documentation/assets/input-checkbox.CMtQJ6D1.mp4>}}
 
-   {{<video https://observablehq.github.io/documentation/assets/input-date.BSh4Phhy.mp4>}}
+    {{<video https://observablehq.github.io/documentation/assets/input-date.BSh4Phhy.mp4>}}
 
-   Similarly, some open source programmers release libraries for specific use
-   cases, like
-   [range sliders](https://observablehq.com/@mootari/-/collection/widgets)
-   or
-   [geographic brushes](https://observablehq.com/@awhitty/fips-county-code-brush).
+    Similarly, some open source programmers release libraries for specific use
+    cases, like
+    [range sliders](https://observablehq.com/@mootari/-/collection/widgets)
+    or
+    [geographic brushes](https://observablehq.com/@awhitty/fips-county-code-brush).
 
 24. $^\dagger$ Even though they're not built in, it's possible to connect these
 custom inputs with mosaic. The key observation is that, under the hood, the
@@ -502,15 +502,15 @@ custom inputs, we need a way to update the `Selection` objects to point to the
 right rows. This was anticipated by the mosaic developers, and every selection
 provides an `.update` method. Abstractly, it has the form,
 
-   ```js
-   selection.update({
-       source: input object
-       value: javascript variables created by the input
-       predicate: SQL expression defining which rows to select
-   })
-   ```
+    ```js
+    selection.update({
+        source: input object
+        value: javascript variables created by the input
+        predicate: SQL expression defining which rows to select
+    })
+    ```
 
-   We will illustrate using both checkbox inputs and range sliders.
+    We will illustrate using both checkbox inputs and range sliders.
 
 25. $^\dagger$. Checkboxes are useful if we want to select multiple species in
 our scatterplot. This isn't supported by `vg.menu`, but it is supported by
@@ -684,11 +684,13 @@ vg.vconcat(
 
 29. Let's work through another example inspired by the classic
 [FilmFinder](https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&t=141)
-visualization. We first prepare a CSV file that we can load into our mosaic
-coordinator. First, we need to handle the missing values present in the raw
-data. If the genre or MPAA rating were unknown, we replace them with a new
-category level called "Missing". Since the focus of the plot is the IMDB and
-Rotten Tomatoes ratings, we drop the movie if either of those is missing.
+visualization.  The entire app is given in the block below. We've written two
+helper functions, `movie_controls` and `movie_plot,` to support the
+interactivity and graphical encodings, respectively. The use case of the app is
+relatively simple, but it already reveals some interesting patterns. For
+example, dramas tend to have higher ratings than horror. Also, what do you think
+is going on with the fact that movies released before 1995 seem to have higher
+ratings in general?
 
     ```{r}
     #| echo: false
@@ -706,13 +708,6 @@ Rotten Tomatoes ratings, we drop the movie if either of those is missing.
     write_csv(movies, "data/movies.csv")
     ```
 
-30. The entire app is given in the block below. We've written two helper
-functions, `movie_controls` and `movie_plot,` to support the interactivity and
-graphical encodings, respectively. The use case of the app is relatively simple,
-but it already reveals some interesting patterns. For example, dramas tend to
-have higher ratings than horror. Also, what do you think is going on with the
-fact that movies released before 1995 seem to have higher ratings in general?
-
 ```{ojs}
 movie_query = vg.Selection.intersect();
 
@@ -722,7 +717,7 @@ vg.vconcat(
 );
 ```
 
-31. Let's study those two functions. `movie_controls` defines the three user
+30. Let's study those two functions. `movie_controls` defines the three user
 interface inputs. The `from` argument tells us to always look at the `movies`
 dataset in our database. `column` says which column should be used to define the
 selector. The argument `query` is a `vg.Selection.intersect()` object.  This
@@ -762,7 +757,7 @@ function movie_controls(query) {
 }
 ```
 
-32. The function below draws the actual plot. Notice that we have two dot
+31. The function below draws the actual plot. Notice that we have two dot
 layers.  The first shows everything in a faint background, and the second shows
 those that pass the query. The `tip: true` call ensures that we can see the
 movie title when we hover our mouse near the highlighted point.

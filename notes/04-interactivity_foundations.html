@@ -633,75 +633,101 @@ window.Quarto = {
 </div>
 </div>
 <ol start="22" type="1">
-<li><p><span class="math inline">\(^\dagger\)</span> By default, the menu, slider, and table inputs aren’t really that pretty. But you can customize their appearance using CSS. For example, I created the alternating light/dark row highlighting and sticky header using the CSS code below.</p>
-<style>
-  thead th {
-    position: sticky;
+<li><span class="math inline">\(^\dagger\)</span> By default, the menu, slider, and table inputs aren’t really that pretty. But you can customize their appearance using Cascading Style Sheets (CSS). The mechanics are beyond the scope of our course, but there are many CSS templates available freely online to customize the appearance of your inputs. For example, the top search result for “css table templates” brought me to <a href="https://www.quackit.com/html/html_editors/scratchpad/?example=/html/templates/tables/hover_highlight_table">this site</a>, whose code I copied to make the tables in these notes prettier (a few minor modifications are commented on below).</li>
+</ol>
+<pre class="tiny"><code>```{=html}
+&lt;style&gt;
+table { /* change ".table-hover" to "table", so the rule applies to every table */
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    font-size: 0.9rem;
+}
+
+table thead th {
+    padding: 12px 15px;
+    background-color: #f4f4f4;
+    box-shadow: inset 0 -2px 0 #ccc;
+    text-align: left;
+    position: sticky; /* always show header at the top */
     top: 0;
-  }
-  tbody tr:nth-child(even) {
-    background: #f3f3f3;
-  }
-</style>
-<p>Here are some other CSS rules to ensure the menu labels have aren’t squeeezd too tightly next to the dropdown.</p>
+}
+
+table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+&lt;/style&gt;
+```</code></pre>
 <style>
-  .input { margin-right: 1em; }
-  .input > * { vertical-align: middle; }
-  .input label:first-of-type { margin-right: .5em; }
-</style></li>
+table { /* change ".table-hover" to "table", so the rule applies to every table */
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    font-size: 0.9rem;
+}
+
+table thead th {
+    padding: 12px 15px;
+    background-color: #f4f4f4;
+    box-shadow: inset 0 -2px 0 #ccc;
+    text-align: left;
+    position: sticky; /* always show header at the top */
+    top: 0;
+}
+
+table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+</style>
+<ol type="1">
+<li><p><span class="math inline">\(^\dagger\)</span> Mosaic is designed to fit into the wider javascript visualization ecosystem<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and it actually is not hard to connect it to other packages. For example, we may want to have access to a wider catalog of inputs, like those implemented in <a href="https://observablehq.github.io/documentation/inputs/overview">Observable JS</a>, which support multi-checkbox and date inputs.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video3" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="https://observablehq.github.io/documentation/assets/input-checkbox.CMtQJ6D1.mp4"></video></div>
+<div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="https://observablehq.github.io/documentation/assets/input-date.BSh4Phhy.mp4"></video></div>
+<p>Similarly, some open source programmers release libraries for specific use cases, like <a href="https://observablehq.com/@mootari/-/collection/widgets">range sliders</a> or <a href="https://observablehq.com/@awhitty/fips-county-code-brush">geographic brushes</a>.</p></li>
+<li><p><span class="math inline">\(^\dagger\)</span> Even though they’re not built in, it’s possible to connect these custom inputs with mosaic. The key observation is that, under the hood, the built-in inputs (e.g., <code>vg.menu</code> and <code>vg.slider</code>) are defining SQL filter statements from the input value. These statements are passed to <code>Selection</code> objects that allow the visualization to show different data subsets. So to use custom inputs, we need a way to update the <code>Selection</code> objects to point to the right rows. This was anticipated by the mosaic developers, and every selection provides an <code>.update</code> method. Abstractly, it has the form,</p></li>
 </ol>
-</section>
-</section>
-<section id="examples" class="level2">
-<h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<section id="athlete-heights" class="level3">
-<h3 class="anchored" data-anchor-id="athlete-heights">Athlete Heights</h3>
-<ol start="23" type="1">
-<li>The example below comes from the mosaic documentation and shows how confidence intervals become narrower when we have more samples. It illustrates this by computing a confidence interval for the height of athletes within each sport. Let’s take a look at the original data. The batch column is defined so that, within each sport, every 10 rows gets labeled with a new batch number.</li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>selection<span class="op">.</span><span class="fu">update</span>({</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">source</span><span class="op">:</span> input object</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> javascript variables created by the input</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">predicate</span><span class="op">:</span> SQL expression defining which rows to select</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We will illustrate using both checkbox inputs and range sliders.</p>
+<ol type="1">
+<li><span class="math inline">\(^\dagger\)</span>. Checkboxes are useful if we want to select multiple species in our scatterplot. This isn’t supported by <code>vg.menu</code>, but it is supported by <code>Inputs.checkbox</code> from the Observable library, which is automatically loaded by quarto. To define an Observable checkbox input in this package, we can use this syntax.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" data-startfrom="442" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 441;"><span id="cb9-442"><a href="#cb9-442" aria-hidden="true" tabindex="-1"></a>athletes_preview <span class="op">=</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">query</span>(<span class="st">"SELECT * FROM athletesBatched"</span>)</span>
-<span id="cb9-443"><a href="#cb9-443" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(athletes_preview)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-startfrom="515" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 514;"><span id="cb11-515"><a href="#cb11-515" aria-hidden="true" tabindex="-1"></a>penguinCheckbox <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>(</span>
+<span id="cb11-516"><a href="#cb11-516" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"Adelie"</span><span class="op">,</span> <span class="st">"Gentoo"</span><span class="op">,</span> <span class="st">"Chinstrap"</span>]<span class="op">,</span> <span class="co">// options</span></span>
+<span id="cb11-517"><a href="#cb11-517" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> [<span class="st">"Adelie"</span><span class="op">,</span> <span class="st">"Gentoo"</span><span class="op">,</span> <span class="st">"Chinstrap"</span>]} <span class="co">// label and initial values</span></span>
+<span id="cb11-518"><a href="#cb11-518" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-9-1" data-nodetype="declaration">
+<div id="ojs-cell-9" data-nodetype="declaration">
 
 </div>
 </div>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-9-2" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-</div>
-<ol start="24" type="1">
-<li><p>The visualization has two slider inputs. <code>$query</code> controls a <code>Selection</code> that filters rows with less then the specified batch number. When a smaller dataset is passed into the <code>errorbarX</code> layer, the associated error bars get wider. <code>ci</code> controls a <code>Param</code> governing the confidence level. Confidence levels that are larger (e.g., 99%) require wider intervals, but this doesn’t reference the underlying data, so we can get away with a <code>Param</code>.</p></li>
-</ol>
+<p>The associated <code>selection.update</code> code is placed in a listener that is run anytime the checkbox is clicked. In this special case of the <code>selection.update</code> pattern, <code>source</code> is the checkbox input, <code>value</code> is an array of currently selected species, and <code>predicate</code> transforms that array into a SQL filter command.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" data-startfrom="467" data-source-offset="-28"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 466;"><span id="cb10-467"><a href="#cb10-467" aria-hidden="true" tabindex="-1"></a>$ci <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="fl">0.95</span>)</span>
-<span id="cb10-468"><a href="#cb10-468" aria-hidden="true" tabindex="-1"></a>$query <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
-<span id="cb10-469"><a href="#cb10-469" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-470"><a href="#cb10-470" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
-<span id="cb10-471"><a href="#cb10-471" aria-hidden="true" tabindex="-1"></a>    <span class="co">// user inputs</span></span>
-<span id="cb10-472"><a href="#cb10-472" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({ <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span> <span class="dt">as</span><span class="op">:</span> $query<span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"batch"</span><span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"athletesBatched"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Max Samples"</span> })<span class="op">,</span></span>
-<span id="cb10-473"><a href="#cb10-473" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="fl">0.999</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.001</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Conf. Level"</span>})<span class="op">,</span></span>
-<span id="cb10-474"><a href="#cb10-474" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-475"><a href="#cb10-475" aria-hidden="true" tabindex="-1"></a>    <span class="co">// graphical encodings</span></span>
-<span id="cb10-476"><a href="#cb10-476" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb10-477"><a href="#cb10-477" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">errorbarX</span>(</span>
-<span id="cb10-478"><a href="#cb10-478" aria-hidden="true" tabindex="-1"></a>            vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"athletesBatched"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $query})<span class="op">,</span></span>
-<span id="cb10-479"><a href="#cb10-479" aria-hidden="true" tabindex="-1"></a>            {<span class="dt">ci</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"height"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"sport"</span>}</span>
-<span id="cb10-480"><a href="#cb10-480" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
-<span id="cb10-481"><a href="#cb10-481" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Height"</span>)<span class="op">,</span></span>
-<span id="cb10-482"><a href="#cb10-482" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">marginLeft</span>(<span class="dv">120</span>)<span class="op">,</span> <span class="co">// keep labels visible</span></span>
-<span id="cb10-483"><a href="#cb10-483" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
-<span id="cb10-484"><a href="#cb10-484" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
-<span id="cb10-485"><a href="#cb10-485" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb10-486"><a href="#cb10-486" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorLegend</span>({<span class="dt">for</span><span class="op">:</span> <span class="st">"heights"</span>})<span class="op">,</span></span>
-<span id="cb10-487"><a href="#cb10-487" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-startfrom="529" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 528;"><span id="cb12-529"><a href="#cb12-529" aria-hidden="true" tabindex="-1"></a>$speciesCheck <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()<span class="op">;</span></span>
+<span id="cb12-530"><a href="#cb12-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-531"><a href="#cb12-531" aria-hidden="true" tabindex="-1"></a>penguinCheckbox<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">"input"</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb12-532"><a href="#cb12-532" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> current <span class="op">=</span> penguinCheckbox<span class="op">.</span><span class="at">value</span><span class="op">;</span> <span class="co">// e.g., ["Adelie", "Gentoo"]</span></span>
+<span id="cb12-533"><a href="#cb12-533" aria-hidden="true" tabindex="-1"></a>  $speciesCheck<span class="op">.</span><span class="fu">update</span>({</span>
+<span id="cb12-534"><a href="#cb12-534" aria-hidden="true" tabindex="-1"></a>    <span class="dt">source</span><span class="op">:</span> penguinCheckbox<span class="op">,</span></span>
+<span id="cb12-535"><a href="#cb12-535" aria-hidden="true" tabindex="-1"></a>    <span class="dt">value</span><span class="op">:</span> current<span class="op">,</span></span>
+<span id="cb12-536"><a href="#cb12-536" aria-hidden="true" tabindex="-1"></a>    <span class="dt">predicate</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">sql</span><span class="vs">`species IN (</span><span class="sc">${</span>current<span class="op">.</span><span class="fu">map</span>(vg<span class="op">.</span><span class="at">literal</span>)<span class="sc">}</span><span class="vs">)`</span></span>
+<span id="cb12-537"><a href="#cb12-537" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb12-538"><a href="#cb12-538" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-10-1" data-nodetype="declaration">
@@ -711,33 +737,26 @@ window.Quarto = {
 </div>
 <div class="cell-output cell-output-display">
 <div>
-<div id="ojs-cell-10-2" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-10-3" data-nodetype="expression">
+<div id="ojs-cell-10-2" data-nodetype="expression">
 
 </div>
 </div>
 </div>
 </div>
-</section>
-<section id="movie-ratings" class="level3">
-<h3 class="anchored" data-anchor-id="movie-ratings">Movie Ratings</h3>
-<ol start="25" type="1">
-<li><p>Let’s work through another example inspired by the classic <a href="https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&amp;t=141">FilmFinder</a> visualization. We first prepare a CSV file that we can load into our mosaic coordinator. First, we need to handle the missing values present in the raw data. If the genre or MPAA rating were unknown, we replace them with a new category level called “Missing”. Since the focus of the plot is the IMDB and Rotten Tomatoes ratings, we drop the movie if either of those is missing.</p></li>
-<li><p>The entire app is given in the block below. We’ve written two helper functions, <code>movie_controls</code> and <code>movie_plot,</code> to support the interactivity and graphical encodings, respectively. The use case of the app is relatively simple, but it already reveals some interesting patterns. For example, dramas tend to have higher ratings than horror. Also, what do you think is going on with the fact that movies released before 1995 seem to have higher ratings in general?</p></li>
-</ol>
+<p>We can now use the modified selection within our visualization layers as if checkbox inputs were built into the mosaic library.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" data-startfrom="525" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 524;"><span id="cb11-525"><a href="#cb11-525" aria-hidden="true" tabindex="-1"></a>movieQuery <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
-<span id="cb11-526"><a href="#cb11-526" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-527"><a href="#cb11-527" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
-<span id="cb11-528"><a href="#cb11-528" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_controls</span>(movieQuery)<span class="op">,</span></span>
-<span id="cb11-529"><a href="#cb11-529" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_plot</span>(movieQuery)</span>
-<span id="cb11-530"><a href="#cb11-530" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" data-startfrom="545" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 544;"><span id="cb13-545"><a href="#cb13-545" aria-hidden="true" tabindex="-1"></a>checkbox_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb13-546"><a href="#cb13-546" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb13-547"><a href="#cb13-547" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $speciesCheck})<span class="op">,</span></span>
+<span id="cb13-548"><a href="#cb13-548" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}</span>
+<span id="cb13-549"><a href="#cb13-549" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb13-550"><a href="#cb13-550" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xDomain</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">60</span>])<span class="op">,</span> <span class="co">// keeps the window ranges fixed</span></span>
+<span id="cb13-551"><a href="#cb13-551" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yDomain</span>([<span class="dv">12</span><span class="op">,</span> <span class="dv">22</span>])<span class="op">,</span></span>
+<span id="cb13-552"><a href="#cb13-552" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb13-553"><a href="#cb13-553" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb13-554"><a href="#cb13-554" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-555"><a href="#cb13-555" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-556"><a href="#cb13-556" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([penguinCheckbox<span class="op">,</span> checkbox_plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-11-1" data-nodetype="declaration">
@@ -753,41 +772,223 @@ window.Quarto = {
 </div>
 </div>
 </div>
+<ol type="1">
+<li><span class="math inline">\(^\dagger\)</span>. Here’s another example. Suppose instead of simply selecting penguins with flipper length below a given value, we wanted to identify those with flipper length within a given range. This isn’t supported by the default <code>vg.slider</code>, but it’s supported by this <a href="https://observablehq.com/@mootari/range-slider">range slider widget</a>. Let’s import it using the command given on that webpage.</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" data-startfrom="566" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 565;"><span id="cb14-566"><a href="#cb14-566" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { interval } <span class="im">from</span> <span class="st">"@mootari/range-slider"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-12" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>The block below defines the slider object, just like we defined the checkbox output above.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" data-startfrom="573" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 572;"><span id="cb15-573"><a href="#cb15-573" aria-hidden="true" tabindex="-1"></a>flipperRangeSlider <span class="op">=</span> <span class="fu">interval</span>([<span class="dv">170</span><span class="op">,</span> <span class="dv">235</span>]<span class="op">,</span> { <span class="co">// min and max range</span></span>
+<span id="cb15-574"><a href="#cb15-574" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"Flipper length"</span><span class="op">,</span></span>
+<span id="cb15-575"><a href="#cb15-575" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> [<span class="dv">170</span><span class="op">,</span> <span class="dv">235</span>]<span class="op">,</span> <span class="co">// initial values</span></span>
+<span id="cb15-576"><a href="#cb15-576" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> ([lo<span class="op">,</span> hi]) <span class="kw">=&gt;</span> <span class="vs">`</span><span class="sc">${</span><span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(lo)<span class="sc">}</span><span class="vs"> - </span><span class="sc">${</span><span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(hi)<span class="sc">}</span><span class="vs">`</span> <span class="co">// hide decimals</span></span>
+<span id="cb15-577"><a href="#cb15-577" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-13" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<p>In this <code>selection.update()</code>, we can use the <code>[lo, hi]</code> pair that’s saved by the slider every time its values are changed. the <code>vg.isBetween</code> command is a helper that automatically constructs a SQL filter based on minimum and maximum values.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" data-startfrom="586" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 585;"><span id="cb16-586"><a href="#cb16-586" aria-hidden="true" tabindex="-1"></a>$flipperRange <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()<span class="op">;</span></span>
+<span id="cb16-587"><a href="#cb16-587" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-588"><a href="#cb16-588" aria-hidden="true" tabindex="-1"></a>flipperRangeSlider<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">"input"</span><span class="op">,</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb16-589"><a href="#cb16-589" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> [lo<span class="op">,</span> hi] <span class="op">=</span> flipperRangeSlider<span class="op">.</span><span class="at">value</span><span class="op">;</span></span>
+<span id="cb16-590"><a href="#cb16-590" aria-hidden="true" tabindex="-1"></a>  $flipperRange<span class="op">.</span><span class="fu">update</span>({</span>
+<span id="cb16-591"><a href="#cb16-591" aria-hidden="true" tabindex="-1"></a>    <span class="dt">source</span><span class="op">:</span> flipperRangeSlider<span class="op">,</span></span>
+<span id="cb16-592"><a href="#cb16-592" aria-hidden="true" tabindex="-1"></a>    <span class="dt">value</span><span class="op">:</span> [lo<span class="op">,</span> hi]<span class="op">,</span></span>
+<span id="cb16-593"><a href="#cb16-593" aria-hidden="true" tabindex="-1"></a>    <span class="dt">predicate</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">isBetween</span>(<span class="st">"flipper_length_mm"</span><span class="op">,</span> [lo<span class="op">,</span> hi])</span>
+<span id="cb16-594"><a href="#cb16-594" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb16-595"><a href="#cb16-595" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-14-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-14-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<p>We can highlight the penguins within the selected range as if it were an ordinary <code>vg.slider</code> input.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" data-startfrom="602" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 601;"><span id="cb17-602"><a href="#cb17-602" aria-hidden="true" tabindex="-1"></a>flipperRangePlot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb17-603"><a href="#cb17-603" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb17-604"><a href="#cb17-604" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb17-605"><a href="#cb17-605" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span>}</span>
+<span id="cb17-606"><a href="#cb17-606" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb17-607"><a href="#cb17-607" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> $flipperRange<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
+<span id="cb17-608"><a href="#cb17-608" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb17-609"><a href="#cb17-609" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb17-610"><a href="#cb17-610" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-611"><a href="#cb17-611" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-612"><a href="#cb17-612" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([flipperRangeSlider<span class="op">,</span> flipperRangePlot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-15-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-15-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<section id="athlete-heights" class="level3">
+<h3 class="anchored" data-anchor-id="athlete-heights">Athlete Heights</h3>
+<ol start="23" type="1">
+<li>The example below comes from the mosaic documentation and shows how confidence intervals become narrower when we have more samples. It illustrates this by computing a confidence interval for the height of athletes within each sport. Let’s take a look at the original data. The batch column is defined so that, within each sport, every 10 rows gets labeled with a new batch number.</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" data-startfrom="627" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 626;"><span id="cb18-627"><a href="#cb18-627" aria-hidden="true" tabindex="-1"></a>athletes_preview <span class="op">=</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">query</span>(<span class="st">"SELECT * FROM athletesBatched"</span>)</span>
+<span id="cb18-628"><a href="#cb18-628" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(athletes_preview)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-16-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-16-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<ol start="24" type="1">
+<li><p>The visualization has two slider inputs. <code>$query</code> controls a <code>Selection</code> that filters rows with less then the specified batch number. When a smaller dataset is passed into the <code>errorbarX</code> layer, the associated error bars get wider. <code>ci</code> controls a <code>Param</code> governing the confidence level. Confidence levels that are larger (e.g., 99%) require wider intervals, but this doesn’t reference the underlying data, so we can get away with a <code>Param</code>.</p></li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" data-startfrom="652" data-source-offset="-28"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 651;"><span id="cb19-652"><a href="#cb19-652" aria-hidden="true" tabindex="-1"></a>$ci <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="fl">0.95</span>)</span>
+<span id="cb19-653"><a href="#cb19-653" aria-hidden="true" tabindex="-1"></a>$query <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
+<span id="cb19-654"><a href="#cb19-654" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-655"><a href="#cb19-655" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb19-656"><a href="#cb19-656" aria-hidden="true" tabindex="-1"></a>    <span class="co">// user inputs</span></span>
+<span id="cb19-657"><a href="#cb19-657" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({ <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span> <span class="dt">as</span><span class="op">:</span> $query<span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"batch"</span><span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"athletesBatched"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Max Samples"</span> })<span class="op">,</span></span>
+<span id="cb19-658"><a href="#cb19-658" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">slider</span>({<span class="dt">as</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">min</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">max</span><span class="op">:</span> <span class="fl">0.999</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="fl">0.001</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Conf. Level"</span>})<span class="op">,</span></span>
+<span id="cb19-659"><a href="#cb19-659" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-660"><a href="#cb19-660" aria-hidden="true" tabindex="-1"></a>    <span class="co">// graphical encodings</span></span>
+<span id="cb19-661"><a href="#cb19-661" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb19-662"><a href="#cb19-662" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">errorbarX</span>(</span>
+<span id="cb19-663"><a href="#cb19-663" aria-hidden="true" tabindex="-1"></a>            vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"athletesBatched"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $query})<span class="op">,</span></span>
+<span id="cb19-664"><a href="#cb19-664" aria-hidden="true" tabindex="-1"></a>            {<span class="dt">ci</span><span class="op">:</span> $ci<span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"height"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"sport"</span>}</span>
+<span id="cb19-665"><a href="#cb19-665" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
+<span id="cb19-666"><a href="#cb19-666" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Height"</span>)<span class="op">,</span></span>
+<span id="cb19-667"><a href="#cb19-667" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">marginLeft</span>(<span class="dv">120</span>)<span class="op">,</span> <span class="co">// keep labels visible</span></span>
+<span id="cb19-668"><a href="#cb19-668" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb19-669"><a href="#cb19-669" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
+<span id="cb19-670"><a href="#cb19-670" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb19-671"><a href="#cb19-671" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorLegend</span>({<span class="dt">for</span><span class="op">:</span> <span class="st">"heights"</span>})<span class="op">,</span></span>
+<span id="cb19-672"><a href="#cb19-672" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-17-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-17-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-17-3" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="movie-ratings" class="level3">
+<h3 class="anchored" data-anchor-id="movie-ratings">Movie Ratings</h3>
+<ol start="25" type="1">
+<li><p>Let’s work through another example inspired by the classic <a href="https://youtu.be/g9JadyYUyK8?si=_uP3aRTsRk2Vwedh&amp;t=141">FilmFinder</a> visualization. We first prepare a CSV file that we can load into our mosaic coordinator. First, we need to handle the missing values present in the raw data. If the genre or MPAA rating were unknown, we replace them with a new category level called “Missing”. Since the focus of the plot is the IMDB and Rotten Tomatoes ratings, we drop the movie if either of those is missing.</p></li>
+<li><p>The entire app is given in the block below. We’ve written two helper functions, <code>movie_controls</code> and <code>movie_plot,</code> to support the interactivity and graphical encodings, respectively. The use case of the app is relatively simple, but it already reveals some interesting patterns. For example, dramas tend to have higher ratings than horror. Also, what do you think is going on with the fact that movies released before 1995 seem to have higher ratings in general?</p></li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" data-startfrom="710" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 709;"><span id="cb20-710"><a href="#cb20-710" aria-hidden="true" tabindex="-1"></a>movieQuery <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
+<span id="cb20-711"><a href="#cb20-711" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-712"><a href="#cb20-712" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb20-713"><a href="#cb20-713" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_controls</span>(movieQuery)<span class="op">,</span></span>
+<span id="cb20-714"><a href="#cb20-714" aria-hidden="true" tabindex="-1"></a>    <span class="fu">movie_plot</span>(movieQuery)</span>
+<span id="cb20-715"><a href="#cb20-715" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-18-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-18-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
 <ol start="27" type="1">
 <li><p>Let’s study those two functions. <code>movie_controls</code> defines the three user interface inputs. The <code>from</code> argument tells us to always look at the <code>movies</code> dataset in our database. <code>column</code> says which column should be used to define the selector. The argument <code>query</code> is a <code>vg.Selection.intersect()</code> object. This ensures that only the movies that satisfy all these selections will be returned from the database.</p>
 <p><em>Exercise: What would happen if we had used <code>vg.Selection.single()</code> instead? What about <code>vg.Selection.union()</code>?</em></p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" data-startfrom="542" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 541;"><span id="cb12-542"><a href="#cb12-542" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_controls</span>(query) {</span>
-<span id="cb12-543"><a href="#cb12-543" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
-<span id="cb12-544"><a href="#cb12-544" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
-<span id="cb12-545"><a href="#cb12-545" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb12-546"><a href="#cb12-546" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb12-547"><a href="#cb12-547" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"Major_Genre"</span><span class="op">,</span></span>
-<span id="cb12-548"><a href="#cb12-548" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="st">"Drama"</span><span class="op">,</span></span>
-<span id="cb12-549"><a href="#cb12-549" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Genre"</span></span>
-<span id="cb12-550"><a href="#cb12-550" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb12-551"><a href="#cb12-551" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
-<span id="cb12-552"><a href="#cb12-552" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb12-553"><a href="#cb12-553" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb12-554"><a href="#cb12-554" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"MPAA_Rating"</span><span class="op">,</span></span>
-<span id="cb12-555"><a href="#cb12-555" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"MPAA Rating"</span></span>
-<span id="cb12-556"><a href="#cb12-556" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
-<span id="cb12-557"><a href="#cb12-557" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">slider</span>({</span>
-<span id="cb12-558"><a href="#cb12-558" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
-<span id="cb12-559"><a href="#cb12-559" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
-<span id="cb12-560"><a href="#cb12-560" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"year"</span><span class="op">,</span></span>
-<span id="cb12-561"><a href="#cb12-561" aria-hidden="true" tabindex="-1"></a>            <span class="dt">min</span><span class="op">:</span> <span class="dv">1928</span><span class="op">,</span></span>
-<span id="cb12-562"><a href="#cb12-562" aria-hidden="true" tabindex="-1"></a>            <span class="dt">max</span><span class="op">:</span> <span class="dv">2046</span><span class="op">,</span></span>
-<span id="cb12-563"><a href="#cb12-563" aria-hidden="true" tabindex="-1"></a>            <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span></span>
-<span id="cb12-564"><a href="#cb12-564" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="dv">2020</span><span class="op">,</span></span>
-<span id="cb12-565"><a href="#cb12-565" aria-hidden="true" tabindex="-1"></a>            <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
-<span id="cb12-566"><a href="#cb12-566" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Released Through"</span></span>
-<span id="cb12-567"><a href="#cb12-567" aria-hidden="true" tabindex="-1"></a>        })</span>
-<span id="cb12-568"><a href="#cb12-568" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
-<span id="cb12-569"><a href="#cb12-569" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" data-startfrom="727" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 726;"><span id="cb21-727"><a href="#cb21-727" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_controls</span>(query) {</span>
+<span id="cb21-728"><a href="#cb21-728" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
+<span id="cb21-729"><a href="#cb21-729" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
+<span id="cb21-730"><a href="#cb21-730" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb21-731"><a href="#cb21-731" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb21-732"><a href="#cb21-732" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"Major_Genre"</span><span class="op">,</span></span>
+<span id="cb21-733"><a href="#cb21-733" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="st">"Drama"</span><span class="op">,</span></span>
+<span id="cb21-734"><a href="#cb21-734" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Genre"</span></span>
+<span id="cb21-735"><a href="#cb21-735" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb21-736"><a href="#cb21-736" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">menu</span>({</span>
+<span id="cb21-737"><a href="#cb21-737" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb21-738"><a href="#cb21-738" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb21-739"><a href="#cb21-739" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"MPAA_Rating"</span><span class="op">,</span></span>
+<span id="cb21-740"><a href="#cb21-740" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"MPAA Rating"</span></span>
+<span id="cb21-741"><a href="#cb21-741" aria-hidden="true" tabindex="-1"></a>        })<span class="op">,</span></span>
+<span id="cb21-742"><a href="#cb21-742" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">slider</span>({</span>
+<span id="cb21-743"><a href="#cb21-743" aria-hidden="true" tabindex="-1"></a>            <span class="dt">as</span><span class="op">:</span> query<span class="op">,</span></span>
+<span id="cb21-744"><a href="#cb21-744" aria-hidden="true" tabindex="-1"></a>            <span class="dt">from</span><span class="op">:</span> <span class="st">"movies"</span><span class="op">,</span></span>
+<span id="cb21-745"><a href="#cb21-745" aria-hidden="true" tabindex="-1"></a>            <span class="dt">column</span><span class="op">:</span> <span class="st">"year"</span><span class="op">,</span></span>
+<span id="cb21-746"><a href="#cb21-746" aria-hidden="true" tabindex="-1"></a>            <span class="dt">min</span><span class="op">:</span> <span class="dv">1928</span><span class="op">,</span></span>
+<span id="cb21-747"><a href="#cb21-747" aria-hidden="true" tabindex="-1"></a>            <span class="dt">max</span><span class="op">:</span> <span class="dv">2046</span><span class="op">,</span></span>
+<span id="cb21-748"><a href="#cb21-748" aria-hidden="true" tabindex="-1"></a>            <span class="dt">select</span><span class="op">:</span> <span class="st">"interval"</span><span class="op">,</span></span>
+<span id="cb21-749"><a href="#cb21-749" aria-hidden="true" tabindex="-1"></a>            <span class="dt">value</span><span class="op">:</span> <span class="dv">2020</span><span class="op">,</span></span>
+<span id="cb21-750"><a href="#cb21-750" aria-hidden="true" tabindex="-1"></a>            <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb21-751"><a href="#cb21-751" aria-hidden="true" tabindex="-1"></a>            <span class="dt">label</span><span class="op">:</span> <span class="st">"Released Through"</span></span>
+<span id="cb21-752"><a href="#cb21-752" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb21-753"><a href="#cb21-753" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb21-754"><a href="#cb21-754" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-12" data-nodetype="declaration">
+<div id="ojs-cell-19" data-nodetype="declaration">
 
 </div>
 </div>
@@ -796,31 +997,31 @@ window.Quarto = {
 <li>The function below draws the actual plot. Notice that we have two dot layers. The first shows everything in a faint background, and the second shows those that pass the query. The <code>tip: true</code> call ensures that we can see the movie title when we hover our mouse near the highlighted point.</li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" data-startfrom="578" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 577;"><span id="cb13-578"><a href="#cb13-578" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_plot</span>(query) {</span>
-<span id="cb13-579"><a href="#cb13-579" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb13-580"><a href="#cb13-580" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span>)<span class="op">,</span> {</span>
-<span id="cb13-581"><a href="#cb13-581" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
-<span id="cb13-582"><a href="#cb13-582" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
-<span id="cb13-583"><a href="#cb13-583" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="fl">1.5</span><span class="op">,</span></span>
-<span id="cb13-584"><a href="#cb13-584" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span></span>
-<span id="cb13-585"><a href="#cb13-585" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
-<span id="cb13-586"><a href="#cb13-586" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> query})<span class="op">,</span> {</span>
-<span id="cb13-587"><a href="#cb13-587" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
-<span id="cb13-588"><a href="#cb13-588" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
-<span id="cb13-589"><a href="#cb13-589" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
-<span id="cb13-590"><a href="#cb13-590" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span></span>
-<span id="cb13-591"><a href="#cb13-591" aria-hidden="true" tabindex="-1"></a>         <span class="dt">title</span><span class="op">:</span> <span class="st">"Title"</span><span class="op">,</span></span>
-<span id="cb13-592"><a href="#cb13-592" aria-hidden="true" tabindex="-1"></a>         <span class="dt">tip</span><span class="op">:</span> <span class="kw">true</span></span>
-<span id="cb13-593"><a href="#cb13-593" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
-<span id="cb13-594"><a href="#cb13-594" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xyDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
-<span id="cb13-595"><a href="#cb13-595" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Rotten Tomatoes Rating"</span>)<span class="op">,</span></span>
-<span id="cb13-596"><a href="#cb13-596" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">yLabel</span>(<span class="st">"IMDB Rating"</span>)<span class="op">,</span></span>
-<span id="cb13-597"><a href="#cb13-597" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">680</span>)<span class="op">,</span></span>
-<span id="cb13-598"><a href="#cb13-598" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
-<span id="cb13-599"><a href="#cb13-599" aria-hidden="true" tabindex="-1"></a>     )<span class="op">;</span></span>
-<span id="cb13-600"><a href="#cb13-600" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" data-startfrom="763" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 762;"><span id="cb22-763"><a href="#cb22-763" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">movie_plot</span>(query) {</span>
+<span id="cb22-764"><a href="#cb22-764" aria-hidden="true" tabindex="-1"></a>     <span class="cf">return</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb22-765"><a href="#cb22-765" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span>)<span class="op">,</span> {</span>
+<span id="cb22-766"><a href="#cb22-766" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
+<span id="cb22-767"><a href="#cb22-767" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
+<span id="cb22-768"><a href="#cb22-768" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="fl">1.5</span><span class="op">,</span></span>
+<span id="cb22-769"><a href="#cb22-769" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#CDB4BB"</span></span>
+<span id="cb22-770"><a href="#cb22-770" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
+<span id="cb22-771"><a href="#cb22-771" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"movies"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> query})<span class="op">,</span> {</span>
+<span id="cb22-772"><a href="#cb22-772" aria-hidden="true" tabindex="-1"></a>         <span class="dt">x</span><span class="op">:</span> <span class="st">"Rotten_Tomatoes_Rating"</span><span class="op">,</span></span>
+<span id="cb22-773"><a href="#cb22-773" aria-hidden="true" tabindex="-1"></a>         <span class="dt">y</span><span class="op">:</span> <span class="st">"IMDB_Rating"</span><span class="op">,</span></span>
+<span id="cb22-774"><a href="#cb22-774" aria-hidden="true" tabindex="-1"></a>         <span class="dt">r</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
+<span id="cb22-775"><a href="#cb22-775" aria-hidden="true" tabindex="-1"></a>         <span class="dt">fill</span><span class="op">:</span> <span class="st">"#7D323D"</span><span class="op">,</span></span>
+<span id="cb22-776"><a href="#cb22-776" aria-hidden="true" tabindex="-1"></a>         <span class="dt">title</span><span class="op">:</span> <span class="st">"Title"</span><span class="op">,</span></span>
+<span id="cb22-777"><a href="#cb22-777" aria-hidden="true" tabindex="-1"></a>         <span class="dt">tip</span><span class="op">:</span> <span class="kw">true</span></span>
+<span id="cb22-778"><a href="#cb22-778" aria-hidden="true" tabindex="-1"></a>       })<span class="op">,</span></span>
+<span id="cb22-779"><a href="#cb22-779" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xyDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
+<span id="cb22-780"><a href="#cb22-780" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">xLabel</span>(<span class="st">"Rotten Tomatoes Rating"</span>)<span class="op">,</span></span>
+<span id="cb22-781"><a href="#cb22-781" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">yLabel</span>(<span class="st">"IMDB Rating"</span>)<span class="op">,</span></span>
+<span id="cb22-782"><a href="#cb22-782" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">680</span>)<span class="op">,</span></span>
+<span id="cb22-783"><a href="#cb22-783" aria-hidden="true" tabindex="-1"></a>       vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">400</span>)</span>
+<span id="cb22-784"><a href="#cb22-784" aria-hidden="true" tabindex="-1"></a>     )<span class="op">;</span></span>
+<span id="cb22-785"><a href="#cb22-785" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div id="ojs-cell-13" data-nodetype="declaration">
+<div id="ojs-cell-20" data-nodetype="declaration">
 
 </div>
 </div>
@@ -828,10 +1029,16 @@ window.Quarto = {
 </section>
 </section>
 
-</main>
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>For this reason it’s a good gateway to more advanced libraries like D3.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
 <!-- /main column -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSAocCkgPT4gbmV3IFVSTChgZGF0YS8ke3B9YCwgZG9jdW1lbnQuYmFzZVVSSSkuaHJlZlxuXG4vLyBzZXR1cCB0aGUgZGF0YSBjb29yZGluYXRvclxudmcgPSB7XG4gICAgY29uc3QgdmcgPSBhd2FpdCBpbXBvcnQoXCJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvbnBtL0B1d2RhdGEvdmdwbG90QDAuMTkuMC8rZXNtXCIpO1xuICAgIGNvbnN0IHdhc20gPSBhd2FpdCB2Zy53YXNtQ29ubmVjdG9yKCk7XG4gICAgdmcuY29vcmRpbmF0b3IoKS5kYXRhYmFzZUNvbm5lY3Rvcih3YXNtKTtcbiAgICBhd2FpdCB2Zy5jb29yZGluYXRvcigpLmV4ZWMoW1xuICAgICAgdmcubG9hZENTVihcInBlbmd1aW5zXCIsIHBhdGgoXCJwZW5ndWlucy5jc3ZcIikpLFxuICAgICAgdmcubG9hZENTVihcImF0aGxldGVzQmF0Y2hlZFwiLCBwYXRoKFwiYXRobGV0ZXMuY3N2XCIpKSxcbiAgICAgIHZnLmxvYWRDU1YoXCJtb3ZpZXNcIiwgcGF0aChcIm1vdmllcy5jc3ZcIikpXG4gICAgXSk7XG4gICAgcmV0dXJuIHZnO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiJGNvbG9yID0gdmcuUGFyYW0udmFsdWUoXCJyZWRcIilcblxubWVudSA9IHZnLm1lbnUoe2FzOiAkY29sb3IsIG9wdGlvbnM6IFtcInJlZFwiLCBcImJsdWVcIiwgXCJncmVlblwiXSwgbGFiZWw6IFwiUG9pbnQgY29sb3JcIn0pXG5wbG90ID0gdmcucGxvdChcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiKSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCIsIGZpbGw6ICRjb2xvcn1cbiAgICApLFxuICAgIHZnLndpZHRoKDUwMCksXG4gICAgdmcuaGVpZ2h0KDMwMClcbilcblxudmcudmNvbmNhdChbbWVudSwgcGxvdF0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIkc3BlY2llcyA9IHZnLlNlbGVjdGlvbi5zaW5nbGUoKVxuXG5zcGVjaWVzTWVudSA9IHZnLm1lbnUoe2FzOiAkc3BlY2llcywgZnJvbTogXCJwZW5ndWluc1wiLCBjb2x1bW46IFwic3BlY2llc1wiLCBsYWJlbDogXCJTcGVjaWVzXCJ9KVxuc3BlY2llc1Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIsIHtmaWx0ZXJCeTogJHNwZWNpZXN9KSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCJ9XG4gICAgKSxcbiAgICB2Zy54RG9tYWluKFszMCwgNjBdKSwgLy8ga2VlcHMgdGhlIHdpbmRvdyByYW5nZXMgZml4ZWRcbiAgICB2Zy55RG9tYWluKFsxMiwgMjJdKSxcbiAgICB2Zy53aWR0aCg1MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4pXG5cbnZnLnZjb25jYXQoW3NwZWNpZXNNZW51LCBzcGVjaWVzUGxvdF0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIkc3BlY2llczIgPSB2Zy5TZWxlY3Rpb24uc2luZ2xlKClcblxuc3BlY2llc01lbnUyID0gdmcubWVudSh7YXM6ICRzcGVjaWVzMiwgZnJvbTogXCJwZW5ndWluc1wiLCBjb2x1bW46IFwic3BlY2llc1wiLCBsYWJlbDogXCJTcGVjaWVzXCJ9KVxuc3BlY2llc1Bsb3QyID0gdmcucGxvdChcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiKSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCJ9LFxuICAgICksXG4gICAgdmcuaGlnaGxpZ2h0KHtieTogJHNwZWNpZXMyLCBvcGFjaXR5OiAwLjF9KSxcbiAgICB2Zy53aWR0aCg1MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4pXG5cbnZnLnZjb25jYXQoW3NwZWNpZXNNZW51Miwgc3BlY2llc1Bsb3QyXSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ii8vIG9uZSBTZWxlY3Rpb24gc2hhcmVkIGJ5IGJvdGggbWVudXM7IHN3YXAgaW50ZXJzZWN0KCkgZm9yIHVuaW9uKCkgb3Igc2luZ2xlKClcbiRmaWx0ZXIgPSB2Zy5TZWxlY3Rpb24uaW50ZXJzZWN0KClcblxuc3BlY2llc01lbnUzID0gdmcubWVudSh7YXM6ICRmaWx0ZXIsIGZyb206IFwicGVuZ3VpbnNcIiwgY29sdW1uOiBcInNwZWNpZXNcIiwgbGFiZWw6IFwiU3BlY2llc1wifSlcbmlzbGFuZE1lbnUgPSB2Zy5tZW51KHthczogJGZpbHRlciwgZnJvbTogXCJwZW5ndWluc1wiLCBjb2x1bW46IFwiaXNsYW5kXCIsIGxhYmVsOiBcIklzbGFuZFwifSlcbnNwZWNpZXNJc2xhbmRQbG90ID0gdmcucGxvdChcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiKSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCIsIGZpbGw6IFwic3BlY2llc1wifVxuICAgICksXG4gICAgdmcuaGlnaGxpZ2h0KHtieTogJGZpbHRlciwgb3BhY2l0eTogMC4xfSksXG4gICAgdmcueERvbWFpbihbMzAsIDYwXSksXG4gICAgdmcueURvbWFpbihbMTIsIDIyXSksXG4gICAgdmcud2lkdGgoNTAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuKVxuXG52Zy52Y29uY2F0KFt2Zy5oY29uY2F0KFtzcGVjaWVzTWVudTMsIGlzbGFuZE1lbnVdKSwgc3BlY2llc0lzbGFuZFBsb3RdKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiJHNpemUgPSB2Zy5QYXJhbS52YWx1ZSg1KVxuXG5zaXplX3NsaWRlciA9IHZnLnNsaWRlcih7YXM6ICRzaXplLCBtaW46IDEsIG1heDogMjUsIGxhYmVsOiBcInBvaW50IHNpemVcIn0pXG5zaXplX3Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIpLFxuICAgICAgICB7eDogXCJiaWxsX2xlbmd0aF9tbVwiLCB5OiBcImJpbGxfZGVwdGhfbW1cIiwgcjogJHNpemV9XG4gICAgKSxcbiAgICB2Zy53aWR0aCg1MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4pXG5cbnZnLnZjb25jYXQoW3NpemVfc2xpZGVyLCBzaXplX3Bsb3RdKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiJGZsaXBwZXJfc2VsZWN0aW9uID0gdmcuU2VsZWN0aW9uLnNpbmdsZSgpXG5cbmZsaXBwZXJfc2xpZGVyID0gdmcuc2xpZGVyKHthczogJGZsaXBwZXJfc2VsZWN0aW9uLCBmcm9tOiBcInBlbmd1aW5zXCIsIGNvbHVtbjogXCJmbGlwcGVyX2xlbmd0aF9tbVwiLCBzZWxlY3Q6IFwiaW50ZXJ2YWxcIiwgbGFiZWw6IFwiRmxpcHBlciBsZW5ndGhcIn0pXG5mbGlwcGVyX3Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIpLFxuICAgICAgICB7eDogXCJiaWxsX2xlbmd0aF9tbVwiLCB5OiBcImJpbGxfZGVwdGhfbW1cIn1cbiAgICApLFxuICAgIHZnLmhpZ2hsaWdodCh7Ynk6ICRmbGlwcGVyX3NlbGVjdGlvbiwgb3BhY2l0eTogMC4xfSksXG4gICAgdmcud2lkdGgoNTAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuKVxuXG52Zy52Y29uY2F0KFtmbGlwcGVyX3NsaWRlciwgZmxpcHBlcl9wbG90XSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IiR0YWJsZV9zZWxlY3Rpb24gPSB2Zy5TZWxlY3Rpb24uc2luZ2xlKClcblxuLy8gZGVmaW5lIHRoZSB0YWJsZSBpbnB1dFxucGVuZ3Vpbl90YWJsZSA9IHZnLnRhYmxlKHtcbiAgICBhczogJHRhYmxlX3NlbGVjdGlvbixcbiAgICBmcm9tOiBcInBlbmd1aW5zXCIsXG4gICAgY29sdW1uczogW1wic3BlY2llc1wiLCBcImlzbGFuZFwiLCBcImJpbGxfbGVuZ3RoX21tXCIsIFwiYmlsbF9kZXB0aF9tbVwiLCBcImZsaXBwZXJfbGVuZ3RoX21tXCJdXG59KVxuXG4vLyBEZWZpbmUgdGhlIHBsb3QgZnJvbSB0d28gZG90IGxheWVycyAoYmFja2dyb3VuZCBhbmQgZm9yZWdyb3VuZClcbnRhYmxlX3Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIpLFxuICAgICAgICB7eDogXCJiaWxsX2xlbmd0aF9tbVwiLCB5OiBcImJpbGxfZGVwdGhfbW1cIiwgZmlsbDogXCIjQ0RCNEJCXCIsIHI6IDJ9XG4gICAgKSxcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiLCB7ZmlsdGVyQnk6ICR0YWJsZV9zZWxlY3Rpb259KSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCIsIGZpbGw6IFwiIzdEMzIzRFwiLCByOiAzfVxuICAgICksXG4gICAgdmcud2lkdGgoNTAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuKVxuXG52Zy52Y29uY2F0KFt0YWJsZV9wbG90LCBwZW5ndWluX3RhYmxlLCB2Zy52c3BhY2UoMTApXSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImF0aGxldGVzX3ByZXZpZXcgPSB2Zy5jb29yZGluYXRvcigpLnF1ZXJ5KFwiU0VMRUNUICogRlJPTSBhdGhsZXRlc0JhdGNoZWRcIilcbklucHV0cy50YWJsZShhdGhsZXRlc19wcmV2aWV3KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ii8vIFBhcmFtZXRlcnMgYW5kIHNlbGVjdGlvblxuJGNpID0gdmcuUGFyYW0udmFsdWUoMC45NSlcbiRxdWVyeSA9IHZnLlNlbGVjdGlvbi5zaW5nbGUoKVxuXG52Zy52Y29uY2F0KFxuICAgIC8vIHVzZXIgaW5wdXRzXG4gICAgdmcuc2xpZGVyKHsgc2VsZWN0OiBcImludGVydmFsXCIsIGFzOiAkcXVlcnksIGNvbHVtbjogXCJiYXRjaFwiLCBmcm9tOiBcImF0aGxldGVzQmF0Y2hlZFwiLCBsYWJlbDogXCJNYXggU2FtcGxlc1wiIH0pLFxuICAgIHZnLnNsaWRlcih7YXM6ICRjaSwgbWluOiAwLjUsIG1heDogMC45OTksIHN0ZXA6IDAuMDAxLCBsYWJlbDogXCJDb25mLiBMZXZlbFwifSksXG5cbiAgICAvLyBncmFwaGljYWwgZW5jb2RpbmdzXG4gICAgdmcucGxvdChcbiAgICAgICAgdmcuZXJyb3JiYXJYKFxuICAgICAgICAgICAgdmcuZnJvbShcImF0aGxldGVzQmF0Y2hlZFwiLCB7ZmlsdGVyQnk6ICRxdWVyeX0pLFxuICAgICAgICAgICAge2NpOiAkY2ksIHg6IFwiaGVpZ2h0XCIsIHk6IFwic3BvcnRcIn1cbiAgICAgICAgKSxcbiAgICAgICAgdmcueExhYmVsKFwiSGVpZ2h0XCIpLFxuICAgICAgICB2Zy5tYXJnaW5MZWZ0KDEyMCksIC8vIGtlZXAgbGFiZWxzIHZpc2libGVcbiAgICAgICAgdmcud2lkdGgoNTAwKSxcbiAgICAgICAgdmcuaGVpZ2h0KDQwMClcbiAgICApLFxuICAgIHZnLmNvbG9yTGVnZW5kKHtmb3I6IFwiaGVpZ2h0c1wifSksXG4pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTExIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoibW92aWVRdWVyeSA9IHZnLlNlbGVjdGlvbi5pbnRlcnNlY3QoKTtcblxudmcudmNvbmNhdChcbiAgICBtb3ZpZV9jb250cm9scyhtb3ZpZVF1ZXJ5KSxcbiAgICBtb3ZpZV9wbG90KG1vdmllUXVlcnkpXG4pO1xuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImZ1bmN0aW9uIG1vdmllX2NvbnRyb2xzKHF1ZXJ5KSB7XG4gICAgcmV0dXJuIHZnLmhjb25jYXQoXG4gICAgICAgIHZnLm1lbnUoe1xuICAgICAgICAgICAgYXM6IHF1ZXJ5LFxuICAgICAgICAgICAgZnJvbTogXCJtb3ZpZXNcIixcbiAgICAgICAgICAgIGNvbHVtbjogXCJNYWpvcl9HZW5yZVwiLFxuICAgICAgICAgICAgdmFsdWU6IFwiRHJhbWFcIixcbiAgICAgICAgICAgIGxhYmVsOiBcIkdlbnJlXCJcbiAgICAgICAgfSksXG4gICAgICAgIHZnLm1lbnUoe1xuICAgICAgICAgICAgYXM6IHF1ZXJ5LFxuICAgICAgICAgICAgZnJvbTogXCJtb3ZpZXNcIixcbiAgICAgICAgICAgIGNvbHVtbjogXCJNUEFBX1JhdGluZ1wiLFxuICAgICAgICAgICAgbGFiZWw6IFwiTVBBQSBSYXRpbmdcIlxuICAgICAgICB9KSxcbiAgICAgICAgdmcuc2xpZGVyKHtcbiAgICAgICAgICAgIGFzOiBxdWVyeSxcbiAgICAgICAgICAgIGZyb206IFwibW92aWVzXCIsXG4gICAgICAgICAgICBjb2x1bW46IFwieWVhclwiLFxuICAgICAgICAgICAgbWluOiAxOTI4LFxuICAgICAgICAgICAgbWF4OiAyMDQ2LFxuICAgICAgICAgICAgc2VsZWN0OiBcImludGVydmFsXCIsXG4gICAgICAgICAgICB2YWx1ZTogMjAyMCxcbiAgICAgICAgICAgIHN0ZXA6IDEsXG4gICAgICAgICAgICBsYWJlbDogXCJSZWxlYXNlZCBUaHJvdWdoXCJcbiAgICAgICAgfSlcbiAgICApO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImZ1bmN0aW9uIG1vdmllX3Bsb3QocXVlcnkpIHtcbiAgICAgcmV0dXJuIHZnLnBsb3QoXG4gICAgICAgdmcuZG90KHZnLmZyb20oXCJtb3ZpZXNcIiksIHtcbiAgICAgICAgIHg6IFwiUm90dGVuX1RvbWF0b2VzX1JhdGluZ1wiLFxuICAgICAgICAgeTogXCJJTURCX1JhdGluZ1wiLFxuICAgICAgICAgcjogMS41LFxuICAgICAgICAgZmlsbDogXCIjQ0RCNEJCXCJcbiAgICAgICB9KSxcbiAgICAgICB2Zy5kb3QodmcuZnJvbShcIm1vdmllc1wiLCB7ZmlsdGVyQnk6IHF1ZXJ5fSksIHtcbiAgICAgICAgIHg6IFwiUm90dGVuX1RvbWF0b2VzX1JhdGluZ1wiLFxuICAgICAgICAgeTogXCJJTURCX1JhdGluZ1wiLFxuICAgICAgICAgcjogMyxcbiAgICAgICAgIGZpbGw6IFwiIzdEMzIzRFwiLFxuICAgICAgICAgdGl0bGU6IFwiVGl0bGVcIixcbiAgICAgICAgIHRpcDogdHJ1ZVxuICAgICAgIH0pLFxuICAgICAgIHZnLnh5RG9tYWluKHZnLkZpeGVkKSxcbiAgICAgICB2Zy54TGFiZWwoXCJSb3R0ZW4gVG9tYXRvZXMgUmF0aW5nXCIpLFxuICAgICAgIHZnLnlMYWJlbChcIklNREIgUmF0aW5nXCIpLFxuICAgICAgIHZnLndpZHRoKDY4MCksXG4gICAgICAgdmcuaGVpZ2h0KDQwMClcbiAgICAgKTtcbn1cbiJ9XX0=
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSAocCkgPT4gbmV3IFVSTChgZGF0YS8ke3B9YCwgZG9jdW1lbnQuYmFzZVVSSSkuaHJlZlxuXG4vLyBzZXR1cCB0aGUgZGF0YSBjb29yZGluYXRvclxudmcgPSB7XG4gICAgY29uc3QgdmcgPSBhd2FpdCBpbXBvcnQoXCJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvbnBtL0B1d2RhdGEvdmdwbG90QDAuMTkuMC8rZXNtXCIpO1xuICAgIGNvbnN0IHdhc20gPSBhd2FpdCB2Zy53YXNtQ29ubmVjdG9yKCk7XG4gICAgdmcuY29vcmRpbmF0b3IoKS5kYXRhYmFzZUNvbm5lY3Rvcih3YXNtKTtcbiAgICBhd2FpdCB2Zy5jb29yZGluYXRvcigpLmV4ZWMoW1xuICAgICAgdmcubG9hZENTVihcInBlbmd1aW5zXCIsIHBhdGgoXCJwZW5ndWlucy5jc3ZcIikpLFxuICAgICAgdmcubG9hZENTVihcImF0aGxldGVzQmF0Y2hlZFwiLCBwYXRoKFwiYXRobGV0ZXMuY3N2XCIpKSxcbiAgICAgIHZnLmxvYWRDU1YoXCJtb3ZpZXNcIiwgcGF0aChcIm1vdmllcy5jc3ZcIikpXG4gICAgXSk7XG4gICAgcmV0dXJuIHZnO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiJGNvbG9yID0gdmcuUGFyYW0udmFsdWUoXCJyZWRcIilcblxubWVudSA9IHZnLm1lbnUoe2FzOiAkY29sb3IsIG9wdGlvbnM6IFtcInJlZFwiLCBcImJsdWVcIiwgXCJncmVlblwiXSwgbGFiZWw6IFwiUG9pbnQgY29sb3JcIn0pXG5wbG90ID0gdmcucGxvdChcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiKSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCIsIGZpbGw6ICRjb2xvcn1cbiAgICApLFxuICAgIHZnLndpZHRoKDUwMCksXG4gICAgdmcuaGVpZ2h0KDMwMClcbilcblxudmcudmNvbmNhdChbbWVudSwgcGxvdF0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIkc3BlY2llcyA9IHZnLlNlbGVjdGlvbi5zaW5nbGUoKVxuXG5zcGVjaWVzTWVudSA9IHZnLm1lbnUoe2FzOiAkc3BlY2llcywgZnJvbTogXCJwZW5ndWluc1wiLCBjb2x1bW46IFwic3BlY2llc1wiLCBsYWJlbDogXCJTcGVjaWVzXCJ9KVxuc3BlY2llc1Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIsIHtmaWx0ZXJCeTogJHNwZWNpZXN9KSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCJ9XG4gICAgKSxcbiAgICB2Zy54RG9tYWluKFszMCwgNjBdKSwgLy8ga2VlcHMgdGhlIHdpbmRvdyByYW5nZXMgZml4ZWRcbiAgICB2Zy55RG9tYWluKFsxMiwgMjJdKSxcbiAgICB2Zy53aWR0aCg1MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4pXG5cbnZnLnZjb25jYXQoW3NwZWNpZXNNZW51LCBzcGVjaWVzUGxvdF0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIkc3BlY2llczIgPSB2Zy5TZWxlY3Rpb24uc2luZ2xlKClcblxuc3BlY2llc01lbnUyID0gdmcubWVudSh7YXM6ICRzcGVjaWVzMiwgZnJvbTogXCJwZW5ndWluc1wiLCBjb2x1bW46IFwic3BlY2llc1wiLCBsYWJlbDogXCJTcGVjaWVzXCJ9KVxuc3BlY2llc1Bsb3QyID0gdmcucGxvdChcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiKSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCJ9LFxuICAgICksXG4gICAgdmcuaGlnaGxpZ2h0KHtieTogJHNwZWNpZXMyLCBvcGFjaXR5OiAwLjF9KSxcbiAgICB2Zy53aWR0aCg1MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4pXG5cbnZnLnZjb25jYXQoW3NwZWNpZXNNZW51Miwgc3BlY2llc1Bsb3QyXSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Ii8vIG9uZSBTZWxlY3Rpb24gc2hhcmVkIGJ5IGJvdGggbWVudXM7IHN3YXAgaW50ZXJzZWN0KCkgZm9yIHVuaW9uKCkgb3Igc2luZ2xlKClcbiRmaWx0ZXIgPSB2Zy5TZWxlY3Rpb24uaW50ZXJzZWN0KClcblxuc3BlY2llc01lbnUzID0gdmcubWVudSh7YXM6ICRmaWx0ZXIsIGZyb206IFwicGVuZ3VpbnNcIiwgY29sdW1uOiBcInNwZWNpZXNcIiwgbGFiZWw6IFwiU3BlY2llc1wifSlcbmlzbGFuZE1lbnUgPSB2Zy5tZW51KHthczogJGZpbHRlciwgZnJvbTogXCJwZW5ndWluc1wiLCBjb2x1bW46IFwiaXNsYW5kXCIsIGxhYmVsOiBcIklzbGFuZFwifSlcbnNwZWNpZXNJc2xhbmRQbG90ID0gdmcucGxvdChcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiKSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCIsIGZpbGw6IFwic3BlY2llc1wifVxuICAgICksXG4gICAgdmcuaGlnaGxpZ2h0KHtieTogJGZpbHRlciwgb3BhY2l0eTogMC4xfSksXG4gICAgdmcueERvbWFpbihbMzAsIDYwXSksXG4gICAgdmcueURvbWFpbihbMTIsIDIyXSksXG4gICAgdmcud2lkdGgoNTAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuKVxuXG52Zy52Y29uY2F0KFt2Zy5oY29uY2F0KFtzcGVjaWVzTWVudTMsIGlzbGFuZE1lbnVdKSwgc3BlY2llc0lzbGFuZFBsb3RdKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiJHNpemUgPSB2Zy5QYXJhbS52YWx1ZSg1KVxuXG5zaXplX3NsaWRlciA9IHZnLnNsaWRlcih7YXM6ICRzaXplLCBtaW46IDEsIG1heDogMjUsIGxhYmVsOiBcInBvaW50IHNpemVcIn0pXG5zaXplX3Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIpLFxuICAgICAgICB7eDogXCJiaWxsX2xlbmd0aF9tbVwiLCB5OiBcImJpbGxfZGVwdGhfbW1cIiwgcjogJHNpemV9XG4gICAgKSxcbiAgICB2Zy53aWR0aCg1MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4pXG5cbnZnLnZjb25jYXQoW3NpemVfc2xpZGVyLCBzaXplX3Bsb3RdKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiJGZsaXBwZXJfc2VsZWN0aW9uID0gdmcuU2VsZWN0aW9uLnNpbmdsZSgpXG5cbmZsaXBwZXJfc2xpZGVyID0gdmcuc2xpZGVyKHthczogJGZsaXBwZXJfc2VsZWN0aW9uLCBmcm9tOiBcInBlbmd1aW5zXCIsIGNvbHVtbjogXCJmbGlwcGVyX2xlbmd0aF9tbVwiLCBzZWxlY3Q6IFwiaW50ZXJ2YWxcIiwgbGFiZWw6IFwiRmxpcHBlciBsZW5ndGhcIn0pXG5mbGlwcGVyX3Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIpLFxuICAgICAgICB7eDogXCJiaWxsX2xlbmd0aF9tbVwiLCB5OiBcImJpbGxfZGVwdGhfbW1cIn1cbiAgICApLFxuICAgIHZnLmhpZ2hsaWdodCh7Ynk6ICRmbGlwcGVyX3NlbGVjdGlvbiwgb3BhY2l0eTogMC4xfSksXG4gICAgdmcud2lkdGgoNTAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuKVxuXG52Zy52Y29uY2F0KFtmbGlwcGVyX3NsaWRlciwgZmxpcHBlcl9wbG90XSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IiR0YWJsZV9zZWxlY3Rpb24gPSB2Zy5TZWxlY3Rpb24uc2luZ2xlKClcblxuLy8gZGVmaW5lIHRoZSB0YWJsZSBpbnB1dFxucGVuZ3Vpbl90YWJsZSA9IHZnLnRhYmxlKHtcbiAgICBhczogJHRhYmxlX3NlbGVjdGlvbixcbiAgICBmcm9tOiBcInBlbmd1aW5zXCIsXG4gICAgY29sdW1uczogW1wic3BlY2llc1wiLCBcImlzbGFuZFwiLCBcImJpbGxfbGVuZ3RoX21tXCIsIFwiYmlsbF9kZXB0aF9tbVwiLCBcImZsaXBwZXJfbGVuZ3RoX21tXCJdXG59KVxuXG4vLyBEZWZpbmUgdGhlIHBsb3QgZnJvbSB0d28gZG90IGxheWVycyAoYmFja2dyb3VuZCBhbmQgZm9yZWdyb3VuZClcbnRhYmxlX3Bsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIpLFxuICAgICAgICB7eDogXCJiaWxsX2xlbmd0aF9tbVwiLCB5OiBcImJpbGxfZGVwdGhfbW1cIiwgZmlsbDogXCIjQ0RCNEJCXCIsIHI6IDJ9XG4gICAgKSxcbiAgICB2Zy5kb3QoXG4gICAgICAgIHZnLmZyb20oXCJwZW5ndWluc1wiLCB7ZmlsdGVyQnk6ICR0YWJsZV9zZWxlY3Rpb259KSxcbiAgICAgICAge3g6IFwiYmlsbF9sZW5ndGhfbW1cIiwgeTogXCJiaWxsX2RlcHRoX21tXCIsIGZpbGw6IFwiIzdEMzIzRFwiLCByOiAzfVxuICAgICksXG4gICAgdmcud2lkdGgoNTAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuKVxuXG52Zy52Y29uY2F0KFt0YWJsZV9wbG90LCBwZW5ndWluX3RhYmxlLCB2Zy52c3BhY2UoMTApXSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBlbmd1aW5DaGVja2JveCA9IElucHV0cy5jaGVja2JveChcbiAgW1wiQWRlbGllXCIsIFwiR2VudG9vXCIsIFwiQ2hpbnN0cmFwXCJdLCAvLyBvcHRpb25zXG4gIHtsYWJlbDogXCJTcGVjaWVzXCIsIHZhbHVlOiBbXCJBZGVsaWVcIiwgXCJHZW50b29cIiwgXCJDaGluc3RyYXBcIl19IC8vIGxhYmVsIGFuZCBpbml0aWFsIHZhbHVlc1xuKTtcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTAiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIkc3BlY2llc0NoZWNrID0gdmcuU2VsZWN0aW9uLnNpbmdsZSgpO1xuXG5wZW5ndWluQ2hlY2tib3guYWRkRXZlbnRMaXN0ZW5lcihcImlucHV0XCIsICgpID0+IHtcbiAgY29uc3QgY3VycmVudCA9IHBlbmd1aW5DaGVja2JveC52YWx1ZTsgLy8gZS5nLiwgW1wiQWRlbGllXCIsIFwiR2VudG9vXCJdXG4gICRzcGVjaWVzQ2hlY2sudXBkYXRlKHtcbiAgICBzb3VyY2U6IHBlbmd1aW5DaGVja2JveCxcbiAgICB2YWx1ZTogY3VycmVudCxcbiAgICBwcmVkaWNhdGU6IHZnLnNxbGBzcGVjaWVzIElOICgke2N1cnJlbnQubWFwKHZnLmxpdGVyYWwpfSlgXG4gIH0pO1xufSk7XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTExIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiY2hlY2tib3hfcGxvdCA9IHZnLnBsb3QoXG4gICAgdmcuZG90KFxuICAgICAgICB2Zy5mcm9tKFwicGVuZ3VpbnNcIiwge2ZpbHRlckJ5OiAkc3BlY2llc0NoZWNrfSksXG4gICAgICAgIHt4OiBcImJpbGxfbGVuZ3RoX21tXCIsIHk6IFwiYmlsbF9kZXB0aF9tbVwifVxuICAgICksXG4gICAgdmcueERvbWFpbihbMzAsIDYwXSksIC8vIGtlZXBzIHRoZSB3aW5kb3cgcmFuZ2VzIGZpeGVkXG4gICAgdmcueURvbWFpbihbMTIsIDIyXSksXG4gICAgdmcud2lkdGgoNTAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuKVxuXG52Zy52Y29uY2F0KFtwZW5ndWluQ2hlY2tib3gsIGNoZWNrYm94X3Bsb3RdKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImltcG9ydCB7IGludGVydmFsIH0gZnJvbSBcIkBtb290YXJpL3JhbmdlLXNsaWRlclwiXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTEzIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZmxpcHBlclJhbmdlU2xpZGVyID0gaW50ZXJ2YWwoWzE3MCwgMjM1XSwgeyAvLyBtaW4gYW5kIG1heCByYW5nZVxuICBsYWJlbDogXCJGbGlwcGVyIGxlbmd0aFwiLFxuICB2YWx1ZTogWzE3MCwgMjM1XSwgLy8gaW5pdGlhbCB2YWx1ZXNcbiAgZm9ybWF0OiAoW2xvLCBoaV0pID0+IGAke01hdGgucm91bmQobG8pfSAtICR7TWF0aC5yb3VuZChoaSl9YCAvLyBoaWRlIGRlY2ltYWxzXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IiRmbGlwcGVyUmFuZ2UgPSB2Zy5TZWxlY3Rpb24uc2luZ2xlKCk7XG5cbmZsaXBwZXJSYW5nZVNsaWRlci5hZGRFdmVudExpc3RlbmVyKFwiaW5wdXRcIiwgKCkgPT4ge1xuICBjb25zdCBbbG8sIGhpXSA9IGZsaXBwZXJSYW5nZVNsaWRlci52YWx1ZTtcbiAgJGZsaXBwZXJSYW5nZS51cGRhdGUoe1xuICAgIHNvdXJjZTogZmxpcHBlclJhbmdlU2xpZGVyLFxuICAgIHZhbHVlOiBbbG8sIGhpXSxcbiAgICBwcmVkaWNhdGU6IHZnLmlzQmV0d2VlbihcImZsaXBwZXJfbGVuZ3RoX21tXCIsIFtsbywgaGldKVxuICB9KTtcbn0pO1xuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImZsaXBwZXJSYW5nZVBsb3QgPSB2Zy5wbG90KFxuICAgIHZnLmRvdChcbiAgICAgICAgdmcuZnJvbShcInBlbmd1aW5zXCIpLFxuICAgICAgICB7eDogXCJiaWxsX2xlbmd0aF9tbVwiLCB5OiBcImJpbGxfZGVwdGhfbW1cIn1cbiAgICApLFxuICAgIHZnLmhpZ2hsaWdodCh7Ynk6ICRmbGlwcGVyUmFuZ2UsIG9wYWNpdHk6IDAuMX0pLFxuICAgIHZnLndpZHRoKDUwMCksXG4gICAgdmcuaGVpZ2h0KDMwMClcbilcblxudmcudmNvbmNhdChbZmxpcHBlclJhbmdlU2xpZGVyLCBmbGlwcGVyUmFuZ2VQbG90XSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJhdGhsZXRlc19wcmV2aWV3ID0gdmcuY29vcmRpbmF0b3IoKS5xdWVyeShcIlNFTEVDVCAqIEZST00gYXRobGV0ZXNCYXRjaGVkXCIpXG5JbnB1dHMudGFibGUoYXRobGV0ZXNfcHJldmlldylcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTciLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyBQYXJhbWV0ZXJzIGFuZCBzZWxlY3Rpb25cbiRjaSA9IHZnLlBhcmFtLnZhbHVlKDAuOTUpXG4kcXVlcnkgPSB2Zy5TZWxlY3Rpb24uc2luZ2xlKClcblxudmcudmNvbmNhdChcbiAgICAvLyB1c2VyIGlucHV0c1xuICAgIHZnLnNsaWRlcih7IHNlbGVjdDogXCJpbnRlcnZhbFwiLCBhczogJHF1ZXJ5LCBjb2x1bW46IFwiYmF0Y2hcIiwgZnJvbTogXCJhdGhsZXRlc0JhdGNoZWRcIiwgbGFiZWw6IFwiTWF4IFNhbXBsZXNcIiB9KSxcbiAgICB2Zy5zbGlkZXIoe2FzOiAkY2ksIG1pbjogMC41LCBtYXg6IDAuOTk5LCBzdGVwOiAwLjAwMSwgbGFiZWw6IFwiQ29uZi4gTGV2ZWxcIn0pLFxuXG4gICAgLy8gZ3JhcGhpY2FsIGVuY29kaW5nc1xuICAgIHZnLnBsb3QoXG4gICAgICAgIHZnLmVycm9yYmFyWChcbiAgICAgICAgICAgIHZnLmZyb20oXCJhdGhsZXRlc0JhdGNoZWRcIiwge2ZpbHRlckJ5OiAkcXVlcnl9KSxcbiAgICAgICAgICAgIHtjaTogJGNpLCB4OiBcImhlaWdodFwiLCB5OiBcInNwb3J0XCJ9XG4gICAgICAgICksXG4gICAgICAgIHZnLnhMYWJlbChcIkhlaWdodFwiKSxcbiAgICAgICAgdmcubWFyZ2luTGVmdCgxMjApLCAvLyBrZWVwIGxhYmVscyB2aXNpYmxlXG4gICAgICAgIHZnLndpZHRoKDUwMCksXG4gICAgICAgIHZnLmhlaWdodCg0MDApXG4gICAgKSxcbiAgICB2Zy5jb2xvckxlZ2VuZCh7Zm9yOiBcImhlaWdodHNcIn0pLFxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0xOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Im1vdmllUXVlcnkgPSB2Zy5TZWxlY3Rpb24uaW50ZXJzZWN0KCk7XG5cbnZnLnZjb25jYXQoXG4gICAgbW92aWVfY29udHJvbHMobW92aWVRdWVyeSksXG4gICAgbW92aWVfcGxvdChtb3ZpZVF1ZXJ5KVxuKTtcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMTkiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmdW5jdGlvbiBtb3ZpZV9jb250cm9scyhxdWVyeSkge1xuICAgIHJldHVybiB2Zy5oY29uY2F0KFxuICAgICAgICB2Zy5tZW51KHtcbiAgICAgICAgICAgIGFzOiBxdWVyeSxcbiAgICAgICAgICAgIGZyb206IFwibW92aWVzXCIsXG4gICAgICAgICAgICBjb2x1bW46IFwiTWFqb3JfR2VucmVcIixcbiAgICAgICAgICAgIHZhbHVlOiBcIkRyYW1hXCIsXG4gICAgICAgICAgICBsYWJlbDogXCJHZW5yZVwiXG4gICAgICAgIH0pLFxuICAgICAgICB2Zy5tZW51KHtcbiAgICAgICAgICAgIGFzOiBxdWVyeSxcbiAgICAgICAgICAgIGZyb206IFwibW92aWVzXCIsXG4gICAgICAgICAgICBjb2x1bW46IFwiTVBBQV9SYXRpbmdcIixcbiAgICAgICAgICAgIGxhYmVsOiBcIk1QQUEgUmF0aW5nXCJcbiAgICAgICAgfSksXG4gICAgICAgIHZnLnNsaWRlcih7XG4gICAgICAgICAgICBhczogcXVlcnksXG4gICAgICAgICAgICBmcm9tOiBcIm1vdmllc1wiLFxuICAgICAgICAgICAgY29sdW1uOiBcInllYXJcIixcbiAgICAgICAgICAgIG1pbjogMTkyOCxcbiAgICAgICAgICAgIG1heDogMjA0NixcbiAgICAgICAgICAgIHNlbGVjdDogXCJpbnRlcnZhbFwiLFxuICAgICAgICAgICAgdmFsdWU6IDIwMjAsXG4gICAgICAgICAgICBzdGVwOiAxLFxuICAgICAgICAgICAgbGFiZWw6IFwiUmVsZWFzZWQgVGhyb3VnaFwiXG4gICAgICAgIH0pXG4gICAgKTtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMjAiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJmdW5jdGlvbiBtb3ZpZV9wbG90KHF1ZXJ5KSB7XG4gICAgIHJldHVybiB2Zy5wbG90KFxuICAgICAgIHZnLmRvdCh2Zy5mcm9tKFwibW92aWVzXCIpLCB7XG4gICAgICAgICB4OiBcIlJvdHRlbl9Ub21hdG9lc19SYXRpbmdcIixcbiAgICAgICAgIHk6IFwiSU1EQl9SYXRpbmdcIixcbiAgICAgICAgIHI6IDEuNSxcbiAgICAgICAgIGZpbGw6IFwiI0NEQjRCQlwiXG4gICAgICAgfSksXG4gICAgICAgdmcuZG90KHZnLmZyb20oXCJtb3ZpZXNcIiwge2ZpbHRlckJ5OiBxdWVyeX0pLCB7XG4gICAgICAgICB4OiBcIlJvdHRlbl9Ub21hdG9lc19SYXRpbmdcIixcbiAgICAgICAgIHk6IFwiSU1EQl9SYXRpbmdcIixcbiAgICAgICAgIHI6IDMsXG4gICAgICAgICBmaWxsOiBcIiM3RDMyM0RcIixcbiAgICAgICAgIHRpdGxlOiBcIlRpdGxlXCIsXG4gICAgICAgICB0aXA6IHRydWVcbiAgICAgICB9KSxcbiAgICAgICB2Zy54eURvbWFpbih2Zy5GaXhlZCksXG4gICAgICAgdmcueExhYmVsKFwiUm90dGVuIFRvbWF0b2VzIFJhdGluZ1wiKSxcbiAgICAgICB2Zy55TGFiZWwoXCJJTURCIFJhdGluZ1wiKSxcbiAgICAgICB2Zy53aWR0aCg2ODApLFxuICAgICAgIHZnLmhlaWdodCg0MDApXG4gICAgICk7XG59XG4ifV19
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
@@ -1244,6 +1451,8 @@ window._ojs.runtime.interpretFromScriptTags();
 </div> <!-- /content -->
 <script>videojs(video_shortcode_videojs_video1);</script>
 <script>videojs(video_shortcode_videojs_video2);</script>
+<script>videojs(video_shortcode_videojs_video3);</script>
+<script>videojs(video_shortcode_videojs_video4);</script>
 
 
 

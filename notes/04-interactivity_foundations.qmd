@@ -401,32 +401,217 @@ vg.vconcat([table_plot, penguin_table, vg.vspace(10)])
 ```
 
 22. $^\dagger$ By default, the menu, slider, and table inputs aren't really that
-pretty. But you can customize their appearance using CSS. For example, I created
-the alternating light/dark row highlighting and sticky header using the CSS code
-below.
+pretty. But you can customize their appearance using Cascading Style Sheets
+(CSS). The mechanics are beyond the scope of our course, but there are many CSS
+templates available freely online to customize the appearance of your inputs.
+For example, the top search result for "css table templates" brought me to [this
+site](https://www.quackit.com/html/html_editors/scratchpad/?example=/html/templates/tables/hover_highlight_table),
+whose code I copied to make the tables in these notes prettier (a few minor
+modifications are commented on below).
 
-    ```{=html}
-    <style>
-      thead th {
-        position: sticky;
-        top: 0;
-      }
-      tbody tr:nth-child(even) {
-        background: #f3f3f3;
-      }
-    </style>
-    ```
+````{.tiny}
+```{=html}
+<style>
+table { /* change ".table-hover" to "table", so the rule applies to every table */
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    font-size: 0.9rem;
+}
 
-    Here are some other CSS rules to ensure the menu labels have aren't squeeezd
-    too tightly next to the dropdown.
+table thead th {
+    padding: 12px 15px;
+    background-color: #f4f4f4;
+    box-shadow: inset 0 -2px 0 #ccc;
+    text-align: left;
+    position: sticky; /* always show header at the top */
+    top: 0;
+}
 
-    ```{=html}
-    <style>
-      .input { margin-right: 1em; }
-      .input > * { vertical-align: middle; }
-      .input label:first-of-type { margin-right: .5em; }
-    </style>
-    ```
+table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+</style>
+```
+````
+
+```{=html}
+<style>
+table { /* change ".table-hover" to "table", so the rule applies to every table */
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    font-size: 0.9rem;
+}
+
+table thead th {
+    padding: 12px 15px;
+    background-color: #f4f4f4;
+    box-shadow: inset 0 -2px 0 #ccc;
+    text-align: left;
+    position: sticky; /* always show header at the top */
+    top: 0;
+}
+
+table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+</style>
+```
+
+1. $^\dagger$ Mosaic is designed to fit into the wider javascript visualization
+ecosystem^[For this reason it's a good gateway to more advanced libraries like D3.] and
+it actually is not hard to connect it to other packages. For example, we may
+want to have access to a wider catalog of inputs, like those implemented in
+[Observable JS](https://observablehq.github.io/documentation/inputs/overview),
+which support multi-checkbox and date inputs.
+
+   {{<video https://observablehq.github.io/documentation/assets/input-checkbox.CMtQJ6D1.mp4>}}
+
+   {{<video https://observablehq.github.io/documentation/assets/input-date.BSh4Phhy.mp4>}}
+
+   Similarly, some open source programmers release libraries for specific use
+   cases, like
+   [range sliders](https://observablehq.com/@mootari/-/collection/widgets)
+   or
+   [geographic brushes](https://observablehq.com/@awhitty/fips-county-code-brush).
+
+1. $^\dagger$ Even though they're not built in, it's possible to connect these
+custom inputs with mosaic. The key observation is that, under the hood, the
+built-in inputs (e.g., `vg.menu` and `vg.slider`) are defining SQL filter
+statements from the input value. These statements are passed to `Selection`
+objects that allow the visualization to show different data subsets. So to use
+custom inputs, we need a way to update the `Selection` objects to point to the
+right rows. This was anticipated by the mosaic developers, and every selection
+provides an `.update` method. Abstractly, it has the form,
+
+```js
+selection.update({
+  source: input object
+  value: javascript variables created by the input
+  predicate: SQL expression defining which rows to select
+})
+```
+
+We will illustrate using both checkbox inputs and range sliders.
+
+1. $^\dagger$. Checkboxes are useful if we want to select multiple species in
+our scatterplot. This isn't supported by `vg.menu`, but it is supported by
+`Inputs.checkbox` from the Observable library, which is automatically loaded by
+quarto. To define an Observable checkbox input in this package, we can use this
+syntax.
+
+```{ojs}
+//| output: true
+penguinCheckbox = Inputs.checkbox(
+  ["Adelie", "Gentoo", "Chinstrap"], // options
+  {label: "Species", value: ["Adelie", "Gentoo", "Chinstrap"]} // label and initial values
+);
+```
+
+The associated `selection.update` code is placed in a listener that is run
+anytime the checkbox is clicked. In this special case of the `selection.update`
+pattern, `source` is the checkbox input, `value` is an array of currently
+selected species, and `predicate` transforms that array into a SQL filter
+command.
+
+```{ojs}
+$speciesCheck = vg.Selection.single();
+
+penguinCheckbox.addEventListener("input", () => {
+  const current = penguinCheckbox.value; // e.g., ["Adelie", "Gentoo"]
+  $speciesCheck.update({
+    source: penguinCheckbox,
+    value: current,
+    predicate: vg.sql`species IN (${current.map(vg.literal)})`
+  });
+});
+```
+
+We can now use the modified selection within our visualization layers as if
+checkbox inputs were built into the mosaic library.
+
+```{ojs}
+checkbox_plot = vg.plot(
+    vg.dot(
+        vg.from("penguins", {filterBy: $speciesCheck}),
+        {x: "bill_length_mm", y: "bill_depth_mm"}
+    ),
+    vg.xDomain([30, 60]), // keeps the window ranges fixed
+    vg.yDomain([12, 22]),
+    vg.width(500),
+    vg.height(300)
+)
+
+vg.vconcat([penguinCheckbox, checkbox_plot])
+```
+
+1. $^\dagger$. Here's another example. Suppose instead of simply selecting
+penguins with flipper length below a given value, we wanted to identify those
+with flipper length within a given range. This isn't supported by the default
+`vg.slider`, but it's supported by this
+[range slider widget](https://observablehq.com/@mootari/range-slider). Let's
+import it using the command given on that webpage.
+
+```{ojs}
+import { interval } from "@mootari/range-slider"
+```
+
+The block below defines the slider object, just like we defined the checkbox
+output above.
+
+```{ojs}
+flipperRangeSlider = interval([170, 235], { // min and max range
+  label: "Flipper length",
+  value: [170, 235], // initial values
+  format: ([lo, hi]) => `${Math.round(lo)} - ${Math.round(hi)}` // hide decimals
+})
+```
+
+In this `selection.update()`, we can use the `[lo, hi]` pair that's saved by the
+slider every time its values are changed. the `vg.isBetween` command is a helper
+that automatically constructs a SQL filter based on minimum and maximum values.
+
+```{ojs}
+$flipperRange = vg.Selection.single();
+
+flipperRangeSlider.addEventListener("input", () => {
+  const [lo, hi] = flipperRangeSlider.value;
+  $flipperRange.update({
+    source: flipperRangeSlider,
+    value: [lo, hi],
+    predicate: vg.isBetween("flipper_length_mm", [lo, hi])
+  });
+});
+```
+
+We can highlight the penguins within the selected range as if it were an
+ordinary `vg.slider` input.
+
+```{ojs}
+flipperRangePlot = vg.plot(
+    vg.dot(
+        vg.from("penguins"),
+        {x: "bill_length_mm", y: "bill_depth_mm"}
+    ),
+    vg.highlight({by: $flipperRange, opacity: 0.1}),
+    vg.width(500),
+    vg.height(300)
+)
+
+vg.vconcat([flipperRangeSlider, flipperRangePlot])
+```
+
 
 ## Examples
 

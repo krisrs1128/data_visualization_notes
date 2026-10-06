@@ -28,7 +28,7 @@ Readings [1](https://homes.cs.washington.edu/~jheer/files/idfva-draft.pdf) (Sect
 ## Taxonomy: View Manipulation
 
 1. Besides data and view specification, interactivity can support view
-manipulation. Important actions associated with view specification are,
+manipulation. Important actions associated with view manipulation are,
 
    - **Select** items to focus or operate on.
    - **Navigate** the view to an region of interest.
@@ -61,16 +61,16 @@ graphical queries.
 3. Rather than querying the samples directly, we can query properties of the
 samples. For example, this version of
 [TimeSearcher](https://www.youtube.com/watch?v=VWx1TMcrb74) lets us we can
-search for all lines with slopes within a certain range [doi:10.1145/506443.506460].
+search for all lines with slopes within a certain range [@hochheiser2002].
 
-   {{< video figures/timesearcher.mp4 width=400 >}}
+   {{< video figures/timesearcher.mp4 width=600 >}}
 
 4. In complex data, we often **navigate** to a particular view of interest. Some
 visualizations act like small viewports into a larger display, in which case
 navigation might mean panning and zooming the viewport to the region of
 interest.
 
-   {{< video figures/art_off_the_rails.mp4 width=400 >}}
+   {{< video figures/art_off_the_rails.mp4 width=600 >}}
 
 5. Beyond literal navigation across visualization space, it is often helpful to
 navigate across resolutions.  Focus-plus-context visualizations include a
@@ -81,13 +81,13 @@ losing the context. Some examples,
    - To navigate a very detailed map, we can show an overview of the main landmarks. By brushing on this overview map, we update another panel giving all the details within that brushed region. The graphical query is brushing on the overview map.
 
    This principle is summarized by Shneiderman's Mantra: Overview first, zoom
-   and filter, then details-on-demand [doi:10.5555/832277.834354].
+   and filter, then details-on-demand [@shneiderman1996].
 
 6. Focus-plus-context only makes sense when an overview is useful. A laywer
 interested in a particular case doesn't need an overview of all cases ever
 litigated, instead they need to navigate to cases similar to the one they are
 working on. In this case, an alternative to Shneiderman's mantra is "Search,
-Show Context, Expand on Demand" [doi:10.1109/TVCG.2009.108].
+Show Context, Expand on Demand" [@vanham2009].
 
    ![](figures/search_and_expand.png){width=700}
 
@@ -131,10 +131,9 @@ point in the design space. It's important to explore the space broadly before
 committing to and refining one. This means creating many rough prototypes to
 understand the tradeoffs in their choice of graphical encodings and interaction
 dynamics. Only after the differences are well-understood do we have enough
-information to decide on one [https://www.cs.ubc.ca/labs/imager/tr/2012/dsm/dsm-talk.pdf and doi:https://dl.acm.org/doi/10.1109/TVCG.2012.213].
+information to decide on one [@sedlmair2012; [talk slides](https://www.cs.ubc.ca/labs/imager/tr/2012/dsm/dsm-talk.pdf)].
 
        {{< video figures/design_space.mp4 width=500 >}}
-    ![]
 
 ## Mosaic Interactors
 

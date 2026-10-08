@@ -133,7 +133,7 @@ understand the tradeoffs in their choice of graphical encodings and interaction
 dynamics. Only after the differences are well-understood do we have enough
 information to decide on one [@sedlmair2012; [talk slides](https://www.cs.ubc.ca/labs/imager/tr/2012/dsm/dsm-talk.pdf)].
 
-       {{< video figures/design_space.mp4 width=500 >}}
+    {{< video figures/design_space.mp4 width=500 >}}
 
 ## Mosaic Interactors
 
@@ -544,9 +544,10 @@ vg = {
   vg.coordinator().databaseConnector(wasm);
   await vg.coordinator().exec([
     vg.loadCSV("penguins", path("penguins.csv")),
-    // a copy of penguins with a row id, used for labeling
+    // adds an ID variable for the "nearest" plot
     "CREATE OR REPLACE TABLE penguins_id AS SELECT row_number() OVER () AS id, * FROM penguins",
-    vg.loadParquet("weather", "https://raw.githubusercontent.com/uwdata/mosaic/main/data/seattle-weather.parquet")
+    vg.loadParquet("weather", "https://raw.githubusercontent.com/uwdata/mosaic/main/data/seattle-weather.parquet"),
+    vg.loadCSV("cities", path("urbanization.csv"), {types: {year: "VARCHAR"}}),
   ]);
   return vg;
 }
@@ -562,8 +563,8 @@ colors = vg.Param.array(["#e7ba52", "#a7a7a7", "#aec7e8", "#1f77b4", "#9467bd"])
 
 24. Before adding interactivity, let's create a static version. This forces us to
 define the basic graphical marks (like dots) and the associated encodings (e.g.,
-date $\to$ $x$ position, temperature $\to$ $y$ position). We combine the panels
-into a stacked layout using `vconcat`.
+date $\to$ $x$ position, temperature $\to$ $y$ position, size $\to$ radius). We
+combine the panels into a stacked layout using `vconcat`.
 
 ```{ojs}
 vg.vconcat(
@@ -579,7 +580,8 @@ vg.vconcat(
     ),
     vg.colorLegend(),
     vg.colorDomain(domain),
-    vg.colorRange(colors)
+    vg.colorRange(colors),
+    vg.rRange([2, 10]) // make sure precipitation = 0 is visible
   ),
   vg.plot(
     vg.barX(
@@ -587,6 +589,7 @@ vg.vconcat(
       {x: vg.count(), y: "weather", fill: "weather"}
     ),
     vg.yDomain(domain),
+    vg.yLabel(null),
     vg.colorDomain(domain),
     vg.colorRange(colors)
   )
@@ -634,7 +637,9 @@ vg.vconcat(
     vg.colorLegend(),
     vg.xyDomain(vg.Fixed),
     vg.colorDomain(domain),
-    vg.colorRange(colors)
+    vg.colorRange(colors),
+    vg.rDomain(vg.Fixed),
+    vg.rRange([2, 10])
   ),
   vg.plot(
     vg.barX(
@@ -642,6 +647,7 @@ vg.vconcat(
       {x: vg.count(), y: "weather", fill: "weather"}
     ),
     vg.yDomain(domain),
+    vg.yLabel(null),
     vg.colorDomain(domain),
     vg.colorRange(colors)
   )
@@ -706,7 +712,9 @@ vg.vconcat(
     vg.colorLegend(),
     vg.xyDomain(vg.Fixed),
     vg.colorDomain(domain),
-    vg.colorRange(colors)
+    vg.colorRange(colors),
+    vg.rDomain(vg.Fixed),
+    vg.rRange([2, 10])
   ),
   vg.plot(
     vg.barX(
@@ -719,6 +727,7 @@ vg.vconcat(
     ),
     vg.xDomain(vg.Fixed),
     vg.yDomain(domain),
+    vg.yLabel(null),
     vg.colorDomain(domain),
     vg.colorRange(colors)
   )
@@ -752,7 +761,8 @@ vg.vconcat(
     vg.xyDomain(vg.Fixed),
     vg.colorDomain(domain),
     vg.colorRange(colors),
-    vg.rDomain(vg.Fixed)
+    vg.rDomain(vg.Fixed),
+    vg.rRange([2, 10])
   ),
   vg.plot(
     vg.barX(
@@ -767,8 +777,170 @@ vg.vconcat(
     vg.highlight({by: weather_type_v3}),
     vg.xDomain(vg.Fixed),
     vg.yDomain(domain),
+    vg.yLabel(null),
     vg.colorDomain(domain),
     vg.colorRange(colors)
   )
 );
+```
+
+## Cities Example
+
+28. Let's next recreate one of the panels from the
+["Urbanization in East Asia"](https://nbremer.github.io/urbanization/)
+visualization by Nadieh Bremer.  This visualization was the winning submission
+to the World Bank's Visualizing Urban Expansion Challenge. The figure we'll
+focus on shows the change in city populations between 2000 and 2010.
+
+   {{< video figures/urbanization-bremer.mp4 width=700 >}}
+
+   Viewed statically, this is a multi-form visualization. A line plot draws
+   attention to the change in population for each city. A bar plot emphasizes each
+   country's the total urban population.
+
+29. The visualization applies two forms of interactivity. First, hovering over
+countries in the bar plot filters the associated lines to just that country's
+cities. This is a form of view coordination. Second, hovering over individual
+lines focuses the label on just that city. This is a form of selection.
+
+30. We'll implement a version of this in mosaic vgplot. Let's start with the bar
+plot. Each country is represented using the maximum density of any of its cities
+in 2010, just like the original. Unlike the original, we won't encode year using
+color. This lets us avoid creating overlapping and semi-transparent bars. The
+`marginLeft` layer makes sure that the country names don't get cut off.
+
+```{ojs}
+bars_static = vg.plot(
+  vg.barX(
+    vg.from("cities"),
+    {x: vg.max("country_density_2010"), y: "country", fill: "#828080", sort: {y: "-x"}}
+  ),
+  vg.xLabel("Urban density, 2010 (people / km²)"),
+  vg.yLabel(null),
+  vg.marginLeft(110),
+  vg.width(300),
+  vg.height(500),
+)
+```
+
+31. $^\dagger$ For the line graph, we need both the lines and the labels for each
+city. The original `cities` data has columns `year` and `density` that can be
+encoded into the x, y positions for the `lineY` layer. The z encoding ensures
+that we have a separate line for each city (remember from our graphical encoding
+lecture that it is like `group` in ggplot2's `geom_line`).
+
+   For the labels, we have to use a small trick. The issue is that we want to have
+   the names for 2000 to be offset to the left, while those for 2010 should be
+   offset to the right. We can accomplish this using the `dx` option in `vg.text`,
+   but these need to be different for the two years depending on whether we're
+   nudging left or right. To this end, we create two different layers with the two
+   different nudging options. Each layer only shows one of the years. This is
+   accomplished by selecting either the first or last row in each city group using
+   the `select`.
+
+```{ojs}
+slope_static = vg.plot(
+  vg.lineY(
+    vg.from("cities"),
+    {x: "year", y: "density", z: "city_id", stroke: "#828080", strokeOpacity: 0.4, marker: "circle"}
+  ),
+
+  // city names at the 2000 end
+  vg.text(
+    vg.from("cities"),
+    {x: "year", y: "density", z: "city_id", text: "city", select: "first", textAnchor: "end", dx: -8}
+  ),
+
+  // city names at the 2010 end
+  vg.text(
+    vg.from("cities"),
+    {x: "year", y: "density", z: "city_id", text: "city", select: "last", textAnchor: "start", dx: 8}
+  ),
+
+  vg.xScale("point"), // years are categories
+  vg.marginLeft(90),
+  vg.width(480),
+  vg.height(520)
+)
+```
+
+We can combine the two plots using an `hconcat`.
+
+```{ojs}
+vg.hconcat(slope_static, bars_static)
+```
+
+32. Now let's add interactivity. Remember that clicking on a country's bar
+selects just the cities in that country, and hovering on a specific city
+highlights it. This entails two types of selection.
+
+```{ojs}
+clicked_country = vg.Selection.single()
+hovered_city = vg.Selection.single()
+```
+
+33. Both types of selection are controlled by graphical queries. `toggleY` allows
+us to click and select a country, and `vg.highlight` gets that bar to stand out.
+In the line graph (the code block after this one), we add a `filterBy` so that
+only the selected country's lines and labels appear.
+
+```{ojs}
+bars = vg.plot(
+  vg.barX(
+    vg.from("cities"),
+    {x: vg.max("country_density_2010"), y: "country", fill: "#828080", sort: {y: "-x"}}
+  ),
+  vg.toggleY({as: clicked_country}),
+  vg.highlight({by: clicked_country}),
+  vg.xLabel("Urban density, 2010 (people / km²)"),
+  vg.yLabel(null),
+  vg.width(300),
+  vg.height(500),
+  vg.marginLeft(110)
+)
+```
+
+34. $^\dagger$ To figure out the closest city to the user's mouse, we use
+`nearest`. Both the lines and the text use `vg.highlight` to respond to changes
+in the hovered city. One subtlety is that we have to use the `channel: ["z"]`
+option to nearest so that it focuses on the `z` channel, which in this case is
+`city_id`. This will allow us to select the closest city to the mouse. If we
+didn't include this, then it would be looking at the closest point on either end
+of the line, rather than the line itself.
+
+```{ojs}
+slope = vg.plot(
+  vg.lineY(
+    vg.from("cities", {filterBy: clicked_country}),
+    {x: "year", y: "density", z: "city_id", stroke: "#828080", strokeOpacity: 0.4, marker: "circle"}
+  ),
+  vg.nearest({as: hovered_city, channels: ["z"]}),
+  vg.highlight({by: hovered_city, opacity: 0.1}),
+
+  // city names at the 2000 end
+  vg.text(
+    vg.from("cities", {filterBy: clicked_country}),
+    {x: "year", y: "density", z: "city_id", text: "city", select: "first", textAnchor: "end", dx: -8}
+  ),
+  vg.highlight({by: hovered_city}),
+
+  // city names at the 2010 end
+  vg.text(
+    vg.from("cities", {filterBy: clicked_country}),
+    {x: "year", y: "density", z: "city_id", text: "city", select: "last", textAnchor: "start", dx: 8}
+  ),
+  vg.highlight({by: hovered_city}),
+
+  vg.xScale("point"), // years are categories
+  vg.marginLeft(70),
+  vg.width(480),
+  vg.height(520)
+)
+```
+
+35. Putting all the pieces together, we can build a version of Bremer's
+award-winning plot.
+
+```{ojs}
+vg.hconcat(slope, bars)
 ```

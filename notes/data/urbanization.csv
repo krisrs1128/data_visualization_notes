@@ -1,0 +1,1739 @@
+city_id,city,country,year,density,country_density_2010
+1,Pearl River Delta,China,2000,5993,5339
+1,Pearl River Delta,China,2010,5992,5339
+2,Tokyo,Japan,2000,5097,4734
+2,Tokyo,Japan,2010,5707,4734
+3,Shanghai,China,2000,8735,5339
+3,Shanghai,China,2010,6949,5339
+4,Jakarta,Indonesia,2000,12174,9421
+4,Jakarta,Indonesia,2010,14643,9421
+5,Beijing,China,2000,5887,5339
+5,Beijing,China,2010,6151,5339
+6,Manila,Philippines,2000,11916,10314
+6,Manila,Philippines,2010,12958,10314
+7,Seoul,Republic of Korea,2000,13378,10511
+7,Seoul,Republic of Korea,2010,13342,10511
+8,Osaka,Japan,2000,5196,4734
+8,Osaka,Japan,2010,5922,4734
+9,Bangkok,Thailand,2000,4098,4344
+9,Bangkok,Thailand,2010,4495,4344
+10,Tianjin,China,2000,5561,5339
+10,Tianjin,China,2010,5311,5339
+11,Shantou,China,2000,6826,5339
+11,Shantou,China,2010,7006,5339
+12,Chengdu,China,2000,7662,5339
+12,Chengdu,China,2010,7787,5339
+13,Ho Chi Minh City,Vietnam,2000,9671,7729
+13,Ho Chi Minh City,Vietnam,2010,9528,7729
+14,Nagoya,Japan,2000,3594,4734
+14,Nagoya,Japan,2010,3946,4734
+15,Wuhan,China,2000,7677,5339
+15,Wuhan,China,2010,7768,5339
+16,Hong Kong SAR,China,2000,33232,5339
+16,Hong Kong SAR,China,2010,32129,5339
+17,Bandung,Indonesia,2000,11068,9421
+17,Bandung,Indonesia,2010,13571,9421
+18,Shenyang,China,2000,7162,5339
+18,Shenyang,China,2010,6673,5339
+19,Taipei City,"Taiwan, China",2000,13001,7391
+19,Taipei City,"Taiwan, China",2010,11309,7391
+20,Hangzhou,China,2000,6687,5339
+20,Hangzhou,China,2010,4844,5339
+21,Surabaya,Indonesia,2000,6822,9421
+21,Surabaya,Indonesia,2010,8410,9421
+22,Kuala Lumpur,Malaysia,2000,2579,3272
+22,Kuala Lumpur,Malaysia,2010,3306,3272
+23,Xi'an,China,2000,8806,5339
+23,Xi'an,China,2010,7801,5339
+24,Ha Noi,Vietnam,2000,6049,7729
+24,Ha Noi,Vietnam,2010,6634,7729
+25,Chongqing,China,2000,10218,5339
+25,Chongqing,China,2010,8497,5339
+26,Quanzhou,China,2000,5368,5339
+26,Quanzhou,China,2010,5184,5339
+27,Nanjing,China,2000,11798,5339
+27,Nanjing,China,2010,10051,5339
+28,Xiamen,China,2000,4747,5339
+28,Xiamen,China,2010,5491,5339
+29,Taiyuan,China,2000,5637,5339
+29,Taiyuan,China,2010,5830,5339
+30,Qingdao,China,2000,4717,5339
+30,Qingdao,China,2010,5178,5339
+31,Medan,Indonesia,2000,6649,9421
+31,Medan,Indonesia,2010,8624,9421
+32,Harbin,China,2000,6374,5339
+32,Harbin,China,2010,7153,5339
+33,Zhengzhou,China,2000,8179,5339
+33,Zhengzhou,China,2010,9414,5339
+34,Changsha,China,2000,8954,5339
+34,Changsha,China,2010,8290,5339
+35,Hefei,China,2000,7717,5339
+35,Hefei,China,2010,8937,5339
+36,Anshan,China,2000,4515,5339
+36,Anshan,China,2010,4122,5339
+37,Dalian,China,2000,5550,5339
+37,Dalian,China,2010,6339,5339
+38,Changchun,China,2000,4058,5339
+38,Changchun,China,2010,4534,5339
+39,Yangon City,Myanmar,2000,7113,7510
+39,Yangon City,Myanmar,2010,8771,7510
+40,Singapore,Singapore,2000,7529,8457
+40,Singapore,Singapore,2010,8457,8457
+41,Shijiazhuang,China,2000,5836,5339
+41,Shijiazhuang,China,2010,6826,5339
+42,Fuzhou,China,2000,6576,5339
+42,Fuzhou,China,2010,6445,5339
+43,Kunming,China,2000,7469,5339
+43,Kunming,China,2010,7097,5339
+44,Busan,Republic of Korea,2000,11798,10511
+44,Busan,Republic of Korea,2010,11384,10511
+45,Jinan,China,2000,8792,5339
+45,Jinan,China,2010,9694,5339
+46,Wenzhou,China,2000,8247,5339
+46,Wenzhou,China,2010,9767,5339
+47,Semarang,Indonesia,2000,6155,9421
+47,Semarang,Indonesia,2010,7832,9421
+48,Wuxi,China,2000,7520,5339
+48,Wuxi,China,2010,5744,5339
+49,Ningbo,China,2000,5010,5339
+49,Ningbo,China,2010,4370,5339
+50,Kaohsiung,"Taiwan, China",2000,6834,7391
+50,Kaohsiung,"Taiwan, China",2010,6797,7391
+51,Changzhou,China,2000,7706,5339
+51,Changzhou,China,2010,5654,5339
+52,Nanchang,China,2000,7456,5339
+52,Nanchang,China,2010,7400,5339
+53,Urumqi,China,2000,5015,5339
+53,Urumqi,China,2010,5279,5339
+54,Zibo,China,2000,4380,5339
+54,Zibo,China,2010,4569,5339
+55,Taizhou,China,2000,7882,5339
+55,Taizhou,China,2010,6179,5339
+56,Malang,Indonesia,2000,6544,9421
+56,Malang,Indonesia,2010,8463,9421
+57,Lanzhou,China,2000,9910,5339
+57,Lanzhou,China,2010,11264,5339
+58,Xinxiang,China,2000,5304,5339
+58,Xinxiang,China,2010,5393,5339
+59,Surakarta,Indonesia,2000,4225,9421
+59,Surakarta,Indonesia,2010,5615,9421
+60,Tegal,Indonesia,2000,6640,9421
+60,Tegal,Indonesia,2010,8480,9421
+61,Guiyang,China,2000,13924,5339
+61,Guiyang,China,2010,13997,5339
+62,Tangshan,China,2000,4359,5339
+62,Tangshan,China,2010,4004,5339
+63,Fukuoka,Japan,2000,5058,4734
+63,Fukuoka,Japan,2010,5592,4734
+64,Xuzhou,China,2000,5949,5339
+64,Xuzhou,China,2010,5873,5339
+65,Baotou,China,2000,5058,5339
+65,Baotou,China,2010,5623,5339
+66,Taegu,Republic of Korea,2000,7035,10511
+66,Taegu,Republic of Korea,2010,7227,10511
+67,Luoyang,China,2000,8587,5339
+67,Luoyang,China,2010,9539,5339
+68,Baoding,China,2000,3454,5339
+68,Baoding,China,2010,3713,5339
+69,Huhehaote,China,2000,5196,5339
+69,Huhehaote,China,2010,6278,5339
+70,Taichung,"Taiwan, China",2000,8230,7391
+70,Taichung,"Taiwan, China",2010,7445,7391
+71,Nanning,China,2000,6663,5339
+71,Nanning,China,2010,7642,5339
+72,Yogyakarta,Indonesia,2000,5799,9421
+72,Yogyakarta,Indonesia,2010,7701,9421
+73,Cixi,China,2000,5424,5339
+73,Cixi,China,2010,4000,5339
+74,Sapporo,Japan,2000,4763,4734
+74,Sapporo,Japan,2010,5414,4734
+75,George Town,Malaysia,2000,3399,3272
+75,George Town,Malaysia,2010,4253,3272
+76,Datong,China,2000,4288,5339
+76,Datong,China,2010,4737,5339
+77,Cirebon,Indonesia,2000,7611,9421
+77,Cirebon,Indonesia,2010,9683,9421
+78,Linyi,China,2000,4886,5339
+78,Linyi,China,2010,4753,5339
+79,Palembang,Indonesia,2000,5998,9421
+79,Palembang,Indonesia,2010,7806,9421
+80,Tasikmalaya,Indonesia,2000,13515,9421
+80,Tasikmalaya,Indonesia,2010,17090,9421
+81,Makassar,Indonesia,2000,9684,9421
+81,Makassar,Indonesia,2010,11464,9421
+82,Handan,China,2000,5824,5339
+82,Handan,China,2010,6296,5339
+83,Huaiyin,China,2000,4442,5339
+83,Huaiyin,China,2010,4781,5339
+84,Weifang,China,2000,3391,5339
+84,Weifang,China,2010,4864,5339
+85,Kitakyushu,Japan,2000,3846,4734
+85,Kitakyushu,Japan,2010,4141,4734
+86,Cebu,Philippines,2000,8268,10314
+86,Cebu,Philippines,2010,9461,10314
+87,Changzhi,China,2000,4716,5339
+87,Changzhi,China,2010,4881,5339
+88,Denpasar,Indonesia,2000,5098,9421
+88,Denpasar,Indonesia,2010,6488,9421
+89,Anyang,China,2000,5648,5339
+89,Anyang,China,2010,6056,5339
+90,Jiaozuo,China,2000,4608,5339
+90,Jiaozuo,China,2010,4362,5339
+91,Xining,China,2000,7267,5339
+91,Xining,China,2010,6643,5339
+92,Phnom Penh,Cambodia,2000,8546,8596
+92,Phnom Penh,Cambodia,2010,8596,8596
+93,Tongzhou,China,2000,9413,5339
+93,Tongzhou,China,2010,7551,5339
+94,Haikou,China,2000,5706,5339
+94,Haikou,China,2010,7175,5339
+95,P'yongyang,DPR Korea,2000,9934,9081
+95,P'yongyang,DPR Korea,2010,10482,9081
+96,Jiexiu,China,2000,3457,5339
+96,Jiexiu,China,2010,3352,5339
+97,Yantai,China,2000,4556,5339
+97,Yantai,China,2010,5553,5339
+98,Jember,Indonesia,2000,4494,9421
+98,Jember,Indonesia,2010,5890,9421
+99,Sukabumi,Indonesia,2000,11758,9421
+99,Sukabumi,Indonesia,2010,14201,9421
+100,Liuzhou,China,2000,8716,5339
+100,Liuzhou,China,2010,8617,5339
+101,Johor Bahru,Malaysia,2000,3026,3272
+101,Johor Bahru,Malaysia,2010,3116,3272
+102,Putian,China,2000,3806,5339
+102,Putian,China,2010,3603,5339
+103,Jilin,China,2000,4433,5339
+103,Jilin,China,2010,4318,5339
+104,Kediri,Indonesia,2000,3646,9421
+104,Kediri,Indonesia,2010,4586,9421
+105,Maoming,China,2000,7294,5339
+105,Maoming,China,2010,8241,5339
+106,Qinhuangdao,China,2000,3784,5339
+106,Qinhuangdao,China,2010,4043,5339
+107,Yingkou,China,2000,2757,5339
+107,Yingkou,China,2010,2778,5339
+108,Xingtai,China,2000,5620,5339
+108,Xingtai,China,2010,6003,5339
+109,Hai Phong,Vietnam,2000,5066,7729
+109,Hai Phong,Vietnam,2010,6144,7729
+110,Yinchuan,China,2000,8944,5339
+110,Yinchuan,China,2010,7736,5339
+111,Lingxi,China,2000,11413,5339
+111,Lingxi,China,2010,8383,5339
+112,Xiangtan,China,2000,9155,5339
+112,Xiangtan,China,2010,7633,5339
+113,Jiangyin,China,2000,6846,5339
+113,Jiangyin,China,2010,4254,5339
+114,Daqing,China,2000,3995,5339
+114,Daqing,China,2010,4704,5339
+115,Jinzhou,China,2000,4198,5339
+115,Jinzhou,China,2010,4403,5339
+116,Zhangjiakou,China,2000,4405,5339
+116,Zhangjiakou,China,2010,4706,5339
+117,Garut,Indonesia,2000,19671,9421
+117,Garut,Indonesia,2010,24749,9421
+118,Mandalay,Myanmar,2000,7375,7510
+118,Mandalay,Myanmar,2010,8709,7510
+119,Sendai,Japan,2000,4077,4734
+119,Sendai,Japan,2010,4439,4734
+120,Cikampek,Indonesia,2000,8295,9421
+120,Cikampek,Indonesia,2010,10556,9421
+121,Kaifeng,China,2000,5148,5339
+121,Kaifeng,China,2010,5415,5339
+122,Dandong,China,2000,5596,5339
+122,Dandong,China,2010,5196,5339
+123,Huaibei,China,2000,4570,5339
+123,Huaibei,China,2010,5653,5339
+124,Chifeng,China,2000,4776,5339
+124,Chifeng,China,2010,4365,5339
+125,Cianjur,Indonesia,2000,11854,9421
+125,Cianjur,Indonesia,2010,15415,9421
+126,Kwangju,Republic of Korea,2000,10098,10511
+126,Kwangju,Republic of Korea,2010,9634,10511
+127,Huainan,China,2000,6492,5339
+127,Huainan,China,2010,8421,5339
+128,Changshu,China,2000,5902,5339
+128,Changshu,China,2010,4151,5339
+129,Yungkang,"Taiwan, China",2000,4481,7391
+129,Yungkang,"Taiwan, China",2010,4464,7391
+130,Cilacap,Indonesia,2000,7679,9421
+130,Cilacap,Indonesia,2010,9978,9421
+131,Zhanjiang,China,2000,7052,5339
+131,Zhanjiang,China,2010,7712,5339
+132,Yangzhou,China,2000,11159,5339
+132,Yangzhou,China,2010,7129,5339
+133,Matsumoto,Japan,2000,12206,4734
+133,Matsumoto,Japan,2010,13279,4734
+134,Bandar Lampung,Indonesia,2000,10711,9421
+134,Bandar Lampung,Indonesia,2010,12919,9421
+135,Madiun,Indonesia,2000,4247,9421
+135,Madiun,Indonesia,2010,5352,9421
+136,Wuhu,China,2000,8802,5339
+136,Wuhu,China,2010,9633,5339
+137,Puyang,China,2000,4287,5339
+137,Puyang,China,2010,4945,5339
+138,Tai'an,China,2000,6129,5339
+138,Tai'an,China,2010,6631,5339
+139,Hengyang,China,2000,7852,5339
+139,Hengyang,China,2010,8300,5339
+140,Purwokerto,Indonesia,2000,5144,9421
+140,Purwokerto,Indonesia,2010,6708,9421
+141,Nara,Japan,2000,4021,4734
+141,Nara,Japan,2010,4206,4734
+142,Jining,China,2000,8743,5339
+142,Jining,China,2010,8490,5339
+143,Taejon,Republic of Korea,2000,9624,10511
+143,Taejon,Republic of Korea,2010,10432,10511
+144,Rui'an,China,2000,8037,5339
+144,Rui'an,China,2010,7397,5339
+145,Zhuzhou,China,2000,8939,5339
+145,Zhuzhou,China,2010,8929,5339
+146,Jiaonan,China,2000,3307,5339
+146,Jiaonan,China,2010,4402,5339
+147,Ulaanbaatar,Mongolia,2000,3008,3419
+147,Ulaanbaatar,Mongolia,2010,3419,3419
+148,Huangshi,China,2000,8411,5339
+148,Huangshi,China,2010,7981,5339
+149,Xiangfan,China,2000,4235,5339
+149,Xiangfan,China,2010,4170,5339
+150,Tengzhou,China,2000,3759,5339
+150,Tengzhou,China,2010,3725,5339
+151,Yueqing,China,2000,7126,5339
+151,Yueqing,China,2010,7127,5339
+152,Yining,China,2000,2506,5339
+152,Yining,China,2010,2698,5339
+153,Otsu,Japan,2000,5580,4734
+153,Otsu,Japan,2010,6123,4734
+154,Zhangjiagang,China,2000,6761,5339
+154,Zhangjiagang,China,2010,4501,5339
+155,Da Nang,Vietnam,2000,8967,7729
+155,Da Nang,Vietnam,2010,9870,7729
+156,Qiqiha'er,China,2000,6565,5339
+156,Qiqiha'er,China,2010,6782,5339
+157,Mudanjiang,China,2000,3329,5339
+157,Mudanjiang,China,2010,3670,5339
+158,Guilin,China,2000,7515,5339
+158,Guilin,China,2010,7692,5339
+159,Yiwu,China,2000,5031,5339
+159,Yiwu,China,2010,5167,5339
+160,Fuqing,China,2000,3020,5339
+160,Fuqing,China,2010,2760,5339
+161,Naha,Japan,2000,4659,4734
+161,Naha,Japan,2010,5183,4734
+162,Baoji,China,2000,7656,5339
+162,Baoji,China,2010,6956,5339
+163,Gaizhou,China,2000,3859,5339
+163,Gaizhou,China,2010,3804,5339
+164,Benxi,China,2000,6552,5339
+164,Benxi,China,2010,6184,5339
+165,Ulsan,Republic of Korea,2000,8375,10511
+165,Ulsan,Republic of Korea,2010,8392,10511
+166,Yueyang,China,2000,7092,5339
+166,Yueyang,China,2010,7334,5339
+167,Batam,Indonesia,2000,6773,9421
+167,Batam,Indonesia,2010,5320,9421
+168,Davao,Philippines,2000,9353,10314
+168,Davao,Philippines,2010,10835,10314
+169,Hiroshima,Japan,2000,4748,4734
+169,Hiroshima,Japan,2010,5173,4734
+170,Keshi,China,2000,8369,5339
+170,Keshi,China,2010,6626,5339
+171,Banyuwangi,Indonesia,2000,8755,9421
+171,Banyuwangi,Indonesia,2010,11543,9421
+172,Suqian,China,2000,6925,5339
+172,Suqian,China,2010,10287,5339
+173,Pingxiang,China,2000,9992,5339
+173,Pingxiang,China,2010,8958,5339
+174,Dongying,China,2000,1648,5339
+174,Dongying,China,2010,1942,5339
+175,Yangquan,China,2000,6796,5339
+175,Yangquan,China,2010,5249,5339
+176,Ma'anshan,China,2000,7299,5339
+176,Ma'anshan,China,2010,6241,5339
+177,Banjarmasin,Indonesia,2000,6298,9421
+177,Banjarmasin,Indonesia,2010,7610,9421
+178,Pekan Baru,Indonesia,2000,4206,9421
+178,Pekan Baru,Indonesia,2010,5473,9421
+179,Yichang,China,2000,9009,5339
+179,Yichang,China,2010,8949,5339
+180,Blitar,Indonesia,2000,4815,9421
+180,Blitar,Indonesia,2010,6228,9421
+181,Fuxin,China,2000,3396,5339
+181,Fuxin,China,2010,3059,5339
+182,Dingzhou,China,2000,3188,5339
+182,Dingzhou,China,2010,3253,5339
+183,Pingdingshan,China,2000,7650,5339
+183,Pingdingshan,China,2010,7737,5339
+184,Zhenjiang,China,2000,7518,5339
+184,Zhenjiang,China,2010,5071,5339
+185,Rizhao,China,2000,3612,5339
+185,Rizhao,China,2010,3799,5339
+186,Pekalongan,Indonesia,2000,10828,9421
+186,Pekalongan,Indonesia,2010,14028,9421
+187,Shouguang,China,2000,2142,5339
+187,Shouguang,China,2010,2088,5339
+188,Liaocheng,China,2000,3645,5339
+188,Liaocheng,China,2010,4582,5339
+189,Klaten,Indonesia,2000,5203,9421
+189,Klaten,Indonesia,2010,6893,9421
+190,Ipoh,Malaysia,2000,1607,3272
+190,Ipoh,Malaysia,2010,2130,3272
+191,Changde,China,2000,9107,5339
+191,Changde,China,2010,7379,5339
+192,Panjin,China,2000,3225,5339
+192,Panjin,China,2010,3125,5339
+193,Kanazawa,Japan,2000,3308,4734
+193,Kanazawa,Japan,2010,3623,4734
+194,Melaka,Malaysia,2000,2247,3272
+194,Melaka,Malaysia,2010,2969,3272
+195,Heze,China,2000,3260,5339
+195,Heze,China,2010,3364,5339
+196,Zunhua,China,2000,3274,5339
+196,Zunhua,China,2010,2354,5339
+197,Jombang,Indonesia,2000,3568,9421
+197,Jombang,Indonesia,2010,4656,9421
+198,Linfen,China,2000,4083,5339
+198,Linfen,China,2010,5096,5339
+199,Fuji,Japan,2000,4218,4734
+199,Fuji,Japan,2010,4582,4734
+200,Bangbu,China,2000,7667,5339
+200,Bangbu,China,2010,8720,5339
+201,Mianyang,China,2000,7242,5339
+201,Mianyang,China,2010,6177,5339
+202,Nanyang,China,2000,4573,5339
+202,Nanyang,China,2010,5213,5339
+203,Cangzhou,China,2000,3978,5339
+203,Cangzhou,China,2010,4316,5339
+204,Gaobeidian,China,2000,2994,5339
+204,Gaobeidian,China,2010,2982,5339
+205,Ganzhou,China,2000,4960,5339
+205,Ganzhou,China,2010,4482,5339
+206,Kumamoto,Japan,2000,3677,4734
+206,Kumamoto,Japan,2010,3984,4734
+207,Pemalang,Indonesia,2000,8344,9421
+207,Pemalang,Indonesia,2010,10587,9421
+208,Jinhua,China,2000,3988,5339
+208,Jinhua,China,2010,4234,5339
+209,Shangqiu,China,2000,3876,5339
+209,Shangqiu,China,2010,4149,5339
+210,Yancheng,China,2000,11140,5339
+210,Yancheng,China,2010,9652,5339
+211,Zhuji,China,2000,4192,5339
+211,Zhuji,China,2010,3609,5339
+212,Kebumen,Indonesia,2000,5134,9421
+212,Kebumen,Indonesia,2010,6793,9421
+213,Wafangdian,China,2000,3251,5339
+213,Wafangdian,China,2010,2941,5339
+214,Kota Kinabalu,Malaysia,2000,2763,3272
+214,Kota Kinabalu,Malaysia,2010,3700,3272
+215,Yixing,China,2000,6283,5339
+215,Yixing,China,2010,4117,5339
+216,Jiaxing,China,2000,6795,5339
+216,Jiaxing,China,2010,5775,5339
+217,Angeles City,Philippines,2000,3135,10314
+217,Angeles City,Philippines,2010,3678,10314
+218,Xuchang,China,2000,4947,5339
+218,Xuchang,China,2010,5694,5339
+219,Hamamatsu,Japan,2000,2190,4734
+219,Hamamatsu,Japan,2010,2312,4734
+220,Shaoyang,China,2000,8672,5339
+220,Shaoyang,China,2010,8133,5339
+221,Hsinchu,"Taiwan, China",2000,6914,7391
+221,Hsinchu,"Taiwan, China",2010,5683,7391
+222,Probolinggo,Indonesia,2000,6106,9421
+222,Probolinggo,Indonesia,2010,7705,9421
+223,Mataram,Indonesia,2000,8912,9421
+223,Mataram,Indonesia,2010,11540,9421
+224,Luohe,China,2000,4252,5339
+224,Luohe,China,2010,4805,5339
+225,Huzhou,China,2000,6142,5339
+225,Huzhou,China,2010,4899,5339
+226,Bojonegoro,Indonesia,2000,3060,9421
+226,Bojonegoro,Indonesia,2010,4020,9421
+227,Subang,Indonesia,2000,5563,9421
+227,Subang,Indonesia,2010,7312,9421
+228,Weihai,China,2000,4807,5339
+228,Weihai,China,2010,5995,5339
+229,Padang,Indonesia,2000,8449,9421
+229,Padang,Indonesia,2010,11013,9421
+230,Samarinda,Indonesia,2000,8438,9421
+230,Samarinda,Indonesia,2010,11148,9421
+231,Guigang,China,2000,4982,5339
+231,Guigang,China,2010,4402,5339
+232,Siping,China,2000,3672,5339
+232,Siping,China,2010,3848,5339
+233,Anqing,China,2000,10203,5339
+233,Anqing,China,2010,9990,5339
+234,Mojokerto,Indonesia,2000,11175,9421
+234,Mojokerto,Indonesia,2010,13841,9421
+235,Tulungagung,Indonesia,2000,5421,9421
+235,Tulungagung,Indonesia,2010,6841,9421
+236,Xintai,China,2000,5256,5339
+236,Xintai,China,2010,5068,5339
+237,Leshan,China,2000,4569,5339
+237,Leshan,China,2010,4290,5339
+238,Zhujiang,China,2000,5948,5339
+238,Zhujiang,China,2010,5623,5339
+239,Buon Ma Thuot,Vietnam,2000,4410,7729
+239,Buon Ma Thuot,Vietnam,2010,6045,7729
+240,Jincheng,China,2000,4652,5339
+240,Jincheng,China,2010,5650,5339
+241,Jiamusi,China,2000,4700,5339
+241,Jiamusi,China,2010,4508,5339
+242,Mito,Japan,2000,2439,4734
+242,Mito,Japan,2010,2694,4734
+243,Yangjiang,China,2000,6272,5339
+243,Yangjiang,China,2010,6144,5339
+244,Jingzhou,China,2000,6731,5339
+244,Jingzhou,China,2010,6421,5339
+245,Fuyang,China,2000,9597,5339
+245,Fuyang,China,2010,9226,5339
+246,Yiyang,China,2000,8323,5339
+246,Yiyang,China,2010,7160,5339
+247,Suzhou,China,2000,3074,5339
+247,Suzhou,China,2010,3161,5339
+248,Zigong,China,2000,10972,5339
+248,Zigong,China,2010,11733,5339
+249,Hai Du'o'ng,Vietnam,2000,3061,7729
+249,Hai Du'o'ng,Vietnam,2010,3986,7729
+250,Linqing,China,2000,4148,5339
+250,Linqing,China,2010,4348,5339
+251,Toyama,Japan,2000,2289,4734
+251,Toyama,Japan,2010,2443,4734
+252,Lufeng,China,2000,5549,5339
+252,Lufeng,China,2010,6327,5339
+253,Changwon,Republic of Korea,2000,8535,10511
+253,Changwon,Republic of Korea,2010,8683,10511
+254,Zunyi,China,2000,12909,5339
+254,Zunyi,China,2010,9899,5339
+255,Jixi,China,2000,4803,5339
+255,Jixi,China,2010,4407,5339
+256,Kuching,Malaysia,2000,2014,3272
+256,Kuching,Malaysia,2010,2444,3272
+257,Magelang,Indonesia,2000,16934,9421
+257,Magelang,Indonesia,2010,22375,9421
+258,Yulin,China,2000,7695,5339
+258,Yulin,China,2010,7928,5339
+259,Tokushima,Japan,2000,3742,4734
+259,Tokushima,Japan,2010,3893,4734
+260,Niigata,Japan,2000,2631,4734
+260,Niigata,Japan,2010,2892,4734
+261,Jambi,Indonesia,2000,6854,9421
+261,Jambi,Indonesia,2010,9112,9421
+262,Shaoguan,China,2000,4232,5339
+262,Shaoguan,China,2010,3891,5339
+263,Langfang,China,2000,3476,5339
+263,Langfang,China,2010,3940,5339
+264,Toyohashi,Japan,2000,2264,4734
+264,Toyohashi,Japan,2010,2372,4734
+265,Zoucheng,China,2000,4840,5339
+265,Zoucheng,China,2010,4748,5339
+266,Wu'an,China,2000,3126,5339
+266,Wu'an,China,2010,3258,5339
+267,Pingdu,China,2000,3009,5339
+267,Pingdu,China,2010,3051,5339
+268,Renqiu,China,2000,4985,5339
+268,Renqiu,China,2010,5274,5339
+269,Dengzhou,China,2000,2443,5339
+269,Dengzhou,China,2010,2781,5339
+270,Heyuan,China,2000,2764,5339
+270,Heyuan,China,2010,3840,5339
+271,Linhai,China,2000,5902,5339
+271,Linhai,China,2010,4719,5339
+272,Ponorogo,Indonesia,2000,10491,9421
+272,Ponorogo,Indonesia,2010,9864,9421
+273,Jiujiang,China,2000,6976,5339
+273,Jiujiang,China,2010,7156,5339
+274,Bacolod,Philippines,2000,7123,10314
+274,Bacolod,Philippines,2010,6851,10314
+275,Changhua,"Taiwan, China",2000,4836,7391
+275,Changhua,"Taiwan, China",2010,4520,7391
+276,Bozhou,China,2000,2308,5339
+276,Bozhou,China,2010,2409,5339
+277,Nha Trang,Vietnam,2000,6197,7729
+277,Nha Trang,Vietnam,2010,8322,7729
+278,Purwakarta,Indonesia,2000,9458,9421
+278,Purwakarta,Indonesia,2010,12311,9421
+279,Nam Ha,Vietnam,2000,5432,7729
+279,Nam Ha,Vietnam,2010,6753,7729
+280,Gaocheng,China,2000,4720,5339
+280,Gaocheng,China,2010,4641,5339
+281,Fengrun,China,2000,3662,5339
+281,Fengrun,China,2010,3462,5339
+282,Wuchuan,China,2000,7213,5339
+282,Wuchuan,China,2010,7406,5339
+283,Shangrao,China,2000,6778,5339
+283,Shangrao,China,2010,7036,5339
+284,Vinh,Vietnam,2000,4545,7729
+284,Vinh,Vietnam,2010,6112,7729
+285,Kuningan,Indonesia,2000,8032,9421
+285,Kuningan,Indonesia,2010,10331,9421
+286,Jepara,Indonesia,2000,8784,9421
+286,Jepara,Indonesia,2010,10783,9421
+287,Nanchong,China,2000,9453,5339
+287,Nanchong,China,2010,9194,5339
+288,Zaozhuang,China,2000,5057,5339
+288,Zaozhuang,China,2010,5215,5339
+289,Qingkou,China,2000,4113,5339
+289,Qingkou,China,2010,3637,5339
+290,Kota Bharu,Malaysia,2000,4553,3272
+290,Kota Bharu,Malaysia,2010,6240,3272
+291,Qingzhou,China,2000,3977,5339
+291,Qingzhou,China,2010,3890,5339
+292,Chongju,Republic of Korea,2000,7614,10511
+292,Chongju,Republic of Korea,2010,7487,10511
+293,Huludao,China,2000,2708,5339
+293,Huludao,China,2010,2888,5339
+294,Qianan,China,2000,2704,5339
+294,Qianan,China,2010,2299,5339
+295,Tongliao,China,2000,5281,5339
+295,Tongliao,China,2010,5000,5339
+296,Qitaihe,China,2000,2818,5339
+296,Qitaihe,China,2010,3458,5339
+297,Yushu,China,2000,1384,5339
+297,Yushu,China,2010,1388,5339
+298,Songyuan,China,2000,2247,5339
+298,Songyuan,China,2010,2472,5339
+299,Danyang,China,2000,7854,5339
+299,Danyang,China,2010,5420,5339
+300,Hejian,China,2000,4578,5339
+300,Hejian,China,2010,4862,5339
+301,Huicheng,China,2000,6882,5339
+301,Huicheng,China,2010,7427,5339
+302,Dezhou,China,2000,5139,5339
+302,Dezhou,China,2010,5918,5339
+303,Yongkang,China,2000,3647,5339
+303,Yongkang,China,2010,3808,5339
+304,Liaoyuan,China,2000,5498,5339
+304,Liaoyuan,China,2010,5100,5339
+305,Hue,Vietnam,2000,6312,7729
+305,Hue,Vietnam,2010,7777,7729
+306,Tongling,China,2000,8495,5339
+306,Tongling,China,2010,5831,5339
+307,Dongyang,China,2000,3821,5339
+307,Dongyang,China,2010,3361,5339
+308,Nankang,China,2000,5869,5339
+308,Nankang,China,2010,4451,5339
+309,Dongsheng,China,2000,4933,5339
+309,Dongsheng,China,2010,4321,5339
+310,Yuncheng,China,2000,2660,5339
+310,Yuncheng,China,2010,2959,5339
+311,Laiwu,China,2000,4839,5339
+311,Laiwu,China,2010,4444,5339
+312,Yanji,China,2000,4100,5339
+312,Yanji,China,2010,4393,5339
+313,Laizhou,China,2000,2660,5339
+313,Laizhou,China,2010,2592,5339
+314,Shengzhou,China,2000,4421,5339
+314,Shengzhou,China,2010,3619,5339
+315,Shiyan,China,2000,7045,5339
+315,Shiyan,China,2010,8536,5339
+316,Qujing,China,2000,4730,5339
+316,Qujing,China,2010,4536,5339
+317,Wuwei,China,2000,7754,5339
+317,Wuwei,China,2010,7671,5339
+318,Jati,Indonesia,2000,6833,9421
+318,Jati,Indonesia,2010,8715,9421
+319,Fenghuang,China,2000,4270,5339
+319,Fenghuang,China,2010,4561,5339
+320,Zhumadian,China,2000,6637,5339
+320,Zhumadian,China,2010,12250,5339
+321,Balikpapan,Indonesia,2000,6424,9421
+321,Balikpapan,Indonesia,2010,8150,9421
+322,Guiping,China,2000,6475,5339
+322,Guiping,China,2010,6314,5339
+323,Akesu,China,2000,2026,5339
+323,Akesu,China,2010,2259,5339
+324,Mawlamyine,Myanmar,2000,5301,7510
+324,Mawlamyine,Myanmar,2010,6547,7510
+325,Longkou,China,2000,2868,5339
+325,Longkou,China,2010,2788,5339
+326,Haining,China,2000,8155,5339
+326,Haining,China,2010,5524,5339
+327,Meizhou,China,2000,6493,5339
+327,Meizhou,China,2010,6700,5339
+328,Taizhou,China,2000,7509,5339
+328,Taizhou,China,2010,5927,5339
+329,Shangyu,China,2000,4251,5339
+329,Shangyu,China,2010,3200,5339
+330,Linzhou,China,2000,6310,5339
+330,Linzhou,China,2010,4670,5339
+331,Sanya,China,2000,4595,5339
+331,Sanya,China,2010,5490,5339
+332,Matsuyama,Japan,2000,3429,4734
+332,Matsuyama,Japan,2010,3595,4734
+333,Tonghua,China,2000,5196,5339
+333,Tonghua,China,2010,4939,5339
+334,Pontianak,Indonesia,2000,7804,9421
+334,Pontianak,Indonesia,2010,10335,9421
+335,Leiyang,China,2000,7732,5339
+335,Leiyang,China,2010,6468,5339
+336,Xinyu,China,2000,6075,5339
+336,Xinyu,China,2010,5154,5339
+337,Okayama,Japan,2000,3178,4734
+337,Okayama,Japan,2010,3461,4734
+338,Peicheng,China,2000,4885,5339
+338,Peicheng,China,2010,4596,5339
+339,Shucheng,China,2000,7040,5339
+339,Shucheng,China,2010,6225,5339
+340,Shimizu,Japan,2000,3745,4734
+340,Shimizu,Japan,2010,4111,4734
+341,Kendari,Indonesia,2000,2859,9421
+341,Kendari,Indonesia,2010,3675,9421
+342,Chenzhou,China,2000,6432,5339
+342,Chenzhou,China,2010,6340,5339
+343,Beihai,China,2000,4709,5339
+343,Beihai,China,2010,4533,5339
+344,Kisaran,Indonesia,2000,12008,9421
+344,Kisaran,Indonesia,2010,15580,9421
+345,Tieling,China,2000,3910,5339
+345,Tieling,China,2010,3170,5339
+346,Yichun,China,2000,8548,5339
+346,Yichun,China,2010,8315,5339
+347,Zhucheng,China,2000,4056,5339
+347,Zhucheng,China,2010,4059,5339
+348,Danzhou,China,2000,6291,5339
+348,Danzhou,China,2010,6624,5339
+349,Quzhou,China,2000,3674,5339
+349,Quzhou,China,2010,4091,5339
+350,Jixian,China,2000,4102,5339
+350,Jixian,China,2010,3497,5339
+351,Chon Buri,Thailand,2000,3365,4344
+351,Chon Buri,Thailand,2010,3414,4344
+352,Chaoyang,China,2000,4374,5339
+352,Chaoyang,China,2010,5024,5339
+353,Binzhou,China,2000,2415,5339
+353,Binzhou,China,2010,2592,5339
+354,Hegang,China,2000,4530,5339
+354,Hegang,China,2010,4100,5339
+355,Wuzhou,China,2000,7286,5339
+355,Wuzhou,China,2010,7623,5339
+356,Zouping,China,2000,3529,5339
+356,Zouping,China,2010,3542,5339
+357,Tongxiang,China,2000,8387,5339
+357,Tongxiang,China,2010,6305,5339
+358,Liu'an,China,2000,5111,5339
+358,Liu'an,China,2010,5185,5339
+359,Yibin,China,2000,7913,5339
+359,Yibin,China,2010,7289,5339
+360,Zhoukou,China,2000,9337,5339
+360,Zhoukou,China,2010,13082,5339
+361,Kofu,Japan,2000,3471,4734
+361,Kofu,Japan,2010,3768,4734
+362,Deyang,China,2000,7144,5339
+362,Deyang,China,2010,6824,5339
+363,Sui'an,China,2000,4089,5339
+363,Sui'an,China,2010,3318,5339
+364,Hamhung,DPR Korea,2000,12994,9081
+364,Hamhung,DPR Korea,2010,13878,9081
+365,Weinan,China,2000,4835,5339
+365,Weinan,China,2010,4757,5339
+366,Chengde,China,2000,11981,5339
+366,Chengde,China,2010,10281,5339
+367,Lishi,China,2000,4543,5339
+367,Lishi,China,2010,5252,5339
+368,Rongcheng,China,2000,3324,5339
+368,Rongcheng,China,2010,3022,5339
+369,Pematangsiantar,Indonesia,2000,10567,9421
+369,Pematangsiantar,Indonesia,2010,10733,9421
+370,Xinji,China,2000,3597,5339
+370,Xinji,China,2010,3535,5339
+371,Zhangqiu,China,2000,6542,5339
+371,Zhangqiu,China,2010,6693,5339
+372,Sanmenling,China,2000,5593,5339
+372,Sanmenling,China,2010,6085,5339
+373,Can Tho,Vietnam,2000,9139,7729
+373,Can Tho,Vietnam,2010,11687,7729
+374,Luzhou,China,2000,7408,5339
+374,Luzhou,China,2010,7530,5339
+375,Bazhou,China,2000,3688,5339
+375,Bazhou,China,2010,3379,5339
+376,Feicheng,China,2000,6330,5339
+376,Feicheng,China,2010,6072,5339
+377,Zhuozhou,China,2000,3064,5339
+377,Zhuozhou,China,2010,2812,5339
+378,Ezhou,China,2000,8192,5339
+378,Ezhou,China,2010,7652,5339
+379,Bangtou,China,2000,5427,5339
+379,Bangtou,China,2010,4834,5339
+380,Loudi,China,2000,6483,5339
+380,Loudi,China,2010,5789,5339
+381,Jingdezhen,China,2000,6497,5339
+381,Jingdezhen,China,2010,5727,5339
+382,Sungai Petani,Malaysia,2000,2842,3272
+382,Sungai Petani,Malaysia,2010,3233,3272
+383,Shuangyashan,China,2000,2750,5339
+383,Shuangyashan,China,2010,2905,5339
+384,Xinyang,China,2000,4743,5339
+384,Xinyang,China,2010,4513,5339
+385,Jingjiang,China,2000,10139,5339
+385,Jingjiang,China,2010,6349,5339
+386,Singaraja,Indonesia,2000,7856,9421
+386,Singaraja,Indonesia,2010,10250,9421
+387,Beiliu,China,2000,10689,5339
+387,Beiliu,China,2010,10860,5339
+388,Gaomi,China,2000,3798,5339
+388,Gaomi,China,2010,3942,5339
+389,Laiyang,China,2000,3232,5339
+389,Laiyang,China,2010,3150,5339
+390,Chiai,"Taiwan, China",2000,4429,7391
+390,Chiai,"Taiwan, China",2010,4405,7391
+391,Hanzhong,China,2000,9398,5339
+391,Hanzhong,China,2010,7291,5339
+392,Nagano,Japan,2000,3069,4734
+392,Nagano,Japan,2010,3497,4734
+393,Lumajang,Indonesia,2000,7748,9421
+393,Lumajang,Indonesia,2010,10171,9421
+394,Qinzhou,China,2000,3994,5339
+394,Qinzhou,China,2010,4025,5339
+395,Hengshui,China,2000,3449,5339
+395,Hengshui,China,2010,4067,5339
+396,Liuyang,China,2000,6964,5339
+396,Liuyang,China,2010,6717,5339
+397,Pizhou,China,2000,7472,5339
+397,Pizhou,China,2010,6949,5339
+398,Fuyang,China,2000,5839,5339
+398,Fuyang,China,2010,4636,5339
+399,Taihe,China,2000,3691,5339
+399,Taihe,China,2010,3652,5339
+400,Huaihua,China,2000,6209,5339
+400,Huaihua,China,2010,8024,5339
+401,Chonju,Republic of Korea,2000,8574,10511
+401,Chonju,Republic of Korea,2010,8788,10511
+402,Ansu,China,2000,2810,5339
+402,Ansu,China,2010,2642,5339
+403,Kuantan,Malaysia,2000,2180,3272
+403,Kuantan,Malaysia,2010,2648,3272
+404,Jining,China,2000,3828,5339
+404,Jining,China,2010,4217,5339
+405,Gongyi,China,2000,6626,5339
+405,Gongyi,China,2010,6101,5339
+406,Shenzhou,China,2000,2495,5339
+406,Shenzhou,China,2010,2480,5339
+407,Taixing,China,2000,10337,5339
+407,Taixing,China,2010,7534,5339
+408,Bianzhuang,China,2000,6366,5339
+408,Bianzhuang,China,2010,6261,5339
+409,Kagoshima,Japan,2000,4183,4734
+409,Kagoshima,Japan,2010,4457,4734
+410,Meihekou,China,2000,3125,5339
+410,Meihekou,China,2010,2949,5339
+411,Jinzhou,China,2000,3799,5339
+411,Jinzhou,China,2010,3858,5339
+412,Haobi,China,2000,12949,5339
+412,Haobi,China,2010,14163,5339
+413,Shizuishan,China,2000,7426,5339
+413,Shizuishan,China,2010,9264,5339
+414,Zhongxing,China,2000,4981,5339
+414,Zhongxing,China,2010,3470,5339
+415,Longyan,China,2000,4114,5339
+415,Longyan,China,2010,4162,5339
+416,Jiangdu,China,2000,6469,5339
+416,Jiangdu,China,2010,5344,5339
+417,Anpu,China,2000,7900,5339
+417,Anpu,China,2010,9208,5339
+418,Yulin,China,2000,6897,5339
+418,Yulin,China,2010,8393,5339
+419,Zhaozhou,China,2000,4217,5339
+419,Zhaozhou,China,2010,4382,5339
+420,Zamboanga,Philippines,2000,7450,10314
+420,Zamboanga,Philippines,2010,8968,10314
+421,Laixi,China,2000,2617,5339
+421,Laixi,China,2010,2644,5339
+422,Taishan,China,2000,5511,5339
+422,Taishan,China,2010,4992,5339
+423,Chuxiong,China,2000,8453,5339
+423,Chuxiong,China,2010,8631,5339
+424,Nongan,China,2000,1512,5339
+424,Nongan,China,2010,1350,5339
+425,Xingning,China,2000,9967,5339
+425,Xingning,China,2010,9033,5339
+426,Hebi,China,2000,3003,5339
+426,Hebi,China,2010,3014,5339
+427,Lianjiang,China,2000,3924,5339
+427,Lianjiang,China,2010,3981,5339
+428,Yutian,China,2000,3218,5339
+428,Yutian,China,2010,3279,5339
+429,Yishui,China,2000,6269,5339
+429,Yishui,China,2010,5844,5339
+430,Panzhihua,China,2000,6591,5339
+430,Panzhihua,China,2010,6858,5339
+431,Yongcheng,China,2000,3115,5339
+431,Yongcheng,China,2010,3076,5339
+432,Iloilo,Philippines,2000,7413,10314
+432,Iloilo,Philippines,2010,8573,10314
+433,Suihua,China,2000,2196,5339
+433,Suihua,China,2010,2379,5339
+434,Anqiu,China,2000,4429,5339
+434,Anqiu,China,2010,3728,5339
+435,Shuozhou,China,2000,2352,5339
+435,Shuozhou,China,2010,2874,5339
+436,Xiaogan,China,2000,7993,5339
+436,Xiaogan,China,2010,7627,5339
+437,Chengyang,China,2000,4394,5339
+437,Chengyang,China,2010,4254,5339
+438,Baoshan,China,2000,3338,5339
+438,Baoshan,China,2010,3589,5339
+439,Xinghua,China,2000,6235,5339
+439,Xinghua,China,2010,4879,5339
+440,Dali,China,2000,4898,5339
+440,Dali,China,2010,5511,5339
+441,Chiang Mai,Thailand,2000,4516,4344
+441,Chiang Mai,Thailand,2010,5010,4344
+442,Xingyang,China,2000,5345,5339
+442,Xingyang,China,2010,5706,5339
+443,Ku'erle,China,2000,1962,5339
+443,Ku'erle,China,2010,2712,5339
+444,Shuangcheng,China,2000,1836,5339
+444,Shuangcheng,China,2010,2011,5339
+445,Yima,China,2000,6025,5339
+445,Yima,China,2010,6242,5339
+446,Zhaodong,China,2000,1844,5339
+446,Zhaodong,China,2010,1997,5339
+447,Kurume,Japan,2000,3196,4734
+447,Kurume,Japan,2010,3356,4734
+448,Xinzhou,China,2000,4151,5339
+448,Xinzhou,China,2010,4331,5339
+449,Manado,Indonesia,2000,5891,9421
+449,Manado,Indonesia,2010,6581,9421
+450,Pinghu,China,2000,7415,5339
+450,Pinghu,China,2010,6593,5339
+451,Takamatsu,Japan,2000,2268,4734
+451,Takamatsu,Japan,2010,2475,4734
+452,Jiyuan,China,2000,2951,5339
+452,Jiyuan,China,2010,2989,5339
+453,Hezhou,China,2000,4218,5339
+453,Hezhou,China,2010,4587,5339
+454,Weitang,China,2000,5730,5339
+454,Weitang,China,2010,4459,5339
+455,Neijiang,China,2000,9451,5339
+455,Neijiang,China,2010,8240,5339
+456,Baguio,Philippines,2000,6428,10314
+456,Baguio,Philippines,2010,6819,10314
+457,Feixian,China,2000,5097,5339
+457,Feixian,China,2010,5089,5339
+458,Dujiangyan,China,2000,7663,5339
+458,Dujiangyan,China,2010,6426,5339
+459,Linhe,China,2000,3338,5339
+459,Linhe,China,2010,3425,5339
+460,Chuzhou,China,2000,9568,5339
+460,Chuzhou,China,2010,7210,5339
+461,Banda Aceh,Indonesia,2000,3395,9421
+461,Banda Aceh,Indonesia,2010,3970,9421
+462,Yueping,China,2000,5309,5339
+462,Yueping,China,2010,5454,5339
+463,Tancheng,China,2000,5761,5339
+463,Tancheng,China,2010,5399,5339
+464,Longcheng,China,2000,3599,5339
+464,Longcheng,China,2010,3422,5339
+465,Fengcheng,China,2000,6463,5339
+465,Fengcheng,China,2010,6987,5339
+466,Rugao,China,2000,10764,5339
+466,Rugao,China,2010,8357,5339
+467,Nakhon Ratchasima,Thailand,2000,2727,4344
+467,Nakhon Ratchasima,Thailand,2010,3153,4344
+468,Alor Setar Kedah,Malaysia,2000,2698,3272
+468,Alor Setar Kedah,Malaysia,2010,3630,3272
+469,Shahe,China,2000,4520,5339
+469,Shahe,China,2010,4503,5339
+470,Qui Nhon,Vietnam,2000,7318,7729
+470,Qui Nhon,Vietnam,2010,9035,7729
+471,Huazhou,China,2000,8510,5339
+471,Huazhou,China,2010,9827,5339
+472,Yongchuan,China,2000,7593,5339
+472,Yongchuan,China,2010,7737,5339
+473,Bencheng,China,2000,2161,5339
+473,Bencheng,China,2010,1355,5339
+474,Suining,China,2000,7408,5339
+474,Suining,China,2010,6544,5339
+475,Viangchan,Lao PDR,2000,2809,3167
+475,Viangchan,Lao PDR,2010,3167,3167
+476,Gaozhou,China,2000,9421,5339
+476,Gaozhou,China,2010,9690,5339
+477,Oita,Japan,2000,2675,4734
+477,Oita,Japan,2010,2883,4734
+478,Yuzhou,China,2000,7489,5339
+478,Yuzhou,China,2010,7367,5339
+479,Bago,Myanmar,2000,3802,7510
+479,Bago,Myanmar,2010,4758,7510
+480,Wuchang,China,2000,1930,5339
+480,Wuchang,China,2010,1908,5339
+481,Lingcheng,China,2000,2869,5339
+481,Lingcheng,China,2010,3049,5339
+482,Yanzhou,China,2000,7048,5339
+482,Yanzhou,China,2010,6615,5339
+483,Wuzhong,China,2000,16985,5339
+483,Wuzhong,China,2010,8423,5339
+484,Liupanshui,China,2000,11552,5339
+484,Liupanshui,China,2010,14717,5339
+485,Huanghua,China,2000,1335,5339
+485,Huanghua,China,2010,1354,5339
+486,Niushan,China,2000,3837,5339
+486,Niushan,China,2010,3234,5339
+487,Potou,China,2000,3139,5339
+487,Potou,China,2010,3302,5339
+488,Yuxi,China,2000,3954,5339
+488,Yuxi,China,2010,4146,5339
+489,Fuzhou,China,2000,6301,5339
+489,Fuzhou,China,2010,6465,5339
+490,Shihezi,China,2000,7552,5339
+490,Shihezi,China,2010,3552,5339
+491,Kuala Terengganu,Malaysia,2000,2872,3272
+491,Kuala Terengganu,Malaysia,2010,3956,3272
+492,Yunfu,China,2000,4758,5339
+492,Yunfu,China,2010,4591,5339
+493,Changge,China,2000,4217,5339
+493,Changge,China,2010,4461,5339
+494,Pohang,Republic of Korea,2000,4723,10511
+494,Pohang,Republic of Korea,2010,4672,10511
+495,Kaiyuan,China,2000,2548,5339
+495,Kaiyuan,China,2010,2558,5339
+496,Long Xuyen,Vietnam,2000,10023,7729
+496,Long Xuyen,Vietnam,2010,12175,7729
+497,Leizhou,China,2000,6501,5339
+497,Leizhou,China,2010,7017,5339
+498,Shizilu,China,2000,4588,5339
+498,Shizilu,China,2010,4158,5339
+499,Xianning,China,2000,6937,5339
+499,Xianning,China,2010,4568,5339
+500,Tianshui,China,2000,4747,5339
+500,Tianshui,China,2010,4830,5339
+501,Zaoyang,China,2000,2948,5339
+501,Zaoyang,China,2010,2824,5339
+502,Xinle,China,2000,4321,5339
+502,Xinle,China,2010,4198,5339
+503,Huozhou,China,2000,2531,5339
+503,Huozhou,China,2010,2508,5339
+504,Luoding,China,2000,6667,5339
+504,Luoding,China,2010,7318,5339
+505,Shanwei,China,2000,7105,5339
+505,Shanwei,China,2010,7808,5339
+506,Liling,China,2000,10632,5339
+506,Liling,China,2010,10285,5339
+507,Wendeng,China,2000,3798,5339
+507,Wendeng,China,2010,3496,5339
+508,Sinuiju,DPR Korea,2000,8778,9081
+508,Sinuiju,DPR Korea,2010,8906,9081
+509,Lhasa,China,2000,2833,5339
+509,Lhasa,China,2010,2735,5339
+510,Hejin,China,2000,3201,5339
+510,Hejin,China,2010,3178,5339
+511,Qidong,China,2000,7039,5339
+511,Qidong,China,2010,6312,5339
+512,Changyi,China,2000,2404,5339
+512,Changyi,China,2010,2110,5339
+513,Liyang,China,2000,5769,5339
+513,Liyang,China,2010,4243,5339
+514,Yingde,China,2000,3286,5339
+514,Yingde,China,2010,3550,5339
+515,Zhongxiang,China,2000,2940,5339
+515,Zhongxiang,China,2010,2943,5339
+516,Linqu,China,2000,5629,5339
+516,Linqu,China,2010,5240,5339
+517,Fenghua,China,2000,3388,5339
+517,Fenghua,China,2010,2530,5339
+518,Zhangye,China,2000,8973,5339
+518,Zhangye,China,2010,7241,5339
+519,Meishan,China,2000,5734,5339
+519,Meishan,China,2010,5658,5339
+520,Changli,China,2000,3212,5339
+520,Changli,China,2010,3177,5339
+521,Qufu,China,2000,5297,5339
+521,Qufu,China,2010,5323,5339
+522,Palu,Indonesia,2000,3838,9421
+522,Palu,Indonesia,2010,4943,9421
+523,Fujieda,Japan,2000,2660,4734
+523,Fujieda,Japan,2010,2827,4734
+524,Hanchuan,China,2000,7047,5339
+524,Hanchuan,China,2010,6501,5339
+525,Wuhai,China,2000,6944,5339
+525,Wuhai,China,2010,9040,5339
+526,Lanxi,China,2000,4476,5339
+526,Lanxi,China,2010,3235,5339
+527,Yuanping,China,2000,3871,5339
+527,Yuanping,China,2010,3783,5339
+528,Tianmen,China,2000,6851,5339
+528,Tianmen,China,2010,6072,5339
+529,Hat Yai,Thailand,2000,5005,4344
+529,Hat Yai,Thailand,2010,5871,4344
+530,Daojiang,China,2000,4346,5339
+530,Daojiang,China,2010,3424,5339
+531,Tebingtinggi,Indonesia,2000,11681,9421
+531,Tebingtinggi,Indonesia,2010,13835,9421
+532,Xinyi,China,2000,5925,5339
+532,Xinyi,China,2010,5263,5339
+533,General Santos,Philippines,2000,3348,10314
+533,General Santos,Philippines,2010,3976,10314
+534,Sandakan,Malaysia,2000,3476,3272
+534,Sandakan,Malaysia,2010,4712,3272
+535,Anguo,China,2000,2895,5339
+535,Anguo,China,2010,2830,5339
+536,Cagayan de Oro,Philippines,2000,4812,10314
+536,Cagayan de Oro,Philippines,2010,5674,10314
+537,Leling,China,2000,3520,5339
+537,Leling,China,2010,3710,5339
+538,Yanshi,China,2000,6214,5339
+538,Yanshi,China,2010,4796,5339
+539,Nagasaki,Japan,2000,5411,4734
+539,Nagasaki,Japan,2010,5646,4734
+540,Haimen,China,2000,7917,5339
+540,Haimen,China,2010,6878,5339
+541,Jiehu,China,2000,5017,5339
+541,Jiehu,China,2010,4707,5339
+542,Hetian,China,2000,6299,5339
+542,Hetian,China,2010,10089,5339
+543,Xingcheng,China,2000,2212,5339
+543,Xingcheng,China,2010,2197,5339
+544,Pengzhou,China,2000,6673,5339
+544,Pengzhou,China,2010,6118,5339
+545,Xiantao,China,2000,8020,5339
+545,Xiantao,China,2010,6210,5339
+546,Ambon,Indonesia,2000,7394,9421
+546,Ambon,Indonesia,2010,9856,9421
+547,Yucheng,China,2000,3544,5339
+547,Yucheng,China,2010,3484,5339
+548,Dancheng,China,2000,3448,5339
+548,Dancheng,China,2010,2909,5339
+549,Xiangcheng,China,2000,7059,5339
+549,Xiangcheng,China,2010,6748,5339
+550,Linan,China,2000,8963,5339
+550,Linan,China,2010,6685,5339
+551,Xingping,China,2000,6741,5339
+551,Xingping,China,2010,5937,5339
+552,Taiping,Malaysia,2000,3580,3272
+552,Taiping,Malaysia,2010,4382,3272
+553,Chonan,Republic of Korea,2000,5507,10511
+553,Chonan,Republic of Korea,2010,5270,10511
+554,Bukit Tinggi,Indonesia,2000,10743,9421
+554,Bukit Tinggi,Indonesia,2010,12838,9421
+555,Ruijin,China,2000,5084,5339
+555,Ruijin,China,2010,5095,5339
+556,Batu Pahat,Malaysia,2000,2859,3272
+556,Batu Pahat,Malaysia,2010,3874,3272
+557,Jiangyan,China,2000,7792,5339
+557,Jiangyan,China,2010,5424,5339
+558,Nangong,China,2000,4338,5339
+558,Nangong,China,2010,4282,5339
+559,Chinju,Republic of Korea,2000,5471,10511
+559,Chinju,Republic of Korea,2010,5534,10511
+560,Hai'an,China,2000,9127,5339
+560,Hai'an,China,2010,7146,5339
+561,Acheng,China,2000,2182,5339
+561,Acheng,China,2010,2001,5339
+562,Zhoushan,China,2000,5236,5339
+562,Zhoushan,China,2010,5054,5339
+563,Zhaoyuan,China,2000,2809,5339
+563,Zhaoyuan,China,2010,2662,5339
+564,Yancheng,China,2000,2683,5339
+564,Yancheng,China,2010,2726,5339
+565,Haiyang,China,2000,2578,5339
+565,Haiyang,China,2010,2467,5339
+566,Jintan,China,2000,5475,5339
+566,Jintan,China,2010,3899,5339
+567,Vung Tau,Vietnam,2000,7819,7729
+567,Vung Tau,Vietnam,2010,8497,7729
+568,Monywa,Myanmar,2000,5079,7510
+568,Monywa,Myanmar,2010,6215,7510
+569,Xinmin,China,2000,1730,5339
+569,Xinmin,China,2010,1620,5339
+570,Baiyin,China,2000,5585,5339
+570,Baiyin,China,2010,5644,5339
+571,Liangshi,China,2000,12077,5339
+571,Liangshi,China,2010,9119,5339
+572,Xiajin,China,2000,4942,5339
+572,Xiajin,China,2010,5077,5339
+573,Xichang,China,2000,5286,5339
+573,Xichang,China,2010,5107,5339
+574,Dehui,China,2000,1913,5339
+574,Dehui,China,2010,1620,5339
+575,Cotabato,Philippines,2000,17995,10314
+575,Cotabato,Philippines,2010,20571,10314
+576,Xiazhen,China,2000,3518,5339
+576,Xiazhen,China,2010,3320,5339
+577,Zhongwei,China,2000,10685,5339
+577,Zhongwei,China,2010,8137,5339
+578,Tumxuk,China,2000,2723,5339
+578,Tumxuk,China,2010,3270,5339
+579,Lishui,China,2000,5323,5339
+579,Lishui,China,2010,5218,5339
+580,Ruzhou,China,2000,6144,5339
+580,Ruzhou,China,2010,6139,5339
+581,Gu'an,China,2000,3213,5339
+581,Gu'an,China,2010,2868,5339
+582,Hancheng,China,2000,3907,5339
+582,Hancheng,China,2010,3514,5339
+583,Bengkulu,Indonesia,2000,7140,9421
+583,Bengkulu,Indonesia,2010,8412,9421
+584,Yishan,China,2000,5956,5339
+584,Yishan,China,2010,4627,5339
+585,Qianjiang,China,2000,5282,5339
+585,Qianjiang,China,2010,4915,5339
+586,Changning,China,2000,8107,5339
+586,Changning,China,2010,7663,5339
+587,Baishan,China,2000,6192,5339
+587,Baishan,China,2010,6396,5339
+588,Miri,Malaysia,2000,1720,3272
+588,Miri,Malaysia,2010,2253,3272
+589,Kupang,Indonesia,2000,6074,9421
+589,Kupang,Indonesia,2010,5895,9421
+590,Jiuquan,China,2000,4934,5339
+590,Jiuquan,China,2010,5082,5339
+591,Haila'er,China,2000,2278,5339
+591,Haila'er,China,2010,2669,5339
+592,Xinmi,China,2000,8022,5339
+592,Xinmi,China,2010,8107,5339
+593,Yangchun,China,2000,6103,5339
+593,Yangchun,China,2010,5812,5339
+594,Huanggang,China,2000,7263,5339
+594,Huanggang,China,2010,6428,5339
+595,Port Moresby,Papua New Guinea,2000,4428,5274
+595,Port Moresby,Papua New Guinea,2010,5274,5274
+596,Ube,Japan,2000,2188,4734
+596,Ube,Japan,2010,2361,4734
+597,Emeishan,China,2000,4835,5339
+597,Emeishan,China,2010,4924,5339
+598,Bandar Seri Begawan,Brunei,2000,1079,1278
+598,Bandar Seri Begawan,Brunei,2010,1278,1278
+599,Qixia,China,2000,2676,5339
+599,Qixia,China,2010,2425,5339
+600,Hailun,China,2000,1472,5339
+600,Hailun,China,2010,1567,5339
+601,Shulan,China,2000,2750,5339
+601,Shulan,China,2010,2679,5339
+602,Cheju,Republic of Korea,2000,3366,10511
+602,Cheju,Republic of Korea,2010,3463,10511
+603,Jiangyou,China,2000,5367,5339
+603,Jiangyou,China,2010,4423,5339
+604,Tongchuan,China,2000,8806,5339
+604,Tongchuan,China,2010,8241,5339
+605,Laibin,China,2000,3442,5339
+605,Laibin,China,2010,3572,5339
+606,Koriyama,Japan,2000,3035,4734
+606,Koriyama,Japan,2010,3311,4734
+607,Guangyuan,China,2000,4425,5339
+607,Guangyuan,China,2010,4027,5339
+608,Xiangxiang,China,2000,9672,5339
+608,Xiangxiang,China,2010,8294,5339
+609,Asahikawa,Japan,2000,2608,4734
+609,Asahikawa,Japan,2010,2953,4734
+610,Penglai,China,2000,2391,5339
+610,Penglai,China,2010,2082,5339
+611,Lingbao,China,2000,4188,5339
+611,Lingbao,China,2010,4139,5339
+612,Miluo,China,2000,8267,5339
+612,Miluo,China,2010,7499,5339
+613,Jiangjin,China,2000,5749,5339
+613,Jiangjin,China,2010,5203,5339
+614,Suizhou,China,2000,3737,5339
+614,Suizhou,China,2010,3294,5339
+615,Zhicheng,China,2000,5688,5339
+615,Zhicheng,China,2010,4943,5339
+616,Hakodate,Japan,2000,3164,4734
+616,Hakodate,Japan,2010,3632,4734
+617,Dazhou,China,2000,7730,5339
+617,Dazhou,China,2010,8788,5339
+618,Pangkalpinang,Indonesia,2000,3791,9421
+618,Pangkalpinang,Indonesia,2010,4985,9421
+619,Phan Thiet,Vietnam,2000,7918,7729
+619,Phan Thiet,Vietnam,2010,10863,7729
+620,Qingyang,China,2000,4300,5339
+620,Qingyang,China,2010,3806,5339
+621,Gaoping,China,2000,6714,5339
+621,Gaoping,China,2010,6878,5339
+622,Lianyuan,China,2000,9623,5339
+622,Lianyuan,China,2010,9341,5339
+623,Yichuan,China,2000,6203,5339
+623,Yichuan,China,2010,6213,5339
+624,Beining,China,2000,3138,5339
+624,Beining,China,2010,3000,5339
+625,Xinyi,China,2000,10444,5339
+625,Xinyi,China,2010,9724,5339
+626,Yingtan,China,2000,5924,5339
+626,Yingtan,China,2010,6225,5339
+627,Panshi,China,2000,2116,5339
+627,Panshi,China,2010,1977,5339
+628,Qionghai,China,2000,7546,5339
+628,Qionghai,China,2010,7502,5339
+629,Dagupan,Philippines,2000,4808,10314
+629,Dagupan,Philippines,2010,5825,10314
+630,Qionglai,China,2000,7432,5339
+630,Qionglai,China,2010,6253,5339
+631,Suicheng,China,2000,6738,5339
+631,Suicheng,China,2010,5906,5339
+632,Baicheng,China,2000,2347,5339
+632,Baicheng,China,2010,2492,5339
+633,Wucheng,China,2000,3713,5339
+633,Wucheng,China,2010,3818,5339
+634,Dengfeng,China,2000,5522,5339
+634,Dengfeng,China,2010,5608,5339
+635,Rushan,China,2000,3456,5339
+635,Rushan,China,2010,3357,5339
+636,Cenxi,China,2000,7272,5339
+636,Cenxi,China,2010,6942,5339
+637,Dongfang,China,2000,3919,5339
+637,Dongfang,China,2010,4322,5339
+638,Phan Rang,Vietnam,2000,5962,7729
+638,Phan Rang,Vietnam,2010,8210,7729
+639,Manzhouli,China,2000,3129,5339
+639,Manzhouli,China,2010,3601,5339
+640,Yizheng,China,2000,7345,5339
+640,Yizheng,China,2010,5526,5339
+641,Jizhou,China,2000,3229,5339
+641,Jizhou,China,2010,3096,5339
+642,Jiutai,China,2000,2489,5339
+642,Jiutai,China,2010,1845,5339
+643,Linxia,China,2000,12649,5339
+643,Linxia,China,2010,8941,5339
+644,Nantou,"Taiwan, China",2000,5303,7391
+644,Nantou,"Taiwan, China",2010,5323,7391
+645,Morioka,Japan,2000,3735,4734
+645,Morioka,Japan,2010,4157,4734
+646,Yongji,China,2000,3045,5339
+646,Yongji,China,2010,3194,5339
+647,Hon Gai,Vietnam,2000,3602,7729
+647,Hon Gai,Vietnam,2010,3742,7729
+648,Thanh Hoa,Vietnam,2000,6924,7729
+648,Thanh Hoa,Vietnam,2010,9558,7729
+649,Akita,Japan,2000,2815,4734
+649,Akita,Japan,2010,3217,4734
+650,Jingmen,China,2000,4210,5339
+650,Jingmen,China,2010,4472,5339
+651,Chaohu,China,2000,6022,5339
+651,Chaohu,China,2010,5309,5339
+652,Sunchon,Republic of Korea,2000,4218,10511
+652,Sunchon,Republic of Korea,2010,4135,10511
+653,Khon-kaen,Thailand,2000,3191,4344
+653,Khon-kaen,Thailand,2010,3929,4344
+654,Hechuan,China,2000,8267,5339
+654,Hechuan,China,2010,7062,5339
+655,Shangzhi,China,2000,2073,5339
+655,Shangzhi,China,2010,2045,5339
+656,Yongzhou,China,2000,5524,5339
+656,Yongzhou,China,2010,4486,5339
+657,Dipu,China,2000,8204,5339
+657,Dipu,China,2010,5659,5339
+658,Saga,Japan,2000,2868,4734
+658,Saga,Japan,2010,2994,4734
+659,Enping,China,2000,4392,5339
+659,Enping,China,2010,4188,5339
+660,Wulanhaote,China,2000,3207,5339
+660,Wulanhaote,China,2010,3607,5339
+661,Gejiu,China,2000,4952,5339
+661,Gejiu,China,2010,4682,5339
+662,Anning,China,2000,3097,5339
+662,Anning,China,2010,2993,5339
+663,Jiayuguan,China,2000,3422,5339
+663,Jiayuguan,China,2010,3982,5339
+664,Lingyuan,China,2000,5450,5339
+664,Lingyuan,China,2010,4912,5339
+665,Changji,China,2000,1882,5339
+665,Changji,China,2010,1840,5339
+666,Mianzhu,China,2000,6993,5339
+666,Mianzhu,China,2010,5177,5339
+667,Hongqiao,China,2000,10077,5339
+667,Hongqiao,China,2010,10849,5339
+668,Touliu,"Taiwan, China",2000,2683,7391
+668,Touliu,"Taiwan, China",2010,2716,7391
+669,Sanchahe,China,2000,3736,5339
+669,Sanchahe,China,2010,3995,5339
+670,Jieshou,China,2000,5786,5339
+670,Jieshou,China,2010,5056,5339
+671,Fukushima,Japan,2000,3446,4734
+671,Fukushima,Japan,2010,3774,4734
+672,Yongzhou,China,2000,4746,5339
+672,Yongzhou,China,2010,5168,5339
+673,Wanning,China,2000,7208,5339
+673,Wanning,China,2010,7512,5339
+674,Qingtongxia,China,2000,6753,5339
+674,Qingtongxia,China,2010,4709,5339
+675,Fu'an,China,2000,7010,5339
+675,Fu'an,China,2010,6685,5339
+676,Lucena,Philippines,2000,11375,10314
+676,Lucena,Philippines,2010,11775,10314
+677,Tawau,Malaysia,2000,2609,3272
+677,Tawau,Malaysia,2010,3554,3272
+678,Aomori,Japan,2000,2838,4734
+678,Aomori,Japan,2010,3122,4734
+679,Jiaohe,China,2000,1692,5339
+679,Jiaohe,China,2010,1578,5339
+680,Wuyuan,China,2000,5917,5339
+680,Wuyuan,China,2010,5265,5339
+681,Zhaotong,China,2000,7570,5339
+681,Zhaotong,China,2010,7618,5339
+682,Jurong,China,2000,5459,5339
+682,Jurong,China,2010,5002,5339
+683,Hachinohe,Japan,2000,2293,4734
+683,Hachinohe,Japan,2010,2595,4734
+684,Huangshan,China,2000,6623,5339
+684,Huangshan,China,2010,5781,5339
+685,Yan'an,China,2000,3818,5339
+685,Yan'an,China,2010,4370,5339
+686,Dili,Timor-Leste,2000,4085,6369
+686,Dili,Timor-Leste,2010,6369,6369
+687,Jinchang,China,2000,5742,5339
+687,Jinchang,China,2010,5511,5339
+688,Lengshuijiang,China,2000,8028,5339
+688,Lengshuijiang,China,2010,6040,5339
+689,Anshun,China,2000,8655,5339
+689,Anshun,China,2010,8211,5339
+690,Thai Nguyen,Vietnam,2000,5901,7729
+690,Thai Nguyen,Vietnam,2010,8145,7729
+691,Karamay,China,2000,2280,5339
+691,Karamay,China,2010,3984,5339
+692,Dongtai,China,2000,6008,5339
+692,Dongtai,China,2010,4733,5339
+693,Ankang,China,2000,5857,5339
+693,Ankang,China,2010,5886,5339
+694,Ji'an,China,2000,5340,5339
+694,Ji'an,China,2010,5532,5339
+695,Xuancheng,China,2000,6286,5339
+695,Xuancheng,China,2010,5628,5339
+696,Zhaozhen,China,2000,6241,5339
+696,Zhaozhen,China,2010,5526,5339
+697,Sanming,China,2000,7775,5339
+697,Sanming,China,2010,7510,5339
+698,Kluang,Malaysia,2000,2271,3272
+698,Kluang,Malaysia,2010,2979,3272
+699,Wusu,China,2000,851,5339
+699,Wusu,China,2010,1283,5339
+700,Fangchengang,China,2000,3394,5339
+700,Fangchengang,China,2010,4146,5339
+701,Hami,China,2000,2516,5339
+701,Hami,China,2010,2946,5339
+702,Pingliang,China,2000,5248,5339
+702,Pingliang,China,2010,5163,5339
+703,Huadian,China,2000,2015,5339
+703,Huadian,China,2010,1992,5339
+704,Nanma,China,2000,6902,5339
+704,Nanma,China,2010,6770,5339
+705,Yamagata,Japan,2000,1781,4734
+705,Yamagata,Japan,2010,2033,4734
+706,Shangmei,China,2000,7070,5339
+706,Shangmei,China,2010,7119,5339
+707,Bijie,China,2000,11036,5339
+707,Bijie,China,2010,9929,5339
+708,Nagaoka,Japan,2000,2652,4734
+708,Nagaoka,Japan,2010,2976,4734
+709,Wucheng,China,2000,7054,5339
+709,Wucheng,China,2010,5833,5339
+710,Gaoyou,China,2000,6135,5339
+710,Gaoyou,China,2010,5363,5339
+711,Huaicheng,China,2000,5679,5339
+711,Huaicheng,China,2010,5990,5339
+712,Nanping,China,2000,3970,5339
+712,Nanping,China,2010,3529,5339
+713,Jiangshan,China,2000,4108,5339
+713,Jiangshan,China,2010,3507,5339
+714,Udon Thani,Thailand,2000,2808,4344
+714,Udon Thani,Thailand,2010,3326,4344
+715,Yuanjiang,China,2000,6459,5339
+715,Yuanjiang,China,2010,5931,5339
+716,Sibu,Malaysia,2000,1656,3272
+716,Sibu,Malaysia,2010,2186,3272
+717,Chongjin,DPR Korea,2000,2602,9081
+717,Chongjin,DPR Korea,2010,2790,9081
+718,Ziyang,China,2000,7447,5339
+718,Ziyang,China,2010,6375,5339
+719,Xifeng,China,2000,6763,5339
+719,Xifeng,China,2010,6815,5339
+720,Play Cu,Vietnam,2000,4379,7729
+720,Play Cu,Vietnam,2010,5962,7729
+721,Houma,China,2000,6113,5339
+721,Houma,China,2010,6414,5339
+722,Namp'o,DPR Korea,2000,8585,9081
+722,Namp'o,DPR Korea,2010,9248,9081
+723,Jaya Pura,Indonesia,2000,7734,9421
+723,Jaya Pura,Indonesia,2010,10095,9421
+724,Jiande,China,2000,4236,5339
+724,Jiande,China,2010,3596,5339
+725,Sishui,China,2000,4691,5339
+725,Sishui,China,2010,4464,5339
+726,Tarakan,Indonesia,2000,4274,9421
+726,Tarakan,Indonesia,2010,5340,9421
+727,Hikone,Japan,2000,2559,4734
+727,Hikone,Japan,2010,2729,4734
+728,Macheng,China,2000,4395,5339
+728,Macheng,China,2010,3395,5339
+729,Sariwon,DPR Korea,2000,11377,9081
+729,Sariwon,DPR Korea,2010,12078,9081
+730,Yitong,China,2000,2330,5339
+730,Yitong,China,2010,2314,5339
+731,Tiefa,China,2000,4684,5339
+731,Tiefa,China,2010,4359,5339
+732,Changqing,China,2000,4410,5339
+732,Changqing,China,2010,4935,5339
+733,Xilinhaote,China,2000,2300,5339
+733,Xilinhaote,China,2010,2860,5339
+734,Yongqing,China,2000,2905,5339
+734,Yongqing,China,2010,2781,5339
+735,Dumai,Indonesia,2000,4705,9421
+735,Dumai,Indonesia,2010,6243,9421
+736,Cam Pha,Vietnam,2000,5556,7729
+736,Cam Pha,Vietnam,2010,5421,7729
+737,Tuy Hoa,Vietnam,2000,5619,7729
+737,Tuy Hoa,Vietnam,2010,7558,7729
+738,Xidu,China,2000,9433,5339
+738,Xidu,China,2010,9049,5339
+739,Nehe,China,2000,1054,5339
+739,Nehe,China,2010,981,5339
+740,Fengcheng,China,2000,3142,5339
+740,Fengcheng,China,2010,2959,5339
+741,Yosu,Republic of Korea,2000,4796,10511
+741,Yosu,Republic of Korea,2010,4920,10511
+742,Chizhou,China,2000,4969,5339
+742,Chizhou,China,2010,4986,5339
+743,Wuxue,China,2000,8216,5339
+743,Wuxue,China,2010,6994,5339
+744,Hualien,"Taiwan, China",2000,3108,7391
+744,Hualien,"Taiwan, China",2010,3097,7391
+745,Sorong,Indonesia,2000,4249,9421
+745,Sorong,Indonesia,2010,5665,9421
+746,Gao'an,China,2000,4159,5339
+746,Gao'an,China,2010,4207,5339
+747,Zhangjiajie,China,2000,5442,5339
+747,Zhangjiajie,China,2010,5328,5339
+748,Kaili,China,2000,7151,5339
+748,Kaili,China,2010,7721,5339
+749,Shifang,China,2000,6760,5339
+749,Shifang,China,2010,5773,5339
+750,Ningde,China,2000,4744,5339
+750,Ningde,China,2010,4116,5339
+751,Tulufan,China,2000,1751,5339
+751,Tulufan,China,2010,1734,5339
+752,Pathein,Myanmar,2000,6971,7510
+752,Pathein,Myanmar,2010,8585,7510
+753,Guixi,China,2000,4425,5339
+753,Guixi,China,2010,4461,5339
+754,Da Lat,Vietnam,2000,7123,7729
+754,Da Lat,Vietnam,2010,9506,7729
+755,Yicheng,China,2000,2749,5339
+755,Yicheng,China,2010,2688,5339
+756,Lingwu,China,2000,11226,5339
+756,Lingwu,China,2010,5747,5339
+757,Cam Ranh,Vietnam,2000,14727,7729
+757,Cam Ranh,Vietnam,2010,20131,7729
+758,Funan,China,2000,7216,5339
+758,Funan,China,2010,6500,5339
+759,Chibi,China,2000,7005,5339
+759,Chibi,China,2010,6174,5339
+760,Vinh Long,Vietnam,2000,9465,7729
+760,Vinh Long,Vietnam,2010,13098,7729
+761,Gujiao,China,2000,3270,5339
+761,Gujiao,China,2010,3224,5339
+762,Linxiang,China,2000,6839,5339
+762,Linxiang,China,2010,6516,5339
+763,Ningguo,China,2000,8462,5339
+763,Ningguo,China,2010,6332,5339
+764,Shishou,China,2000,6328,5339
+764,Shishou,China,2010,5502,5339
+765,Jin'e,China,2000,10417,5339
+765,Jin'e,China,2010,8763,5339
+766,Xucheng,China,2000,3477,5339
+766,Xucheng,China,2010,3136,5339
+767,Huangmei,China,2000,8230,5339
+767,Huangmei,China,2010,6599,5339
+768,Laohekou,China,2000,4026,5339
+768,Laohekou,China,2010,3711,5339
+769,Wenchang,China,2000,3182,5339
+769,Wenchang,China,2010,3382,5339
+770,Iligan,Philippines,2000,9130,10314
+770,Iligan,Philippines,2010,10798,10314
+771,Kure,Japan,2000,4048,4734
+771,Kure,Japan,2010,4297,4734
+772,Tagum,Philippines,2000,6266,10314
+772,Tagum,Philippines,2010,6560,10314
+773,Pakokku,Myanmar,2000,3081,7510
+773,Pakokku,Myanmar,2010,3811,7510
+774,Dunhua,China,2000,1241,5339
+774,Dunhua,China,2010,1239,5339
+775,Longnan,China,2000,7394,5339
+775,Longnan,China,2010,7408,5339
+776,Lechang,China,2000,4636,5339
+776,Lechang,China,2010,3846,5339
+777,Marawi,Philippines,2000,20411,10314
+777,Marawi,Philippines,2010,22832,10314
+778,Xingyi,China,2000,5773,5339
+778,Xingyi,China,2010,6050,5339
+779,Ningan,China,2000,1416,5339
+779,Ningan,China,2010,1401,5339
+780,Sasebo,Japan,2000,4002,4734
+780,Sasebo,Japan,2010,4078,4734
+781,Niihama,Japan,2000,1646,4734
+781,Niihama,Japan,2010,1764,4734
+782,Bitung,Indonesia,2000,6489,9421
+782,Bitung,Indonesia,2010,7729,9421
+783,Bole,China,2000,2192,5339
+783,Bole,China,2010,2135,5339
+784,Iwaki,Japan,2000,2570,4734
+784,Iwaki,Japan,2010,2654,4734
+785,Padangsidempuan,Indonesia,2000,19882,9421
+785,Padangsidempuan,Indonesia,2010,24293,9421
+786,Kushiro,Japan,2000,2276,4734
+786,Kushiro,Japan,2010,2646,4734
+787,Douhuti,China,2000,5723,5339
+787,Douhuti,China,2010,5016,5339
+788,Tokuyama,Japan,2000,2219,4734
+788,Tokuyama,Japan,2010,2418,4734
+789,Kanggye,DPR Korea,2000,8918,9081
+789,Kanggye,DPR Korea,2010,9186,9081
+790,Tarlac,Philippines,2000,2481,10314
+790,Tarlac,Philippines,2010,3038,10314
+791,Huoqiu,China,2000,4685,5339
+791,Huoqiu,China,2010,4413,5339
+792,Da'an,China,2000,1967,5339
+792,Da'an,China,2010,1974,5339
+793,Yidu,China,2000,6386,5339
+793,Yidu,China,2010,6206,5339
+794,Rach Gia,Vietnam,2000,14306,7729
+794,Rach Gia,Vietnam,2010,19637,7729
+795,Gorontalo,Indonesia,2000,3261,9421
+795,Gorontalo,Indonesia,2010,4071,9421
+796,Surat Thani,Thailand,2000,3017,4344
+796,Surat Thani,Thailand,2010,3648,4344
+797,Yichun,China,2000,6251,5339
+797,Yichun,China,2010,5565,5339
+798,Ruichang,China,2000,6238,5339
+798,Ruichang,China,2010,6317,5339
+799,Thai Binh,Vietnam,2000,7977,7729
+799,Thai Binh,Vietnam,2010,8999,7729
+800,Zhijiang,China,2000,5691,5339
+800,Zhijiang,China,2010,5601,5339
+801,Soc Trang,Vietnam,2000,7543,7729
+801,Soc Trang,Vietnam,2010,9920,7729
+802,Caohe,China,2000,7222,5339
+802,Caohe,China,2010,5438,5339
+803,Myingyan,Myanmar,2000,3470,7510
+803,Myingyan,Myanmar,2010,4261,7510
+804,Dehong,China,2000,2976,5339
+804,Dehong,China,2010,3284,5339
+805,Hirosaki,Japan,2000,2787,4734
+805,Hirosaki,Japan,2010,3084,4734
+806,Rayong,Thailand,2000,2442,4344
+806,Rayong,Thailand,2010,2678,4344
+807,Kuitun,China,2000,5722,5339
+807,Kuitun,China,2010,3159,5339
+808,Watampone,Indonesia,2000,6583,9421
+808,Watampone,Indonesia,2010,8777,9421
+809,Yanling,China,2000,8058,5339
+809,Yanling,China,2010,6690,5339
+810,Toungoo,Myanmar,2000,4198,7510
+810,Toungoo,Myanmar,2010,5266,7510
+811,Qingzhen,China,2000,7272,5339
+811,Qingzhen,China,2010,6669,5339
+812,Salatiga,Indonesia,2000,9988,9421
+812,Salatiga,Indonesia,2010,12945,9421
+813,Kunsan,Republic of Korea,2000,3218,10511
+813,Kunsan,Republic of Korea,2010,3360,10511
+814,Matsue,Japan,2000,3478,4734
+814,Matsue,Japan,2010,3759,4734
+815,Zhangshu,China,2000,4927,5339
+815,Zhangshu,China,2010,5203,5339
+816,Ubon Ratchathani,Thailand,2000,3572,4344
+816,Ubon Ratchathani,Thailand,2010,4219,4344
+817,Lufeng,China,2000,4035,5339
+817,Lufeng,China,2010,3872,5339
+818,Hailin,China,2000,1921,5339
+818,Hailin,China,2010,1719,5339
+819,Shangzhou,China,2000,11450,5339
+819,Shangzhou,China,2010,11541,5339
+820,My Tho,Vietnam,2000,15503,7729
+820,My Tho,Vietnam,2010,21297,7729
+821,Ca Mau,Vietnam,2000,7744,7729
+821,Ca Mau,Vietnam,2010,10269,7729
+822,Muling,China,2000,2036,5339
+822,Muling,China,2010,1835,5339
+823,Renhuai,China,2000,8952,5339
+823,Renhuai,China,2010,8918,5339
+824,Xuanwei,China,2000,4518,5339
+824,Xuanwei,China,2010,4673,5339
+825,Mengyin,China,2000,5627,5339
+825,Mengyin,China,2010,5103,5339
+826,Bei'an,China,2000,1238,5339
+826,Bei'an,China,2010,1219,5339
+827,Yingcheng,China,2000,7811,5339
+827,Yingcheng,China,2010,7196,5339
+828,Omuta,Japan,2000,2429,4734
+828,Omuta,Japan,2010,2642,4734
+829,Dangyang,China,2000,3910,5339
+829,Dangyang,China,2010,3633,5339
+830,Shimonoseki,Japan,2000,2615,4734
+830,Shimonoseki,Japan,2010,2753,4734
+831,Ejin Horo,China,2000,3759,5339
+831,Ejin Horo,China,2010,3410,5339
+832,Zixing,China,2000,4678,5339
+832,Zixing,China,2010,4080,5339
+833,Pyin-Oo-Lwin,Myanmar,2000,4199,7510
+833,Pyin-Oo-Lwin,Myanmar,2010,4340,7510
+834,Tomakomai,Japan,2000,1610,4734
+834,Tomakomai,Japan,2010,1764,4734
+835,Hongning,China,2000,3389,5339
+835,Hongning,China,2010,3229,5339
+836,Zhangjiang,China,2000,5921,5339
+836,Zhangjiang,China,2010,5510,5339
+837,Tieli,China,2000,1908,5339
+837,Tieli,China,2010,1824,5339
+838,Songzi,China,2000,6967,5339
+838,Songzi,China,2010,6194,5339
+839,Mishan,China,2000,1154,5339
+839,Mishan,China,2010,1062,5339
+840,Longjiang,China,2000,1432,5339
+840,Longjiang,China,2010,1451,5339
+841,Taonan,China,2000,1695,5339
+841,Taonan,China,2010,1649,5339
+842,Batangas,Philippines,2000,3528,10314
+842,Batangas,Philippines,2010,4305,10314
+843,Kabankalan,Philippines,2000,4558,10314
+843,Kabankalan,Philippines,2010,4471,10314
+844,Fengzhen,China,2000,4102,5339
+844,Fengzhen,China,2010,3848,5339
+845,Jishou,China,2000,6117,5339
+845,Jishou,China,2010,5871,5339
+846,Sibolga,Indonesia,2000,8929,9421
+846,Sibolga,Indonesia,2010,11179,9421
+847,Jianyang,China,2000,7556,5339
+847,Jianyang,China,2010,5501,5339
+848,Cabanatuan,Philippines,2000,3456,10314
+848,Cabanatuan,Philippines,2010,4086,10314
+849,Guangan,China,2000,8388,5339
+849,Guangan,China,2010,6576,5339
+850,Xinshi,China,2000,2956,5339
+850,Xinshi,China,2010,2767,5339
+851,Wonsan,DPR Korea,2000,9426,9081
+851,Wonsan,DPR Korea,2010,10215,9081
+852,Pingyin,China,2000,5286,5339
+852,Pingyin,China,2010,5046,5339
+853,Yuanzhou,China,2000,3250,5339
+853,Yuanzhou,China,2010,2875,5339
+854,Beipiao,China,2000,2807,5339
+854,Beipiao,China,2010,2408,5339
+855,Lampang,Thailand,2000,3137,4344
+855,Lampang,Thailand,2010,3636,4344
+856,Nanchuan,China,2000,5608,5339
+856,Nanchuan,China,2010,4007,5339
+857,Ishinomaki,Japan,2000,2558,4734
+857,Ishinomaki,Japan,2010,2786,4734
+858,Butuan,Philippines,2000,7131,10314
+858,Butuan,Philippines,2010,8783,10314
+859,Obihiro,Japan,2000,1545,4734
+859,Obihiro,Japan,2010,1739,4734
+860,Lijiang,China,2000,1425,5339
+860,Lijiang,China,2010,1672,5339
+861,Wugang,China,2000,3327,5339
+861,Wugang,China,2010,3300,5339
+862,Gaosha,China,2000,8406,5339
+862,Gaosha,China,2010,8571,5339
+863,Bontang,Indonesia,2000,2310,9421
+863,Bontang,Indonesia,2010,2908,9421
+864,Ya'an,China,2000,7364,5339
+864,Ya'an,China,2010,7452,5339
+865,Anlu,China,2000,5587,5339
+865,Anlu,China,2010,5189,5339
+866,Haeju,DPR Korea,2000,7630,9081
+866,Haeju,DPR Korea,2010,8307,9081
+867,Atushi,China,2000,8081,5339
+867,Atushi,China,2010,9458,5339
+868,Tanjungpinang,Indonesia,2000,2930,9421
+868,Tanjungpinang,Indonesia,2010,3375,9421
+869,Yonago,Japan,2000,3003,4734
+869,Yonago,Japan,2010,3315,4734

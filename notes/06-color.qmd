@@ -1,0 +1,578 @@
+---
+title: "Color"
+author: Kris Sankaran
+date: 2026-10-09
+format:
+  html:
+    html-math-method: mathjax
+    fig-align: center
+execute:
+    echo: true
+    message: false
+    warning: false
+    cache: false
+    eval: true
+---
+
+```{r}
+#| label: setup
+#| echo: false
+library(tidyverse)
+library(colorspace)
+library(patchwork)
+theme_set(
+    theme_classic() +
+    theme(panel.border = element_rect(fill = NA, linewidth = 0))
+)
+theme_swatch <- theme_void() +
+    theme(
+        axis.text.y = element_text(hjust = 1, margin = margin(r = 4)),
+        plot.title = element_text(size = 10)
+    )
+set.seed(2026)
+```
+
+1. We've been using color in our data visualizations since the very first day of
+class. But despite being a topic that most people can informally talk about (and
+maybe even encountered in preschool...), what color actually _is_ is a very rich
+topic. Learning a bit more about the theory and psychology of color can be
+helpful for designing more effective data visualizations.
+
+## Color Theory
+
+### Neuroscience
+
+1. Human vision works through photoreceptor cells called rods and cones. Rod
+cells are more sensitive than cones and can detect even a single photon of light
+(cones need tens to hundreds before they are stimulated). But they aren't able
+to effectively distinguish between photons from different wavelengths, so their
+signals can't be used to decode finer color variations. This is why colors
+appear subdued at night.
+
+1. Cone cells are sensitive to specific wavelengths and come in three types (L,
+M, S) which are sensitive to long, medium, and short wavelengths of light. How
+exactly the relative activations of these photoreceptor cells get translated to
+perceived color is actually an actively debated topic in neuroscience. But for
+our purposes, we'll work with the opponent color channels theory discussed in
+the reading. This theory suggests that the signals from these cone cells get
+translated into three channels, a red-green, a blue-green, and a luminance
+(black-white) gradient.
+
+### Color Spaces
+
+come in three types.
+
+1. The eyes have rods and cones. Rods are only for black and white and give
+relatively low-resolution information. There are three types of rods, which
+cover three types of opponent color channels. One of those is for luminance, . The
+other two are red, green, and blue-yellow respectively.
+
+Aside: this is how color blindness works. It's a deficiency in one of the kinds of cones.
+
+1. To speak precisely about color, it's worth breaking it apart into luminance,
+hue, and saturation.
+
+Color space represents how to numerically represent color. RGB comes from computing but isn't really appropriate for human perception. The more appropriate one is HSL, which stands for hue, saturation, and lightness. Hue is pure color, saturation is the amount of white, and lightness is the amount of black mixed in.
+
+Example representing HSL and HSV in color wheels
+
+```{r}
+#| label: hsl-hsv-wheels
+#| fig-width: 6
+#| fig-height: 3
+#| out-width: "80%"
+wheel <- expand_grid(hue = seq(0, 357, by = 3), sat = seq(0.05, 1, by = 0.1))
+
+wheel_plot <- function(colors, title) {
+    ggplot(wheel, aes(hue, sat, fill = colors)) +
+        geom_tile() +
+        scale_fill_identity() +
+        scale_x_continuous(limits = c(-1.5, 358.5)) +
+        coord_polar() +
+        labs(title = title) +
+        theme_void() +
+        theme(plot.title = element_text(size = 10, hjust = 0.5))
+}
+
+wheel_plot(hex(HSV(wheel$hue, wheel$sat, 1)), "HSV (value = 1)") +
+    wheel_plot(hex(HLS(wheel$hue, 0.5, wheel$sat)), "HSL (lightness = 0.5)")
+```
+
+Luminance in HSL doesn't exactly correspond to luminance in the cones of our vision.
+
+```{r}
+#| label: hsl-vs-luminance
+#| fig-width: 6
+#| fig-height: 2
+#| out-width: "80%"
+hues <- tibble(
+    name = c("red", "yellow", "green", "cyan", "blue", "magenta"),
+    hue = seq(0, 300, by = 60),
+    hsl = hex(HLS(hue, 0.5, 1)),                          # same HSL lightness
+    lstar = coords(as(hex2RGB(hsl), "LAB"))[, "L"],       # perceptual lightness
+    perceived = hex(LAB(lstar, 0, 0)),                    # just the L* channel, as gray
+    label = paste0(name, "\nL* = ", round(lstar))
+)
+
+hues |>
+    pivot_longer(c(hsl, perceived), names_to = "version", values_to = "color") |>
+    mutate(version = factor(version, c("hsl", "perceived"), c("HSL, L = 0.5", "Same colors as L*"))) |>
+    ggplot(aes(fct_inorder(label), fct_rev(version), fill = color)) +
+    geom_tile(color = "white") +
+    scale_fill_identity() +
+    scale_x_discrete(position = "top") +
+    labs(x = NULL, y = NULL) +
+    theme_swatch +
+    theme(axis.text.x = element_text(size = 8))
+```
+
+The L*, A*, B* representation is a better match to what we perceive as true luminosity. It has been calibrated to human observers. It is a good choice for operations on colors like interpolation and finding differences.
+
+The way the discussion focuses on luminance is slightly different than the definition given before. They're using it to describe the black-and-white visual channel.
+
+Luminance, hue, and saturation are all separate visual channels that can be manipulated to encode data. They are a more specific source of variation than what we might more informally call color.
+
+```{r}
+#| label: separate-channels
+#| fig-width: 6
+#| fig-height: 1.8
+#| out-width: "80%"
+n <- 9
+ramps <- bind_rows(
+    tibble(channel = "Luminance", step = 1:n,
+           color = hcl(260, 40, seq(20, 90, length.out = n))),
+    tibble(channel = "Saturation", step = 1:n,
+           color = hcl(260, seq(0, 70, length.out = n), 60)),
+    tibble(channel = "Hue", step = 1:n,
+           color = hcl(seq(0, 320, length.out = n), 50, 60))
+)
+
+ggplot(ramps, aes(step, fct_rev(fct_inorder(channel)), fill = color)) +
+    geom_tile(color = "white") +
+    scale_fill_identity() +
+    labs(x = NULL, y = NULL) +
+    theme_swatch
+```
+
+Each ramp changes only one channel. Here is the same ordered variable, encoded
+by each of them.
+
+```{r}
+#| label: channels-scatter
+#| fig-width: 8
+#| fig-height: 2.5
+#| out-width: "90%"
+pts <- tibble(x = runif(300), y = runif(300), value = x + y)
+
+base <- ggplot(pts, aes(x, y, color = value)) +
+    geom_point(size = 1.5) +
+    coord_equal() +
+    theme(legend.position = "none", axis.text = element_blank(), axis.ticks = element_blank())
+
+(base + scale_color_gradient(low = hcl(260, 40, 20), high = hcl(260, 40, 90)) +
+    ggtitle("Luminance")) +
+    (base + scale_color_gradient(low = hcl(260, 0, 60), high = hcl(260, 70, 60)) +
+        ggtitle("Saturation")) +
+    (base + scale_color_gradientn(colors = hcl(seq(0, 320, length.out = 9), 50, 60)) +
+        ggtitle("Hue"))
+```
+
+The magnitude of luminance is appropriate for ordered data but we shouldn't try differentiating between more than, say, five bins of luminance. It is very difficult to tell small variations in luminance apart.
+
+```{r}
+#| label: luminance-bins
+#| fig-width: 6
+#| fig-height: 1.8
+#| out-width: "80%"
+bins <- map_dfr(c(5, 12), \(k) tibble(k = k, step = 1:k, color = gray.colors(k, start = 0.1, end = 0.95)))
+
+ggplot(bins, aes(xmin = (step - 1) / k, xmax = step / k, ymin = 0, ymax = 1, fill = color)) +
+    geom_rect() +
+    scale_fill_identity() +
+    facet_wrap(~k, ncol = 1, labeller = as_labeller(c("5" = "5 gray levels", "12" = "12 gray levels"))) +
+    theme_void() +
+    theme(strip.text = element_text(hjust = 0, size = 9, margin = margin(b = 4)))
+```
+
+Small differences in luminance are very difficult to read if they're supposed to be defining edges. For example text that has a 3:1 luminance ratio is almost impossible to read against the background.  They recommend 10:1.
+
+```{r}
+#| label: text-contrast
+#| fig-width: 6
+#| fig-height: 2
+#| out-width: "70%"
+relative_luminance <- function(color) {
+    rgb <- col2rgb(color) / 255
+    linear <- ifelse(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055)^2.4)
+    colSums(linear * c(0.2126, 0.7152, 0.0722))
+}
+
+contrast_ratio <- function(a, b) {
+    la <- relative_luminance(a)
+    lb <- relative_luminance(b)
+    (pmax(la, lb) + 0.05) / (pmin(la, lb) + 0.05)
+}
+
+# gray text on a white background whose contrast ratio is closest to the target
+grays <- gray(seq(0, 1, length.out = 256))
+text_color <- function(target) grays[which.min(abs(contrast_ratio(grays, "white") - target))]
+
+tibble(ratio = c(1.5, 3, 10)) |>
+    mutate(
+        color = map_chr(ratio, text_color),
+        label = paste0("Contrast ", ratio, ":1 (", round(contrast_ratio(color, "white"), 1), " achieved)")
+    ) |>
+    ggplot(aes(0, fct_rev(factor(ratio)), label = label, color = color)) +
+    geom_text(hjust = 0, size = 5) +
+    scale_color_identity() +
+    xlim(0, 1) +
+    theme_void()
+```
+
+Saturation can also be used for ordered data but again can only have so many bins. Three is the maximum recommended.
+
+There's an interaction between channel size. For example it's easier to tell small differences in saturation if there are larger regions. For small sizes it's recommended to use highly saturated colors but for large regions the recommendation is to use low-saturation colors, which are pastels.
+
+```{r}
+#| label: saturation-size
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: "70%"
+cells <- expand_grid(x = 1:12, y = 1:12) |>
+    mutate(level = factor(cut(x + y + rnorm(n(), sd = 2), 3, labels = FALSE)))
+
+pastel <- hcl(260, c(10, 20, 30), 75)
+vivid <- hcl(260, c(30, 55, 80), 55)
+
+small_marks <- function(palette, title) {
+    ggplot(cells, aes(x, y, color = level)) +
+        geom_point(size = 0.8) +
+        scale_color_manual(values = palette) +
+        labs(title = title) +
+        theme_void() + theme(legend.position = "none", plot.title = element_text(size = 9))
+}
+
+large_marks <- function(palette, title) {
+    ggplot(cells, aes(x, y, fill = level)) +
+        geom_tile() +
+        scale_fill_manual(values = palette) +
+        labs(title = title) +
+        theme_void() + theme(legend.position = "none", plot.title = element_text(size = 9))
+}
+
+(small_marks(pastel, "Small marks, pastel") + small_marks(vivid, "Small marks, saturated")) /
+    (large_marks(pastel, "Large regions, pastel") + large_marks(vivid, "Large regions, saturated"))
+```
+
+U is very highly ranked for telling apart categorical data values. It's easy to tell the difference in hue for contiguous regions but harder to tell differences in hue when they're very far apart. In a small region we can tell apart roughly six or seven hues at a time.
+
+```{r}
+#| label: hue-count
+#| fig-width: 8
+#| fig-height: 3.5
+#| out-width: "90%"
+hue_counts <- c(3, 6, 12, 20)
+
+adjacent <- map_dfr(hue_counts, \(k) {
+    colors <- rainbow_hcl(k)
+    tibble(k = k, group = 1:k, color = colors)
+}) |>
+    ggplot(aes(xmin = (group - 1) / k, xmax = group / k, ymin = 0, ymax = 1, fill = color)) +
+    geom_rect() +
+    scale_fill_identity() +
+    facet_wrap(~k, nrow = 1, labeller = label_both) +
+    labs(title = "Large, adjacent regions") +
+    theme_void() + theme(plot.title = element_text(size = 10))
+
+scattered <- map_dfr(hue_counts, \(k) {
+    colors <- rainbow_hcl(k)
+    group <- sample(k, 200, replace = TRUE)
+    tibble(k = k, x = runif(200), y = runif(200), color = colors[group])
+}) |>
+    ggplot(aes(x, y, color = color)) +
+    geom_point(size = 0.8) +
+    scale_color_identity() +
+    facet_wrap(~k, nrow = 1, labeller = label_both) +
+    labs(title = "Small marks, scattered") +
+    theme_void() + theme(plot.title = element_text(size = 10))
+
+adjacent / scattered
+```
+
+Unlike saturation and luminance, hue doesn't have a natural ordering. We've sometimes learned associations (for example, green, yellow, red in traffic lights) but these aren't at the level of perception in the same way that saturation and luminance are.
+
+Transparency should not be used together with luminance or saturation. It's often used to differentiate foreground from background layers. But you can't really use it to order-encode more ordered data.
+
+Color map is a term used to refer to the visual encoding of data with color.
+
+The basic taxonomy is:
+* categorical versus ordered
+* within ordered: sequential versus divergent
+This matches the underlying data attribute characteristics.
+
+The color maps can be either continuous or segmented into discrete bins (also called stepped color map). They can even be two-dimensional in the case of bivariate color maps.
+
+```{r}
+#| label: continuous-vs-stepped
+#| fig-width: 7
+#| fig-height: 3
+#| out-width: "80%"
+base <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+    geom_raster() +
+    theme(legend.position = "bottom", legend.key.width = unit(1, "cm"))
+
+(base + scale_fill_viridis_c() + ggtitle("Continuous")) +
+    (base + scale_fill_viridis_b(n.breaks = 6) + ggtitle("Stepped"))
+```
+
+These categorical color maps are actually traversing the hue, saturation, and luminance channels simultaneously along a single path through the 3D space.
+
+The number of distinct colors that we can tell apart is between 6 and 12. Recommendation of using opponent colors as a good default (e.g., red, blue, green, and yellow)
+
+It's not always clear what luminance contrast to use. If you choose very high luminance contrast then the colors can be told apart even on black-and-white paper. But keeping the luminances close to each other can make the saliences more comparable and avoid the differences that draw attention to themselves. A good color map resource is Color Brewer. You can do for both low and high saturation maps.
+
+```{r}
+#| label: categorical-luminance
+#| fig-width: 6
+#| fig-height: 3
+#| out-width: "80%"
+map_dfr(c("Set2", "Dark2", "Set1"), \(p) {
+    tibble(palette = p, index = 1:8, color = RColorBrewer::brewer.pal(8, p))
+}) |>
+    mutate(grayscale = desaturate(color, 1)) |>
+    pivot_longer(c(color, grayscale), names_to = "version", values_to = "fill") |>
+    ggplot(aes(index, fct_rev(version), fill = fill)) +
+    geom_tile(color = "white") +
+    scale_fill_identity() +
+    facet_wrap(~fct_inorder(palette), ncol = 1) +
+    theme_swatch +
+    theme(strip.text = element_text(hjust = 0, size = 9))
+```
+
+Set2 has nearly constant luminance, so its grayscale version is almost a flat
+strip. Set1 and Dark2 vary in luminance, so the colors are still separable on
+a black-and-white print, but some colors will draw more attention than others.
+
+How many colors we can tell apart from each other also depends on how much space is available for showing them. A very small segment will be difficult to read if we use many colors. Illustrated with an example where 21 chromosomes are visualized with different colors (still possible to read), versus the individual segments after meiosis, where the colors are no longer clearly distinguishable.
+
+In general 12 color bins is as much as we can ever distinguish.
+
+What should you do when you have many categories? There are two reasonable options:
+1. To bin the groups into a smaller number of categories.
+2. To group all the rare categories into "other".
+
+If you insist on using many categories then it's possible to combine different channels at once (for example, shape and color).
+
+```{r}
+#| label: many-categories
+#| fig-width: 9
+#| fig-height: 3.5
+#| out-width: "90%"
+many <- ggplot(mpg, aes(displ, hwy, color = manufacturer)) +
+    geom_point() +
+    guides(color = guide_legend(ncol = 2, title = NULL)) +
+    labs(title = "15 manufacturers")
+
+lumped <- mpg |>
+    mutate(manufacturer = fct_lump_n(manufacturer, 5)) |>
+    ggplot(aes(displ, hwy, color = manufacturer)) +
+    geom_point() +
+    scale_color_manual(values = c(RColorBrewer::brewer.pal(5, "Set1"), "grey70")) +
+    labs(title = "Top 5 + Other")
+
+many + lumped
+```
+
+Combining channels: 12 categories as 12 hues, versus 4 hues crossed with 3 shapes.
+
+```{r}
+#| label: color-and-shape
+#| fig-width: 8
+#| fig-height: 3
+#| out-width: "90%"
+clusters <- tibble(category = 1:12, angle = 2 * pi * (category - 1) / 12) |>
+    mutate(
+        cx = cos(angle), cy = sin(angle),
+        hue_group = factor((category - 1) %% 4),
+        shape_group = factor((category - 1) %/% 4)
+    )
+
+pts <- clusters |>
+    slice(rep(1:12, each = 12)) |>
+    mutate(x = cx + rnorm(n(), sd = 0.12), y = cy + rnorm(n(), sd = 0.12))
+
+base <- ggplot(pts, aes(x, y)) + coord_equal() + theme_void() + theme(legend.position = "none")
+
+(base + geom_point(aes(color = factor(category))) + scale_color_manual(values = rainbow_hcl(12)) +
+    ggtitle("12 hues")) +
+    (base + geom_point(aes(color = hue_group, shape = shape_group), size = 2) +
+        scale_color_brewer(palette = "Set1") + ggtitle("4 hues x 3 shapes"))
+```
+
+Now on to ordered color maps. Sequential color maps range from minimum to maximum values. Gray scale is what happens when you ignore hue and just vary luminance.
+
+Consider fixing a hue at one end of a colormap. If we vary saturation then one end will be white. If we vary luminance then the other end will be black.
+
+```{r}
+#| label: sequential-maps
+#| fig-width: 9
+#| fig-height: 3
+#| out-width: "95%"
+elev <- expand_grid(col = 1:ncol(volcano), row = 1:nrow(volcano)) |>
+    mutate(z = as.vector(volcano))
+
+map_plot <- function(scale, title, data = elev) {
+    ggplot(data, aes(col, row, fill = z)) +
+        geom_raster() +
+        scale +
+        coord_equal() +
+        labs(title = title) +
+        theme_void() +
+        theme(legend.position = "bottom", legend.title = element_blank(),
+              legend.key.width = unit(0.6, "cm"), legend.key.height = unit(0.2, "cm"),
+              plot.title = element_text(size = 9), legend.text = element_text(size = 7))
+}
+
+map_plot(scale_fill_gradient(low = "black", high = "white"), "Grayscale
+(luminance only)") +
+    map_plot(scale_fill_gradient(low = "white", high = "#1f78b4"), "One hue,
+varying saturation") +
+    map_plot(scale_fill_gradient(low = "black", high = "#1f78b4"), "One hue,
+varying luminance") +
+    map_plot(scale_fill_viridis_c(), "Many hues
+(viridis)") +
+    plot_layout(nrow = 1)
+```
+
+Diverging maps have a meaningful midpoint, so both ends should be visually distinct
+from the center and from each other.
+
+```{r}
+#| label: diverging-maps
+#| fig-width: 9
+#| fig-height: 3
+#| out-width: "95%"
+elev_c <- elev |> mutate(z = z - 130)  # deviation from a reference elevation
+
+diverging <- function(midpoint) {
+    scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B", midpoint = midpoint)
+}
+
+map_plot(scale_fill_viridis_c(), "Sequential:
+reference is invisible", elev_c) +
+    map_plot(diverging(0), "Diverging:
+midpoint at reference", elev_c) +
+    map_plot(diverging(30), "Diverging:
+midpoint misplaced", elev_c) +
+    plot_layout(nrow = 1)
+```
+
+You can actually use many hues in a continuous colormap, for example, a rainbow palette. The fewer hues that are considered, the more the global structure is emphasized. The more hues that are considered, the more the fine-grain structure is emphasized. Add the example from Bergman et al. 95.
+
+Even though rainbow palettes are helpful for looking at fine structure, one problem is that the differences in hue don't have a natural ordering so it's difficult to make the order visible.
+
+Another problem is that the scale is not perceptually linear. 1,000 units at one part of the range can go through three different colors while at another range they can look all the same color.
+
+A technical solution to this problem is called monotonically increasing luminence. Show the example from Rogowitz and Trainisch 98.
+
+```{r}
+#| label: rainbow-maps
+#| fig-width: 8
+#| fig-height: 3
+#| out-width: "90%"
+palette_cols <- list(
+    Rainbow = rev(rainbow(100, end = 0.7)),
+    Viridis = viridisLite::viridis(100),
+    Grayscale = gray(seq(0, 1, length.out = 100))
+)
+
+map_plot(scale_fill_gradientn(colors = palette_cols$Rainbow), "Rainbow") +
+    map_plot(scale_fill_gradientn(colors = palette_cols$Viridis), "Viridis") +
+    map_plot(scale_fill_gradientn(colors = palette_cols$Grayscale), "Grayscale") +
+    plot_layout(nrow = 1)
+```
+
+The rainbow creates bands that look like discrete steps, but where the bands fall
+depends on hue changes, not on the data. Plotting luminance (L\*) along each
+colormap shows why: the rainbow rises and falls, while viridis increases steadily.
+
+```{r}
+#| label: rainbow-luminance
+#| fig-width: 5
+#| fig-height: 3
+#| out-width: "60%"
+imap_dfr(palette_cols, \(cols, name) {
+    tibble(palette = name, position = seq_along(cols), lstar = coords(as(hex2RGB(cols), "LAB"))[, "L"])
+}) |>
+    ggplot(aes(position, lstar, color = palette)) +
+    geom_line(linewidth = 1) +
+    labs(x = "Position along colormap (low to high)", y = "L*", color = NULL)
+```
+
+Bivariate colormaps show two attributes at a time.
+
+For categorical data with multiple levels this doesn't really work well. But it can be okay for sequential and diverging attributes. Some people will have difficulty interpreting this even though they appear often in visualizations.
+
+```{r}
+#| label: bivariate-map
+#| fig-width: 7
+#| fig-height: 3.5
+#| out-width: "80%"
+# second variable: local steepness of the volcano
+shift_rows <- rbind(volcano[-1, ], volcano[nrow(volcano), ])
+shift_cols <- cbind(volcano[, -1], volcano[, ncol(volcano)])
+slope <- sqrt((shift_rows - volcano)^2 + (shift_cols - volcano)^2)
+
+# 3 x 3 palette; index = (slope bin - 1) * 3 + elevation bin
+bi_pal <- c("#e8e8e8", "#ace4e4", "#5ac8c8",
+            "#dfb0d6", "#a5add3", "#5698b9",
+            "#be64ac", "#8c62aa", "#3b4994")
+
+bi <- elev |>
+    mutate(
+        slope = as.vector(slope),
+        color = bi_pal[(ntile(slope, 3) - 1) * 3 + ntile(z, 3)]
+    )
+
+bi_map <- ggplot(bi, aes(col, row, fill = color)) +
+    geom_raster() + scale_fill_identity() + coord_equal() + theme_void()
+
+bi_legend <- expand_grid(elevation = 1:3, slope = 1:3) |>
+    ggplot(aes(elevation, slope, fill = bi_pal[(slope - 1) * 3 + elevation])) +
+    geom_tile() + scale_fill_identity() + coord_equal() +
+    labs(x = "Elevation →", y = "Slope →") +
+    theme_minimal(base_size = 9) +
+    theme(panel.grid = element_blank(), axis.text = element_blank())
+
+bi_map + bi_legend + plot_layout(widths = c(3, 1))
+```
+
+Red-green color blindness can affect 8% of the men. About half a percent of the women. To design for a potential colorblind audience, you can use a simulator.
+
+```{r}
+#| label: colorblind-simulation
+#| fig-width: 7
+#| fig-height: 4.5
+#| out-width: "80%"
+cvd_palettes <- list(
+    Rainbow = rainbow(7),
+    "Red-green" = RColorBrewer::brewer.pal(7, "RdYlGn"),
+    Viridis = viridisLite::viridis(7),
+    "Okabe-Ito" = unname(palette.colors(8, "Okabe-Ito")[-1])
+)
+
+imap_dfr(cvd_palettes, \(cols, name) {
+    tibble(
+        palette = name, index = seq_along(cols),
+        Normal = cols, Deuteranopia = deutan(cols), Protanopia = protan(cols), Tritanopia = tritan(cols)
+    )
+}) |>
+    pivot_longer(Normal:Tritanopia, names_to = "vision", values_to = "color") |>
+    mutate(vision = fct_rev(fct_inorder(vision))) |>
+    ggplot(aes(index, vision, fill = color)) +
+    geom_tile(color = "white") +
+    scale_fill_identity() +
+    facet_wrap(~palette, ncol = 2) +
+    theme_swatch +
+    theme(strip.text = element_text(size = 10))
+```

@@ -60,21 +60,45 @@ translated into three channels, a red-green, a blue-green, and a luminance
 
 ### Color Spaces
 
-come in three types.
+1. Color spaces are attempts to mathematically ``map'' the space of colors that
+are perceivable by the human visual system. They provide different ways of
+operationalizing ideas like color and luminance, but be mindful that these are
+not necessarily perfect matches with how our biology works.
 
-1. The eyes have rods and cones. Rods are only for black and white and give
-relatively low-resolution information. There are three types of rods, which
-cover three types of opponent color channels. One of those is for luminance, . The
-other two are red, green, and blue-yellow respectively.
+1. The RGB color space decomposes colors into red, green, and blue components.
+It associates each color with a point in 3D space.
 
-Aside: this is how color blindness works. It's a deficiency in one of the kinds of cones.
+![](figures/RGB_Cube_Show_lowgamma_cutout_b.png)
 
-1. To speak precisely about color, it's worth breaking it apart into luminance,
-hue, and saturation.
+This system became popular with the rise of television and computer monitors,
+which construct color in this way. For example, LCD displays simulate the
+appearance of many different colors by using liquid crystals to adjust the
+relative backlight passing through red, green, and blue filters.
 
-Color space represents how to numerically represent color. RGB comes from computing but isn't really appropriate for human perception. The more appropriate one is HSL, which stands for hue, saturation, and lightness. Hue is pure color, saturation is the amount of white, and lightness is the amount of black mixed in.
+![](figures/RGB_pixels.jpg)
 
-Example representing HSL and HSV in color wheels
+1. While this is convenient for thinking about how color is constructed on these
+devices, it's not very useful for speaking about color in visualization design.
+The issue is that simple operations in RGB space don't correspond to easily
+explainable changes in the perceived color. For example, suppose we want to
+change an orange color to relatively less saturated version. This requires an
+unintuitive readjustment of each of the RGB color components (it's not
+immediately obvious why we would have to increase blue and decrease red so
+much).
+
+![](figures/Unintuitive-rgb.png)
+
+1. The need for a more intuitive coordinate system to map out colors has been
+appreciated by artists and researchers for a long time. For example, in 1810,
+Phillipp Otto Runge created a color sphere where hues were associated with the
+polar angle, saturation with the radius, and lightness/darkness with the
+$z$-axis. In this spherical geometry, each of the coordinates has a meaningful
+perceptual interpretation.
+
+1. There have been many more modern refinements. The most widely used
+alternative to RGB in practice is HSL, which stands for Hue, Saturation, and
+Luminance. The hue and saturation axes can be visualized using a color wheel,
+and modifying the luminance leads to color wheels.
 
 ```{r}
 #| label: hsl-hsv-wheels
@@ -98,7 +122,16 @@ wheel_plot(hex(HSV(wheel$hue, wheel$sat, 1)), "HSV (value = 1)") +
     wheel_plot(hex(HLS(wheel$hue, 0.5, wheel$sat)), "HSL (lightness = 0.5)")
 ```
 
-Luminance in HSL doesn't exactly correspond to luminance in the cones of our vision.
+1. The system is actually derived by transforming the RGB cube. We tilt the cube
+so that black and white appear at the top and bottom. We then fill in the gaps
+to form an entire cylinder.
+
+<iframe width="1300" height="1452" frameborder="0" loading="lazy" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; web-share" allowfullscreen src="https://commons.wikimedia.org/wiki/File:RGB_2_HSL_conversion_with_grid.ogg?embedplayer=true" />
+
+1. One subtlety is that luminance in HSL doesn't correspond exactly to how we
+perceive luminance in our visual system. In the figure below, all the colors
+have the same "L" value in HSL, shown in the top row, but in perceptual studies,
+people consistently order the perceived luminance according to the bottom row.
 
 ```{r}
 #| label: hsl-vs-luminance
@@ -126,11 +159,22 @@ hues |>
     theme(axis.text.x = element_text(size = 8))
 ```
 
-The L*, A*, B* representation is a better match to what we perceive as true luminosity. It has been calibrated to human observers. It is a good choice for operations on colors like interpolation and finding differences.
+1. For this reason, the $L^\ast a^\ast b^\ast$ color space was developed. The
+goal was to create a color space that is perceptually uniform, in the sense that
+it has been calibrated by to match the luminance judgments made by human study
+participants. The bottom row in the plot above gives the $L^\ast$ values
+associated with each of the colors in the top row.
 
-The way the discussion focuses on luminance is slightly different than the definition given before. They're using it to describe the black-and-white visual channel.
+1. There's an entire science based around how people perceive color and how we
+should represent it theoretically. It could easily be an entire class. Since our
+focus is data visualization, let's consider how these aspects of color theory
+can influence the use of color as a visual encoding channel.
 
-Luminance, hue, and saturation are all separate visual channels that can be manipulated to encode data. They are a more specific source of variation than what we might more informally call color.
+## Visual Encodings with Hue, Saturation, and Luminance
+
+1. Luminance, hue, and saturation are each separate visual channels that can be
+manipulated to encode data. This gives us much more precise language for
+describing the "color channel" that appeared previously in our Howard coding. .
 
 ```{r}
 #| label: separate-channels
@@ -154,8 +198,7 @@ ggplot(ramps, aes(step, fct_rev(fct_inorder(channel)), fill = color)) +
     theme_swatch
 ```
 
-Each ramp changes only one channel. Here is the same ordered variable, encoded
-by each of them.
+For example, here is the same variable encoded using each channel.
 
 ```{r}
 #| label: channels-scatter
@@ -177,7 +220,9 @@ base <- ggplot(pts, aes(x, y, color = value)) +
         ggtitle("Hue"))
 ```
 
-The magnitude of luminance is appropriate for ordered data but we shouldn't try differentiating between more than, say, five bins of luminance. It is very difficult to tell small variations in luminance apart.
+1. While luminance is appropriate for encoding ordered data, it's difficult to
+tell apart small differences. The reading argues that we should never expect our
+audience to be able to tell apart more than five different values of luminance.
 
 ```{r}
 #| label: luminance-bins
@@ -194,7 +239,9 @@ ggplot(bins, aes(xmin = (step - 1) / k, xmax = step / k, ymin = 0, ymax = 1, fil
     theme(strip.text = element_text(hjust = 0, size = 9, margin = margin(b = 4)))
 ```
 
-Small differences in luminance are very difficult to read if they're supposed to be defining edges. For example text that has a 3:1 luminance ratio is almost impossible to read against the background.  They recommend 10:1.
+This is also very important for thinking about text. A 3:1 luminance ratio
+between text and the background is almost impossible to read. The reading
+recommends at least a 10:1 ratio.
 
 ```{r}
 #| label: text-contrast
@@ -229,9 +276,14 @@ tibble(ratio = c(1.5, 3, 10)) |>
     theme_void()
 ```
 
-Saturation can also be used for ordered data but again can only have so many bins. Three is the maximum recommended.
-
-There's an interaction between channel size. For example it's easier to tell small differences in saturation if there are larger regions. For small sizes it's recommended to use highly saturated colors but for large regions the recommendation is to use low-saturation colors, which are pastels.
+1. Similarly to luminance, saturation can be used for ordered data. But again,
+we can only differentiate so many bins, and in fact, the recommended maximum for
+this channel is three. Further, there's an interaction between saturation and
+the size of the region to which the color is applied. For example, for small
+marks, it's difficult to tell apart differences in saturation, and even two bins
+can be hard to read. Another rule of thumb is that for small marks, we should
+use more saturated colors, while for larger regions, we should use less
+saturated colors (pastels).
 
 ```{r}
 #| label: saturation-size
@@ -264,7 +316,10 @@ large_marks <- function(palette, title) {
     (large_marks(pastel, "Large regions, pastel") + large_marks(vivid, "Large regions, saturated"))
 ```
 
-U is very highly ranked for telling apart categorical data values. It's easy to tell the difference in hue for contiguous regions but harder to tell differences in hue when they're very far apart. In a small region we can tell apart roughly six or seven hues at a time.
+1. Hue is very highly ranked visual channel for telling apart categorical data
+values. It's easy to tell the difference in hue for contiguous regions but
+harder to tell differences in hue when they're far apart. In a small region we
+can tell apart roughly six or seven hues at a time.
 
 ```{r}
 #| label: hue-count

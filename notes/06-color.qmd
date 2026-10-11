@@ -397,7 +397,7 @@ base <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
     (base + scale_fill_viridis_b(n.breaks = 6) + ggtitle("Stepped"))
 ```
 
-### Categorical Color Maps
+### Categorical color maps
 
 1. For categorical color maps, it is important to choose colors that can be
 differentiated from one another. A good default is to choose complementary
@@ -498,7 +498,7 @@ map_dfr(c("Set2", "Dark2", "Set1"), \(p) {
     theme(strip.text = element_text(hjust = 0, size = 9))
 ```
 
-### Ordered Color Maps
+### Ordered color maps
 
 1. There are two types of color maps for ordered data.
 
@@ -571,9 +571,9 @@ change, because hues don't have a natural ordering.
 
 (tk: Add the example from Bergman et al. 95).
 
-Another problem is that the scale is not perceptually linear. 1,000 units at one part of the range can go through three different colors while at another range they can look all the same color.
-
-A technical solution to this problem is called monotonically increasing luminence. Show the example from Rogowitz and Trainisch 98.
+Another problem is that rainbow color palettes are not perceptually linear. 1000
+data units in one part of the range can go through three different colors while
+1000 units at another point all appear like the same hue.
 
 ```{r}
 #| label: rainbow-maps
@@ -592,26 +592,13 @@ map_plot(scale_fill_gradientn(colors = palette_cols$Rainbow), "Rainbow") +
     plot_layout(nrow = 1)
 ```
 
-The rainbow creates bands that look like discrete steps, but where the bands fall
-depends on hue changes, not on the data. Plotting luminance (L\*) along each
-colormap shows why: the rainbow rises and falls, while viridis increases steadily.
+### Bivariate color maps
 
-```{r}
-#| label: rainbow-luminance
-#| fig-width: 5
-#| fig-height: 3
-#| out-width: "60%"
-imap_dfr(palette_cols, \(cols, name) {
-    tibble(palette = name, position = seq_along(cols), lstar = coords(as(hex2RGB(cols), "LAB"))[, "L"])
-}) |>
-    ggplot(aes(position, lstar, color = palette)) +
-    geom_line(linewidth = 1) +
-    labs(x = "Position along colormap (low to high)", y = "L*", color = NULL)
-```
-
-Bivariate colormaps show two attributes at a time.
-
-For categorical data with multiple levels this doesn't really work well. But it can be okay for sequential and diverging attributes. Some people will have difficulty interpreting this even though they appear often in visualizations.
+1. While it's not as common, a single color map can be used to visualize two
+data variables using a bivariate color map. Each dimension in the map matches a
+different variable. This is difficult to use for categorical variables, but it
+can work when each variable is ordered. Be careful that some readers find this
+difficult to read.
 
 ```{r}
 #| label: bivariate-map
@@ -647,7 +634,12 @@ bi_legend <- expand_grid(elevation = 1:3, slope = 1:3) |>
 bi_map + bi_legend + plot_layout(widths = c(3, 1))
 ```
 
-Red-green color blindness can affect 8% of the men. About half a percent of the women. To design for a potential colorblind audience, you can use a simulator.
+## Accessibility
+
+1. Red-green color blindness can affect 8% of men and about a half a percent of
+women. To design for colorblind readers, you can use a simulator which
+approximates (for those without color blindness) how the visualization would
+appear to someone who is colorblind.
 
 ```{r}
 #| label: colorblind-simulation
@@ -677,6 +669,7 @@ imap_dfr(cvd_palettes, \(cols, name) {
     theme(strip.text = element_text(size = 10))
 ```
 
+## Implementation
 
 stepped vs. continuous scales
 scale manual
@@ -694,3 +687,4 @@ try sharing themes across
 develop a helper functions file
 
 check this: associated sequential map either by varying saturation (one end will be white) ---> shouldn't it be grey?
+check this: Another problem is that rainbow color palettes are not perceptually linear. Give a definition about this.

@@ -170,7 +170,7 @@ should represent it theoretically. It could easily be an entire class. Since our
 focus is data visualization, let's consider how these aspects of color theory
 can influence the use of color as a visual encoding channel.
 
-## Visual Encodings with Hue, Saturation, and Luminance
+## Visual Encodings Revisited
 
 1. Luminance, hue, and saturation are each separate visual channels that can be
 manipulated to encode data. This gives us much more precise language for
@@ -354,18 +354,35 @@ scattered <- map_dfr(hue_counts, \(k) {
 adjacent / scattered
 ```
 
-Unlike saturation and luminance, hue doesn't have a natural ordering. We've sometimes learned associations (for example, green, yellow, red in traffic lights) but these aren't at the level of perception in the same way that saturation and luminance are.
+1. Unlike saturation and luminance, hue doesn't have a natural ordering. Though
+it can be applied to ordered data, like with a rainbow color map, these
+comparisons requires more cognitive effort. In some settings we've already
+learned to associate hue with ordering (e.g., green, yellow, and red on traffic
+lights), but this isn't built into our basic perception in the same way that
+saturation and luminance comparisons are.
 
-Transparency should not be used together with luminance or saturation. It's often used to differentiate foreground from background layers. But you can't really use it to order-encode more ordered data.
+1. Transparency is related to color, and can in principle could be used to
+encode ordered data. For example, the largest values can be 0% transparent, the
+next largest can be 10% transparent, etc. However, transparency strongly
+interacts with luminance and saturation, in the sense that a a fully saturated
+but 20% transparent point might be confused with a less saturated but 0%
+transparent point. For this reason, transparency encoding should not be used
+together with luminance and saturation gradients.
 
-Color map is a term used to refer to the visual encoding of data with color.
+1. The most defensible use of transparency is in differentiating foreground from
+background layers. Anything more than two bins becomes difficult to perceive
+accurately.
 
-The basic taxonomy is:
-* categorical versus ordered
-* within ordered: sequential versus divergent
-This matches the underlying data attribute characteristics.
+## Color Map
 
-The color maps can be either continuous or segmented into discrete bins (also called stepped color map). They can even be two-dimensional in the case of bivariate color maps.
+1. To actually use color to encode a data attribute, we need a color map, which
+_maps_ from a domain of data values to a range of colors. A first distinction
+between color maps is between ordered and categorical color spaces.  For ordered
+data, we can think of this as traversing a path through the 3D color space. For
+categorical data, this is a selection of points in that space.
+
+1. For ordered variables, we can use either continuous or stepped color maps.
+Stepped color maps are segmented into discrete bins.
 
 ```{r}
 #| label: continuous-vs-stepped
@@ -380,43 +397,27 @@ base <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
     (base + scale_fill_viridis_b(n.breaks = 6) + ggtitle("Stepped"))
 ```
 
-These categorical color maps are actually traversing the hue, saturation, and luminance channels simultaneously along a single path through the 3D space.
+### Categorical Color Maps
 
-The number of distinct colors that we can tell apart is between 6 and 12. Recommendation of using opponent colors as a good default (e.g., red, blue, green, and yellow)
+1. For categorical color maps, it is important to choose colors that can be
+differentiated from one another. A good default is to choose complementary
+colors as much as possible (those on opposite sides of the color wheel). There
+is some disagreement about the maximum number of colors to use at once, but they
+range from 6 - 12.
 
-It's not always clear what luminance contrast to use. If you choose very high luminance contrast then the colors can be told apart even on black-and-white paper. But keeping the luminances close to each other can make the saliences more comparable and avoid the differences that draw attention to themselves. A good color map resource is Color Brewer. You can do for both low and high saturation maps.
+1. How many colors we can tell apart at once also depends on how much space is
+available for showing them. Colors confined to small spaces, we should use fewer
+categories. In the first visualization, we can still perceive the 21 different
+colors (the fact that they are physically separated also helps). The second has
+the same number of colors, but since they are shading in smaller segments, it's
+much harder to tell them apart.
 
-```{r}
-#| label: categorical-luminance
-#| fig-width: 6
-#| fig-height: 3
-#| out-width: "80%"
-map_dfr(c("Set2", "Dark2", "Set1"), \(p) {
-    tibble(palette = p, index = 1:8, color = RColorBrewer::brewer.pal(8, p))
-}) |>
-    mutate(grayscale = desaturate(color, 1)) |>
-    pivot_longer(c(color, grayscale), names_to = "version", values_to = "fill") |>
-    ggplot(aes(index, fct_rev(version), fill = fill)) +
-    geom_tile(color = "white") +
-    scale_fill_identity() +
-    facet_wrap(~fct_inorder(palette), ncol = 1) +
-    theme_swatch +
-    theme(strip.text = element_text(hjust = 0, size = 9))
-```
+1. Considering that we may be able to only distinguish so many colors in a
+categorical color map, what should we do with data with many categories? Some
+reasonable approaches are,
 
-Set2 has nearly constant luminance, so its grayscale version is almost a flat
-strip. Set1 and Dark2 vary in luminance, so the colors are still separable on
-a black-and-white print, but some colors will draw more attention than others.
-
-How many colors we can tell apart from each other also depends on how much space is available for showing them. A very small segment will be difficult to read if we use many colors. Illustrated with an example where 21 chromosomes are visualized with different colors (still possible to read), versus the individual segments after meiosis, where the colors are no longer clearly distinguishable.
-
-In general 12 color bins is as much as we can ever distinguish.
-
-What should you do when you have many categories? There are two reasonable options:
-1. To bin the groups into a smaller number of categories.
-2. To group all the rare categories into "other".
-
-If you insist on using many categories then it's possible to combine different channels at once (for example, shape and color).
+    - To bin the groups into a smaller number of categories.
+    - To group all the rare categories into "other".
 
 ```{r}
 #| label: many-categories
@@ -438,7 +439,9 @@ lumped <- mpg |>
 many + lumped
 ```
 
-Combining channels: 12 categories as 12 hues, versus 4 hues crossed with 3 shapes.
+1. If it's absolutely necessary to distinguish every category, one option is to
+cross another channel along with color. If we had 12 categories, we could show 4
+hues $\times$ 3 shapes, instead of 12 separate hues.
 
 ```{r}
 #| label: color-and-shape
@@ -464,17 +467,77 @@ base <- ggplot(pts, aes(x, y)) + coord_equal() + theme_void() + theme(legend.pos
         scale_color_brewer(palette = "Set1") + ggtitle("4 hues x 3 shapes"))
 ```
 
-Now on to ordered color maps. Sequential color maps range from minimum to maximum values. Gray scale is what happens when you ignore hue and just vary luminance.
+1. Even with a fixed set of hues, we still have to make a decision about the
+luminance and saturation for each hue. There's no universal recipe for setting
+this. Sometimes it's recommended to use high luminance contrast across
+caetgories. The advantage of this is that the categories can be read apart even
+on black-and-white paper. But this can be misleading if it draws too much
+attention to the high luminance categories.
 
-Consider fixing a hue at one end of a colormap. If we vary saturation then one end will be white. If we vary luminance then the other end will be black.
+1. A good color map resource is ColorBrewer, a set of color palettes created by
+Cynthia Brewer for use in spatial data visualization. They have been chosen so
+that categories are easy to differentiate. It provides color maps with both high
+(Set1) and low (Set2) saturation. It also has high (Set1, Set2) vs. low (Dark1,
+Dark2) luminance versions
+
+```{r}
+#| label: categorical-luminance
+#| fig-width: 6
+#| fig-height: 3
+#| out-width: "80%"
+map_dfr(c("Set2", "Dark2", "Set1"), \(p) {
+    tibble(palette = p, index = 1:8, color = RColorBrewer::brewer.pal(8, p))
+}) |>
+    mutate(grayscale = desaturate(color, 1)) |>
+    pivot_longer(c(color, grayscale), names_to = "version", values_to = "fill") |>
+    ggplot(aes(index, fct_rev(version), fill = fill)) +
+    geom_tile(color = "white") +
+    scale_fill_identity() +
+    facet_wrap(~fct_inorder(palette), ncol = 1) +
+    theme_swatch +
+    theme(strip.text = element_text(hjust = 0, size = 9))
+```
+
+### Ordered Color Maps
+
+1. There are two types of color maps for ordered data.
+
+   - **Sequential** color maps range from a minimujm to a maximum value.
+   - **Diverging** color maps have a meaningful midpoint and must ensure that the the endpoints are different both from one another and from the midpoint.
+
+```{r}
+#| label: diverging-maps
+#| fig-width: 9
+#| fig-height: 3
+#| out-width: "95%"
+elev <- expand_grid(col = 1:ncol(volcano), row = 1:nrow(volcano)) |>
+    mutate(z = as.vector(volcano))
+elev_c <- elev |> mutate(z = z - 130)  # deviation from a reference elevation
+
+diverging <- function(midpoint) {
+    scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B", midpoint = midpoint)
+}
+
+map_plot(scale_fill_viridis_c(), "Sequential:
+reference is invisible", elev_c) +
+    map_plot(diverging(0), "Diverging:
+midpoint at reference", elev_c) +
+    map_plot(diverging(30), "Diverging:
+midpoint misplaced", elev_c) +
+    plot_layout(nrow = 1)
+```
+
+1. Our discussion of luminance and saturation shows that these are well-suited
+to defining sequential color maps. Consider fixing a hue. We can obtain an
+associated sequential map either by varying saturation (one end will be white)
+or luminance (one end will be black). If we ignore hue entirely, then we recover
+gray scale.
 
 ```{r}
 #| label: sequential-maps
 #| fig-width: 9
 #| fig-height: 3
 #| out-width: "95%"
-elev <- expand_grid(col = 1:ncol(volcano), row = 1:nrow(volcano)) |>
-    mutate(z = as.vector(volcano))
 
 map_plot <- function(scale, title, data = elev) {
     ggplot(data, aes(col, row, fill = z)) +
@@ -499,32 +562,14 @@ varying luminance") +
     plot_layout(nrow = 1)
 ```
 
-Diverging maps have a meaningful midpoint, so both ends should be visually distinct
-from the center and from each other.
+1. Alternatively, we can use multiple hues in a sequential colormap.  The fewer
+hues that are considered, the easier it is to perceive global differences. The
+more hues that are considered, the more that fine-grained structure is
+emphasized. At the extreme, we can use a rainbow color palette. Even though this
+makes small differences in the data attribute visible, it can blind us to larger
+change, because hues don't have a natural ordering.
 
-```{r}
-#| label: diverging-maps
-#| fig-width: 9
-#| fig-height: 3
-#| out-width: "95%"
-elev_c <- elev |> mutate(z = z - 130)  # deviation from a reference elevation
-
-diverging <- function(midpoint) {
-    scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B", midpoint = midpoint)
-}
-
-map_plot(scale_fill_viridis_c(), "Sequential:
-reference is invisible", elev_c) +
-    map_plot(diverging(0), "Diverging:
-midpoint at reference", elev_c) +
-    map_plot(diverging(30), "Diverging:
-midpoint misplaced", elev_c) +
-    plot_layout(nrow = 1)
-```
-
-You can actually use many hues in a continuous colormap, for example, a rainbow palette. The fewer hues that are considered, the more the global structure is emphasized. The more hues that are considered, the more the fine-grain structure is emphasized. Add the example from Bergman et al. 95.
-
-Even though rainbow palettes are helpful for looking at fine structure, one problem is that the differences in hue don't have a natural ordering so it's difficult to make the order visible.
+(tk: Add the example from Bergman et al. 95).
 
 Another problem is that the scale is not perceptually linear. 1,000 units at one part of the range can go through three different colors while at another range they can look all the same color.
 
@@ -631,3 +676,21 @@ imap_dfr(cvd_palettes, \(cols, name) {
     theme_swatch +
     theme(strip.text = element_text(size = 10))
 ```
+
+
+stepped vs. continuous scales
+scale manual
+scale brewer
+factor - other (forcats)
+factor - lump
+scale gradient
+scale gradient 2 (diverging)
+scale viridis
+scico
+
+
+avoid geom raster
+try sharing themes across
+develop a helper functions file
+
+check this: associated sequential map either by varying saturation (one end will be white) ---> shouldn't it be grey?

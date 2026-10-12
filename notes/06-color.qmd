@@ -2,6 +2,7 @@
 title: "Color"
 author: Kris Sankaran
 date: 2026-10-09
+bibliography: references.bib
 format:
   html:
     html-math-method: mathjax
@@ -17,16 +18,19 @@ execute:
 ```{r}
 #| label: setup
 #| echo: true
-library(tidyverse)
-library(colorspace)
-library(patchwork)
+library(RColorBrewer)
 library(biscale)
+library(colorspace)
+library(palmerpenguins)
+library(patchwork)
+library(swatches)
+library(tidyverse)
 source("06-color-helpers.R")
 ```
 
-1. We've been using color in our data visualizations since the very first day of
+1. We've been using color in our data visualizations since the first day of
 class. But despite being a topic that most people can informally talk about (and
-maybe even encountered in preschool...), what color actually _is_ is a very rich
+maybe even encountered in preschool...), what color actually _is_ is a rich
 topic. Learning a bit more about the theory and psychology of color can be
 helpful for designing more effective data visualizations.
 
@@ -70,7 +74,7 @@ It associates each color with a point in 3D space.
    ![](figures/RGB_pixels.jpg){width=440px}
 
 6. While this is convenient for thinking about how color is constructed on these
-devices, it's not very useful for speaking about color in visualization design.
+devices, it's not useful for speaking about color in visualization design.
 The issue is that simple operations in RGB space don't correspond to easily
 explainable changes in the perceived color. For example, suppose we want to
 change an orange color to relatively less saturated version. This requires an
@@ -87,6 +91,8 @@ polar angle, saturation with the radius, and lightness/darkness with the
 $z$-axis. In this spherical geometry, each of the coordinates has a meaningful
 perceptual interpretation.
 
+   ![](figures/Runge_Farbenkugel.jpg){width=400px}
+
 8. There have been many more modern refinements. The most widely used
 alternative to RGB in practice is HSL, which stands for Hue, Saturation, and
 Luminance. The hue and saturation axes can be visualized using a color wheel,
@@ -97,6 +103,7 @@ and modifying the luminance leads to different color wheels.
    #| fig-width: 6
    #| fig-height: 3
    #| out-width: "80%"
+   #| echo: false
    wheel_plot(hex(HLS(wheel$hue, 0.6, wheel$sat)), "HSL (L = 1)") +
        wheel_plot(hex(HLS(wheel$hue, 0.4, wheel$sat)), "HSL (L = 0.5)")
    ```
@@ -122,6 +129,7 @@ people consistently order the perceived luminance according to the bottom row.
     #| fig-width: 6
     #| fig-height: 2
     #| out-width: "80%"
+    #| echo: false
     hues <- tibble(
         name = c("red", "yellow", "green", "cyan", "blue", "magenta"),
         hue = seq(0, 300, by = 60),
@@ -164,6 +172,7 @@ describing the "color channel" that appeared previously in our Howard coding. .
     #| fig-width: 6
     #| fig-height: 1.8
     #| out-width: "80%"
+    #| echo: false
     n <- 9
     ramps <- bind_rows(
         tibble(channel = "Luminance", step = 1:n,
@@ -188,6 +197,7 @@ describing the "color channel" that appeared previously in our Howard coding. .
     #| fig-width: 8
     #| fig-height: 2.5
     #| out-width: "90%"
+    #| echo: false
     base <- ggplot(channel_points, aes(x, y, color = value)) +
         geom_point(size = 1.5) +
         coord_equal() +
@@ -210,6 +220,7 @@ audience to be able to tell apart more than five different values of luminance.
     #| fig-width: 6
     #| fig-height: 1.8
     #| out-width: "80%"
+    #| echo: false
     bins <- map_dfr(c(5, 12), \(n_levels) {
         tibble(k = n_levels, step = 1:n_levels, color = gray.colors(n_levels, start = 0.1, end = 0.95))
     })
@@ -221,7 +232,7 @@ audience to be able to tell apart more than five different values of luminance.
         theme_bins
     ```
 
-    This is also very important for thinking about text. A 3:1 luminance ratio
+    This is also important for thinking about text. A 3:1 luminance ratio
     between text and the background is almost impossible to read. The reading
     recommends at least a 10:1 ratio.
 
@@ -241,38 +252,41 @@ audience to be able to tell apart more than five different values of luminance.
 
 15. Similarly to luminance, saturation can be used for ordered data. But again,
 we can only differentiate so many bins, and in fact, the recommended maximum for
-this channel is three. Further, there's an interaction between saturation and
-the size of the region to which the color is applied. For example, for small
-marks, it's difficult to tell apart differences in saturation, and even two bins
-can be hard to read. Another rule of thumb is that for small marks, we should
+this channel is three. Another rule of thumb is that for small marks, we should
 use more saturated colors, while for larger regions, we should use less
 saturated colors (pastels).
 
     ```{r}
     #| label: saturation-size
-    #| fig-width: 6
-    #| fig-height: 4
-    #| out-width: "70%"
-    pastel <- hcl(260, c(10, 20, 30), 75)
-    vivid <- hcl(260, c(30, 55, 80), 55)
+    #| fig-width: 7
+    #| fig-height: 3
+    #| out-width: "85%"
+    #| echo: false
+    small_marks <- penguins |>
+        drop_na(bill_length_mm, bill_depth_mm) |>
+        ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) +
+        geom_point(size = 1.2) +
+        scale_color_manual(values = brewer.pal(3, "Set1")) +
+        labs(title = "Small marks with saturated colors") +
+        theme_diagram
 
-    base <- ggplot(cells, aes(x, y)) + theme_diagram
-    small_marks <- base + geom_point(aes(color = level), size = 0.8)
-    large_marks <- base + geom_tile(aes(fill = level))
+    large_regions <- ggplot(cells, aes(x, y, fill = level)) +
+        geom_tile() +
+        scale_fill_manual(values = brewer.pal(3, "Pastel1")) +
+        coord_equal() +
+        labs(title = "Large regions with pastels") +
+        theme_diagram
 
-    ((small_marks + scale_color_manual(values = pastel) + labs(title = "Small marks, pastel")) +
-        (small_marks + scale_color_manual(values = vivid) + labs(title = "Small marks, saturated"))) /
-        ((large_marks + scale_fill_manual(values = pastel) + labs(title = "Large regions, pastel")) +
-            (large_marks + scale_fill_manual(values = vivid) + labs(title = "Large regions, saturated")))
+    small_marks + large_regions
     ```
 
-16. Hue is very highly ranked visual channel for telling apart categorical data
+16. Hue is highly ranked visual channel for telling apart categorical data
 values. It's easy to tell the difference in hue for contiguous regions but
 harder to tell differences in hue when they're far apart. In a small region we
 can tell apart roughly six or seven hues at a time.
 
     ![](figures/contiguous_segmented.png){width=800px}
-    Figure from [@https://doi.org/10.1186/1471-2105-8-82]
+    Figure from [@sinha2007]
 
 17. Unlike saturation and luminance, hue doesn't have a natural ordering. Though
 it can be applied to ordered data, like with a rainbow color map, these
@@ -309,6 +323,7 @@ Stepped color maps are segmented into discrete bins.
     #| fig-width: 6
     #| fig-height: 3.5
     #| out-width: "75%"
+    #| echo: false
     base <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
         geom_tile() +
         theme_colorbar
@@ -344,6 +359,7 @@ reasonable approaches are,
     #| fig-width: 9
     #| fig-height: 3.5
     #| out-width: "90%"
+    #| echo: false
     many <- ggplot(mpg, aes(displ, hwy, color = manufacturer)) +
         geom_point() +
         guides(color = guide_legend(ncol = 2, title = NULL)) +
@@ -353,7 +369,7 @@ reasonable approaches are,
         mutate(manufacturer = fct_lump_n(manufacturer, 5)) |>
         ggplot(aes(displ, hwy, color = manufacturer)) +
         geom_point() +
-        scale_color_manual(values = c(RColorBrewer::brewer.pal(5, "Set1"), "grey70")) +
+        scale_color_manual(values = c(brewer.pal(5, "Set1"), "grey70")) +
         labs(title = "Top 5 + Other")
 
     many + lumped
@@ -368,6 +384,7 @@ hues $\times$ 3 shapes, instead of 12 separate hues.
     #| fig-width: 8
     #| fig-height: 3
     #| out-width: "90%"
+    #| echo: false
     pts <- category_points |>
         mutate(
             hue_group = factor((category - 1) %% 4),
@@ -375,8 +392,9 @@ hues $\times$ 3 shapes, instead of 12 separate hues.
         )
 
     base <- ggplot(pts, aes(x, y)) + coord_equal() + theme_diagram
-
-    (base + geom_point(aes(color = factor(category))) + scale_color_manual(values = rainbow_hcl(12)) +
+    (base +
+        geom_point(aes(color = factor(category))) +
+        scale_color_manual(values = rainbow_hcl(12)) +
         labs(title = "12 hues")) +
         (base + geom_point(aes(color = hue_group, shape = shape_group), size = 2) +
             scale_color_brewer(palette = "Set1") + labs(title = "4 hues x 3 shapes"))
@@ -400,8 +418,9 @@ Dark2) luminance versions
     #| fig-width: 6
     #| fig-height: 3
     #| out-width: "80%"
+    #| echo: false
     map_dfr(c("Set2", "Dark2", "Set1"), \(p) {
-        tibble(palette = p, index = 1:8, color = RColorBrewer::brewer.pal(8, p))
+        tibble(palette = p, index = 1:8, color = brewer.pal(8, p))
     }) |>
         pivot_longer(c(color), names_to = "version", values_to = "fill") |>
         ggplot(aes(index, version, fill = fill)) +
@@ -411,9 +430,18 @@ Dark2) luminance versions
         theme_swatch
     ```
 
+28. $^\dagger$ One trick to keep in mind is that gray is actually a
+versatile color to use in data visualization. A complete list of potential uses
+cases is given
+[here](https://visualisingdata.com/2015/01/make-grey-best-friend/). In general,
+it tends to be useful in setting the context and helping us get oriented to the
+overall data on which the most important elements might be placed.
+
+    ![](figures/160423-mood.png){width=400px}
+
 ### Ordered color maps
 
-28. There are two types of color maps for ordered data.
+29. There are two types of color maps for ordered data.
 
     - **Sequential** color maps range from a minimujm to a maximum value.
     - **Diverging** color maps have a meaningful midpoint and must ensure that the the endpoints are different both from one another and from the midpoint.
@@ -423,6 +451,7 @@ Dark2) luminance versions
     #| fig-width: 9
     #| fig-height: 3
     #| out-width: "95%"
+    #| echo: false
     elev_c <- elev |> mutate(z = z - 130)  # deviation from a reference elevation
 
     diverging <- function(midpoint) {
@@ -438,7 +467,7 @@ Dark2) luminance versions
         plot_layout(nrow = 1)
     ```
 
-29. Our discussion of luminance and saturation shows that these are well-suited
+30. Our discussion of luminance and saturation shows that these are well-suited
 to defining sequential color maps. Consider fixing a hue. We can obtain an
 associated sequential map either by varying saturation (one end will be white)
 or luminance (one end will be black). If we ignore hue entirely, then we recover
@@ -449,6 +478,7 @@ gray scale.
     #| fig-width: 9
     #| fig-height: 3
     #| out-width: "95%"
+    #| echo: false
 
     map_plot(scale_fill_gradient(low = "black", high = "white"), "Grayscale
     (luminance only)") +
@@ -461,13 +491,13 @@ gray scale.
         plot_layout(nrow = 1)
     ```
 
-30. Alternatively, we can use multiple hues in a sequential colormap.  The fewer
+31. Alternatively, we can use multiple hues in a sequential colormap.  The fewer
 hues that are considered, the easier it is to perceive global differences. The
 more hues that are considered, the more that fine-grained structure is
 emphasized. At the extreme, we can use a rainbow color palette. Even though this
 makes small differences in the data attribute visible, it can blind us to larger
 change, because hues don't have a natural ordering. The example below comes from
-[@doi.org/10.1109/VISUAL.1995.480803]
+[@bergman1995].
 
     ![](figures/rainbow_vs_twohue.png)
 
@@ -480,6 +510,7 @@ change, because hues don't have a natural ordering. The example below comes from
     #| fig-width: 8
     #| fig-height: 3
     #| out-width: "90%"
+    #| echo: false
     palette_cols <- list(
         Rainbow = rev(rainbow(100, end = 0.7)),
         Viridis = viridisLite::viridis(100),
@@ -494,7 +525,7 @@ change, because hues don't have a natural ordering. The example below comes from
 
 ### Bivariate color maps
 
-31. While it's not as common, a single color map can be used to visualize two
+32. While it's not as common, a single color map can be used to visualize two
 data variables using a bivariate color map. Each dimension in the map matches a
 different variable. This is difficult to use for categorical variables, but it
 can work when each variable is ordered. Be careful that some readers find this
@@ -505,6 +536,7 @@ difficult to read.
     #| fig-width: 7
     #| fig-height: 3.5
     #| out-width: "80%"
+    #| echo: false
     bi <- elev |>
         mutate(
             elevation_class = factor(ntile(z, 3), levels = 1:3),
@@ -533,9 +565,9 @@ difficult to read.
 
     ![](figures/bivariate_choropleth.png){width=600px}
 
-## Accessibility
+### Accessibility and Emotion
 
-32. Red-green color blindness can affect 8% of men and about a half a percent of
+33. Red-green color blindness can affect 8% of men and about a half a percent of
 women. To design for colorblind readers, you can use a simulator which
 approximates (for those without color blindness) how the visualization would
 appear to someone who is colorblind.
@@ -545,9 +577,10 @@ appear to someone who is colorblind.
     #| fig-width: 7
     #| fig-height: 4.5
     #| out-width: "80%"
+    #| echo: false
     cvd_palettes <- list(
         Rainbow = rainbow(7),
-        "Red-green" = RColorBrewer::brewer.pal(7, "RdYlGn"),
+        "Red-green" = brewer.pal(7, "RdYlGn"),
         Viridis = viridisLite::viridis(7),
         "Okabe-Ito" = unname(palette.colors(8, "Okabe-Ito")[-1])
     )
@@ -567,157 +600,271 @@ appear to someone who is colorblind.
         theme_swatch
     ```
 
+34. Finally, remember that colors carry many associations in our society,
+especially with emotion. This example from the optional reading gives a sense of
+how we internalize different color associations.
+
+    ![](figures/160423-colorist.png){width=400px}
+
+    An interesting scientific analysis was carried out by UW-Madison visual
+    communications professor Nan Li. Her team analyzed how different ways of
+    portraying COVID affected readers' responses
+    [@li2022]. The microscopy images below don't have
+    any color to begin with. They were all added by the scientific illustrator.
+    The colors that they chose influenced whether readers experienced fear when
+    viewing their image.
+
+    ![](figures/covid_fear_levels.jpg){width=500px}
+
 ## Implementation
 
-### Stepped vs. Continuous Scales
+35. In ggplot2, we can implement custom colormaps using scale layers.  For
+categorical scales, we can use `scale_color_manual. To specify a color, we have
+to use RGB  hex codes. These are strings of six characters giving the
+coordinates in RGB space (the first two positions correspond to red, the next
+two to green, and the last two to blue). Most color palette selectors, even
+those that are based on HSL space, will allow us to extract these RGB hex codes.
 
-```{r}
-#| label: impl-stepped
-#| fig-width: 6
-#| fig-height: 3
-#| out-width: "75%"
-base_map <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
-    geom_tile() +
-    theme_colorbar
+    ```{r}
+    #| label: impl-manual
+    #| fig-width: 4
+    #| fig-height: 3
+    #| out-width: "50%"
+    penguins |>
+        ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) +
+        geom_point() +
+        scale_color_manual(values = c(Adelie = "#E41A1C", Chinstrap = "#377EB8", Gentoo = "#4DAF4A")) +
+        labs(x = "Bill length (mm)", y = "Bill depth (mm)", color = "Species")
+    ```
 
-(base_map + scale_fill_viridis_c() + labs(title = "Continuous")) +
-    (base_map + scale_fill_viridis_b(n.breaks = 5) + labs(title = "Stepped (5 bins)"))
-```
+    Note that if you use `fill` in the graphical encoding (like for `geom_bar`
+    or `geom_tile`), then you can replace color with fill in
+    `scale_color_manual` and any of the color scales discussed below. This is
+    why you might see some of the code referring to `scale_fill_*` when my
+    discussion talks about `scale_color_*`.
 
-The same continuous/stepped distinction exists in other scale families. For
-ColorBrewer palettes, `scale_fill_distiller()` is the continuous version and
-`scale_fill_fermenter()` is the binned version — analogous to `viridis_c` and
-`viridis_b`.
+36. ggplot2 has built-in color brewer palettes using the `scale_color_brewer`
+layer. The Color Brewer
+[website](https://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3) lets you
+explore these options interactively.
 
-```{r}
-#| label: impl-distiller
-#| fig-width: 6
-#| fig-height: 3
-#| out-width: "75%"
-(base_map + scale_fill_distiller(palette = "YlOrRd", direction = 1) + labs(title = "distiller (continuous)")) +
-    (base_map + scale_fill_fermenter(palette = "YlOrRd", direction = 1, n.breaks = 5) + labs(title = "fermenter (stepped)"))
-```
+    ```{r}
+    #| label: impl-brewer
+    #| fig-width: 4
+    #| fig-height: 3
+    #| out-width: "50%"
+    penguins |>
+        ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) +
+        geom_point() +
+        scale_color_brewer(palette = "Set1") +
+        labs(x = "Bill length (mm)", y = "Bill depth (mm)", color = "Species")
+    ```
 
-### scale_color_manual
+    If you ever want to modify these colors, you can also extract the hex codes
+    directly using `brewer.pal` from the RColorBrewer package.
 
-```{r}
-#| label: impl-manual
-#| fig-width: 4
-#| fig-height: 3
-#| out-width: "50%"
-ggplot(mpg, aes(displ, hwy, color = drv)) +
-    geom_point() +
-    scale_color_manual(values = c("4" = "#E41A1C", "f" = "#377EB8", "r" = "#4DAF4A"))
-```
+    ```{r}
+    #| label: rcolorbrew
+    brewer.pal(3, "Set1")
+    ```
 
-### scale_color_brewer
+37. There are websites that let you select a color palette from an image. For
+example, adobe [color express](https://color.adobe.com/create/image) or
+[coolors](https://coolors.co/image-picker). Some allow you directly to copy the
+hex codes. For others, it might help to download the ASE file format, which can
+be read using `read_ase` from the swatches library. For inspiration, I often use^[The example below is from https://www.wikiart.org/en/henri-matisse/woman-with-hat-1905/.]
+colors from [paintings](https://www.wikiart.org/en/henri-matisse), and the
+reading mentions getting inspiration from movie stills.
 
-```{r}
-#| label: impl-brewer
-#| fig-width: 4
-#| fig-height: 3
-#| out-width: "50%"
-ggplot(mpg, aes(displ, hwy, color = drv)) +
-    geom_point() +
-    scale_color_brewer(palette = "Set1")
-```
+    ```{r}
+    #| label: impl-matisse
+    #| fig-width: 4
+    #| fig-height: 3
+    #| out-width: "50%"
+    pal <- read_ase("figures/matisse_palette.ase", use_names = FALSE)
+    penguins |>
+        ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) +
+        geom_point() +
+        scale_color_manual(values = pal) +
+        labs(x = "Bill length (mm)", y = "Bill depth (mm)", color = "Species")
+    ```
 
-### fct_other and fct_lump (forcats)
+38. We mentioned that one solution to working with many categories is to lump
+many of them into "other." The `fct_other` function helps with this by setting
+anything not in the `keep` argument ot an "Other" value. `fct_lump_n` works
+similarly but automatically finds the `n` most common categories.
 
-`fct_other()` keeps named levels and collapses the rest; `fct_lump_n()` keeps the
-$n$ most frequent and collapses the rest.
+    ```{r}
+    #| label: impl-forcats
+    #| fig-width: 7
+    #| fig-height: 3
+    #| out-width: "80%"
+    # the last level is "other"
+    pal <- c(brewer.pal(3, "Set1"), "grey")
 
-```{r}
-#| label: impl-forcats
-#| fig-width: 7
-#| fig-height: 3
-#| out-width: "80%"
-p_other <- mpg |>
-    mutate(mfr = fct_other(manufacturer, keep = c("toyota", "honda", "ford"))) |>
-    ggplot(aes(displ, hwy, color = mfr)) +
-    geom_point() +
-    scale_color_brewer(palette = "Set1") +
-    labs(title = "fct_other: keep named levels", color = NULL)
+    p_other <- mpg |>
+        mutate(mfr = fct_other(manufacturer, keep = c("toyota", "honda", "ford"))) |>
+        ggplot(aes(displ, hwy, color = mfr)) +
+        geom_point() +
+        scale_color_manual(values = pal) +
+        labs(title = "fct_other", color = NULL)
 
-p_lump <- mpg |>
-    mutate(mfr = fct_lump_n(manufacturer, 3)) |>
-    ggplot(aes(displ, hwy, color = mfr)) +
-    geom_point() +
-    scale_color_brewer(palette = "Set1") +
-    labs(title = "fct_lump_n: keep top 3", color = NULL)
+    p_lump <- mpg |>
+        mutate(mfr = fct_lump_n(manufacturer, 3)) |>
+        ggplot(aes(displ, hwy, color = mfr)) +
+        geom_point() +
+        scale_color_manual(values = pal) +
+        labs(title = "fct_lump_n3", color = NULL)
 
-p_other + p_lump
-```
+    p_other + p_lump
+    ```
 
-### scale_fill_gradient
+39. For ordered color scales, we can use `scale_color_gradient` (sequential) or
+`scale_color_gradient2` (diverging). `scale_color_gradient` allows you to input
+low and high values, and it will interpolate the gradient for you.
 
-```{r}
-#| label: impl-gradient
-#| fig-width: 3.5
-#| fig-height: 3.25
-#| out-width: "50%"
-ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
-    geom_tile() +
-    scale_fill_gradient(low = "white", high = "#1f78b4")
-```
+    ```{r}
+    #| label: impl-gradient
+    #| fig-width: 3.5
+    #| fig-height: 3.25
+    #| out-width: "50%"
+    ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+        geom_tile() +
+        scale_fill_gradient(low = "white", high = "#1f78b4")
+    ```
 
-### scale_fill_gradient2 (Diverging)
+    `scale_color_gradient2` works similarly, except you also have to provide the
+    color (`mid`) and value (`midpoint`) of the center of the color scale.
 
-```{r}
-#| label: impl-gradient2
-#| fig-width: 4
-#| fig-height: 3
-#| out-width: "50%"
-elev_c <- elev |> mutate(z = z - 130)
+    ```{r}
+    #| label: impl-gradient2
+    #| fig-width: 4
+    #| fig-height: 3
+    #| out-width: "50%"
+    elev_c <- elev |> mutate(z = z - 130)
 
-ggplot(elev_c, aes(col, row, fill = z)) +
-    geom_tile() +
-    coord_equal() +
-    scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B", midpoint = 0) +
-    theme_map
-```
+    ggplot(elev_c, aes(col, row, fill = z)) +
+        geom_tile() +
+        coord_equal() +
+        scale_fill_gradient2(low = "#2166AC", mid = "white", high = "#B2182B", midpoint = 0) +
+        theme_map
+    ```
 
-### scale_fill_viridis_c
+    We can create binned versions of these ordered color maps using
+    `scale_color_steps` and `scale_color_steps2`
 
-Several named palettes are available via the `option` argument.
+    ```{r}
+    #| label: impl-steps
+    #| fig-width: 6
+    #| fig-height: 4
+    #| out-width: "80%"
+    p1 <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+        geom_tile() +
+        scale_fill_steps(low = "white", high = "#1f78b4")
 
-```{r}
-#| label: impl-viridis
-#| fig-width: 7
-#| fig-height: 3
-#| out-width: "80%"
-base_map2 <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
-    geom_tile() +
-    theme_diagram
+    p2 <- ggplot(elev_c, aes(col, row, fill = z)) +
+        geom_tile() +
+        coord_equal() +
+        scale_fill_steps2(low = "#2166AC", mid = "white", high = "#B2182B", midpoint = 0) +
+        theme_map
 
-(base_map2 + scale_fill_viridis_c(option = "viridis") + labs(title = "viridis")) +
-    (base_map2 + scale_fill_viridis_c(option = "magma")  + labs(title = "magma"))  +
-    (base_map2 + scale_fill_viridis_c(option = "plasma") + labs(title = "plasma")) +
-    (base_map2 + scale_fill_viridis_c(option = "cividis") + labs(title = "cividis"))
-```
+    p1 + p2
+    ```
 
-### scico
+40. Similarly to how `scale_color_brewer` provides a default colormap for
+categorical data, the `scale_color_viridis_c`, `scale_color_distiller`, and
+`scale_color_fermenter` for well-known gradient scales. For example, below we
+show a few options implemented by viridis.
 
-`scico` provides perceptually uniform palettes including colorblind-safe and
-diverging options.
+    ```{r}
+    #| label: impl-viridis
+    #| fig-width: 7
+    #| fig-height: 4
+    #| out-width: "80%"
+    base_map2 <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+        geom_tile() +
+         theme_diagram
 
-```{r}
-#| label: impl-scico
-#| fig-width: 7
-#| fig-height: 3
-#| out-width: "80%"
-library(scico)
+    (base_map2 + scale_fill_viridis_c(option = "viridis") + labs(title = "viridis")) +
+        (base_map2 + scale_fill_viridis_c(option = "magma")  + labs(title = "magma"))  +
+        (base_map2 + scale_fill_viridis_c(option = "plasma") + labs(title = "plasma")) +
+        (base_map2 + scale_fill_viridis_c(option = "cividis") + labs(title = "cividis"))
+    ```
 
-(base_map2 + scale_fill_scico(palette = "bamako")   + labs(title = "bamako"))  +
-    (base_map2 + scale_fill_scico(palette = "batlow")   + labs(title = "batlow"))  +
-    (base_map2 + scale_fill_scico(palette = "vik")      + labs(title = "vik (div)")) +
-    (base_map2 + scale_fill_scico(palette = "roma")     + labs(title = "roma (div)"))
-```
+41. These named color gradient scales also come with binned versions. For
+example, for the viridis scale, we can use `_b` insteasd of `_c` in the suffix.
 
-using greys effectively
+    ```{r}
+    #| label: impl-stepped
+    #| fig-width: 6
+    #| fig-height: 3
+    #| out-width: "75%"
+        #| echo: false
+    base_map <- ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+        geom_tile() +
+        theme_colorbar
 
-websites for choosing color palettes (paleton)
+    (base_map + scale_fill_viridis_c() + labs(title = "Continuous")) +
+        (base_map + scale_fill_viridis_b(n.breaks = 5) + labs(title = "Stepped (5 bins)"))
+    ```
 
-colors and associations/emotions
+42. Similarly for `scale_color_distiller`, the binned equivalent is
+`scale_color_fermenter`.
 
-and where you can get inspiration more generally
+    ```{r}
+    #| label: impl-distiller
+    #| fig-width: 6
+    #| fig-height: 3
+    #| out-width: "75%"
+        #| echo: false
+    (base_map + scale_fill_distiller(direction = 1) + labs(title = "distiller (continuous)")) +
+        (base_map + scale_fill_fermenter(direction = 1, n.breaks = 5) + labs(title = "fermenter (stepped)"))
+    ```
+
+43. Another resource worth knowing about for building color gradients is `scico`.
+These have been evaluated using user studies to be as perceptually uniform as
+possible. You can view all the available gradients
+[here](https://www.fabiocrameri.ch/colourmaps/).
+
+    ```{r}
+    #| label: impl-scico
+    #| fig-width: 7
+    #| fig-height: 3
+    #| out-width: "80%"
+    library(scico)
+
+    (base_map2 + scale_fill_scico(palette = "bamako")   + labs(title = "bamako"))  +
+        (base_map2 + scale_fill_scico(palette = "batlow") + labs(title = "batlow"))  +
+        (base_map2 + scale_fill_scico(palette = "vik") + labs(title = "vik (div)")) +
+        (base_map2 + scale_fill_scico(palette = "roma") + labs(title = "roma (div)"))
+    ```
+
+44. If you want to simulate how color blindness looks in a proposed color
+palette, you can use functions from the colorspace package. For example,
+remember the ColorBrewer palette that we extracted above.
+
+    ```{r}
+    #| label: impl-swatch
+    #| fig-width: 5
+    #| fig-height: 0.6
+    #| out-width: "60%"
+    par(mar = c(0.1, 0.1, 0.1, 0.1))
+    swatchplot(pal)
+    ```
+
+    This is what it would look like under three types of color blindness.
+
+    ```{r}
+    #| label: impl-swatch-cvd
+    #| fig-width: 5
+    #| fig-height: 0.6
+    #| out-width: "60%"
+    par(mar = c(0.1, 0.1, 0.1, 0.1))
+    swatchplot(deutan(pal))
+    swatchplot(protan(pal))
+    swatchplot(tritan(pal))
+    ```
+
+    You can also use online tools like the Adobe color accessibility
+    [page](https://color.adobe.com/create/color-accessibility) or
+    [colorhexa](https://www.colorhexa.com).

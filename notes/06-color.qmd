@@ -51,7 +51,7 @@ exactly the relative activations of these photoreceptor cells get translated to
 perceived color is actually an actively debated topic in neuroscience. But for
 our purposes, we'll work with the opponent color channels theory discussed in
 the reading. This theory suggests that the signals from these cone cells get
-translated into three channels, a red-green, a blue-green, and a luminance
+translated into three channels, a red-green, a blue-yellow, and a luminance
 (black-white) gradient.
 
 ### Color Spaces
@@ -86,7 +86,7 @@ much).
 
 7. The need for a more intuitive coordinate system to map out colors has been
 appreciated by artists and researchers for a long time. For example, in 1810,
-Phillipp Otto Runge created a color sphere where hues were associated with the
+Philipp Otto Runge created a color sphere where hues were associated with the
 polar angle, saturation with the radius, and lightness/darkness with the
 $z$-axis. In this spherical geometry, each of the coordinates has a meaningful
 perceptual interpretation.
@@ -152,7 +152,7 @@ people consistently order the perceived luminance according to the bottom row.
 
 11. For this reason, the $L^\ast a^\ast b^\ast$ color space was developed. The
 goal was to create a color space that is perceptually uniform, in the sense that
-it has been calibrated by to match the luminance judgments made by human study
+it has been calibrated to match the luminance judgments made by human study
 participants. The bottom row in the plot above gives the $L^\ast$ values
 associated with each of the colors in the top row.
 
@@ -165,7 +165,8 @@ can influence the use of color as a visual encoding channel.
 
 13. Luminance, hue, and saturation are each separate visual channels that can be
 manipulated to encode data. This gives us much more precise language for
-describing the "color channel" that appeared previously in our Howard coding. .
+describing the "color channel" that appeared previously in our hierarchy of
+encodings.
 
     ```{r}
     #| label: separate-channels
@@ -280,7 +281,7 @@ saturated colors (pastels).
     small_marks + large_regions
     ```
 
-16. Hue is highly ranked visual channel for telling apart categorical data
+16. Hue is a highly ranked visual channel for telling apart categorical data
 values. It's easy to tell the difference in hue for contiguous regions but
 harder to tell differences in hue when they're far apart. In a small region we
 can tell apart roughly six or seven hues at a time.
@@ -290,15 +291,15 @@ can tell apart roughly six or seven hues at a time.
 
 17. Unlike saturation and luminance, hue doesn't have a natural ordering. Though
 it can be applied to ordered data, like with a rainbow color map, these
-comparisons requires more cognitive effort. In some settings we've already
+comparisons require more cognitive effort. In some settings we've already
 learned to associate hue with ordering (e.g., green, yellow, and red on traffic
 lights), but this isn't built into our basic perception in the same way that
 saturation and luminance comparisons are.
 
-18. Transparency is related to color, and can in principle could be used to
+18. Transparency is related to color, and can in principle be used to
 encode ordered data. For example, the largest values can be 0% transparent, the
 next largest can be 10% transparent, etc. However, transparency strongly
-interacts with luminance and saturation, in the sense that a a fully saturated
+interacts with luminance and saturation, in the sense that a fully saturated
 but 20% transparent point might be confused with a less saturated but 0%
 transparent point. For this reason, transparency encoding should not be used
 together with luminance and saturation gradients.
@@ -311,7 +312,7 @@ accurately.
 
 20. To actually use color to encode a data attribute, we need a color map, which
 _maps_ from a domain of data values to a range of colors. A first distinction
-between color maps is between ordered and categorical color spaces.  For ordered
+between color maps is between ordered and categorical color maps.  For ordered
 data, we can think of this as traversing a path through the 3D color space. For
 categorical data, this is a selection of points in that space.
 
@@ -341,7 +342,7 @@ is some disagreement about the maximum number of colors to use at once, but they
 range from 6 - 12.
 
 23. How many colors we can tell apart at once also depends on how much space is
-available for showing them. Colors confined to small spaces, we should use fewer
+available for showing them. For colors confined to small spaces, we should use fewer
 categories. In the first visualization, we can still perceive the 21 different
 colors (the fact that they are physically separated also helps). The second has
 the same number of colors, but since they are shading in smaller segments, it's
@@ -403,7 +404,7 @@ hues $\times$ 3 shapes, instead of 12 separate hues.
 26. Even with a fixed set of hues, we still have to make a decision about the
 luminance and saturation for each hue. There's no universal recipe for setting
 this. Sometimes it's recommended to use high luminance contrast across
-caetgories. The advantage of this is that the categories can be read apart even
+categories. The advantage of this is that the categories can be read apart even
 on black-and-white paper. But this can be misleading if it draws too much
 attention to the high luminance categories.
 
@@ -431,7 +432,7 @@ Dark2) luminance versions
     ```
 
 28. $^\dagger$ One trick to keep in mind is that gray is actually a
-versatile color to use in data visualization. A complete list of potential uses
+versatile color to use in data visualization. A complete list of potential use
 cases is given
 [here](https://visualisingdata.com/2015/01/make-grey-best-friend/). In general,
 it tends to be useful in setting the context and helping us get oriented to the
@@ -443,8 +444,8 @@ overall data on which the most important elements might be placed.
 
 29. There are two types of color maps for ordered data.
 
-    - **Sequential** color maps range from a minimujm to a maximum value.
-    - **Diverging** color maps have a meaningful midpoint and must ensure that the the endpoints are different both from one another and from the midpoint.
+    - **Sequential** color maps range from a minimum to a maximum value.
+    - **Diverging** color maps have a meaningful midpoint and must ensure that the endpoints are different both from one another and from the midpoint.
 
     ```{r}
     #| label: diverging-maps
@@ -619,8 +620,8 @@ how we internalize different color associations.
 ## Implementation
 
 35. In ggplot2, we can implement custom colormaps using scale layers.  For
-categorical scales, we can use `scale_color_manual. To specify a color, we have
-to use RGB  hex codes. These are strings of six characters giving the
+categorical scales, we can use `scale_color_manual`. To specify a color, we have
+to use RGB hex codes. These are strings of six characters giving the
 coordinates in RGB space (the first two positions correspond to red, the next
 two to green, and the last two to blue). Most color palette selectors, even
 those that are based on HSL space, will allow us to extract these RGB hex codes.
@@ -691,7 +692,7 @@ reading mentions getting inspiration from movie stills.
 
 38. We mentioned that one solution to working with many categories is to lump
 many of them into "other." The `fct_other` function helps with this by setting
-anything not in the `keep` argument ot an "Other" value. `fct_lump_n` works
+anything not in the `keep` argument to an "Other" value. `fct_lump_n` works
 similarly but automatically finds the `n` most common categories.
 
     ```{r}
@@ -792,7 +793,7 @@ show a few options implemented by viridis.
     ```
 
 41. These named color gradient scales also come with binned versions. For
-example, for the viridis scale, we can use `_b` insteasd of `_c` in the suffix.
+example, for the viridis scale, we can use `_b` instead of `_c` in the suffix.
 
     ```{r}
     #| label: impl-stepped

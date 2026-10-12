@@ -182,7 +182,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="neuroscience">Neuroscience</h3>
 <ol start="2" type="1">
 <li><p>Human vision works through photoreceptor cells called rods and cones. Rod cells are more sensitive than cones and can detect even a single photon of light (cones need tens to hundreds before they are stimulated). But they aren’t able to effectively distinguish between photons from different wavelengths, so their signals can’t be used to decode finer color variations. This is why colors appear subdued at night.</p></li>
-<li><p>Cone cells are sensitive to specific wavelengths and come in three types (L, M, S) which are sensitive to long, medium, and short wavelengths of light. How exactly the relative activations of these photoreceptor cells get translated to perceived color is actually an actively debated topic in neuroscience. But for our purposes, we’ll work with the opponent color channels theory discussed in the reading. This theory suggests that the signals from these cone cells get translated into three channels, a red-green, a blue-green, and a luminance (black-white) gradient.</p></li>
+<li><p>Cone cells are sensitive to specific wavelengths and come in three types (L, M, S) which are sensitive to long, medium, and short wavelengths of light. How exactly the relative activations of these photoreceptor cells get translated to perceived color is actually an actively debated topic in neuroscience. But for our purposes, we’ll work with the opponent color channels theory discussed in the reading. This theory suggests that the signals from these cone cells get translated into three channels, a red-green, a blue-yellow, and a luminance (black-white) gradient.</p></li>
 </ol>
 </section>
 <section id="color-spaces" class="level3">
@@ -195,7 +195,7 @@ window.Quarto = {
 <p><img src="figures/RGB_pixels.jpg" class="img-fluid" width="440"></p></li>
 <li><p>While this is convenient for thinking about how color is constructed on these devices, it’s not useful for speaking about color in visualization design. The issue is that simple operations in RGB space don’t correspond to easily explainable changes in the perceived color. For example, suppose we want to change an orange color to relatively less saturated version. This requires an unintuitive readjustment of each of the RGB color components (it’s not immediately obvious why we would have to increase blue and decrease red so much).</p>
 <p><img src="figures/Unintuitive-rgb.png" class="img-fluid"></p></li>
-<li><p>The need for a more intuitive coordinate system to map out colors has been appreciated by artists and researchers for a long time. For example, in 1810, Phillipp Otto Runge created a color sphere where hues were associated with the polar angle, saturation with the radius, and lightness/darkness with the <span class="math inline">\(z\)</span>-axis. In this spherical geometry, each of the coordinates has a meaningful perceptual interpretation.</p>
+<li><p>The need for a more intuitive coordinate system to map out colors has been appreciated by artists and researchers for a long time. For example, in 1810, Philipp Otto Runge created a color sphere where hues were associated with the polar angle, saturation with the radius, and lightness/darkness with the <span class="math inline">\(z\)</span>-axis. In this spherical geometry, each of the coordinates has a meaningful perceptual interpretation.</p>
 <p><img src="figures/Runge_Farbenkugel.jpg" class="img-fluid" width="400"></p></li>
 <li><p>There have been many more modern refinements. The most widely used alternative to RGB in practice is HSL, which stands for Hue, Saturation, and Luminance. The hue and saturation axes can be visualized using a color wheel, and modifying the luminance leads to different color&nbsp;wheels.</p>
 <div class="cell">
@@ -222,7 +222,7 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>For this reason, the <span class="math inline">\(L^\ast a^\ast b^\ast\)</span> color space was developed. The goal was to create a color space that is perceptually uniform, in the sense that it has been calibrated by to match the luminance judgments made by human study participants. The bottom row in the plot above gives the <span class="math inline">\(L^\ast\)</span> values associated with each of the colors in the top row.</p></li>
+<li><p>For this reason, the <span class="math inline">\(L^\ast a^\ast b^\ast\)</span> color space was developed. The goal was to create a color space that is perceptually uniform, in the sense that it has been calibrated to match the luminance judgments made by human study participants. The bottom row in the plot above gives the <span class="math inline">\(L^\ast\)</span> values associated with each of the colors in the top row.</p></li>
 <li><p>There’s an entire science based around how people perceive color and how we should represent it theoretically. It could easily be an entire class. Since our focus is data visualization, let’s consider how these aspects of color theory can influence the use of color as a visual encoding channel.</p></li>
 </ol>
 </section>
@@ -230,7 +230,7 @@ window.Quarto = {
 <section id="visual-encodings-revisited" class="level2">
 <h2 class="anchored" data-anchor-id="visual-encodings-revisited">Visual Encodings Revisited</h2>
 <ol start="13" type="1">
-<li><p>Luminance, hue, and saturation are each separate visual channels that can be manipulated to encode data. This gives us much more precise language for describing the “color channel” that appeared previously in our Howard coding. .</p>
+<li><p>Luminance, hue, and saturation are each separate visual channels that can be manipulated to encode data. This gives us much more precise language for describing the “color channel” that appeared previously in our hierarchy of encodings.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -280,17 +280,17 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>Hue is highly ranked visual channel for telling apart categorical data values. It’s easy to tell the difference in hue for contiguous regions but harder to tell differences in hue when they’re far apart. In a small region we can tell apart roughly six or seven hues at a time.</p>
+<li><p>Hue is a highly ranked visual channel for telling apart categorical data values. It’s easy to tell the difference in hue for contiguous regions but harder to tell differences in hue when they’re far apart. In a small region we can tell apart roughly six or seven hues at a time.</p>
 <p><img src="figures/contiguous_segmented.png" class="img-fluid" width="800"> Figure from <span class="citation" data-cites="sinha2007">(<a href="#ref-sinha2007" role="doc-biblioref">Sinha and Meller 2007</a>)</span></p></li>
-<li><p>Unlike saturation and luminance, hue doesn’t have a natural ordering. Though it can be applied to ordered data, like with a rainbow color map, these comparisons requires more cognitive effort. In some settings we’ve already learned to associate hue with ordering (e.g., green, yellow, and red on traffic lights), but this isn’t built into our basic perception in the same way that saturation and luminance comparisons are.</p></li>
-<li><p>Transparency is related to color, and can in principle could be used to encode ordered data. For example, the largest values can be 0% transparent, the next largest can be 10% transparent, etc. However, transparency strongly interacts with luminance and saturation, in the sense that a a fully saturated but 20% transparent point might be confused with a less saturated but 0% transparent point. For this reason, transparency encoding should not be used together with luminance and saturation gradients.</p></li>
+<li><p>Unlike saturation and luminance, hue doesn’t have a natural ordering. Though it can be applied to ordered data, like with a rainbow color map, these comparisons require more cognitive effort. In some settings we’ve already learned to associate hue with ordering (e.g., green, yellow, and red on traffic lights), but this isn’t built into our basic perception in the same way that saturation and luminance comparisons are.</p></li>
+<li><p>Transparency is related to color, and can in principle be used to encode ordered data. For example, the largest values can be 0% transparent, the next largest can be 10% transparent, etc. However, transparency strongly interacts with luminance and saturation, in the sense that a fully saturated but 20% transparent point might be confused with a less saturated but 0% transparent point. For this reason, transparency encoding should not be used together with luminance and saturation gradients.</p></li>
 <li><p>The most defensible use of transparency is in differentiating foreground from background layers. Anything more than two bins becomes difficult to perceive accurately.</p></li>
 </ol>
 </section>
 <section id="color-map" class="level2">
 <h2 class="anchored" data-anchor-id="color-map">Color Map</h2>
 <ol start="20" type="1">
-<li><p>To actually use color to encode a data attribute, we need a color map, which <em>maps</em> from a domain of data values to a range of colors. A first distinction between color maps is between ordered and categorical color spaces. For ordered data, we can think of this as traversing a path through the 3D color space. For categorical data, this is a selection of points in that space.</p></li>
+<li><p>To actually use color to encode a data attribute, we need a color map, which <em>maps</em> from a domain of data values to a range of colors. A first distinction between color maps is between ordered and categorical color maps. For ordered data, we can think of this as traversing a path through the 3D color space. For categorical data, this is a selection of points in that space.</p></li>
 <li><p>For ordered variables, we can use either continuous or stepped color maps. Stepped color maps are segmented into discrete bins.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -306,7 +306,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="categorical-color-maps">Categorical color maps</h3>
 <ol start="22" type="1">
 <li><p>For categorical color maps, it is important to choose colors that can be differentiated from one another. A good default is to choose complementary colors as much as possible (those on opposite sides of the color wheel). There is some disagreement about the maximum number of colors to use at once, but they range from 6 - 12.</p></li>
-<li><p>How many colors we can tell apart at once also depends on how much space is available for showing them. Colors confined to small spaces, we should use fewer categories. In the first visualization, we can still perceive the 21 different colors (the fact that they are physically separated also helps). The second has the same number of colors, but since they are shading in smaller segments, it’s much harder to tell them apart.</p></li>
+<li><p>How many colors we can tell apart at once also depends on how much space is available for showing them. For colors confined to small spaces, we should use fewer categories. In the first visualization, we can still perceive the 21 different colors (the fact that they are physically separated also helps). The second has the same number of colors, but since they are shading in smaller segments, it’s much harder to tell them apart.</p></li>
 <li><p>Considering that we may be able to only distinguish so many colors in a categorical color map, what should we do with data with many categories? Some reasonable approaches are,</p>
 <ul>
 <li>To bin the groups into a smaller number of categories.</li>
@@ -331,7 +331,7 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>Even with a fixed set of hues, we still have to make a decision about the luminance and saturation for each hue. There’s no universal recipe for setting this. Sometimes it’s recommended to use high luminance contrast across caetgories. The advantage of this is that the categories can be read apart even on black-and-white paper. But this can be misleading if it draws too much attention to the high luminance categories.</p></li>
+<li><p>Even with a fixed set of hues, we still have to make a decision about the luminance and saturation for each hue. There’s no universal recipe for setting this. Sometimes it’s recommended to use high luminance contrast across categories. The advantage of this is that the categories can be read apart even on black-and-white paper. But this can be misleading if it draws too much attention to the high luminance categories.</p></li>
 <li><p>A good color map resource is ColorBrewer, a set of color palettes created by Cynthia Brewer for use in spatial data visualization. They have been chosen so that categories are easy to differentiate. It provides color maps with both high (Set1) and low (Set2) saturation. It also has high (Set1, Set2) vs.&nbsp;low (Dark1, Dark2) luminance versions</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -342,7 +342,7 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p><span class="math inline">\(^\dagger\)</span> One trick to keep in mind is that gray is actually a versatile color to use in data visualization. A complete list of potential uses cases is given <a href="https://visualisingdata.com/2015/01/make-grey-best-friend/">here</a>. In general, it tends to be useful in setting the context and helping us get oriented to the overall data on which the most important elements might be placed.</p>
+<li><p><span class="math inline">\(^\dagger\)</span> One trick to keep in mind is that gray is actually a versatile color to use in data visualization. A complete list of potential use cases is given <a href="https://visualisingdata.com/2015/01/make-grey-best-friend/">here</a>. In general, it tends to be useful in setting the context and helping us get oriented to the overall data on which the most important elements might be placed.</p>
 <p><img src="figures/160423-mood.png" class="img-fluid" width="400"></p></li>
 </ol>
 </section>
@@ -351,8 +351,8 @@ window.Quarto = {
 <ol start="29" type="1">
 <li><p>There are two types of color maps for ordered data.</p>
 <ul>
-<li><strong>Sequential</strong> color maps range from a minimujm to a maximum value.</li>
-<li><strong>Diverging</strong> color maps have a meaningful midpoint and must ensure that the the endpoints are different both from one another and from the midpoint.</li>
+<li><strong>Sequential</strong> color maps range from a minimum to a maximum value.</li>
+<li><strong>Diverging</strong> color maps have a meaningful midpoint and must ensure that the endpoints are different both from one another and from the midpoint.</li>
 </ul>
 <div class="cell">
 <div class="cell-output-display">
@@ -427,7 +427,7 @@ window.Quarto = {
 <section id="implementation" class="level2">
 <h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
 <ol start="35" type="1">
-<li><p>In ggplot2, we can implement custom colormaps using scale layers. For categorical scales, we can use `scale_color_manual. To specify a color, we have to use RGB hex codes. These are strings of six characters giving the coordinates in RGB space (the first two positions correspond to red, the next two to green, and the last two to blue). Most color palette selectors, even those that are based on HSL space, will allow us to extract these RGB hex codes.</p>
+<li><p>In ggplot2, we can implement custom colormaps using scale layers. For categorical scales, we can use <code>scale_color_manual</code>. To specify a color, we have to use RGB hex codes. These are strings of six characters giving the coordinates in RGB space (the first two positions correspond to red, the next two to green, and the last two to blue). Most color palette selectors, even those that are based on HSL space, will allow us to extract these RGB hex codes.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
@@ -481,7 +481,7 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>We mentioned that one solution to working with many categories is to lump many of them into “other.” The <code>fct_other</code> function helps with this by setting anything not in the <code>keep</code> argument ot an “Other” value. <code>fct_lump_n</code> works similarly but automatically finds the <code>n</code> most common categories.</p>
+<li><p>We mentioned that one solution to working with many categories is to lump many of them into “other.” The <code>fct_other</code> function helps with this by setting anything not in the <code>keep</code> argument to an “Other” value. <code>fct_lump_n</code> works similarly but automatically finds the <code>n</code> most common categories.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the last level is "other"</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">brewer.pal</span>(<span class="dv">3</span>, <span class="st">"Set1"</span>), <span class="st">"grey"</span>)</span>
@@ -578,7 +578,7 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>These named color gradient scales also come with binned versions. For example, for the viridis scale, we can use <code>_b</code> insteasd of <code>_c</code> in the suffix.</p>
+<li><p>These named color gradient scales also come with binned versions. For example, for the viridis scale, we can use <code>_b</code> instead of <code>_c</code> in the suffix.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">#| echo: false</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>base_map <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(faithfuld, <span class="fu">aes</span>(waiting, eruptions, <span class="at">fill =</span> density)) <span class="sc">+</span></span>

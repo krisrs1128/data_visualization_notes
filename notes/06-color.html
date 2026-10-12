@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kris Sankaran">
+<meta name="dcterms.date" content="2026-10-09">
+
+<title>Color</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="06-color_files/libs/clipboard/clipboard.min.js"></script>
+<script src="06-color_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="06-color_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="06-color_files/libs/quarto-html/popper.min.js"></script>
+<script src="06-color_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="06-color_files/libs/quarto-html/anchor.min.js"></script>
+<link href="06-color_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="06-color_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="06-color_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="06-color_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="06-color_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Color</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kris Sankaran </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 9, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biscale)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(colorspace)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(swatches)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"06-color-helpers.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol type="1">
+<li>We’ve been using color in our data visualizations since the first day of class. But despite being a topic that most people can informally talk about (and maybe even encountered in preschool…), what color actually <em>is</em> is a rich topic. Learning a bit more about the theory and psychology of color can be helpful for designing more effective data visualizations.</li>
+</ol>
+<section id="color-theory" class="level2">
+<h2 class="anchored" data-anchor-id="color-theory">Color Theory</h2>
+<section id="neuroscience" class="level3">
+<h3 class="anchored" data-anchor-id="neuroscience">Neuroscience</h3>
+<ol start="2" type="1">
+<li><p>Human vision works through photoreceptor cells called rods and cones. Rod cells are more sensitive than cones and can detect even a single photon of light (cones need tens to hundreds before they are stimulated). But they aren’t able to effectively distinguish between photons from different wavelengths, so their signals can’t be used to decode finer color variations. This is why colors appear subdued at night.</p></li>
+<li><p>Cone cells are sensitive to specific wavelengths and come in three types (L, M, S) which are sensitive to long, medium, and short wavelengths of light. How exactly the relative activations of these photoreceptor cells get translated to perceived color is actually an actively debated topic in neuroscience. But for our purposes, we’ll work with the opponent color channels theory discussed in the reading. This theory suggests that the signals from these cone cells get translated into three channels, a red-green, a blue-green, and a luminance (black-white) gradient.</p></li>
+</ol>
+</section>
+<section id="color-spaces" class="level3">
+<h3 class="anchored" data-anchor-id="color-spaces">Color Spaces</h3>
+<ol start="4" type="1">
+<li><p>Color spaces are attempts to mathematically ``map’’ the space of colors that are perceivable by the human visual system. They provide different ways of operationalizing ideas like color and luminance, but be mindful that these are not necessarily perfect matches with how our biology works.</p></li>
+<li><p>The RGB color space decomposes colors into red, green, and blue components. It associates each color with a point in 3D space.</p>
+<p><img src="figures/RGB_Cube_Show_lowgamma_cutout_b.png" class="img-fluid" width="400"></p>
+<p>This system became popular with the rise of television and computer monitors, which construct color in this way. For example, LCD displays simulate the appearance of many different colors by using liquid crystals to adjust the relative backlight passing through red, green, and blue filters.</p>
+<p><img src="figures/RGB_pixels.jpg" class="img-fluid" width="440"></p></li>
+<li><p>While this is convenient for thinking about how color is constructed on these devices, it’s not useful for speaking about color in visualization design. The issue is that simple operations in RGB space don’t correspond to easily explainable changes in the perceived color. For example, suppose we want to change an orange color to relatively less saturated version. This requires an unintuitive readjustment of each of the RGB color components (it’s not immediately obvious why we would have to increase blue and decrease red so much).</p>
+<p><img src="figures/Unintuitive-rgb.png" class="img-fluid"></p></li>
+<li><p>The need for a more intuitive coordinate system to map out colors has been appreciated by artists and researchers for a long time. For example, in 1810, Phillipp Otto Runge created a color sphere where hues were associated with the polar angle, saturation with the radius, and lightness/darkness with the <span class="math inline">\(z\)</span>-axis. In this spherical geometry, each of the coordinates has a meaningful perceptual interpretation.</p>
+<p><img src="figures/Runge_Farbenkugel.jpg" class="img-fluid" width="400"></p></li>
+<li><p>There have been many more modern refinements. The most widely used alternative to RGB in practice is HSL, which stands for Hue, Saturation, and Luminance. The hue and saturation axes can be visualized using a color wheel, and modifying the luminance leads to different color&nbsp;wheels.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/hsl-hsv-wheels-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Considering the range <span class="math inline">\(0 \leq L \leq 1\)</span>, the color space can be viewed as a cylinder.</p>
+<p><img src="figures/hsl_cylinder.png" class="img-fluid" width="400"></p>
+<p>The system is actually derived by transforming the RGB cube. We tilt the cube so that black and white appear at the top and bottom. We then fill in the gaps to form an entire cylinder.</p>
+<iframe width="600" height="300" allowfullscreen="" src="https://commons.wikimedia.org/wiki/File:RGB_2_HSL_conversion_with_grid.ogg?embedplayer=true">
+</iframe></li>
+<li><p>One subtlety is that luminance in HSL doesn’t correspond exactly to how we perceive luminance in our visual system. In the figure below, all the colors have the same “L” value in HSL, shown in the top row, but in perceptual studies, people consistently order the perceived luminance according to the bottom row.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/hsl-vs-luminance-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>For this reason, the <span class="math inline">\(L^\ast a^\ast b^\ast\)</span> color space was developed. The goal was to create a color space that is perceptually uniform, in the sense that it has been calibrated by to match the luminance judgments made by human study participants. The bottom row in the plot above gives the <span class="math inline">\(L^\ast\)</span> values associated with each of the colors in the top row.</p></li>
+<li><p>There’s an entire science based around how people perceive color and how we should represent it theoretically. It could easily be an entire class. Since our focus is data visualization, let’s consider how these aspects of color theory can influence the use of color as a visual encoding channel.</p></li>
+</ol>
+</section>
+</section>
+<section id="visual-encodings-revisited" class="level2">
+<h2 class="anchored" data-anchor-id="visual-encodings-revisited">Visual Encodings Revisited</h2>
+<ol start="13" type="1">
+<li><p>Luminance, hue, and saturation are each separate visual channels that can be manipulated to encode data. This gives us much more precise language for describing the “color channel” that appeared previously in our Howard coding. .</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/separate-channels-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For example, here is the same variable encoded using each channel.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/channels-scatter-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>While luminance is appropriate for encoding ordered data, it’s difficult to tell apart small differences. The reading argues that we should never expect our audience to be able to tell apart more than five different values of luminance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/luminance-bins-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is also important for thinking about text. A 3:1 luminance ratio between text and the background is almost impossible to read. The reading recommends at least a 10:1 ratio.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/text-contrast-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Similarly to luminance, saturation can be used for ordered data. But again, we can only differentiate so many bins, and in fact, the recommended maximum for this channel is three. Another rule of thumb is that for small marks, we should use more saturated colors, while for larger regions, we should use less saturated colors (pastels).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/saturation-size-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Hue is highly ranked visual channel for telling apart categorical data values. It’s easy to tell the difference in hue for contiguous regions but harder to tell differences in hue when they’re far apart. In a small region we can tell apart roughly six or seven hues at a time.</p>
+<p><img src="figures/contiguous_segmented.png" class="img-fluid" width="800"> Figure from <span class="citation" data-cites="sinha2007">(<a href="#ref-sinha2007" role="doc-biblioref">Sinha and Meller 2007</a>)</span></p></li>
+<li><p>Unlike saturation and luminance, hue doesn’t have a natural ordering. Though it can be applied to ordered data, like with a rainbow color map, these comparisons requires more cognitive effort. In some settings we’ve already learned to associate hue with ordering (e.g., green, yellow, and red on traffic lights), but this isn’t built into our basic perception in the same way that saturation and luminance comparisons are.</p></li>
+<li><p>Transparency is related to color, and can in principle could be used to encode ordered data. For example, the largest values can be 0% transparent, the next largest can be 10% transparent, etc. However, transparency strongly interacts with luminance and saturation, in the sense that a a fully saturated but 20% transparent point might be confused with a less saturated but 0% transparent point. For this reason, transparency encoding should not be used together with luminance and saturation gradients.</p></li>
+<li><p>The most defensible use of transparency is in differentiating foreground from background layers. Anything more than two bins becomes difficult to perceive accurately.</p></li>
+</ol>
+</section>
+<section id="color-map" class="level2">
+<h2 class="anchored" data-anchor-id="color-map">Color Map</h2>
+<ol start="20" type="1">
+<li><p>To actually use color to encode a data attribute, we need a color map, which <em>maps</em> from a domain of data values to a range of colors. A first distinction between color maps is between ordered and categorical color spaces. For ordered data, we can think of this as traversing a path through the 3D color space. For categorical data, this is a selection of points in that space.</p></li>
+<li><p>For ordered variables, we can use either continuous or stepped color maps. Stepped color maps are segmented into discrete bins.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/continuous-vs-stepped-1.png" class="img-fluid figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+</ol>
+<section id="categorical-color-maps" class="level3">
+<h3 class="anchored" data-anchor-id="categorical-color-maps">Categorical color maps</h3>
+<ol start="22" type="1">
+<li><p>For categorical color maps, it is important to choose colors that can be differentiated from one another. A good default is to choose complementary colors as much as possible (those on opposite sides of the color wheel). There is some disagreement about the maximum number of colors to use at once, but they range from 6 - 12.</p></li>
+<li><p>How many colors we can tell apart at once also depends on how much space is available for showing them. Colors confined to small spaces, we should use fewer categories. In the first visualization, we can still perceive the 21 different colors (the fact that they are physically separated also helps). The second has the same number of colors, but since they are shading in smaller segments, it’s much harder to tell them apart.</p></li>
+<li><p>Considering that we may be able to only distinguish so many colors in a categorical color map, what should we do with data with many categories? Some reasonable approaches are,</p>
+<ul>
+<li>To bin the groups into a smaller number of categories.</li>
+<li>To group all the rare categories into “other”.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/many-categories-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>If it’s absolutely necessary to distinguish every category, one option is to cross another channel along with color. If we had 12 categories, we could show 4 hues <span class="math inline">\(\times\)</span> 3 shapes, instead of 12 separate hues.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/color-and-shape-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Even with a fixed set of hues, we still have to make a decision about the luminance and saturation for each hue. There’s no universal recipe for setting this. Sometimes it’s recommended to use high luminance contrast across caetgories. The advantage of this is that the categories can be read apart even on black-and-white paper. But this can be misleading if it draws too much attention to the high luminance categories.</p></li>
+<li><p>A good color map resource is ColorBrewer, a set of color palettes created by Cynthia Brewer for use in spatial data visualization. They have been chosen so that categories are easy to differentiate. It provides color maps with both high (Set1) and low (Set2) saturation. It also has high (Set1, Set2) vs.&nbsp;low (Dark1, Dark2) luminance versions</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/categorical-luminance-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p><span class="math inline">\(^\dagger\)</span> One trick to keep in mind is that gray is actually a versatile color to use in data visualization. A complete list of potential uses cases is given <a href="https://visualisingdata.com/2015/01/make-grey-best-friend/">here</a>. In general, it tends to be useful in setting the context and helping us get oriented to the overall data on which the most important elements might be placed.</p>
+<p><img src="figures/160423-mood.png" class="img-fluid" width="400"></p></li>
+</ol>
+</section>
+<section id="ordered-color-maps" class="level3">
+<h3 class="anchored" data-anchor-id="ordered-color-maps">Ordered color maps</h3>
+<ol start="29" type="1">
+<li><p>There are two types of color maps for ordered data.</p>
+<ul>
+<li><strong>Sequential</strong> color maps range from a minimujm to a maximum value.</li>
+<li><strong>Diverging</strong> color maps have a meaningful midpoint and must ensure that the the endpoints are different both from one another and from the midpoint.</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/diverging-maps-1.png" class="img-fluid figure-img" style="width:95.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Our discussion of luminance and saturation shows that these are well-suited to defining sequential color maps. Consider fixing a hue. We can obtain an associated sequential map either by varying saturation (one end will be white) or luminance (one end will be black). If we ignore hue entirely, then we recover gray scale.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/sequential-maps-1.png" class="img-fluid figure-img" style="width:95.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Alternatively, we can use multiple hues in a sequential colormap. The fewer hues that are considered, the easier it is to perceive global differences. The more hues that are considered, the more that fine-grained structure is emphasized. At the extreme, we can use a rainbow color palette. Even though this makes small differences in the data attribute visible, it can blind us to larger change, because hues don’t have a natural ordering. The example below comes from <span class="citation" data-cites="bergman1995">(<a href="#ref-bergman1995" role="doc-biblioref">Bergman et al. 1995</a>)</span>.</p>
+<p><img src="figures/rainbow_vs_twohue.png" class="img-fluid"></p>
+<p>Another problem is that rainbow color palettes are not perceptually linear. 1000 data units in one part of the range can go through three different colors while 1000 units at another point all appear like the same hue.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/rainbow-maps-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="bivariate-color-maps" class="level3">
+<h3 class="anchored" data-anchor-id="bivariate-color-maps">Bivariate color maps</h3>
+<ol start="32" type="1">
+<li><p>While it’s not as common, a single color map can be used to visualize two data variables using a bivariate color map. Each dimension in the map matches a different variable. This is difficult to use for categorical variables, but it can work when each variable is ordered. Be careful that some readers find this difficult to read.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/bivariate-map-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This example by Joshua Stevens visualizes public health data from the CDC.</p>
+<p><img src="figures/bivariate_choropleth.png" class="img-fluid" width="600"></p></li>
+</ol>
+</section>
+<section id="accessibility-and-emotion" class="level3">
+<h3 class="anchored" data-anchor-id="accessibility-and-emotion">Accessibility and Emotion</h3>
+<ol start="33" type="1">
+<li><p>Red-green color blindness can affect 8% of men and about a half a percent of women. To design for colorblind readers, you can use a simulator which approximates (for those without color blindness) how the visualization would appear to someone who is colorblind.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/colorblind-simulation-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Finally, remember that colors carry many associations in our society, especially with emotion. This example from the optional reading gives a sense of how we internalize different color associations.</p>
+<p><img src="figures/160423-colorist.png" class="img-fluid" width="400"></p>
+<p>An interesting scientific analysis was carried out by UW-Madison visual communications professor Nan Li. Her team analyzed how different ways of portraying COVID affected readers’ responses <span class="citation" data-cites="li2022">(<a href="#ref-li2022" role="doc-biblioref">Li et al. 2022</a>)</span>. The microscopy images below don’t have any color to begin with. They were all added by the scientific illustrator. The colors that they chose influenced whether readers experienced fear when viewing their image.</p>
+<p><img src="figures/covid_fear_levels.jpg" class="img-fluid" width="500"></p></li>
+</ol>
+</section>
+</section>
+<section id="implementation" class="level2">
+<h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
+<ol start="35" type="1">
+<li><p>In ggplot2, we can implement custom colormaps using scale layers. For categorical scales, we can use `scale_color_manual. To specify a color, we have to use RGB hex codes. These are strings of six characters giving the coordinates in RGB space (the first two positions correspond to red, the next two to green, and the last two to blue). Most color palette selectors, even those that are based on HSL space, will allow us to extract these RGB hex codes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">Adelie =</span> <span class="st">"#E41A1C"</span>, <span class="at">Chinstrap =</span> <span class="st">"#377EB8"</span>, <span class="at">Gentoo =</span> <span class="st">"#4DAF4A"</span>)) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Bill length (mm)"</span>, <span class="at">y =</span> <span class="st">"Bill depth (mm)"</span>, <span class="at">color =</span> <span class="st">"Species"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-manual-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that if you use <code>fill</code> in the graphical encoding (like for <code>geom_bar</code> or <code>geom_tile</code>), then you can replace color with fill in <code>scale_color_manual</code> and any of the color scales discussed below. This is why you might see some of the code referring to <code>scale_fill_*</code> when my discussion talks about <code>scale_color_*</code>.</p></li>
+<li><p>ggplot2 has built-in color brewer palettes using the <code>scale_color_brewer</code> layer. The Color Brewer <a href="https://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=3">website</a> lets you explore these options interactively.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Bill length (mm)"</span>, <span class="at">y =</span> <span class="st">"Bill depth (mm)"</span>, <span class="at">color =</span> <span class="st">"Species"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-brewer-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you ever want to modify these colors, you can also extract the hex codes directly using <code>brewer.pal</code> from the RColorBrewer package.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">brewer.pal</span>(<span class="dv">3</span>, <span class="st">"Set1"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "#E41A1C" "#377EB8" "#4DAF4A"</code></pre>
+</div>
+</div></li>
+<li><p>There are websites that let you select a color palette from an image. For example, adobe <a href="https://color.adobe.com/create/image">color express</a> or <a href="https://coolors.co/image-picker">coolors</a>. Some allow you directly to copy the hex codes. For others, it might help to download the ASE file format, which can be read using <code>read_ase</code> from the swatches library. For inspiration, I often use<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> colors from <a href="https://www.wikiart.org/en/henri-matisse">paintings</a>, and the reading mentions getting inspiration from movie stills.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">read_ase</span>(<span class="st">"figures/matisse_palette.ase"</span>, <span class="at">use_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Bill length (mm)"</span>, <span class="at">y =</span> <span class="st">"Bill depth (mm)"</span>, <span class="at">color =</span> <span class="st">"Species"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-matisse-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>We mentioned that one solution to working with many categories is to lump many of them into “other.” The <code>fct_other</code> function helps with this by setting anything not in the <code>keep</code> argument ot an “Other” value. <code>fct_lump_n</code> works similarly but automatically finds the <code>n</code> most common categories.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the last level is "other"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">brewer.pal</span>(<span class="dv">3</span>, <span class="st">"Set1"</span>), <span class="st">"grey"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>p_other <span class="ot">&lt;-</span> mpg <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">mfr =</span> <span class="fu">fct_other</span>(manufacturer, <span class="at">keep =</span> <span class="fu">c</span>(<span class="st">"toyota"</span>, <span class="st">"honda"</span>, <span class="st">"ford"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(displ, hwy, <span class="at">color =</span> mfr)) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"fct_other"</span>, <span class="at">color =</span> <span class="cn">NULL</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>p_lump <span class="ot">&lt;-</span> mpg <span class="sc">|&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">mfr =</span> <span class="fu">fct_lump_n</span>(manufacturer, <span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(displ, hwy, <span class="at">color =</span> mfr)) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal) <span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"fct_lump_n3"</span>, <span class="at">color =</span> <span class="cn">NULL</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>p_other <span class="sc">+</span> p_lump</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-forcats-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>For ordered color scales, we can use <code>scale_color_gradient</code> (sequential) or <code>scale_color_gradient2</code> (diverging). <code>scale_color_gradient</code> allows you to input low and high values, and it will interpolate the gradient for you.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(faithfuld, <span class="fu">aes</span>(waiting, eruptions, <span class="at">fill =</span> density)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"#1f78b4"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-gradient-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>scale_color_gradient2</code> works similarly, except you also have to provide the color (<code>mid</code>) and value (<code>midpoint</code>) of the center of the color scale.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>elev_c <span class="ot">&lt;-</span> elev <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">z =</span> z <span class="sc">-</span> <span class="dv">130</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(elev_c, <span class="fu">aes</span>(col, row, <span class="at">fill =</span> z)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"#2166AC"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"#B2182B"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    theme_map</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-gradient2-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can create binned versions of these ordered color maps using <code>scale_color_steps</code> and <code>scale_color_steps2</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(faithfuld, <span class="fu">aes</span>(waiting, eruptions, <span class="at">fill =</span> density)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_steps</span>(<span class="at">low =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"#1f78b4"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(elev_c, <span class="fu">aes</span>(col, row, <span class="at">fill =</span> z)) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_steps2</span>(<span class="at">low =</span> <span class="st">"#2166AC"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"#B2182B"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    theme_map</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-steps-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Similarly to how <code>scale_color_brewer</code> provides a default colormap for categorical data, the <code>scale_color_viridis_c</code>, <code>scale_color_distiller</code>, and <code>scale_color_fermenter</code> for well-known gradient scales. For example, below we show a few options implemented by viridis.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>base_map2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(faithfuld, <span class="fu">aes</span>(waiting, eruptions, <span class="at">fill =</span> density)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     theme_diagram</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>(base_map2 <span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"viridis"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"viridis"</span>)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    (base_map2 <span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"magma"</span>)  <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"magma"</span>))  <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    (base_map2 <span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"plasma"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"plasma"</span>)) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    (base_map2 <span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"cividis"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"cividis"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-viridis-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>These named color gradient scales also come with binned versions. For example, for the viridis scale, we can use <code>_b</code> insteasd of <code>_c</code> in the suffix.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">#| echo: false</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>base_map <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(faithfuld, <span class="fu">aes</span>(waiting, eruptions, <span class="at">fill =</span> density)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    theme_colorbar</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>(base_map <span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Continuous"</span>)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    (base_map <span class="sc">+</span> <span class="fu">scale_fill_viridis_b</span>(<span class="at">n.breaks =</span> <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stepped (5 bins)"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-stepped-1.png" class="img-fluid figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Similarly for <code>scale_color_distiller</code>, the binned equivalent is <code>scale_color_fermenter</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">#| echo: false</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>(base_map <span class="sc">+</span> <span class="fu">scale_fill_distiller</span>(<span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"distiller (continuous)"</span>)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    (base_map <span class="sc">+</span> <span class="fu">scale_fill_fermenter</span>(<span class="at">direction =</span> <span class="dv">1</span>, <span class="at">n.breaks =</span> <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"fermenter (stepped)"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-distiller-1.png" class="img-fluid figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Another resource worth knowing about for building color gradients is <code>scico</code>. These have been evaluated using user studies to be as perceptually uniform as possible. You can view all the available gradients <a href="https://www.fabiocrameri.ch/colourmaps/">here</a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scico)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>(base_map2 <span class="sc">+</span> <span class="fu">scale_fill_scico</span>(<span class="at">palette =</span> <span class="st">"bamako"</span>)   <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"bamako"</span>))  <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    (base_map2 <span class="sc">+</span> <span class="fu">scale_fill_scico</span>(<span class="at">palette =</span> <span class="st">"batlow"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"batlow"</span>))  <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    (base_map2 <span class="sc">+</span> <span class="fu">scale_fill_scico</span>(<span class="at">palette =</span> <span class="st">"vik"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"vik (div)"</span>)) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    (base_map2 <span class="sc">+</span> <span class="fu">scale_fill_scico</span>(<span class="at">palette =</span> <span class="st">"roma"</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"roma (div)"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-scico-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>If you want to simulate how color blindness looks in a proposed color palette, you can use functions from the colorspace package. For example, remember the ColorBrewer palette that we extracted above.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">swatchplot</span>(pal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-swatch-1.png" class="img-fluid figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is what it would look like under three types of color blindness.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">swatchplot</span>(<span class="fu">deutan</span>(pal))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-swatch-cvd-1.png" class="img-fluid figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">swatchplot</span>(<span class="fu">protan</span>(pal))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-swatch-cvd-2.png" class="img-fluid figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">swatchplot</span>(<span class="fu">tritan</span>(pal))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="06-color_files/figure-html/impl-swatch-cvd-3.png" class="img-fluid figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can also use online tools like the Adobe color accessibility <a href="https://color.adobe.com/create/color-accessibility">page</a> or <a href="https://www.colorhexa.com">colorhexa</a>.</p></li>
+</ol>
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-bergman1995" class="csl-entry" role="listitem">
+Bergman, Lawrence D., Bernice E. Rogowitz, and Lloyd A. Treinish. 1995. <span>“A Rule-Based Tool for Assisting Colormap Selection.”</span> <em>Proceedings Visualization ’95</em>, 118–25. <a href="https://doi.org/10.1109/VISUAL.1995.480803">https://doi.org/10.1109/VISUAL.1995.480803</a>.
+</div>
+<div id="ref-li2022" class="csl-entry" role="listitem">
+Li, Nan, Amanda L. Molder, and Shiyu Yang. 2022. <span>“Visual Representations of <span>SARS-CoV-2</span>, Emotions, and Risk Perception of <span>COVID-19</span>.”</span> <em>Health Science Reports</em> 5 (1): e496. <a href="https://doi.org/10.1002/hsr2.496">https://doi.org/10.1002/hsr2.496</a>.
+</div>
+<div id="ref-sinha2007" class="csl-entry" role="listitem">
+Sinha, Amit U., and Jaroslaw Meller. 2007. <span>“Cinteny: Flexible Analysis and Visualization of Synteny and Genome Rearrangements in Multiple Organisms.”</span> <em>BMC Bioinformatics</em> 8 (1): 82. <a href="https://doi.org/10.1186/1471-2105-8-82">https://doi.org/10.1186/1471-2105-8-82</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>The example below is from https://www.wikiart.org/en/henri-matisse/woman-with-hat-1905/.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

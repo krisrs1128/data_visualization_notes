@@ -450,7 +450,7 @@ vg.hconcat(
             vg.from("penguins"),
             {x: "bill_length_mm", y: "bill_depth_mm", clip: true}
         ),
-        vg.pan({x: x_pan, y: y_pan_depth}),
+        vg.panZoom({x: x_pan, y: y_pan_depth}),
         vg.width(300),
         vg.height(250)
     ),
@@ -944,3 +944,13 @@ award-winning plot.
 ```{ojs}
 vg.hconcat(slope, bars)
 ```
+
+### Objectives
+
+- Apply the vocabulary of view specification (select, navigate, coordinaet, organize) to precisely describe the dynamics of an interactive visualization.
+- Differentiate between alternative forms of view manipulation and imagine new examples of visualizations use them.
+- Explain Schneiderman's mantra, the focus-plus-context principle, and the design space metaphor apply them to structure a visualization design task.
+- Given a visualization implemented in mosaic, identify and explain the parts of the code that transform user input into a visualization update, making sure to distinguish between interactors, selections, params, highlighting, filtering.
+- Given a graphical query that we would like a visualization to support, identify the corresponding mosaic interactor (`interval*`, `toggle*`, `nearest*`, `panZoom`), or argue that no such interactor is available.
+- Explain how several interactors can be used simultaneously within a single mosaic visualization, including how their targets are reconciled using Selections.
+- Given mosaic code, explain the visualization that it produces and the interactions that it responds to.

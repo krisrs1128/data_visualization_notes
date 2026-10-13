@@ -203,7 +203,7 @@ vg = {
 link between user inputs and the visual rendering code that needs to be rerun
 based on the user input. For example, the scatterplot below allows us to change
 point color using a menu. The user can provide inputs through `vg.menu`. The
-`vg.dot` layer uses whatever color is passed to the `fill` argument.  `$color`
+`vg.dot` layer uses whatever color is passed to the `fill` argument.  `color`
 appears in both the `vg.menu` and `vg.dot` code is and ensures the visualization
 is rerendered every time the input changes.
 
@@ -787,3 +787,16 @@ function movie_plot(query) {
     );
 }
 ```
+
+### Objectives
+
+By the end of this week, you should be able to,
+
+- Apply the interaction taxonomy to precisely describe the dynamics of an interactive visualization.
+- Provide original examples of visualizations that implement terms given in the interaction taxonomy.
+- Describe the strengths and weaknesses of interactive visualizations.
+- Explain the gulfs of interaction and how they can be used to evaluate visualizations.
+- Given a form of desired user input, decide whether a `Param` or ``Selection` is more appropriate.
+- When multiple user inputs are present, explain how `intersect`, `single`, and `union` selections reconcile them.
+- Given a visualization implemented in mosaic, identify and explain the parts of the code that transform user input into a visualization update.
+- Given mosaic code, explain the visualization that it produces and the interactions that it responds to.

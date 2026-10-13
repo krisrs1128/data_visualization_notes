@@ -258,7 +258,7 @@ window.Quarto = {
 <section id="param-and-selection" class="level3">
 <h3 class="anchored" data-anchor-id="param-and-selection"><code>Param</code> and <code>Selection</code></h3>
 <ol start="15" type="1">
-<li>In mosaic, <code>Params</code> are used for interactive view specification. They are the link between user inputs and the visual rendering code that needs to be rerun based on the user input. For example, the scatterplot below allows us to change point color using a menu. The user can provide inputs through <code>vg.menu</code>. The <code>vg.dot</code> layer uses whatever color is passed to the <code>fill</code> argument. <code>$color</code> appears in both the <code>vg.menu</code> and <code>vg.dot</code> code is and ensures the visualization is rerendered every time the input changes.</li>
+<li>In mosaic, <code>Params</code> are used for interactive view specification. They are the link between user inputs and the visual rendering code that needs to be rerun based on the user input. For example, the scatterplot below allows us to change point color using a menu. The user can provide inputs through <code>vg.menu</code>. The <code>vg.dot</code> layer uses whatever color is passed to the <code>fill</code> argument. <code>color</code> appears in both the <code>vg.menu</code> and <code>vg.dot</code> code is and ensures the visualization is rerendered every time the input changes.</li>
 </ol>
 <div id="param-minimal-plot" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" data-startfrom="212" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 211;"><span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(<span class="st">"red"</span>)</span>
@@ -1028,6 +1028,20 @@ table tbody tr:hover {
 </div>
 </div>
 </div>
+</section>
+<section id="objectives" class="level3">
+<h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
+<p>By the end of this week, you should be able to,</p>
+<ul>
+<li>Apply the interaction taxonomy to precisely describe the dynamics of an interactive visualization.</li>
+<li>Provide original examples of visualizations that implement terms given in the interaction taxonomy.</li>
+<li>Describe the strengths and weaknesses of interactive visualizations.</li>
+<li>Explain the gulfs of interaction and how they can be used to evaluate visualizations.</li>
+<li>Given a form of desired user input, decide whether a <code>Param</code> or `<code>Selection</code> is more appropriate.</li>
+<li>When multiple user inputs are present, explain how <code>intersect</code>, <code>single</code>, and <code>union</code> selections reconcile them.</li>
+<li>Given a visualization implemented in mosaic, identify and explain the parts of the code that transform user input into a visualization update.</li>
+<li>Given mosaic code, explain the visualization that it produces and the interactions that it responds to.</li>
+</ul>
 </section>
 </section>
 

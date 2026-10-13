@@ -535,11 +535,7 @@ difficult to read.
     #| out-width: "80%"
     #| echo: false
     bi <- elev |>
-        mutate(
-            elevation_class = factor(ntile(z, 3), levels = 1:3),
-            slope_class = factor(ntile(slope, 3), levels = 1:3)
-        ) |>
-        bi_class(x = elevation_class, y = slope_class)
+        bi_class(x = z, y = slope, style = "equal")
 
     bi_map <- ggplot(bi, aes(col, row, fill = bi_class)) +
         geom_tile() +
@@ -549,10 +545,8 @@ difficult to read.
 
     bi_key <- bi_legend(
         pal = "DkBlue",
-        dim = 3,
         xlab = "Elevation",
-        ylab = "Slope",
-        size = 9
+        ylab = "Slope"
     )
 
     bi_map + bi_key + plot_layout(widths = c(3, 1))
@@ -828,15 +822,43 @@ possible. You can view all the available gradients
     #| fig-width: 7
     #| fig-height: 3
     #| out-width: "80%"
-    library(scico)
-
     (base_map2 + scale_fill_scico(palette = "bamako")   + labs(title = "bamako"))  +
         (base_map2 + scale_fill_scico(palette = "batlow") + labs(title = "batlow"))  +
         (base_map2 + scale_fill_scico(palette = "vik") + labs(title = "vik (div)")) +
         (base_map2 + scale_fill_scico(palette = "roma") + labs(title = "roma (div)"))
     ```
 
-44. If you want to simulate how color blindness looks in a proposed color
+44. To construct a bivariate color scale, you can use the `biscale` package,
+which defines `bi_scale_color` and `bi_scale_fill` layers. This is a bit tricky
+to implement because `ggplot2`'s graphical encodings are designed for individual
+columns of a `data.frame`. The `biscale` package works around this by defining a
+special column that merges two columns, like in the `bi` object below.
+
+    ```{r}
+    #| label: defn-biclass
+     bi <- elev |>
+         bi_class(x = z, y = slope, style = "equal")
+     head(bi)
+    ```
+
+    These can then be used as the fill within the binary colormap.
+
+    ```{r}
+    #| label: impl-biscale
+    #| fig-width: 7
+    #| fig-height: 3
+    #| out-width: "80%"
+    bi_map <- ggplot(bi, aes(col, row, fill = bi_class)) +
+        geom_tile() +
+        bi_scale_fill(pal = "DkBlue", dim = 3, guide = "none") +
+        coord_equal() +
+        theme_diagram
+
+    bi_key <- bi_legend(pal = "DkBlue", xlab = "Elevation", ylab = "Slope")
+    bi_map + bi_key + plot_layout(widths = c(3, 1))
+    ```
+
+45. If you want to simulate how color blindness looks in a proposed color
 palette, you can use functions from the colorspace package. For example,
 remember the ColorBrewer palette that we extracted above.
 
@@ -874,4 +896,4 @@ remember the ColorBrewer palette that we extracted above.
 - Describe the challenges of using hue to encode many categories and explain options available in practice.
 - Describe the strengths and weaknesses of rainbow color palettes.
 - Given a scale layer implemented in ggplot2, scico, or biscale, describe what type of color map it corresponds to.
-- Describe the best practices for improving the accessibility of a visualization's color encodings.
+- Describe how you might check and improve the accessibility of a visualization's color encodings.

@@ -127,63 +127,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Use quarto notebooks to combine code, visualizations, and commentary.</li>
 <li>Run the pi coding agent to create a ggplot2 visualization.</li>
 <li>Check that your code notebooks are formatted properly for submission.</li>
-</ul></li>
+</ul>
+<p>Before we get started, please make sure to the install quarto and pi. The instructions below describe how to do this for different operating systems.</p></li>
 </ol>
-<p>Before we get started, please make sure to the install quarto and pi. The instructions below describe how to do this for different operating systems.</p>
 <section id="code-editors" class="level2">
 <h2 class="anchored" data-anchor-id="code-editors">Code Editors</h2>
 <ol start="2" type="1">
-<li>We will create visualizations in a programming language. This is different from creating visualizations in software like Excel, Power BI, or Tableau, because our visualizations will be defined by writing code rather than interacting with a GUI (clicking buttons, selecting from dropdown menus, etc.).</li>
-</ol>
+<li><p>We will create visualizations in a programming language. This is different from creating visualizations in software like Excel, Power BI, or Tableau, because our visualizations will be defined by writing code rather than interacting with a GUI (clicking buttons, selecting from dropdown menus, etc.).</p>
 <p>Contrast the excel approach,</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/excel_plot.mp4"></video></div>
 <p>With the coded version,</p>
-<div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/vscode_plot.mp4"></video></div>
-<ol start="3" type="1">
+<div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/vscode_plot.mp4"></video></div></li>
 <li><p>Since programming is all done by editing text files, it helps to have efficient ways to navigate, type in, and monitoring changes to text files. This is what modern code editors support. This note describes vscode, but Rstudio and positron are similar (and I’m happy to go over that one-on-one).</p></li>
-<li><p>To open an existing folder, go to “File &gt; Open Folder.” This will make the editor aware of all the files in that folder.</p></li>
-</ol>
+<li><p>To open an existing folder, go to “File &gt; Open Folder.” This will make the editor aware of all the files in that folder.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video3" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/opening_folder.mp4"></video></div>
-<p>You can navigate all the files in a project using the stack-of-paper icon at the top left of the editor. If you have directories, clicking on them will expand all the files within. You can also create new files and directories by right-clicking in this space</p>
-<ol start="5" type="1">
-<li>We’ll mainly work with quarto files (described in detail below). These files have boilerplate text that is always present, and it’s tedious to copy each time. Instead, you can type <code>Ctrl + Shift + p</code> (windows) or <code>Cmd + Shift + p</code> (mac) to bring up the “Command Palette,” where you can create a quarto file with the boilerplate in place<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
-</ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/new_quarto.mp4"></video></div>
-<ol start="6" type="1">
+<p>You can navigate all the files in a project using the stack-of-paper icon at the top left of the editor. If you have directories, clicking on them will expand all the files within. You can also create new files and directories by right-clicking in this space</p></li>
+<li><p>We’ll mainly work with quarto files (described in detail below). These files have boilerplate text that is always present, and it’s tedious to copy each time. Instead, you can type <code>Ctrl + Shift + p</code> (windows) or <code>Cmd + Shift + p</code> (mac) to bring up the “Command Palette,” where you can create a quarto file with the boilerplate in place<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/new_quarto.mp4"></video></div></li>
 <li><p>Modern code editors have built-in support for <code>git</code>, a program for checkpointing progress in your code projects. It’s essentially “track changes” for code. It’s helpful because,</p>
 <ul>
 <li>It keeps you from accidentally losing your work.</li>
 <li>When using AI agents, it clearly highlights the changes they make.</li>
-</ul></li>
-</ol>
+</ul>
 <p>Describing everything git can do is beyond the scope of this course (and I believe it’s taught in the introductory R courses). But for our purposes, it’s enough to know that you can initialize a repository in a folder.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video5" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/new_repo.mp4"></video></div>
 <p>Commit a change, which acts like a checkpoint for your later review.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video6" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/committing_a_change.mp4"></video></div>
 <p>And track any changes since the last commit.</p>
-<div class="quarto-video"><video id="video_shortcode_videojs_video7" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/git_track_changes.mp4"></video></div>
-<ol start="7" type="1">
-<li>It’s not as important, but know that you can customize your editor. You can change the panel layout, the color themes<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, even the fonts. There are also extensions (blocks icon on the left) give even more options.</li>
+<div class="quarto-video"><video id="video_shortcode_videojs_video7" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/git_track_changes.mp4"></video></div></li>
+<li><p>It’s not as important, but know that you can customize your editor. You can change the panel layout, the color themes<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, even the fonts. There are also extensions (blocks icon on the left) give even more options.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video8" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/color_themes.mp4"></video></div></li>
 </ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video8" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/color_themes.mp4"></video></div>
 </section>
 <section id="quarto-notebooks" class="level2">
 <h2 class="anchored" data-anchor-id="quarto-notebooks">Quarto Notebooks</h2>
 <ol start="8" type="1">
-<li>Literate programming is the idea that code from a programming language can be embedded within a documentation language. This places the emphasis back on why we are writing the code, what exactly we’re meant to learn from or accomplish with it.</li>
-</ol>
+<li><p>Literate programming is the idea that code from a programming language can be embedded within a documentation language. This places the emphasis back on why we are writing the code, what exactly we’re meant to learn from or accomplish with it.</p>
 <blockquote class="blockquote">
 <p>The main idea is to treat a program as a piece of literature, addressed to human beings rather than to a computer.</p>
 <p>– Donald Knuth, <em>Literate Programming</em></p>
-</blockquote>
-<ol start="9" type="1">
+</blockquote></li>
 <li><p>Quarto is an implementation of literate programming that’s well suited to data visualization. It supports R, python, and javascript, and those code blocks are embedded within the markdown. Python is helpful for the machine learning visualization topics at the end of the course, and javascript will help us make interactive plots, but the only prior experience we assume is with R.</p></li>
-<li><p>If you are using vscode, to install the quarto extension so you can run code without leaving the editor. If you use Rstudio, quarto is supported by default.</p></li>
-</ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video9" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/install_quarto.mp4"></video></div>
-<ol start="11" type="1">
-<li>You can create a code block with three backticks and the name of the language. This is what an R code block looks like,</li>
-</ol>
+<li><p>If you are using vscode, to install the quarto extension so you can run code without leaving the editor. If you use Rstudio, quarto is supported by default.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video9" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/install_quarto.mp4"></video></div></li>
+<li><p>You can create a code block with three backticks and the name of the language. This is what an R code block looks like,</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
@@ -194,7 +181,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+</div></li>
+</ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-startfrom="134" data-source-offset="9"><pre class="sourceCode java code-with-copy"><code class="sourceCode java" style="counter-reset: source-line 133;"><span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>```<span class="op">{</span>ojs<span class="op">}</span></span>
 <span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="co">//| echo: fenced</span></span>
@@ -207,15 +195,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <ol start="12" type="1">
-<li>You can set options within each block. They won’t appear in the rendered document but control how the output looks. For example, you can name your chunks, which helps debugging.</li>
-</ol>
+<li><p>You can set options within each block. They won’t appear in the rendered document but control how the output looks. For example, you can name your chunks, which helps debugging.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: my-label</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>One trick that’s worth knowing for our course – you can resize figures and write captions this way.</p>
+<p>One trick that’s worth knowing for our course is that you can resize figures and write captions this way.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 6</span></span>
@@ -248,10 +235,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-</div>
-<ol start="13" type="1">
-<li>Sometimes code prints many messages that clutter the document.</li>
-</ol>
+</div></li>
+<li><p>Sometimes code prints many messages that clutter the document.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -276,21 +261,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<ol start="14" type="1">
-<li>Copying these options to every chunk is tedious. Instead, you can set the metadata at the top of the document so that they will apply to every chunk below.</li>
-</ol>
-<p><img src="figures/global_chunk_options.png" class="img-fluid"></p>
-<ol start="15" type="1">
-<li>To render a document, open the command palette and enter <code>Quarto Preview</code>. You can also render from terminal with <code>quarto preview your-document.qmd</code>.</li>
-</ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video10" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/quarto_preview.mp4"></video></div>
-<ol start="16" type="1">
-<li>A common pitfall is that if you move the rendered HTML document outside its original folder, the figures won’t render. For example, if we move the previous document to a new folder, we’ll see this.</li>
-</ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video11" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/not_self_contained.mp4"></video></div>
-<ol start="17" type="1">
-<li>To fix this, add <code>self-contained: true</code> to the file header. This embeds all images and styling embedded directly in the HTML.</li>
+</div></li>
+<li><p>Copying these options to every chunk is tedious. Instead, you can set the metadata at the top of the document so that they will apply to every chunk below.</p>
+<p><img src="figures/global_chunk_options.png" class="img-fluid"></p></li>
+<li><p>To render a document, open the command palette and enter <code>Quarto Preview</code>. You can also render from terminal with <code>quarto preview your-document.qmd</code>.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video10" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/quarto_preview.mp4"></video></div></li>
+<li><p>A common pitfall is that if you move the rendered HTML document outside its original folder, the figures won’t render. For example, if we move the previous document to a new folder, we’ll see this.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video11" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/not_self_contained.mp4"></video></div></li>
+<li><p>To fix this, add <code>self-contained: true</code> to the file header. This embeds all images and styling embedded directly in the HTML.</p></li>
 </ol>
 </section>
 <section id="agentic-coding" class="level2">
@@ -298,20 +276,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="18" type="1">
 <li><p>Coding agents are programs that you call from your command line that can edit and run other programs. Unlike typing prompts into a web interface, they can draw on more context and run checks locally on your machine.</p></li>
 <li><p>These tools can help with visualization, especially if you think carefully through what you are trying to accomplish, have built a working vocabulary for technical concepts, and can review the intermediate output critically.</p></li>
-<li><p>In this class, I’ll ask you to use the Pi agent for all the work you submit. This gives everyone access to the same models, which keeps things fair. It’s also open source and works with with many underlying models. The best models will keep changing, and a single platform that interfaces with all of them will make sure that your skills remain relevant.</p></li>
-<li><p>You can run pi from the terminal. In the recording below, I’ve use a free model to add a new histogram of random numbers. Notice how I used the <code>@</code> symbol to refer to a file. This guides the model to the context that it needs. Here it specifies the file we want to edit, but it can point to anything that helps solve the task, like related files or documentation. A minor point – at the start, I moved my terminal panel to the right. This is not necessary, I just did it so we can see more output.</p></li>
-</ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video12" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_example.mp4"></video></div>
-<ol start="22" type="1">
-<li>At the end of that recording, I use the <code>/export</code> command to save the session. The result is a plain HTML file I could share with anyone interested in the prompts or intermediate outputs.</li>
-</ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video13" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_export.mp4"></video></div>
-<ol start="23" type="1">
+<li><p>In this class, I’ll ask you to use the pi agent for all the work you submit. This gives everyone access to the same models, which keeps things fair. It’s also open source and works with with many underlying models. The best models will keep changing, and a single platform that interfaces with all of them will make sure that your skills remain relevant.</p></li>
+<li><p>You can run pi from the terminal. In the recording below, I’ve use a free model to add a new histogram of random numbers. Notice how I used the <code>@</code> symbol to refer to a file. This guides the model to the context that it needs. Here it specifies the file we want to edit, but it can point to anything that helps solve the task, like related files or documentation. Notice that at the start, I moved my terminal panel to the right. This isn’t actually necessary, I had just wanted to show more of the output.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video12" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_example.mp4"></video></div></li>
+<li><p>At the end of that recording, I use the <code>/export</code> command to save the session. The result is a plain HTML file I could share with anyone interested in the prompts or intermediate outputs.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video13" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_export.mp4"></video></div></li>
 <li><p>When you finish a task and want to move on to another, you can use <code>/clear</code> to clear the context from all interactions so far. This keeps earlier interactions from inadvertently influencing the next set of edits.</p></li>
-<li><p>Another important Pi command is <code>/model</code>. This lets you switch between models. The example in the video above is simple enough for a free model. For slightly more complex tasks, even a very cheap model is often preferable.</p></li>
-<li><p>I will give you an OpenRouter API key with access to a a few models. Please use it class assignments. Once you have the key, add it to Pi with the steps in the video below.</p></li>
+<li><p>Another important pi command is <code>/model</code>. This lets you switch between models. The example in the video above is simple enough for a free model. For slightly more complex tasks, even a very cheap model is often preferable.</p></li>
+<li><p>I will give you an OpenRouter API key with access to a a few models. Please use it for class assignments. Once you have the key, add it to pi with the steps in the video below.</p>
+<div class="quarto-video"><video id="video_shortcode_videojs_video14" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_api_key.mp4"></video></div></li>
 </ol>
-<div class="quarto-video"><video id="video_shortcode_videojs_video14" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="figures/pi_api_key.mp4"></video></div>
 </section>
 
 

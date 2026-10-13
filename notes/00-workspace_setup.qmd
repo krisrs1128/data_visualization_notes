@@ -18,13 +18,13 @@ _This note won't be tested on the exam but prepares you for running in-class exe
 1. This note describes the development environment we'll use throughout the
 class.  By the end, you should be able to
 
-    - Navigate a modern code editor.
-    - Use quarto notebooks to combine code, visualizations, and commentary.
-    - Run the pi coding agent to create a ggplot2 visualization.
-    - Check that your code notebooks are formatted properly for submission.
+   - Navigate a modern code editor.
+   - Use quarto notebooks to combine code, visualizations, and commentary.
+   - Run the pi coding agent to create a ggplot2 visualization.
+   - Check that your code notebooks are formatted properly for submission.
 
-Before we get started, please make sure to the install quarto and pi. The
-instructions below describe how to do this for different operating systems.
+   Before we get started, please make sure to the install quarto and pi. The
+   instructions below describe how to do this for different operating systems.
 
 ## Code Editors
 
@@ -33,13 +33,13 @@ is different from creating visualizations in software like Excel, Power BI, or
 Tableau, because our visualizations will be defined by writing code rather than
 interacting with a GUI (clicking buttons, selecting from dropdown menus, etc.).
 
-Contrast the excel approach,
+   Contrast the excel approach,
 
-{{<video figures/excel_plot.mp4>}}
+   {{<video figures/excel_plot.mp4>}}
 
-With the coded version,
+   With the coded version,
 
-{{<video figures/vscode_plot.mp4>}}
+   {{<video figures/vscode_plot.mp4>}}
 
 3. Since programming is all done by editing text files, it helps to have
 efficient ways to navigate, type in, and monitoring changes to text files. This
@@ -49,12 +49,12 @@ positron are similar (and I'm happy to go over that one-on-one).
 4. To open an existing folder, go to "File > Open Folder." This will make the
 editor aware of all the files in that folder.
 
-{{<video figures/opening_folder.mp4>}}
+   {{<video figures/opening_folder.mp4>}}
 
-You can navigate all the files in a project using the stack-of-paper icon at the
-top left of the editor. If you have directories, clicking on them will expand
-all the files within. You can also create new files and directories by
-right-clicking in this space
+   You can navigate all the files in a project using the stack-of-paper icon at the
+   top left of the editor. If you have directories, clicking on them will expand
+   all the files within. You can also create new files and directories by
+   right-clicking in this space
 
 5. We'll mainly work with quarto files (described in detail below).  These
 files have boilerplate text that is always present, and it's
@@ -63,28 +63,28 @@ tedious to copy each time. Instead, you can type
 Palette," where you can create a quarto file with the boilerplate in
 place^[This works for other file types too, like python notebooks.]
 
-{{<video figures/new_quarto.mp4>}}
+   {{<video figures/new_quarto.mp4>}}
 
 6. Modern code editors have built-in support for `git`, a program for
 checkpointing progress in your code projects. It's essentially "track changes"
 for code. It's helpful because,
 
-    - It keeps you from accidentally losing your work.
-    - When using AI agents, it clearly highlights the changes they make.
+   - It keeps you from accidentally losing your work.
+   - When using AI agents, it clearly highlights the changes they make.
 
-Describing everything git can do is beyond the scope of this course (and I
-believe it's taught in the introductory R courses). But for our purposes, it's
-enough to know that you can initialize a repository in a folder.
+   Describing everything git can do is beyond the scope of this course (and I
+   believe it's taught in the introductory R courses). But for our purposes, it's
+   enough to know that you can initialize a repository in a folder.
 
-{{<video figures/new_repo.mp4>}}
+   {{<video figures/new_repo.mp4>}}
 
-Commit a change, which acts like a checkpoint for your later review.
+   Commit a change, which acts like a checkpoint for your later review.
 
-{{<video figures/committing_a_change.mp4>}}
+   {{<video figures/committing_a_change.mp4>}}
 
-And track any changes since the last commit.
+   And track any changes since the last commit.
 
-{{<video figures/git_track_changes.mp4>}}
+   {{<video figures/git_track_changes.mp4>}}
 
 7. It's not as important, but know that you can customize your editor.
 You can change the panel layout, the color
@@ -92,7 +92,7 @@ themes^[The examples below are mostly from the Chalice extension.], even the
 fonts. There are also extensions (blocks icon on the left) give even more
 options.
 
-{{<video figures/color_themes.mp4>}}
+   {{<video figures/color_themes.mp4>}}
 
 ## Quarto Notebooks
 
@@ -101,9 +101,9 @@ embedded within a documentation language. This places the emphasis back on why
 we are writing the code, what exactly we're meant to learn from or accomplish
 with it.
 
-> The main idea is to treat a program as a piece of literature, addressed to human beings rather than to a computer.
->
-> -- Donald Knuth, _Literate Programming_
+   > The main idea is to treat a program as a piece of literature, addressed to human beings rather than to a computer.
+   >
+   > -- Donald Knuth, _Literate Programming_
 
 9. Quarto is an implementation of literate programming that's well suited to
 data visualization. It supports R, python, and javascript, and those code blocks
@@ -114,22 +114,22 @@ interactive plots, but the only prior experience we assume is with R.
 10. If you are using vscode, to install the quarto extension so you can run code
 without leaving the editor. If you use Rstudio, quarto is supported by default.
 
-{{<video figures/install_quarto.mp4>}}
+    {{<video figures/install_quarto.mp4>}}
 
 11. You can create a code block with three backticks and the name of the
 language. This is what an R code block looks like,
 
-```{r}
-#| echo: fenced
-x <- c(1, 2, 3)
-```
+    ```{r}
+    #| echo: fenced
+    x <- c(1, 2, 3)
+    ```
 
-These are the equivalents in python and javascript.
+    These are the equivalents in python and javascript.
 
-```{python}
-#| echo: fenced
-x = [1, 2, 3]
-```
+    ```{python}
+    #| echo: fenced
+    x = [1, 2, 3]
+    ```
 
 ```{ojs}
 //| echo: fenced
@@ -140,66 +140,66 @@ x = [1, 2, 3] // js arrays are written the same way as python
 document but control how the output looks. For example, you can name your
 chunks, which helps debugging.
 
-```{r}
-#| label: my-label
-#| echo: fenced
-x <- c(1, 2, 3)
-```
+    ```{r}
+    #| label: my-label
+    #| echo: fenced
+    x <- c(1, 2, 3)
+    ```
 
-One trick that's worth knowing for our course -- you can resize figures and write
-captions this way.
+    One trick that's worth knowing for our course is that you can resize figures and
+    write captions this way.
 
-```{r}
-#| fig-width: 6
-#| fig-height: 3.5
-#| fig-cap: Here is a caption.
-#| echo: fenced
-plot(1:3)
-```
+    ```{r}
+    #| fig-width: 6
+    #| fig-height: 3.5
+    #| fig-cap: Here is a caption.
+    #| echo: fenced
+    plot(1:3)
+    ```
 
-Contrast that with,
+    Contrast that with,
 
-```{r}
-#| fig-width: 3
-#| fig-height: 8
-#| fig-cap: Here is a caption.
-#| echo: fenced
-plot(1:3)
-```
+    ```{r}
+    #| fig-width: 3
+    #| fig-height: 8
+    #| fig-cap: Here is a caption.
+    #| echo: fenced
+    plot(1:3)
+    ```
 
 13. Sometimes code prints many messages that clutter the document.
 
-```{r}
-#| echo: fenced
-library(tidyverse)
-```
+    ```{r}
+    #| echo: fenced
+    library(tidyverse)
+    ```
 
-To keep things clean, I set the `message` and `warning` code chunk options to false.
+    To keep things clean, I set the `message` and `warning` code chunk options to false.
 
-```{r}
-#| message: false
-#| warning: false
-#| echo: fenced
-library(tidyverse)
-```
+    ```{r}
+    #| message: false
+    #| warning: false
+    #| echo: fenced
+    library(tidyverse)
+    ```
 
 14. Copying these options to every chunk is tedious. Instead, you can set the
 metadata at the top of the document so that they will apply to every chunk
 below.
 
-![](figures/global_chunk_options.png)
+    ![](figures/global_chunk_options.png)
 
 15. To render a document, open the command palette and enter
 `Quarto Preview`. You can also render from terminal
 with `quarto preview your-document.qmd`.
 
-{{<video figures/quarto_preview.mp4>}}
+    {{<video figures/quarto_preview.mp4>}}
 
 16. A common pitfall is that if you move the rendered HTML document outside its
 original folder, the figures won't render.  For example, if we move the previous
 document to a new folder, we'll see this.
 
-{{<video figures/not_self_contained.mp4>}}
+    {{<video figures/not_self_contained.mp4>}}
 
 17. To fix this, add `self-contained: true` to the file header. This embeds all
 images and styling embedded directly in the HTML.
@@ -214,7 +214,7 @@ can draw on more context and run checks locally on your machine.
 through what you are trying to accomplish, have built a working vocabulary for
 technical concepts, and can review the intermediate output critically.
 
-20. In this class, I'll ask you to use the Pi agent for all the work you submit.
+20. In this class, I'll ask you to use the pi agent for all the work you submit.
 This gives everyone access to the same models, which keeps things fair. It's
 also open source and works with with many underlying models. The best models
 will keep changing, and a single platform that interfaces with all of them will
@@ -224,28 +224,28 @@ make sure that your skills remain relevant.
 model to add a new histogram of random numbers. Notice how I used the `@` symbol
 to refer to a file. This guides the model to the context that it needs.  Here it
 specifies the file we want to edit, but it can point to anything that helps
-solve the task, like related files or documentation. A minor point -- at the
-start, I moved my terminal panel to the right. This is not necessary, I just did
-it so we can see more output.
+solve the task, like related files or documentation. Notice that at the start, I
+moved my terminal panel to the right. This isn't actually necessary, I had just
+wanted to show more of the output.
 
-{{<video figures/pi_example.mp4>}}
+    {{<video figures/pi_example.mp4>}}
 
 22. At the end of that recording, I use the `/export` command to save the
 session. The result is a plain HTML file I could share with anyone interested in
 the prompts or intermediate outputs.
 
-{{<video figures/pi_export.mp4>}}
+    {{<video figures/pi_export.mp4>}}
 
 23. When you finish a task and want to move on to another, you can use `/clear`
 to clear the context from all interactions so far.  This keeps earlier
 interactions from inadvertently influencing the next set of edits.
 
-24. Another important Pi command is `/model`. This lets you switch between
+24. Another important pi command is `/model`. This lets you switch between
 models. The example in the video above is simple enough for a free model. For
 slightly more complex tasks, even a very cheap model is often preferable.
 
 25. I will give you an OpenRouter API key with access to a a few models. Please
-use it class assignments. Once you have the key, add it to Pi with the steps in
-the video below.
+use it for class assignments. Once you have the key, add it to pi with the steps
+in the video below.
 
-{{<video figures/pi_api_key.mp4>}}
+    {{<video figures/pi_api_key.mp4>}}

@@ -795,7 +795,7 @@ By the end of this week, you should be able to,
 - Apply the interaction taxonomy to precisely describe the dynamics of an interactive visualization.
 - Provide original examples of visualizations that implement terms given in the interaction taxonomy.
 - Describe the strengths and weaknesses of interactive visualizations.
-- Explain the gulfs of interaction and how they can be used to evaluate visualizations.
+- Explain the terms gulfs of interaction, object constancy, and "eyes beat memory" and how they can be used to evaluate visualizations.
 - Given a form of desired user input, decide whether a `Param` or ``Selection` is more appropriate.
 - When multiple user inputs are present, explain how `intersect`, `single`, and `union` selections reconcile them.
 - Given a visualization implemented in mosaic, identify and explain the parts of the code that transform user input into a visualization update.

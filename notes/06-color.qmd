@@ -95,8 +95,8 @@ perceptual interpretation.
 
 8. There have been many more modern refinements. The most widely used
 alternative to RGB in practice is HSL, which stands for Hue, Saturation, and
-Luminance. The hue and saturation axes can be visualized using a color wheel,
-and modifying the luminance leads to different color wheels.
+Lightness. The hue and saturation axes can be visualized using a color wheel,
+and modifying the lightness leads to different color wheels.
 
    ```{r}
    #| label: hsl-hsv-wheels
@@ -119,7 +119,7 @@ cylinder.
 
    <iframe width="600" height="300" allowfullscreen src="https://commons.wikimedia.org/wiki/File:RGB_2_HSL_conversion_with_grid.ogg?embedplayer=true"></iframe>
 
-10. One subtlety is that luminance in HSL doesn't correspond exactly to how we
+10. One subtlety is that lightness in HSL doesn't correspond exactly to how we
 perceive luminance in our visual system. In the figure below, all the colors
 have the same "L" value in HSL, shown in the top row, but in perceptual studies,
 people consistently order the perceived luminance according to the bottom row.
@@ -163,7 +163,7 @@ can influence the use of color as a visual encoding channel.
 
 ## Visual Encodings Revisited
 
-13. Luminance, hue, and saturation are each separate visual channels that can be
+13. Lightness, hue, and saturation are each separate visual channels that can be
 manipulated to encode data. This gives us much more precise language for
 describing the "color channel" that appeared previously in our hierarchy of
 encodings.
@@ -176,7 +176,7 @@ encodings.
     #| echo: false
     n <- 9
     ramps <- bind_rows(
-        tibble(channel = "Luminance", step = 1:n,
+        tibble(channel = "Lightness", step = 1:n,
                color = hcl(260, 40, seq(20, 90, length.out = n))),
         tibble(channel = "Saturation", step = 1:n,
                color = hcl(260, seq(0, 70, length.out = n), 60)),
@@ -205,19 +205,19 @@ encodings.
         theme_scatter
 
     (base + scale_color_gradient(low = hcl(260, 40, 20), high = hcl(260, 40, 90)) +
-        labs(title = "Luminance")) +
+        labs(title = "Lightness")) +
         (base + scale_color_gradient(low = hcl(260, 0, 60), high = hcl(260, 70, 60)) +
             labs(title = "Saturation")) +
         (base + scale_color_gradientn(colors = hcl(seq(0, 320, length.out = 9), 50, 60)) +
             labs(title = "Hue"))
     ```
 
-14. While luminance is appropriate for encoding ordered data, it's difficult to
+14. While lightness is appropriate for encoding ordered data, it's difficult to
 tell apart small differences. The reading argues that we should never expect our
-audience to be able to tell apart more than five different values of luminance.
+audience to be able to tell apart more than five different values of lightness.
 
     ```{r}
-    #| label: luminance-bins
+    #| label: lightness-bins
     #| fig-width: 6
     #| fig-height: 1.8
     #| out-width: "80%"
@@ -233,7 +233,7 @@ audience to be able to tell apart more than five different values of luminance.
         theme_bins
     ```
 
-    This is also important for thinking about text. A 3:1 luminance ratio
+    This is also important for thinking about text. A 3:1 lightness ratio
     between text and the background is almost impossible to read. The reading
     recommends at least a 10:1 ratio.
 
@@ -251,7 +251,7 @@ audience to be able to tell apart more than five different values of luminance.
         theme_diagram
     ```
 
-15. Similarly to luminance, saturation can be used for ordered data. But again,
+15. Similarly to lightness, saturation can be used for ordered data. But again,
 we can only differentiate so many bins, and in fact, the recommended maximum for
 this channel is three. Another rule of thumb is that for small marks, we should
 use more saturated colors, while for larger regions, we should use less
@@ -289,20 +289,20 @@ can tell apart roughly six or seven hues at a time.
     ![](figures/contiguous_segmented.png){width=800px}
     Figure from [@sinha2007]
 
-17. Unlike saturation and luminance, hue doesn't have a natural ordering. Though
+17. Unlike saturation and lightness, hue doesn't have a natural ordering. Though
 it can be applied to ordered data, like with a rainbow color map, these
 comparisons require more cognitive effort. In some settings we've already
 learned to associate hue with ordering (e.g., green, yellow, and red on traffic
 lights), but this isn't built into our basic perception in the same way that
-saturation and luminance comparisons are.
+saturation and lightness comparisons are.
 
 18. Transparency is related to color, and can in principle be used to
 encode ordered data. For example, the largest values can be 0% transparent, the
 next largest can be 10% transparent, etc. However, transparency strongly
-interacts with luminance and saturation, in the sense that a fully saturated
+interacts with lightness and saturation, in the sense that a fully saturated
 but 20% transparent point might be confused with a less saturated but 0%
 transparent point. For this reason, transparency encoding should not be used
-together with luminance and saturation gradients.
+together with lightness and saturation gradients.
 
 19. The most defensible use of transparency is in differentiating foreground from
 background layers. Anything more than two bins becomes difficult to perceive
@@ -402,17 +402,17 @@ hues $\times$ 3 shapes, instead of 12 separate hues.
     ```
 
 26. Even with a fixed set of hues, we still have to make a decision about the
-luminance and saturation for each hue. There's no universal recipe for setting
-this. Sometimes it's recommended to use high luminance contrast across
+lightness and saturation for each hue. There's no universal recipe for setting
+this. Sometimes it's recommended to use high lightness contrast across
 categories. The advantage of this is that the categories can be read apart even
 on black-and-white paper. But this can be misleading if it draws too much
-attention to the high luminance categories.
+attention to the high lightness categories.
 
 27. A good color map resource is ColorBrewer, a set of color palettes created by
 Cynthia Brewer for use in spatial data visualization. They have been chosen so
 that categories are easy to differentiate. It provides color maps with both high
 (Set1) and low (Set2) saturation. It also has high (Set1, Set2) vs. low (Dark1,
-Dark2) luminance versions
+Dark2) lightness versions
 
     ```{r}
     #| label: categorical-luminance
@@ -468,10 +468,10 @@ overall data on which the most important elements might be placed.
         plot_layout(nrow = 1)
     ```
 
-30. Our discussion of luminance and saturation shows that these are well-suited
+30. Our discussion of lightness and saturation shows that these are well-suited
 to defining sequential color maps. Consider fixing a hue. We can obtain an
 associated sequential map either by varying saturation (one end will be white)
-or luminance (one end will be black). If we ignore hue entirely, then we recover
+or lightness (one end will be black). If we ignore hue entirely, then we recover
 gray scale.
 
     ```{r}
@@ -482,11 +482,11 @@ gray scale.
     #| echo: false
 
     map_plot(scale_fill_gradient(low = "black", high = "white"), "Grayscale
-    (luminance only)") +
+    (lightness only)") +
         map_plot(scale_fill_gradient(low = "white", high = "#1f78b4"), "One hue,
     varying saturation") +
         map_plot(scale_fill_gradient(low = "black", high = "#1f78b4"), "One hue,
-    varying luminance") +
+    varying lightness") +
         map_plot(scale_fill_viridis_c(), "Many hues
     (viridis)") +
         plot_layout(nrow = 1)
@@ -869,3 +869,7 @@ remember the ColorBrewer palette that we extracted above.
     You can also use online tools like the Adobe color accessibility
     [page](https://color.adobe.com/create/color-accessibility) or
     [colorhexa](https://www.colorhexa.com).
+
+### Objectives
+
+- Explain the difference between RGB and HSL color spaces and what varies along each dimension.

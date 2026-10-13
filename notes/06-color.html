@@ -197,7 +197,7 @@ window.Quarto = {
 <p><img src="figures/Unintuitive-rgb.png" class="img-fluid"></p></li>
 <li><p>The need for a more intuitive coordinate system to map out colors has been appreciated by artists and researchers for a long time. For example, in 1810, Philipp Otto Runge created a color sphere where hues were associated with the polar angle, saturation with the radius, and lightness/darkness with the <span class="math inline">\(z\)</span>-axis. In this spherical geometry, each of the coordinates has a meaningful perceptual interpretation.</p>
 <p><img src="figures/Runge_Farbenkugel.jpg" class="img-fluid" width="400"></p></li>
-<li><p>There have been many more modern refinements. The most widely used alternative to RGB in practice is HSL, which stands for Hue, Saturation, and Luminance. The hue and saturation axes can be visualized using a color wheel, and modifying the luminance leads to different color&nbsp;wheels.</p>
+<li><p>There have been many more modern refinements. The most widely used alternative to RGB in practice is HSL, which stands for Hue, Saturation, and Lightness. The hue and saturation axes can be visualized using a color wheel, and modifying the lightness leads to different color&nbsp;wheels.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -212,7 +212,7 @@ window.Quarto = {
 <p>The system is actually derived by transforming the RGB cube. We tilt the cube so that black and white appear at the top and bottom. We then fill in the gaps to form an entire cylinder.</p>
 <iframe width="600" height="300" allowfullscreen="" src="https://commons.wikimedia.org/wiki/File:RGB_2_HSL_conversion_with_grid.ogg?embedplayer=true">
 </iframe></li>
-<li><p>One subtlety is that luminance in HSL doesn’t correspond exactly to how we perceive luminance in our visual system. In the figure below, all the colors have the same “L” value in HSL, shown in the top row, but in perceptual studies, people consistently order the perceived luminance according to the bottom row.</p>
+<li><p>One subtlety is that lightness in HSL doesn’t correspond exactly to how we perceive luminance in our visual system. In the figure below, all the colors have the same “L” value in HSL, shown in the top row, but in perceptual studies, people consistently order the perceived luminance according to the bottom row.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -230,7 +230,7 @@ window.Quarto = {
 <section id="visual-encodings-revisited" class="level2">
 <h2 class="anchored" data-anchor-id="visual-encodings-revisited">Visual Encodings Revisited</h2>
 <ol start="13" type="1">
-<li><p>Luminance, hue, and saturation are each separate visual channels that can be manipulated to encode data. This gives us much more precise language for describing the “color channel” that appeared previously in our hierarchy of encodings.</p>
+<li><p>Lightness, hue, and saturation are each separate visual channels that can be manipulated to encode data. This gives us much more precise language for describing the “color channel” that appeared previously in our hierarchy of encodings.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -250,17 +250,17 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>While luminance is appropriate for encoding ordered data, it’s difficult to tell apart small differences. The reading argues that we should never expect our audience to be able to tell apart more than five different values of luminance.</p>
+<li><p>While lightness is appropriate for encoding ordered data, it’s difficult to tell apart small differences. The reading argues that we should never expect our audience to be able to tell apart more than five different values of lightness.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="06-color_files/figure-html/luminance-bins-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="06-color_files/figure-html/lightness-bins-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>This is also important for thinking about text. A 3:1 luminance ratio between text and the background is almost impossible to read. The reading recommends at least a 10:1 ratio.</p>
+<p>This is also important for thinking about text. A 3:1 lightness ratio between text and the background is almost impossible to read. The reading recommends at least a 10:1 ratio.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -270,7 +270,7 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>Similarly to luminance, saturation can be used for ordered data. But again, we can only differentiate so many bins, and in fact, the recommended maximum for this channel is three. Another rule of thumb is that for small marks, we should use more saturated colors, while for larger regions, we should use less saturated colors (pastels).</p>
+<li><p>Similarly to lightness, saturation can be used for ordered data. But again, we can only differentiate so many bins, and in fact, the recommended maximum for this channel is three. Another rule of thumb is that for small marks, we should use more saturated colors, while for larger regions, we should use less saturated colors (pastels).</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -282,8 +282,8 @@ window.Quarto = {
 </div></li>
 <li><p>Hue is a highly ranked visual channel for telling apart categorical data values. It’s easy to tell the difference in hue for contiguous regions but harder to tell differences in hue when they’re far apart. In a small region we can tell apart roughly six or seven hues at a time.</p>
 <p><img src="figures/contiguous_segmented.png" class="img-fluid" width="800"> Figure from <span class="citation" data-cites="sinha2007">(<a href="#ref-sinha2007" role="doc-biblioref">Sinha and Meller 2007</a>)</span></p></li>
-<li><p>Unlike saturation and luminance, hue doesn’t have a natural ordering. Though it can be applied to ordered data, like with a rainbow color map, these comparisons require more cognitive effort. In some settings we’ve already learned to associate hue with ordering (e.g., green, yellow, and red on traffic lights), but this isn’t built into our basic perception in the same way that saturation and luminance comparisons are.</p></li>
-<li><p>Transparency is related to color, and can in principle be used to encode ordered data. For example, the largest values can be 0% transparent, the next largest can be 10% transparent, etc. However, transparency strongly interacts with luminance and saturation, in the sense that a fully saturated but 20% transparent point might be confused with a less saturated but 0% transparent point. For this reason, transparency encoding should not be used together with luminance and saturation gradients.</p></li>
+<li><p>Unlike saturation and lightness, hue doesn’t have a natural ordering. Though it can be applied to ordered data, like with a rainbow color map, these comparisons require more cognitive effort. In some settings we’ve already learned to associate hue with ordering (e.g., green, yellow, and red on traffic lights), but this isn’t built into our basic perception in the same way that saturation and lightness comparisons are.</p></li>
+<li><p>Transparency is related to color, and can in principle be used to encode ordered data. For example, the largest values can be 0% transparent, the next largest can be 10% transparent, etc. However, transparency strongly interacts with lightness and saturation, in the sense that a fully saturated but 20% transparent point might be confused with a less saturated but 0% transparent point. For this reason, transparency encoding should not be used together with lightness and saturation gradients.</p></li>
 <li><p>The most defensible use of transparency is in differentiating foreground from background layers. Anything more than two bins becomes difficult to perceive accurately.</p></li>
 </ol>
 </section>
@@ -331,8 +331,8 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>Even with a fixed set of hues, we still have to make a decision about the luminance and saturation for each hue. There’s no universal recipe for setting this. Sometimes it’s recommended to use high luminance contrast across categories. The advantage of this is that the categories can be read apart even on black-and-white paper. But this can be misleading if it draws too much attention to the high luminance categories.</p></li>
-<li><p>A good color map resource is ColorBrewer, a set of color palettes created by Cynthia Brewer for use in spatial data visualization. They have been chosen so that categories are easy to differentiate. It provides color maps with both high (Set1) and low (Set2) saturation. It also has high (Set1, Set2) vs.&nbsp;low (Dark1, Dark2) luminance versions</p>
+<li><p>Even with a fixed set of hues, we still have to make a decision about the lightness and saturation for each hue. There’s no universal recipe for setting this. Sometimes it’s recommended to use high lightness contrast across categories. The advantage of this is that the categories can be read apart even on black-and-white paper. But this can be misleading if it draws too much attention to the high lightness categories.</p></li>
+<li><p>A good color map resource is ColorBrewer, a set of color palettes created by Cynthia Brewer for use in spatial data visualization. They have been chosen so that categories are easy to differentiate. It provides color maps with both high (Set1) and low (Set2) saturation. It also has high (Set1, Set2) vs.&nbsp;low (Dark1, Dark2) lightness versions</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -363,7 +363,7 @@ window.Quarto = {
 </div>
 </div>
 </div></li>
-<li><p>Our discussion of luminance and saturation shows that these are well-suited to defining sequential color maps. Consider fixing a hue. We can obtain an associated sequential map either by varying saturation (one end will be white) or luminance (one end will be black). If we ignore hue entirely, then we recover gray scale.</p>
+<li><p>Our discussion of lightness and saturation shows that these are well-suited to defining sequential color maps. Consider fixing a hue. We can obtain an associated sequential map either by varying saturation (one end will be white) or lightness (one end will be black). If we ignore hue entirely, then we recover gray scale.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -666,7 +666,13 @@ window.Quarto = {
 </div>
 <p>You can also use online tools like the Adobe color accessibility <a href="https://color.adobe.com/create/color-accessibility">page</a> or <a href="https://www.colorhexa.com">colorhexa</a>.</p></li>
 </ol>
+<section id="objectives" class="level3">
+<h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
+<ul>
+<li>Explain the difference between RGB and HSL color spaces and what varies along each dimension.</li>
+</ul>
 
+</section>
 </section>
 
 

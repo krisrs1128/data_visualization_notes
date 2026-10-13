@@ -438,7 +438,7 @@ cases is given
 it tends to be useful in setting the context and helping us get oriented to the
 overall data on which the most important elements might be placed.
 
-    ![](figures/160423-mood.png){width=400px}
+    ![](figures/160423-mood.png){width=600px}
 
 ### Ordered color maps
 
@@ -460,11 +460,11 @@ overall data on which the most important elements might be placed.
     }
 
     map_plot(scale_fill_viridis_c(), "Sequential:
-    reference is invisible", elev_c) +
+    no reference", elev_c) +
         map_plot(diverging(0), "Diverging:
-    midpoint at reference", elev_c) +
+    midpoint reference", elev_c) +
         map_plot(diverging(30), "Diverging:
-    midpoint misplaced", elev_c) +
+    changed reference", elev_c) +
         plot_layout(nrow = 1)
     ```
 
@@ -481,14 +481,10 @@ gray scale.
     #| out-width: "95%"
     #| echo: false
 
-    map_plot(scale_fill_gradient(low = "black", high = "white"), "Grayscale
-    (lightness only)") +
-        map_plot(scale_fill_gradient(low = "white", high = "#1f78b4"), "One hue,
-    varying saturation") +
-        map_plot(scale_fill_gradient(low = "black", high = "#1f78b4"), "One hue,
-    varying lightness") +
-        map_plot(scale_fill_viridis_c(), "Many hues
-    (viridis)") +
+    map_plot(scale_fill_gradient(low = "black", high = "white"), "Grayscale") +
+        map_plot(scale_fill_gradient(low = "white", high = "#1f78b4"), "Varying saturation") +
+        map_plot(scale_fill_gradient(low = "black", high = "#1f78b4"), "Varying lightness") +
+        map_plot(scale_fill_viridis_c(), "Many hues") +
         plot_layout(nrow = 1)
     ```
 
@@ -502,9 +498,9 @@ change, because hues don't have a natural ordering. The example below comes from
 
     ![](figures/rainbow_vs_twohue.png)
 
-    Another problem is that rainbow color palettes are not perceptually linear. 1000
-    data units in one part of the range can go through three different colors while
-    1000 units at another point all appear like the same hue.
+    Another problem is that rainbow color palettes are not perceptually linear.
+    10 data units in one part of the range can go through three different colors
+    while 10 units at another point all appear like the same hue.
 
     ```{r}
     #| label: rainbow-maps
@@ -568,10 +564,10 @@ difficult to read.
 
 ### Accessibility and Emotion
 
-33. Red-green color blindness can affect 8% of men and about a half a percent of
-women. To design for colorblind readers, you can use a simulator which
-approximates (for those without color blindness) how the visualization would
-appear to someone who is colorblind.
+33. Red-green color blindness (Deuteranopia and Protanopia) affects 8% of men
+and about a half a percent of women. To design for colorblind readers, you can
+use a simulator which approximates how a visualization appears under different
+types of color blindness.
 
     ```{r}
     #| label: colorblind-simulation
@@ -605,7 +601,7 @@ appear to someone who is colorblind.
 especially with emotion. This example from the optional reading gives a sense of
 how we internalize different color associations.
 
-    ![](figures/160423-colorist.png){width=400px}
+    ![](figures/160423-colorist.png){width=600px}
 
     An interesting scientific analysis was carried out by UW-Madison visual
     communications professor Nan Li. Her team analyzed how different ways of
@@ -873,3 +869,9 @@ remember the ColorBrewer palette that we extracted above.
 ### Objectives
 
 - Explain the difference between RGB and HSL color spaces and what varies along each dimension.
+- Explain best practices in using hue, saturation, and lightness as visual encoding channels and apply these best practices to critique real visualizations.
+- Compare and contrast the following color maps: ordered, sequential, diverging, continuous, stepped, bivariate.
+- Describe the challenges of using hue to encode many categories and explain options available in practice.
+- Describe the strengths and weaknesses of rainbow color palettes.
+- Given a scale layer implemented in ggplot2, scico, or biscale, describe what type of color map it corresponds to.
+- Describe the best practices for improving the accessibility of a visualization's color encodings.

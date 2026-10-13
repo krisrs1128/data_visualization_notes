@@ -343,7 +343,7 @@ window.Quarto = {
 </div>
 </div></li>
 <li><p><span class="math inline">\(^\dagger\)</span> One trick to keep in mind is that gray is actually a versatile color to use in data visualization. A complete list of potential use cases is given <a href="https://visualisingdata.com/2015/01/make-grey-best-friend/">here</a>. In general, it tends to be useful in setting the context and helping us get oriented to the overall data on which the most important elements might be placed.</p>
-<p><img src="figures/160423-mood.png" class="img-fluid" width="400"></p></li>
+<p><img src="figures/160423-mood.png" class="img-fluid" width="600"></p></li>
 </ol>
 </section>
 <section id="ordered-color-maps" class="level3">
@@ -375,7 +375,7 @@ window.Quarto = {
 </div></li>
 <li><p>Alternatively, we can use multiple hues in a sequential colormap. The fewer hues that are considered, the easier it is to perceive global differences. The more hues that are considered, the more that fine-grained structure is emphasized. At the extreme, we can use a rainbow color palette. Even though this makes small differences in the data attribute visible, it can blind us to larger change, because hues don’t have a natural ordering. The example below comes from <span class="citation" data-cites="bergman1995">(<a href="#ref-bergman1995" role="doc-biblioref">Bergman et al. 1995</a>)</span>.</p>
 <p><img src="figures/rainbow_vs_twohue.png" class="img-fluid"></p>
-<p>Another problem is that rainbow color palettes are not perceptually linear. 1000 data units in one part of the range can go through three different colors while 1000 units at another point all appear like the same hue.</p>
+<p>Another problem is that rainbow color palettes are not perceptually linear. 10 data units in one part of the range can go through three different colors while 10 units at another point all appear like the same hue.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -407,7 +407,7 @@ window.Quarto = {
 <section id="accessibility-and-emotion" class="level3">
 <h3 class="anchored" data-anchor-id="accessibility-and-emotion">Accessibility and Emotion</h3>
 <ol start="33" type="1">
-<li><p>Red-green color blindness can affect 8% of men and about a half a percent of women. To design for colorblind readers, you can use a simulator which approximates (for those without color blindness) how the visualization would appear to someone who is colorblind.</p>
+<li><p>Red-green color blindness (Deuteranopia and Protanopia) affects 8% of men and about a half a percent of women. To design for colorblind readers, you can use a simulator which approximates how a visualization appears under different types of color blindness.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -418,7 +418,7 @@ window.Quarto = {
 </div>
 </div></li>
 <li><p>Finally, remember that colors carry many associations in our society, especially with emotion. This example from the optional reading gives a sense of how we internalize different color associations.</p>
-<p><img src="figures/160423-colorist.png" class="img-fluid" width="400"></p>
+<p><img src="figures/160423-colorist.png" class="img-fluid" width="600"></p>
 <p>An interesting scientific analysis was carried out by UW-Madison visual communications professor Nan Li. Her team analyzed how different ways of portraying COVID affected readers’ responses <span class="citation" data-cites="li2022">(<a href="#ref-li2022" role="doc-biblioref">Li et al. 2022</a>)</span>. The microscopy images below don’t have any color to begin with. They were all added by the scientific illustrator. The colors that they chose influenced whether readers experienced fear when viewing their image.</p>
 <p><img src="figures/covid_fear_levels.jpg" class="img-fluid" width="500"></p></li>
 </ol>
@@ -670,6 +670,12 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
 <ul>
 <li>Explain the difference between RGB and HSL color spaces and what varies along each dimension.</li>
+<li>Explain best practices in using hue, saturation, and lightness as visual encoding channels and apply these best practices to critique real visualizations.</li>
+<li>Compare and contrast the following color maps: ordered, sequential, diverging, continuous, stepped, bivariate.</li>
+<li>Describe the challenges of using hue to encode many categories and explain options available in practice.</li>
+<li>Describe the strengths and weaknesses of rainbow color palettes.</li>
+<li>Given a scale layer implemented in ggplot2, scico, or biscale, describe what type of color map it corresponds to.</li>
+<li>Describe the best practices for improving the accessibility of a visualization’s color encodings.</li>
 </ul>
 
 </section>

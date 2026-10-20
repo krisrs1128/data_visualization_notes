@@ -170,10 +170,10 @@ to it at the end.
 `vg.vconcat` calls. Whatever is in the arguments of these functions will be the
 main inputs or visualization panels of the plot.
 
-10. For the data, marks, and graphical encodings, I look for layers like `vg.dot`
-(for scatterplots) or `vg.bar` (for bar plots). The name of the layer itself
-specifies the mark. Its first argument specifies the data, and the second
-argument, a kind of dictionary (between `{}` symbols, like
+10. For the data, marks, and graphical encodings, I look for layers like
+`vg.dot` (scatterplots), `vg.bar` (bar plots), or `vg.line()` (line plot). The
+name of the layer itself specifies the mark. Its first argument specifies the
+data, and the second argument, a kind of dictionary (between `{}` symbols, like
 `{x: "var1", y: "var2"}`), specifies the graphical encoding.
 
 11. To work through the last few steps, let's briefly review how mosaic handles

@@ -48,8 +48,9 @@ enough time for solving these. You can get partial credit for answering any
 subproblem, and they can be answered independently of one another
 
 4. You do not need to write much in your response to get full credit. In our
-solutions, one to two sentences are enough for each problem. This will allow you
-to make steady progress without feeling rushed.
+solutions, one to two sentences are enough for almost every part. Use lists and
+draw tables to organize your answers.  This will allow you to make steady
+progress without feeling rushed.
 
 5. Try not to rely too much on your cheat sheet. If there's a detail that might
 take time to look up on your sheet, consider skipping that part and coming back

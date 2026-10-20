@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kris Sankaran">
+<meta name="dcterms.date" content="2026-10-20">
+
+<title>Midterm Review</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="midterm_review_files/libs/clipboard/clipboard.min.js"></script>
+<script src="midterm_review_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="midterm_review_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="midterm_review_files/libs/quarto-html/popper.min.js"></script>
+<script src="midterm_review_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="midterm_review_files/libs/quarto-html/anchor.min.js"></script>
+<link href="midterm_review_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="midterm_review_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="midterm_review_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="midterm_review_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="midterm_review_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Midterm Review</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kris Sankaran </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 20, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="exam-tips" class="level2">
+<h2 class="anchored" data-anchor-id="exam-tips">Exam Tips</h2>
+<ol type="1">
+<li><p>The exam covers the six weeks of material. Expect roughly one problem per week.</p></li>
+<li><p>The first few problems will be multiple true/false. No justification is needed. Think of these as a warm-up.</p></li>
+<li><p>The last few problems will be more challenging. Make sure you give yourself enough time for solving these. You can get partial credit for answering any subproblem, and they can be answered independently of one another</p></li>
+<li><p>You do not need to write much in your response to get full credit. In our solutions, one to two sentences are enough for each problem. This will allow you to make steady progress without feeling rushed.</p></li>
+<li><p>Try not to rely too much on your cheat sheet. If there’s a detail that might take time to look up on your sheet, consider skipping that part and coming back to it at the end.</p></li>
+</ol>
+</section>
+<section id="interactivity" class="level2">
+<h2 class="anchored" data-anchor-id="interactivity">Interactivity</h2>
+<section id="interaction-taxonomy" class="level3">
+<h3 class="anchored" data-anchor-id="interaction-taxonomy">Interaction Taxonomy</h3>
+<ol start="6" type="1">
+<li><p>The two main takeaways of the interaction taxonomy notes are:</p>
+<ul>
+<li>Not all interactive visualizations are the same. We need to be precise about the purpose of user interactions and how they are implemented.</li>
+<li>There are only a few common interaction patterns in practice. One common breakdown (and the one used in our reading) appears below.</li>
+</ul>
+<style>
+.itree .n { display: flex; align-items: center; }
+.itree .lab { padding: 4px 10px; border: 1px solid #888; border-radius: 4px; background: #f4f4f4; font-size: 0.9em; text-align: center; }
+.itree .kids { position: relative; display: flex; flex-direction: column; margin-left: 20px; }
+.itree .kids::before { content: ''; position: absolute; left: -20px; top: 50%; width: 20px; border-top: 1px solid #888; }
+.itree .kids > .n { position: relative; padding: 6px 0 6px 20px; }
+.itree .kids > .n::before { content: ''; position: absolute; left: 0; top: 50%; width: 20px; border-top: 1px solid #888; }
+.itree .kids > .n::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; border-left: 1px solid #888; }
+.itree .kids > .n:first-child::after { top: 50%; }
+.itree .kids > .n:last-child::after { bottom: 50%; }
+.itree .leaf { display: flex; align-items: center; gap: 12px; }
+.itree .leaf .lab { width: 90px; flex: none; }
+.itree .leaf .media { width: 170px; flex: none; text-align: center; }
+.itree .leaf .media img, .itree .leaf .media video { max-width: 170px; max-height: 130px; border: 1px solid #ccc; }
+.itree .leaf .cap { font-size: 0.8em; color: #555; max-width: 190px; }
+</style>
+
+<div class="itree">
+<div class="n"><div class="lab">root</div>
+<div class="kids">
+
+<div class="n"><div class="lab">data and view<br>specification</div>
+<div class="kids">
+<div class="n"><div class="leaf"><div class="lab">visualize</div>
+<div class="media"><img src="figures/interaction_tree/visualize.jpg"></div>
+<div class="cap">Decide on a set of visual encodings.</div></div></div>
+<div class="n"><div class="leaf"><div class="lab">filter</div>
+<div class="media"><img src="figures/interaction_tree/filter.jpg"></div>
+<div class="cap">Modify which samples are shown.</div></div></div>
+<div class="n"><div class="leaf"><div class="lab">sort</div>
+<div class="media"><video src="figures/interaction_tree/sort.mp4" poster="figures/interaction_tree/sort.jpg" autoplay="" muted="" loop="" playsinline=""></video></div>
+<div class="cap">Reorder where the samples appear on the display.</div></div></div>
+<div class="n"><div class="leaf"><div class="lab">derive</div>
+<div class="media"><video src="figures/interaction_tree/derive.mp4" poster="figures/interaction_tree/derive.jpg" autoplay="" muted="" loop="" playsinline=""></video></div>
+<div class="cap">Introduce new variables to the display.</div></div></div>
+</div></div>
+
+<div class="n"><div class="lab">view<br>manipulation</div>
+<div class="kids">
+<div class="n"><div class="leaf"><div class="lab">select</div>
+<div class="media"><video src="figures/interaction_tree/select.mp4" poster="figures/interaction_tree/select.jpg" autoplay="" muted="" loop="" playsinline=""></video></div>
+<div class="cap">Select items to focus or operate on.</div></div></div>
+<div class="n"><div class="leaf"><div class="lab">navigate</div>
+<div class="media"><video src="figures/interaction_tree/navigate.mp4" poster="figures/interaction_tree/navigate.jpg" autoplay="" muted="" loop="" playsinline=""></video></div>
+<div class="cap">Navigate the view to a region of interest.</div></div></div>
+<div class="n"><div class="leaf"><div class="lab">coordinate</div>
+<div class="media"><video src="figures/interaction_tree/coordinate.mp4" poster="figures/interaction_tree/coordinate.jpg" autoplay="" muted="" loop="" playsinline=""></video></div>
+<div class="cap">Coordinate interactions across related panels.</div></div></div>
+<div class="n"><div class="leaf"><div class="lab">organize</div>
+<div class="media"></div>
+<div class="cap">Organize views into an easier to understand layout.</div></div></div>
+</div></div>
+
+<div class="n"><div class="lab">analysis process<br>and provenance</div></div>
+
+</div></div>
+</div></li>
+<li><p>To evaluate whether an interactive visualization is good, you can use these principles,</p>
+<ul>
+<li><strong>The gulfs of interaction</strong>.
+<ul>
+<li>Execution <span class="math inline">\(\to\)</span> How long does it take to specify a query and update the display?</li>
+<li>Evaluation <span class="math inline">\(\to\)</span> How long does it take to understand the updated display?</li>
+</ul></li>
+<li><strong>Eyes beat memory</strong>. Compared to small multiples, interactive visualizations have a higher cognitive load but take up less space.</li>
+<li><strong>Object constancy</strong>. Any animated transitions should track the same object.</li>
+</ul></li>
+</ol>
+</section>
+<section id="mosaic" class="level3">
+<h3 class="anchored" data-anchor-id="mosaic">Mosaic</h3>
+<ol start="8" type="1">
+<li><p>To read Mosaic code, I answer these questions in order:</p>
+<ul>
+<li>What is the overall arrangement of plots or interface elements? I would deliberately ignore anything that seems like stylistic customization.</li>
+<li>Ignoring interactivity, what are the data, marks, and graphical encodings in each?</li>
+<li>What user inputs are available? Are they outside the plot (e.g., sliders) or built directly into the plot (e.g., brush)?</li>
+<li>What <code>Param</code> or <code>Selection</code> variables are used to store the user inputs?</li>
+<li>How does the plot responds to those user inputs?</li>
+</ul>
+<p>After I’ve walked through this, I should be able to explain what the plot shows and how information flows from the user making an input to the plot updating in response. For concreteness, let’s consider this example.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>filter <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>species_menu_3 <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> filter<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Species"</span>})</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>island_menu <span class="op">=</span> vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">as</span><span class="op">:</span> filter<span class="op">,</span> <span class="dt">from</span><span class="op">:</span> <span class="st">"penguins"</span><span class="op">,</span> <span class="dt">column</span><span class="op">:</span> <span class="st">"island"</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Island"</span>})</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>species_island_plot <span class="op">=</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"penguins"</span>)<span class="op">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"bill_length_mm"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"bill_depth_mm"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span>}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> filter<span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.1</span>})<span class="op">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xDomain</span>([<span class="dv">30</span><span class="op">,</span> <span class="dv">60</span>])<span class="op">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yDomain</span>([<span class="dv">12</span><span class="op">,</span> <span class="dv">22</span>])<span class="op">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">500</span>)<span class="op">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>([vg<span class="op">.</span><span class="fu">hconcat</span>([species_menu_3<span class="op">,</span> island_menu])<span class="op">,</span> species_island_plot])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>For the overall arrangement, I see whether there are any <code>vg.hconcat</code> or <code>vg.vconcat</code> calls. Whatever is in the arguments of these functions will be the main inputs or visualization panels of the plot.</p></li>
+<li><p>For the data, marks, and graphical encodings, I look for layers like <code>vg.dot</code> (for scatterplots) or <code>vg.bar</code> (for bar plots). The name of the layer itself specifies the mark. Its first argument specifies the data, and the second argument, a kind of dictionary (between <code>{}</code> symbols, like <code>{x: "var1", y: "var2"}</code>), specifies the graphical encoding.</p></li>
+<li><p>To work through the last few steps, let’s briefly review how mosaic handles interactivity. The interactivity code has three jobs,</p>
+<ul>
+<li>Read in user inputs.</li>
+<li>Store the user inputs.</li>
+<li>Update the visualization based on user inputs.</li>
+</ul>
+<p>The reason things get complicated is that in real world interactive visualizations there are many ways to do each step. But there are a few common patterns that tend to appear again and again, and Mosaic provides shorthand for implementing those patterns.</p></li>
+<li><p>To read in user inputs<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, Mosaic provides either Inputs or Interactors.</p>
+<ul>
+<li>Inputs are elements on the user interface outside the plot. These are the inputs that appear in the “Interactive Visualization – Part 1” notes.</li>
+<li>Interactors read in input by directly interacting with the plot. These appeared in the “Interactive Visualization – Part 2” notes.</li>
+</ul>
+<p>When reading code to answer the fourth question, I would scan the code <em>outside</em> the marks layers, to see if any Inputs are present: <code>vg.menu</code>, <code>vg.slider</code>, <code>vg.search</code>, <code>vg.table</code>. Then I would scan the code <em>inside</em> the marks layers to see if any interactors are present: <code>vg.interval*</code>, <code>vg.toggle*</code>, <code>vg.nearest</code>, <code>vg.panZoom</code>.</p></li>
+<li><p><code>Param</code> and <code>Selection</code> variables are used to store the user inputs. <code>Param</code>s update the graphical marks directly, without ever referring to particular rows of the data. E.g., it could be used to set the size or color of all the points. Selections form a query related to the underlying dataset and tells us which rows are <em>selected</em> by that query. E.g., it can be used to find all the Airbnbs that are below a certain price.</p>
+<p>Here is an example problem I was considering putting on the midterm,</p>
+<blockquote class="blockquote">
+<p>For each of the situations below, circle whether a mosaic <code>Param</code> or <code>Selection</code> applies. You may select one, both, or neither in each part.</p>
+<ol type="a">
+<li>PARAM SELECTION You plan to overlay a 2D density on a scatterplot and would like a slider that allows the user to adjust the bandwidth.</li>
+<li>PARAM SELECTION You want to create a scatterplot of column A vs.&nbsp;column B in a dataset, where both A and B are selected through separate drop-down menus.</li>
+<li>PARAM SELECTION A scatter plot shows daily maximum temperature across the year, and a bar plot shows the number of sunny, rainy, and snowy days. Clicking a bar filters the scatter plot to days with that weather type.</li>
+<li>PARAM SELECTION Brushing a scatterplot of Airbnb rental locations updates a table displaying details of each property.</li>
+</ol>
+</blockquote></li>
+<li><p>In all our examples, we declare these variables at the very start. The variables appear in both the inputs (e.g., <code>vg.menu</code>) and the layers that implement the response (e.g., <code>vg.highlight</code>, discussed below). When I’m reading the mosaic part, I would look for these “storage” variables in both places. This tells me how the variable keeps track of the user input and passes it along to update the view.</p></li>
+<li><p>A subtlety with <code>Selection</code> is that different user inputs can conflict with each other. For example, the brush might select one region in the map, and a menu might select only the one-room rentals. To reconcile the conflicts, mosaic requires us to specify whether the selection is a <code>vg.Selection.intersect()</code>, <code>vg.Selection.union()</code>, or <code>vg.Selection.single()</code>.</p>
+<svg viewbox="0 0 1060 220" style="width: 100%; max-width: 900px; display: block; margin: 0 auto;" font-family="monospace" font-size="16" text-anchor="middle">
+  <defs>
+    <clippath id="venn-clip-a"><circle cx="100" cy="130" r="65"></circle></clippath>
+  </defs>
+  <g stroke="#0c0c0c" stroke-width="1.5" fill="#f4f4f4">
+    <circle cx="100" cy="130" r="65"></circle><circle cx="180" cy="130" r="65"></circle>
+    <circle cx="420" cy="130" r="65"></circle><circle cx="500" cy="130" r="65"></circle>
+    <circle cx="740" cy="130" r="65"></circle><circle cx="820" cy="130" r="65"></circle>
+  </g>
+  <circle cx="180" cy="130" r="65" fill="#4682b4" stroke="#0c0c0c" stroke-width="1.5" clip-path="url(#venn-clip-a)"></circle>
+  <g fill="#4682b4" stroke="#0c0c0c" stroke-width="1.5">
+    <circle cx="420" cy="130" r="65"></circle><circle cx="500" cy="130" r="65"></circle>
+    <circle cx="820" cy="130" r="65"></circle>
+  </g>
+  <text x="140" y="30">vg.Selection.intersect()</text>
+  <text x="460" y="30">vg.Selection.union()</text>
+  <text x="780" y="30">vg.Selection.single()</text>
+  <text x="895" y="135" text-anchor="start">&lt;- most recent</text>
+</svg></li>
+<li><p>For how the plot responds, it depends on whether the input was a <code>Param</code> or <code>Selection</code>. If it was a Param, we directly manipulate the graphical encoding inside the <code>{}</code> symbols.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>color <span class="op">=</span> a Param object</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">// dataset goes here,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"var1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"var2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> color} <span class="co">// graphical encoding depends on Param</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If it was a Selection, we can either filter the dataset or highlight the samples. This is the filtering approach.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>current_rentals <span class="op">=</span> a Selection object</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"rentals"</span><span class="op">,</span> filterBy<span class="op">:</span> {current_rentals})</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// graphical encoding goes here</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is the highlighting approach.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>current_rentals <span class="op">=</span> a Selection object</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">// dataset goes here</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// graphical encoding goes here</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> current_rentals})</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In the three examples above, I haven’t written the Input or Interactor that is used to update the storage variable. I’ve tried to focus on just the parts relevant to the visualization’s response to the input, but the real code would need these ways of reading in input and updating the <code>Param</code> or <code>Selection</code>.</p></li>
+<li><p>Let’s practice working through these steps with this more involved example from the notes.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>weather_type_v3 <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>months_v3 <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"weather"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> weather_type_v3})<span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">x</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">dateMonthDay</span>(<span class="st">"date"</span>)<span class="op">,</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">y</span><span class="op">:</span> <span class="st">"temp_max"</span><span class="op">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fill</span><span class="op">:</span> <span class="st">"weather"</span><span class="op">,</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">r</span><span class="op">:</span> <span class="st">"precipitation"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalX</span>({<span class="dt">as</span><span class="op">:</span> months_v3})<span class="op">,</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> months_v3<span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#ccc"</span><span class="op">,</span> <span class="dt">fillOpacity</span><span class="op">:</span> <span class="fl">0.2</span>})<span class="op">,</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorLegend</span>({<span class="dt">as</span><span class="op">:</span> weather_type_v3})<span class="op">,</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xyDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorDomain</span>(domain)<span class="op">,</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorRange</span>(colors)<span class="op">,</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">rDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">rRange</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">10</span>])</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">barX</span>(</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"weather"</span>)<span class="op">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">count</span>()<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"weather"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#ccc"</span><span class="op">,</span> <span class="dt">fillOpacity</span><span class="op">:</span> <span class="fl">0.2</span>}</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">barX</span>(</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"weather"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> months_v3})<span class="op">,</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">count</span>()<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"weather"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"weather"</span>}</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">toggleY</span>({<span class="dt">as</span><span class="op">:</span> weather_type_v3})<span class="op">,</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">highlight</span>({<span class="dt">by</span><span class="op">:</span> weather_type_v3})<span class="op">,</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">xDomain</span>(vg<span class="op">.</span><span class="at">Fixed</span>)<span class="op">,</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yDomain</span>(domain)<span class="op">,</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">yLabel</span>(<span class="kw">null</span>)<span class="op">,</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorDomain</span>(domain)<span class="op">,</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">colorRange</span>(colors)</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ol>
+</section>
+</section>
+<section id="data-management" class="level2">
+<h2 class="anchored" data-anchor-id="data-management">Data Management</h2>
+<ol start="18" type="1">
+<li><p>You should be able to explain whether or not a dataset is tidy. If it’s implicitly storing variables in the column names, then it is not tidy. If it’s storing two types of variables within a single column, then it’s also not tidy.</p></li>
+<li><p>There were a few kinds of operations we used to make data tidy for visualization. You should be able to explain conceptually what they do and also combine them in the necessary ways to transform data.</p></li>
+<li><p>These are the main operations you should know.</p>
+<ul>
+<li><strong>Pivoting wider</strong> spreads one column into many different columns. <strong>Pivoting longer</strong> stacks many columns into one and introduces a new variable to explicitly track what had been implicitly stored in the column names. They are implemented in the <code>pivot_wider</code> and <code>pivot_longer</code> functions, respectively.</li>
+</ul>
+<p><img src="figures/pivoting_figures.jpg" class="img-fluid" width="350"></p>
+<ul>
+<li><strong>Deriving</strong> a column introduces a new column based on existing columns. This is implemented by <code>mutate</code>. <strong>Aggregation</strong> replaces a column (or columns) with group-level summary statistics. This is implemented by the <code>group_by</code> and <code>summarize</code> functions placed one after the other. The output has one row per group.</li>
+</ul>
+<p><img src="figures/mutate_example1.jpg" class="img-fluid" width="450"></p>
+<p><img src="figures/group_by_summarize.jpg" class="img-fluid" width="300"></p>
+<ul>
+<li><p><strong>Filtering</strong> keeps only the rows based on the data value. <strong>Selecting</strong> keeps only the columns based on their name.</p></li>
+<li><p><strong>Joining</strong> merges two tables into one using the variables that are shared across them. Since an ID could be present in only one of the two tables, we needed different types of join (<code>left_join</code>, <code>right_join</code>, <code>full_join</code>, <code>inner_join</code>).</p></li>
+</ul>
+<p><img src="figures/example_joins.jpeg" class="img-fluid" width="500"></p></li>
+<li><p>The skill I want to make sure you’ve developed is that you can recognize how the transformations can be applied in a sequence to achieve a desired data format. I’ve modified one of the exercises from our exercise sheet to deprioritize writing code from scratch and instead emphasize noticing the types of transformations that are needed.</p>
+<blockquote class="blockquote">
+<p>The dataframe <code>df</code> contains the habits of readers in a hypothetical reading group. Each row is one book read by one reader. For each part, describe how to transform the data from the Before to the After format. Clearly indicate if it requires multiple steps. Your answers can be very brief (e.g., “step 1. filter to rows with rating above 3”). Each part is independent of the others.</p>
+</blockquote>
+<blockquote class="blockquote">
+<ol type="a">
+<li>Total pages read by each reader within each genre.</li>
+</ol>
+</blockquote>
+<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+<div style="flex: 0 0 50%; font-size: 0.85em; text-align: center;">
+<em>Before</em>
+
+<table class="table table-sm caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">person_id</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">genre</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pages_read</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">days_taken</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rating</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">240</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">350</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">330</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div style="flex: 0 0 40%; font-size: 0.85em; text-align: center;">
+<em>After</em>
+
+<table class="table table-sm caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">person_id</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">genre</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">total_pages</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">280</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">540</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">350</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">330</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">210</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">550</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<blockquote class="blockquote">
+<ol start="2" type="a">
+<li>Reading pace for each book.</li>
+</ol>
+</blockquote>
+<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+<div style="flex: 0 0 40%; font-size: 0.85em; text-align: center;">
+<em>Before</em>
+
+<table class="table table-sm caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">person_id</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">genre</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pages_read</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">days_taken</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">240</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">350</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">330</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div style="flex: 0 0 50%; font-size: 0.85em; text-align: center;">
+<em>After</em>
+
+<table class="table table-sm caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">person_id</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">genre</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pages_read</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">days_taken</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">240</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">350</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">330</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">30</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<blockquote class="blockquote">
+<ol start="3" type="a">
+<li>Each reader’s average rating in each genre.</li>
+</ol>
+</blockquote>
+<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+<div style="flex: 0 0 50%; font-size: 0.85em; text-align: center;">
+<em>Before</em>
+
+<table class="table table-sm caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">person_id</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">genre</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">pages_read</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">days_taken</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">rating</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">240</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">350</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">501</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">280</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Sci-Fi</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">History</td>
+<td style="text-align: right;">330</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: left;">Mystery</td>
+<td style="text-align: right;">210</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div style="flex: 0 0 40%; font-size: 0.85em; text-align: center;">
+<em>After</em>
+
+<table class="table table-sm caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">person_id</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">History</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mystery</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sci-Fi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">501</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">502</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div></li>
+</ol>
+</section>
+<section id="color" class="level2">
+<h2 class="anchored" data-anchor-id="color">Color</h2>
+<ol start="22" type="1">
+<li><p>There were three main parts in this lecture,</p>
+<ul>
+<li>We introduced RGB and HSL color spaces. This helped us understand what color is and how it’s represented in a computer.</li>
+<li>We defined color maps, reviewed different types of color map, and pointed to functions that can be used to implement them.</li>
+<li>We went over some best practices. These are recommendations from the literature that we can use to improve upon ggplot2 defaults.</li>
+</ul></li>
+<li><p>Color spaces are numerical representations of color. RGB represented color as a mixture of red, green, and blue components. When you enter strings like “#F00000” in code, that is the RGB representation. HSL represented color using hue, saturation, and lightness. This was useful for making sense of color wheels. We had two diagrams to summarize these color spaces.</p>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="figures/RGB_Cube_Show_lowgamma_cutout_b.png" class="img-fluid"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="figures/hsl_cylinder.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<p>An important aspect of HSL representation is that saturation and luminance are naturally perceived as being ordered. Hue is not, which is why when using it to encode data (rainbow palettes) it requires more cognitive effort.</p></li>
+<li><p>Color maps are ways of mapping data attributes to color. We could organize them according to (i) the data that they’re supposed to encode and (ii) the mapping from the data to the color space. These are all the color maps that we discussed. The first are more important because even if we only have them, we can cover all the Types, Directions, and Continuity options. The rest are nice presets provided by the community, but they are not as essential to recognize.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 0%">
+<col style="width: 95%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Direction</th>
+<th style="text-align: left;">Continuity</th>
+<th style="text-align: left;">Package</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>scale_color_manual</code></td>
+<td style="text-align: left;">Categorical</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#E41A1C;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#377EB8;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#4DAF4A;"></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>scale_color_gradient</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Sequential</td>
+<td style="text-align: left;">Continuous</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:120px;height:16px;background:linear-gradient(to right,#FFFFFF,#FDFEFE,#FBFCFD,#F9FBFD,#F7F9FC,#F5F8FB,#F3F6FA,#F1F5FA,#EFF3F9,#EDF2F8,#EBF0F7,#EAEFF7,#E8EEF6,#E6ECF5,#E4EBF4,#E2E9F4,#E0E8F3,#DEE6F2,#DCE5F1,#DAE4F1,#D8E2F0,#D6E1EF,#D4DFEE,#D2DEEE,#D0DCED,#CEDBEC,#CCDAEB,#CAD8EB,#C8D7EA,#C6D5E9,#C4D4E8,#C2D3E8,#C0D1E7,#BED0E6,#BDCEE5,#BBCDE5,#B9CCE4,#B7CAE3,#B5C9E2,#B3C7E1,#B1C6E1,#AFC5E0,#ADC3DF,#ABC2DE,#A9C0DE,#A7BFDD,#A5BEDC,#A3BCDB,#A1BBDB,#9FBADA,#9DB8D9,#9BB7D8,#99B5D8,#97B4D7,#94B3D6,#92B1D5,#90B0D5,#8EAFD4,#8CADD3,#8AACD2,#88ABD2,#86A9D1,#84A8D0,#82A7CF,#80A5CF,#7EA4CE,#7BA3CD,#79A1CC,#77A0CC,#759FCB,#739DCA,#719CC9,#6E9BC8,#6C99C8,#6A98C7,#6897C6,#6595C5,#6394C5,#6193C4,#5E91C3,#5C90C2,#598FC2,#578EC1,#548CC0,#528BBF,#4F8ABF,#4C88BE,#4A87BD,#4786BC,#4485BC,#4183BB,#3E82BA,#3B81B9,#3880B9,#347EB8,#317DB7,#2D7CB6,#297BB6,#2479B5,#1F78B4);"></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>scale_color_steps</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Sequential</td>
+<td style="text-align: left;">Stepped</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#ECF1F8;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#C5D4E9;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#9EB9DA;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#749ECB;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#4484BC;"></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>scale_color_gradient2</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Diverging</td>
+<td style="text-align: left;">Continuous</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:120px;height:16px;background:linear-gradient(to right,#2166AC,#2A69AE,#316CAF,#386EB1,#3E71B3,#4474B4,#4977B6,#4E7AB8,#537DB9,#587FBB,#5D82BD,#6285BF,#6688C0,#6B8BC2,#6F8EC4,#7491C5,#7894C7,#7C97C9,#809ACA,#859DCC,#89A0CE,#8DA3CF,#91A6D1,#95A9D3,#99ADD4,#9DB0D6,#A1B3D8,#A5B6D9,#A9B9DB,#ADBCDD,#B1BFDE,#B5C2E0,#B9C6E2,#BDC9E3,#C1CCE5,#C5CFE7,#C9D3E8,#CDD6EA,#D1D9EC,#D5DCED,#D9E0EF,#DDE3F1,#E1E6F2,#E5E9F4,#E9EDF6,#EDF0F7,#F1F3F9,#F5F7FB,#F9FAFC,#FDFDFE,#FFFDFD,#FEF8F8,#FDF4F3,#FDF0EE,#FCEBEA,#FBE7E5,#FAE3E0,#F9DEDB,#F9DAD7,#F8D6D2,#F7D1CE,#F5CDC9,#F4C9C4,#F3C4C0,#F2C0BB,#F1BCB7,#F0B7B2,#EEB3AE,#EDAFA9,#ECABA5,#EAA6A0,#E9A29C,#E79E98,#E69993,#E4958F,#E3918B,#E18C86,#DF8882,#DE847E,#DC807A,#DA7B75,#D87771,#D6726D,#D56E69,#D36A65,#D16561,#CF615D,#CD5C59,#CB5755,#C95351,#C64E4D,#C44949,#C24445,#C03F41,#BE3A3D,#BB343A,#B92E36,#B72832,#B4212F,#B2182B);"></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>scale_color_steps2</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Diverging</td>
+<td style="text-align: left;">Stepped</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#5D82BD;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#B0BEDE;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#FFFFFF;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#EBA9A3;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#C85250;"></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>scale_color_brewer</code></td>
+<td style="text-align: left;">Categorical</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#E41A1C;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#377EB8;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#4DAF4A;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#984EA3;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#FF7F00;"></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>scale_color_viridis_c</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Sequential</td>
+<td style="text-align: left;">Continuous</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:120px;height:16px;background:linear-gradient(to right,#440154FF,#450558FF,#46085CFF,#470D60FF,#471063FF,#481467FF,#481769FF,#481B6DFF,#481E70FF,#482173FF,#482576FF,#482878FF,#472C7AFF,#472F7CFF,#46327EFF,#453581FF,#453882FF,#443B84FF,#433E85FF,#424186FF,#404587FF,#3F4788FF,#3E4A89FF,#3D4D8AFF,#3C508BFF,#3B528BFF,#39558CFF,#38598CFF,#375B8DFF,#355E8DFF,#34608DFF,#33638DFF,#32658EFF,#31688EFF,#2F6B8EFF,#2E6D8EFF,#2D708EFF,#2C718EFF,#2B748EFF,#2A768EFF,#29798EFF,#287C8EFF,#277E8EFF,#26818EFF,#26828EFF,#25858EFF,#24878EFF,#238A8DFF,#228D8DFF,#218F8DFF,#20928CFF,#20938CFF,#1F968BFF,#1F998AFF,#1E9B8AFF,#1F9E89FF,#1FA088FF,#1FA287FF,#20A486FF,#22A785FF,#24AA83FF,#25AC82FF,#28AE80FF,#2BB07FFF,#2EB37CFF,#31B67BFF,#35B779FF,#39BA76FF,#3DBC74FF,#41BE71FF,#47C06FFF,#4CC26CFF,#51C56AFF,#56C667FF,#5BC863FF,#61CA60FF,#67CC5CFF,#6DCD59FF,#73D056FF,#78D152FF,#7FD34EFF,#85D54AFF,#8CD646FF,#92D741FF,#99D83DFF,#A0DA39FF,#A7DB35FF,#ADDC30FF,#B4DE2CFF,#BBDE28FF,#C2DF23FF,#C9E020FF,#D0E11CFF,#D7E219FF,#DDE318FF,#E4E419FF,#EBE51AFF,#F1E51DFF,#F7E620FF,#FDE725FF);"></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>scale_color_viridis_b</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Sequential</td>
+<td style="text-align: left;">Stepped</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#440154FF;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#3B528BFF;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#21908CFF;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#5DC863FF;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#FDE725FF;"></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>scale_color_distiller</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Sequential</td>
+<td style="text-align: left;">Continuous</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:120px;height:16px;background:linear-gradient(to right,#EFF3FF,#EDF2FE,#EAF0FD,#E8EFFC,#E5EDFB,#E3ECFA,#E0EAF9,#DEE9F8,#DBE7F7,#D9E6F6,#D6E4F5,#D4E3F4,#D1E2F3,#CFE0F2,#CCDFF1,#CADDF0,#C7DCEF,#C5DAEF,#C2D9EE,#C0D8ED,#BED7EC,#BBD6EB,#B9D5EA,#B6D4E9,#B4D3E9,#B2D2E8,#AFD1E7,#ADD0E6,#AACFE5,#A8CEE4,#A5CDE4,#A3CCE3,#A0CBE2,#9ECAE1,#9BC8E0,#98C7E0,#95C5DF,#92C3DE,#8FC1DE,#8CC0DD,#89BEDC,#86BCDC,#83BBDB,#80B9DA,#7DB7DA,#7AB6D9,#77B4D8,#73B2D8,#70B1D7,#6DAFD6,#6AADD6,#68ABD5,#65AAD4,#63A8D3,#61A6D2,#5EA5D1,#5CA3D0,#5AA1CF,#579FCE,#559ECD,#529CCC,#509ACB,#4D99CA,#4A97C9,#4895C8,#4594C7,#4292C6,#4090C5,#3F8EC4,#3D8CC3,#3B8AC2,#3988C1,#3886C0,#3684BF,#3482BE,#3280BD,#307EBC,#2E7CBB,#2C7ABA,#2A78B9,#2776B8,#2574B7,#2272B6,#2170B4,#206DB2,#1E6AB0,#1D67AE,#1C65AC,#1B62AA,#1A5FA8,#195DA6,#175AA4,#1657A2,#1455A0,#13529E,#114F9C,#0F4D9A,#0D4A98,#0B4896,#084594);"></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>scale_color_fermenter</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Sequential</td>
+<td style="text-align: left;">Stepped</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#EFF3FF;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#BDD7E7;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#6BAED6;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#3182BD;"></span><span style="display:inline-block;vertical-align:middle;width:24px;height:16px;background:#08519C;"></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>scale_color_scico</code></td>
+<td style="text-align: left;">Ordered</td>
+<td style="text-align: left;">Depends</td>
+<td style="text-align: left;">Continuous</td>
+<td style="text-align: left;">scico</td>
+<td style="text-align: left;"><span style="display:inline-block;vertical-align:middle;width:120px;height:16px;background:linear-gradient(to right,#001959,#031D5A,#06215B,#07245A,#0A285B,#0A2C5C,#0C2F5C,#0D335D,#0D365D,#0E395E,#0F3C5F,#0F3F60,#11415F,#114460,#114761,#134961,#144C62,#144E62,#165061,#165261,#185561,#1A5761,#1B5961,#1E5C62,#1F5D60,#226060,#246160,#27635F,#2B655D,#2E665C,#31695A,#346959,#386B57,#3B6C55,#406E53,#447051,#47704F,#4C724C,#4F734B,#537548,#587645,#5C7744,#607941,#64793F,#687A3D,#6C7B3B,#727D38,#767F36,#7A7F34,#7F8132,#838231,#88842F,#8D842E,#92862C,#97882C,#9C892A,#A18A2B,#A68A2C,#AB8B2D,#B08C2E,#B68D30,#BB8E33,#BF9035,#C49138,#C9913B,#CD923F,#D29243,#D79347,#DB944B,#DF9550,#E39654,#E69759,#EA995E,#EE9B64,#F09C6A,#F39E70,#F59F76,#F8A17B,#F8A281,#FAA587,#FCA78E,#FBA894,#FCAB9A,#FCAC9F,#FCAFA5,#FDB0AA,#FCB2AF,#FDB4B6,#FDB6BB,#FDB8C0,#FCB9C6,#FDBCCB,#FBBDD0,#FCBFD7,#FBC2DC,#FBC3E2,#FAC6E8,#FAC7EE,#FBCAF4,#F9CCF9);"></span><br><span style="display:inline-block;vertical-align:middle;width:120px;height:16px;background:linear-gradient(to right,#001260,#001663,#011A66,#011E68,#01226B,#02266D,#012A70,#022E73,#023275,#013678,#01397A,#023E7D,#02417F,#024582,#034A85,#034E87,#05528A,#06568C,#095B90,#0D5F92,#116596,#176999,#1D6E9C,#2373A0,#2A78A3,#317DA6,#3882AA,#4088AE,#488DB2,#5093B5,#5798B9,#609DBC,#68A2C0,#71A7C4,#78ADC7,#80B2CA,#89B7CD,#91BCD1,#99C1D4,#A1C5D8,#AACBDC,#B1D0DE,#BAD5E2,#C2D9E4,#C9DDE7,#D1E0E8,#D9E4E9,#E0E6E8,#E6E6E7,#EAE5E3,#ECE4DE,#EDE0D9,#EEDDD3,#EDD7CB,#EBD2C4,#EACEBE,#E8C9B7,#E6C4B0,#E3BEA9,#E2BAA2,#DFB49B,#DDAF94,#DBAA8D,#D9A587,#D7A081,#D59C7A,#D29773,#D1926E,#CE8D67,#CD8961,#CB845C,#C98056,#C77B50,#C57649,#C37243,#C16D3E,#BF6938,#BD6432,#BB602D,#B75B27,#B45420,#B04F1B,#AC4915,#A74310,#A23D0C,#9C3709,#963107,#902C06,#8B2706,#862306,#811F06,#7D1C06,#781806,#731405,#6E1006,#6A0D06,#660906,#620606,#5D0207,#590007);"></span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>bi_scale_color</code></td>
+<td style="text-align: left;">Ordered (two variables)</td>
+<td style="text-align: left;">Neither, bivariate</td>
+<td style="text-align: left;">Stepped</td>
+<td style="text-align: left;">biscale</td>
+<td style="text-align: left;"><span style="display:inline-grid;vertical-align:middle;grid-template-columns:repeat(3,16px);grid-auto-rows:16px;"><span style="background:#be64ac;"></span><span style="background:#8c62aa;"></span><span style="background:#3b4994;"></span><span style="background:#dfb0d6;"></span><span style="background:#a5add3;"></span><span style="background:#5698b9;"></span><span style="background:#e8e8e8;"></span><span style="background:#ace4e4;"></span><span style="background:#5ac8c8;"></span></span></td>
+</tr>
+</tbody>
+</table></li>
+<li><p>There were many best practices, but the one that comes up the most in practice is that we should not use too many colors in categorical color maps. The maximum recommended ranged from 6 to 12, though it depended on details like how much space the color marks take up. The two solutions we discussed were either (i) coarsen the categories so that there are fewer of them or (ii) lump the rare categories into an “other” category.</p></li>
+<li><p>We discussed that there are different forms of color blindness and that they make several points in a color space appear equivalent. We mentioned that there are both R functions and online resources to see how color palettes appear under each of these forms of color blindness, so that color maps can be chosen which will not be ambiguous to colorblind readers.</p></li>
+</ol>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>It’s a bit confusing at first, but interactors are still a type of input.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

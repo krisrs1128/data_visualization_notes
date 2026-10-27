@@ -25,6 +25,8 @@ set.seed(2026)
 
 Readings [1](https://homes.cs.washington.edu/~jheer/files/idfva-draft.pdf) (Sections 3), [2](https://idl.uw.edu/mosaic/core/)
 
+Items marked with $^\dagger$ will not be tested on exams.
+
 ## Taxonomy: View Manipulation
 
 1. Besides data and view specification, interactivity can support view

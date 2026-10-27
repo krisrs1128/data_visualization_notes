@@ -17,6 +17,8 @@ execute:
 
 Readings [1](https://search.library.wisc.edu/catalog/9913040404802121/online) (Sections 10.1 - 10.3), [2 (optional)](https://lisacharlottemuth.com/2016/04/22/Colors-for-DataVis/)
 
+Items marked with $^\dagger$ will not be tested on exams.
+
 ```{r}
 #| label: setup
 #| echo: true

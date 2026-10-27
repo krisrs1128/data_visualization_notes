@@ -26,6 +26,8 @@ set.seed(2026)
 
 Readings [1](https://homes.cs.washington.edu/~jheer/files/idfva-draft.pdf) (Sections 1 - 2), [2](https://idl.uw.edu/mosaic/what-is-mosaic/)
 
+Items marked with $^\dagger$ will not be tested on exams.
+
 ## History
 
 1. Interactive visualizations are visualizations that respond to user input. We

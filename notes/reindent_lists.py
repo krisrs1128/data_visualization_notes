@@ -82,7 +82,31 @@ def is_blank(line):
     return line.strip() == ''
 
 
+def normalize_fences(lines):
+    """Pull fence lines back to the indent of the code they enclose.
+
+    If an opening/closing fence is indented further than the code between
+    them, Pandoc sees the fence as an indented code block (4+ spaces past
+    the list item's content column) and the whole chunk renders verbatim.
+    Shifting a block as a unit preserves that mismatch, so fix it first.
+    ojs fences are left alone (see module docstring).
+    """
+    lines = list(lines)
+    for start, end, is_ojs in fence_ranges(lines):
+        if is_ojs or end <= start + 1:
+            continue
+        body = [l for l in lines[start + 1:end] if not is_blank(l.rstrip('\n'))]
+        if not body:
+            continue
+        body_indent = min(leading_spaces(l) for l in body)
+        for i in (start, end):
+            if leading_spaces(lines[i]) > body_indent:
+                lines[i] = ' ' * body_indent + lines[i].lstrip(' ')
+    return lines
+
+
 def reindent(lines):
+    lines = normalize_fences(lines)
     protected = [False] * len(lines)
     ojs_line = [False] * len(lines)
     for start, end, is_ojs in fence_ranges(lines):

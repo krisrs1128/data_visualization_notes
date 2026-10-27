@@ -422,8 +422,11 @@ a single point (its location is arbitrary) over the `satellite` dataset.
     point <- data.frame(geom = st_sfc(st_point(c(-113, 37.3)))) |>
         st_as_sf()
 
-    tm_shape(satellite / max(satellite) * 255) +
-        tm_rgb() +
+    tm_shape(satellite) +
+        tm_rgb(
+            col = tm_vars(c(1, 2, 3), multivariate = TRUE),
+            col.scale = tm_scale_rgb(stretch = TRUE, probs = c(0.02, 0.98))
+        ) +
         tm_shape(point) +
         tm_dots(col = "blue", size = 5)
     ```

@@ -134,8 +134,11 @@ image of a neighborhood outside Shanghai.
 
    ```{r}
    #| label: plot-shanghai
-   tm_shape(shanghai / 1636 * 255) + # rescale the max value to 255
-       tm_rgb()
+   tm_shape(shanghai) +
+       tm_rgb(
+           col = tm_vars(c(1, 2, 3), multivariate = TRUE),
+           col.scale = tm_scale_rgb(max_color_value = 1636)
+       )
    ```
 
    There’s actually quite a bit of information in this image. We can zoom in...
@@ -145,8 +148,11 @@ image of a neighborhood outside Shanghai.
    bbox <- ext(121.66, 121.665, 30.963, 30.968)
    shanghai_ <- crop(shanghai, bbox)
 
-   tm_shape(shanghai_ / 1636 * 255) +
-       tm_rgb()
+   tm_shape(shanghai_) +
+       tm_rgb(
+           col = tm_vars(c(1, 2, 3), multivariate = TRUE),
+           col.scale = tm_scale_rgb(max_color_value = 1636)
+       )
    ```
 
    Here are is data on elevation in Zion national park.
@@ -791,3 +797,15 @@ vg.plot(
   vg.height(500)
 );
 ```
+
+### Objectives
+
+- Read in and write spatial and raster data formats into R.
+- Evaluate whether a dataset is more appropriately stored as a vector or raster data format.
+- Distinguish between the seven forms of vector data format.
+- Explain differences between a data frame and a spatial format's data structure. Given an example object in this format, explain what one row means and how to interpret the geometry.
+- Describe what it means for a raster data format to have multiple layers.
+- Given tmap visualization code, identify the groups and explain the role played by each layer.
+- Add relevant annotation, like legends, scale bars, and graticules using tmap.
+- Describe the role of inactivity in spatial visualizations and place alternative implementations on the taxonomy of interactive visualization. .
+- Explain what a choropleth map visualization is and create one using the `vg.geo` layer in the Mosaic library.

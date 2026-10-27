@@ -5,16 +5,17 @@ date: 2026-09-01
 bibliography: references.bib
 format:
   html:
-    embed-resources: true
     html-math-method: mathjax
     fig-align: center
 execute:
     echo: true
     message: false
     warning: false
-    cache: false
+    cache: true
     eval: true
 ---
+
+Readings [1](https://r-tmap.github.io/tmap-book/) (Chapter 3), [2 (optional)](https://r.geocompx.org/spatial-class.html) (Chapter 2)
 
 ```{r}
 #| label: libraries
@@ -32,7 +33,7 @@ theme_set(theme_minimal())
 ### Preview
 
 1. Spatial data come in two main formats: vector and raster. We’ll examine them
-in detail soon, but first let's review the high-level distinction and gives a
+in detail soon, but first let's review the high-level distinction and give a
 few examples. We'll also see how to read and write data to and from these
 formats.
 
@@ -56,56 +57,58 @@ containing the boundaries of lakes in Madison.
 lakes <- read_sf("https://uwmadison.box.com/shared/static/duqpj0dl3miltku1676es64d5zmygy92.geojson")
 
 lakes |>
-    dplyr::select(id, name, geometry)
+   dplyr::select(id, name, geometry)
 #write_sf(lakes, "output.geojson", driver = "GeoJSON")
 ```
 
-We'll discuss plotting soon, but for a preview, this is how you can
-visualize the lakes using ggplot2.
+We'll discuss plotting soon, but for a preview, this is how you can visualize
+the lakes using `tmap`.
 
 ```{r}
 #| label: plot-lakes
 #| echo: TRUE
 lakes <- lakes |>
-    group_by(id) |>
-    mutate(
-    longitude = st_coordinates(geometry)[1, 1],
-    latitude = st_coordinates(geometry)[1, 2]
-    )
+   group_by(id) |>
+   mutate(
+      longitude = st_coordinates(geometry)[1, 1],
+      latitude = st_coordinates(geometry)[1, 2]
+   )
 
 tm_shape(lakes) +
-    tm_polygons(col = "#00ced1")
+   tm_polygons(col = "#00ced1")
 ```
 
 5. There is a surprising amount of public vector data available online. Using this [query^[It can be constructed easily using the wizard]](https://overpass-turbo.eu/s/14ma), I’ve downloaded locations of all hospital clinics in Madison.
 
 ```{r}
-#| label: read-clinics
-clinics <- read_sf("https://uwmadison.box.com/shared/static/896jdml9mfnmza3vf8bh221h9hlvh70v.geojson")
+   #| label: read-clinics
+   clinics <- read_sf("https://uwmadison.box.com/shared/static/896jdml9mfnmza3vf8bh221h9hlvh70v.geojson")
 
-# how would you overlay the names of the clinics, using geom_text?
-tm_shape(clinics) +
-    tm_dots(col = "red", size = 1)
+    head(clinics)
+
+   # how would you overlay the names of the clinics?
+   tm_shape(clinics) +
+       tm_dots(col = "red", size = 1)
 ```
 
-Using this [query](https://overpass-turbo.eu/s/14m9), I’ve downloaded all the
-bus routes.
+   Using this [query](https://overpass-turbo.eu/s/14m9), I’ve downloaded all the
+   bus routes.
 
 ```{r}
-#| label: read-bus
-bus <- read_sf("https://uwmadison.box.com/shared/static/5neu1mpuh8esmb1q3j9celu73jy1rj2i.geojson")
+   #| label: read-bus
+   bus <- read_sf("https://uwmadison.box.com/shared/static/5neu1mpuh8esmb1q3j9celu73jy1rj2i.geojson")
 
-tm_shape(bus) +
-    tm_lines(col = "#bc7ab3", size = 1)
+   tm_shape(bus) +
+       tm_lines(col = "#bc7ab3", size = 1)
 ```
 
-For the boundaries of the lakes above, I used this [query](https://overpass-turbo.eu/s/14mb).
+   For the boundaries of the lakes above, I used this [query](https://overpass-turbo.eu/s/14mb).
 
-Many organizations prepare geojson data themselves and make it publicly
-available; e.g., the boundaries of
-[rivers](https://data-wi-dnr.opendata.arcgis.com/datasets/c7de80dd473d440e98ab3acb611e7d64_2)
-or
-[glaciers](https://rds.icimod.org/Home/DataDetail?metadataId=9361&searchlist=True).
+   Many organizations prepare geojson data themselves and make it publicly
+   available; e.g., the boundaries of
+   [rivers](https://data-wi-dnr.opendata.arcgis.com/datasets/c7de80dd473d440e98ab3acb611e7d64_2)
+   or
+   [glaciers](https://rds.icimod.org/data-explore).
 
 ### Raster Data
 
@@ -130,32 +133,32 @@ image of a neighborhood outside Shanghai.
 ```{r}
 #| label: plot-shanghai
 tm_shape(shanghai / 1636 * 255) + # rescale the max value to 255
-  tm_rgb()
+ tm_rgb()
 ```
 
-There’s actually quite a bit of information in this image. We can zoom in…
+   There’s actually quite a bit of information in this image. We can zoom in...
 
-```{r}
-#| label: zoom-shanghai
-bbox <- ext(121.66, 121.665, 30.963, 30.968)
-shanghai_ <- crop(shanghai, bbox)
+   ```{r}
+   #| label: zoom-shanghai
+   bbox <- ext(121.66, 121.665, 30.963, 30.968)
+   shanghai_ <- crop(shanghai, bbox)
 
-tm_shape(shanghai_ / 1636 * 255) +
-  tm_rgb()
-```
+   tm_shape(shanghai_ / 1636 * 255) +
+     tm_rgb()
+   ```
 
-Here are is data on elevation in Zion national park.
+   Here are is data on elevation in Zion national park.
 
-```{r}
-#| label: zion-elevation
-f <- system.file("raster/srtm.tif", package = "spDataLarge")
-zion <- rast(f)
-tm_shape(zion) +
-  tm_raster(palette = "PuBuGn") +
-  tm_layout(legend.position = c("left", "bottom"))
-```
+   ```{r}
+   #| label: zion-elevation
+   f <- system.file("raster/srtm.tif", package = "spDataLarge")
+   zion <- rast(f)
+   tm_shape(zion) +
+     tm_raster(palette = "PuBuGn") +
+     tm_layout(legend.position = c("left", "bottom"))
+   ```
 
-### Installation
+**Installation**
 
 9. A note about R packages: for historical reasons, spatial data libraries in R
 reference a few command line programs, like `gdal` and `proj`. Since these
@@ -172,130 +175,133 @@ and reaching out early if you have any issues.
 7 types of geometric information that are commonly used, as given in the figure
 below.
 
-![](figures/sf-classes.png)
+    ![](figures/sf-classes.png)
 
 11. We can construct these geometric objects from scratch. For example, starting
-from the defining coordinates, we can use `st_point`, `st_linestring`, and `st_polygon` to draw points, lines, and polygons.
+from the defining coordinates, we can use `st_point`, `st_linestring`, and
+`st_polygon` to draw points, lines, and polygons.
 
-```{r}
-#| label: construct-geoms
-# make a point
-p <- st_point(c(5, 2))
-plot(p)
+    ```{r}
+    #| label: construct-geoms
+    # make a point
+    p <- st_point(c(5, 2))
+    plot(p)
 
-# make a line
-linestring_matrix <- rbind(c(1, 5), c(4, 4), c(4, 1), c(2, 2), c(3, 2))
-p <- st_linestring(linestring_matrix)
-plot(p)
+    # make a line
+    linestring_matrix <- rbind(c(1, 5), c(4, 4), c(4, 1), c(2, 2), c(3, 2))
+    p <- st_linestring(linestring_matrix)
+    plot(p)
 
-# make a polygon
-polygon_list <- list(rbind(c(1, 5), c(2, 2), c(4, 1), c(4, 4), c(1, 5)))
-p <- st_polygon(polygon_list)
-plot(p)
-```
+    # make a polygon
+    polygon_list <- list(rbind(c(1, 5), c(2, 2), c(4, 1), c(4, 4), c(1, 5)))
+    p <- st_polygon(polygon_list)
+    plot(p)
+    ```
 
 12. Different geometries can be combined into a geometry collection, using `sfc`.
 
-```{r}
-#| label: sfc-collection
-point1 <- st_point(c(5, 2))
-point2 <- st_point(c(1, 3))
-points_sfc <- st_sfc(point1, point2)
-plot(points_sfc)
-```
+    ```{r}
+    #| label: sfc-collection
+    point1 <- st_point(c(5, 2))
+    point2 <- st_point(c(1, 3))
+    points_sfc <- st_sfc(point1, point2)
+    plot(points_sfc)
+    ```
 
-13. Real-world vector datasets are more than just these geometries — they also
+13. Real-world vector datasets are more than just these geometries -- they also
 associate each geometry with some additional information about each feature. We
 can add this information to the geometries above by associating each element
 with a row of a data.frame. In R, this this merging is accomplished by `st_sf`,
 using `geometry` to associate a raw `st_geom` a row of a data.frame.
 
-```{r}
-#| label: st-sf-london
-lnd_point <- st_point(c(0.1, 51.5))
-lnd_geom <- st_sfc(lnd_point, crs = 4326)
-lnd_attrib = data.frame(
-  name = "London",
-  temperature = 25,
-  date = as.Date("2017-06-21")
-)
+    ```{r}
+    #| label: st-sf-london
+    lnd_point <- st_point(c(0.1, 51.5))
+    lnd_geom <- st_sfc(lnd_point, crs = 4326)
+    lnd_attrib = data.frame(
+      name = "London",
+      temperature = 25,
+      date = as.Date("2017-06-21")
+    )
 
-lnd_sf = st_sf(lnd_attrib, geometry = lnd_geom)
-```
+    lnd_sf = st_sf(lnd_attrib, geometry = lnd_geom)
+    ```
 
 14. To visualize vector data, we can use the tmap package. Like ggplot2, this
 package allows us to layer multiple visual encodings, but this time specialized
 to different types of geospatial data.
 
-Vector data can be directly plotted using base R. For example, suppose we
-want to plot the boundaries of India, within it's local context. Each row of the
-`world` object below contains both the boundary of a country (in the `geom`
-column) and information about its location and population characteristics.
+    Vector data can be directly plotted using base R. For example, suppose we
+    want to plot the boundaries of India, within its local context. Each row of
+    the `world` object below contains both the boundary of a country (in the
+    `geom` column) and information about its location and population
+    characteristics.
 
-```{r}
-#| label: head-world
-data(world)
-head(world)
-```
+    ```{r}
+    #| label: head-world
+    data(world)
+    head(world)
+    ```
 
-This makes the plot, using `dplyr` to filter down to just the row containing the
-India geometry.
+    This makes the plot in base R by first filtering to just the row containing
+    the India geometry.
 
-```{r}
-#| label: india-base
-india_geom <- world |>
-  filter(name_long == "India") |>
-  st_geometry()
+    ```{r}
+    #| label: india-base
+    india_geom <- world |>
+      filter(name_long == "India") |>
+      st_geometry()
 
-plot(india_geom)
-```
+    plot(india_geom)
+    ```
 
-Alternatively, we can use the `tmap` package,
+    Alternatively, we can use the `tmap` package,
 
-```{r}
-#| label: india-tmap
-bbox <- c(60, 5, 110, 40)
-tm_shape(india_geom) +
-  tm_polygons()
-```
+    ```{r}
+    #| label: india-tmap
+    bbox <- c(60, 5, 110, 40)
+    tm_shape(india_geom) +
+      tm_polygons()
+    ```
 
-Like `ggplot2`, `tmap` builds packages from sets of basic layers for all vector formats,
+    Like `ggplot2`, `tmap` builds packages from sets of basic layers for all vector formats,
 
-- Data: `tm_shape` sets up the raster or vector data to be used in subsequent layers.
-- Points: `tm_dots()` draws dots at spatial points, `tm_markers()` draws Google Map-style markers, `tm_squares()` draws small squares.
-- Lines: `tm_lines()` draws spatial line vectors.
-- Polygons: `tm_polygons()` draws polygon vectors, `tm_fill()` draws polygons with the border removed, `tm_borders()` draws polygons with only the border.
+    - Data: `tm_shape` sets up the raster or vector data to be used in subsequent layers.
+    - Points: `tm_dots()` draws dots at spatial points, `tm_markers()` draws Google Map-style markers, `tm_squares()` draws small squares.
+    - Lines: `tm_lines()` draws spatial line vectors.
+    - Polygons: `tm_polygons()` draws polygon vectors, `tm_fill()` draws polygons with the border removed, `tm_borders()` draws polygons with only the border.
 
-There are other layers for more specialized contexts, like adding text labels or iso-contour lines.
+    There are other layers for more specialized contexts, like adding text
+    labels or contour lines.
 
 15. Often, we want to layer on several vector objects. `tmap` makes this possible
 in a ggplot2-like syntax. To change the coordinates of the viewing box, we can
 set the `bbox` (bounding box) argument.
 
-```{r}
-#| label: world-asia
-world_asia <- world |>
-  filter(continent == "Asia")
+    ```{r}
+    #| label: world-asia
+    world_asia <- world |>
+      filter(continent == "Asia")
 
-bbox <- c(60, 5, 110, 40)
-tm_shape(world_asia, bbox = bbox) +
-  tm_polygons(col = "white") +
-  tm_shape(india_geom) +
-  tm_polygons()
-```
+    bbox <- c(60, 5, 110, 40)
+    tm_shape(world_asia, bbox = bbox) +
+      tm_polygons(col = "white") +
+      tm_shape(india_geom) +
+      tm_polygons()
+    ```
 
 16. We can also encode data that's contained in the vector dataset.
 
-```{r}
-#| label: lifeExp-map
-tm_shape(world_asia, bbox = bbox) +
-  tm_polygons(col = "lifeExp") +
-  tm_polygons()
-```
+    ```{r}
+    #| label: lifeExp-map
+    tm_shape(world_asia, bbox = bbox) +
+      tm_polygons(col = "lifeExp") +
+      tm_polygons()
+    ```
 
-All the encoding channels we are used to modifying through ggplot2 (like color,
-linetype, and size) can also be modified through these tmap commands, though
-note, there is no intermediate aesthetic encoding function.
+    All the encoding channels we are used to modifying through ggplot2 (like color,
+    linetype, and size) can also be modified through these tmap commands, though
+    note, there is no intermediate aesthetic encoding function.
 
 ### Raster Formats
 
@@ -368,20 +374,6 @@ grid. Notice that we had to give a fake spatial extent.
     plotRGB(satellite, stretch = "lin")
     ```
 
-25. Sometimes, it’s useful to overlay several visual marks on top of a raster
-image.
-
-    ```{r}
-    #| label: overlay-point
-    satellite <- project(satellite, "EPSG:4326")
-    point <- data.frame(geom = st_sfc(st_point(c(-113, 37.3)))) |>
-      st_as_sf()
-
-    tm_shape(satellite) +
-      tm_raster() +
-      tm_shape(point) +
-      tm_dots(col = "blue", size = 5)
-    ```
 
 26. If we want to visualize just a single layer, we can use `tm_rgb` with all
 color channels set to the layer of interest. Note that, here, I've rescaled the
@@ -394,6 +386,59 @@ a color image.
       tm_rgb(r = 1, g = 1, b = 1)
     ```
 
+_Exercise: Are the following datasets in vector or raster formats? If they are in vector data format, explain which types of geometries it contains (e.g., point or linestring)._
+
+- [Climate normals mapped over time](https://flowingdata.com/2021/05/13/climate-normals-mapped-over-time/)
+- [Windfarms (first panel under "Geography")](https://dominicroye.github.io/project/)
+- [Mycorrhizal infrastructure map](https://a-hidden-infrastructure.spun.earth/story/mycorrhizal-infrastructure-map)
+- [US Building Footprints](https://github.com/Microsoft/USBuildingFootprints)
+
+###  `tmap` topics
+
+1. We can overlay both raster and vector data in a single visualization. This is
+done using the tmap concept of _groups_. A group is a `tm_shape` call together
+with the layers that follow it (up until the next call to `tm_shape`). The
+`tm_shape` calls refer to the data sources and may be either vector or raster
+formats.
+
+1. We can include several groups in a single visualization, in which case the
+later groups will appear on top of the earlier ones. For example, here we
+overlay a vector dataset of volcano locations on top of a raster dataset of
+elevations on Easter Island.
+
+```{r}
+#| label: easter-island
+ei_elev <- rast("data/easter_island/ei_elev.tif")
+ei_points <- read_sf("data/easter_island/ei_points.gpkg")
+volcanoes <- subset(ei_points, type == "volcano")
+
+tm_shape(ei_elev) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "-rd_yl_gn"),
+    col.legend = tm_legend(title = "Elevation (m asl)")
+  ) +
+  tm_shape(volcanoes) +
+  tm_symbols(
+    shape = 24,
+    size = "elevation",
+    size.legend = tm_legend(title = "Volcanoes (m asl)")
+  )
+```
+
+25. Here's another example placing a single point (its location is arbitrary)
+over the `satellite` dataset.
+
+    ```{r}
+    #| label: overlay-point
+    satellite <- project(satellite, "EPSG:4326")
+    point <- data.frame(geom = st_sfc(st_point(c(-113, 37.3)))) |>
+      st_as_sf()
+
+    tm_shape(satellite) +
+      tm_raster() +
+      tm_shape(point) +
+      tm_dots(col = "blue", size = 5)
+    ```
 
 ### Coordinate Reference Systems
 
@@ -444,25 +489,25 @@ inconsistency, it will be important to « reproject » the data into the same 
 extra pan and zoom functionality to make the most of very high-resolution
 spatial data.
 
-33. Mosaic vgplot is especially well-suited to selection interactions. We need
-two main changes from our previous mosaic visualizations.
+33.$^\dagger$ Mosaic vgplot is especially well-suited to selection interactions.
+We need two main changes from our previous mosaic visualizations.
 
-   - We make sure our coordinator loads the spatial data input. This isn't
-   enabled by default and requires us to first call
-   `vg.loadExtension("spatial")`, which makes the spatial database tools
-   available. We can then load typical vector data formats using
-   `vg.loadSpatial()`.
-   - We use `vg.geo()` to encode vector data. This layer is analogous to
-   `vg.dot()` or `vg.line()` for dot or line plots, for example.
+    - We make sure our coordinator loads the spatial data input. This isn't
+    enabled by default and requires us to first call
+    `vg.loadExtension("spatial")`, which makes the spatial database tools
+    available. We can then load typical vector data formats using
+    `vg.loadSpatial()`.
+    - We use `vg.geo()` to encode vector data. This layer is analogous to
+    `vg.dot()` or `vg.line()` for dot or line plots, for example.
 
-It's not as common, but if we ever want to customize the CRS, we have to use
-`vg.projectionType()`.
+    It's not as common, but if we ever want to customize the CRS, we have to use
+    `vg.projectionType()`.
 
-1.The block below loads data that will be used in the examples below. Note that
-the county geometry data is separate from the original unemployment rates.  The
-code below manually joins these into a new table called combined. We could have
-alternatively joined these tables elsewhere and then directly loaded the spatial
-data with unemployment information baked in.
+    1.The block below loads data that will be used in the examples below. Note that
+    the county geometry data is separate from the original unemployment rates.  The
+    code below manually joins these into a new table called combined. We could have
+    alternatively joined these tables elsewhere and then directly loaded the spatial
+    data with unemployment information baked in.
 
 ```{ojs}
 //| label: ojs-setup
@@ -520,24 +565,24 @@ doesn't actually add too much to the visualization because we can already see
 unemployment directly on the plot. However, it can still be useful for noticing
 differences within the color bins, especially the outliers.
 
-- We build the unemployment histogram using `vg.rectY` and setting the x-axis to
-be the binned rate.
-- We draw two maps, one that only will show the counties that have been brushed
-in the histogram and another grayed-out one that serves as the "context" in a
-focus-plus-context view. These are the two calls to `vg.geo`.
-- Finally, we enable brushing by defining a reactive selection object called
-`$range`. It reacts to user inputs through `intervalX`, and `filterBy` in the
-second `vg.geo` call ensures that only the selected subset of the map is drawn
-in the "focus."
+    - We build the unemployment histogram using `vg.rectY` and setting the x-axis to
+    be the binned rate.
+    - We draw two maps, one that only will show the counties that have been brushed
+    in the histogram and another grayed-out one that serves as the "context" in a
+    focus-plus-context view. These are the two calls to `vg.geo`.
+    - Finally, we enable brushing by defining a reactive selection object called
+    `$range`. It reacts to user inputs through `intervalX`, and `filterBy` in the
+    second `vg.geo` call ensures that only the selected subset of the map is drawn
+    in the "focus."
 
-One subtlety is that in this interactive version, we need to manually set the
-breakpoints in the quantile scale. If we omit this, then the color scale adapts
-every time we move the brush. This is analogous to fixing the x and y-axis
-scales in our earlier weather example.
+    One subtlety is that in this interactive version, we need to manually set the
+    breakpoints in the quantile scale. If we omit this, then the color scale adapts
+    every time we move the brush. This is analogous to fixing the x and y-axis
+    scales in our earlier weather example.
 
 ```{ojs}
 //| label: ojs-brush
-$range = vg.Selection.intersect()
+range = vg.Selection.intersect()
 
 vg.hconcat(
   // make the histogram
@@ -546,7 +591,7 @@ vg.hconcat(
       vg.from("combined"),
       {x: vg.bin("rate"), y: vg.count(), fill: "#c8c8c8"}
     ),
-    vg.intervalX({as: $range, brush: {fill: "none"}}),
+    vg.intervalX({as: range}),
     vg.xLabel("Unemployment (%)"),
     vg.width(300),
     vg.height(300)
@@ -557,16 +602,20 @@ vg.hconcat(
     vg.plot(
       vg.geo(
         vg.from("combined"),
-        {fill: "none", stroke: "#eee", strokeWidth: 0.5}
+        {fill: "none", stroke: "#eee"}
       ),
       vg.geo(
-        vg.from("combined", {filterBy: $range}),
-        {fill: "rate", title: vg.sql`concat(rate, '%')`}
+        vg.from("combined", {filterBy: range}),
+        {fill: "rate"}
       ),
       vg.name("county-map-brush"),
+
+      // define a stepped color scale
       vg.colorScale("threshold"),
       vg.colorDomain([3.2, 3.8, 4.4, 4.8, 5.2, 5.7, 6.5, 7.6]),
       vg.colorScheme("blues"),
+
+      // specify the CRS
       vg.projectionType("albers-usa"),
       vg.width(500),
       vg.height(300)
@@ -582,10 +631,10 @@ for working with vector data. It's not possible to work with multiband rasters
 like those we would need for a full-color satellite image. However, working with
 one layer at a time is easy and can be done using the `vg.raster` command.
 
-   A technical detail is that for the raster data to be read in properly, it
-   needs to be formatted in long form. That is, it can't just be a matrix of
-   raster values. It has to have $x$-coordinate, $y$-coordinate, and
-   value-at-that-coordinate columns.
+    A technical detail is that for the raster data to be read in properly, it
+    needs to be formatted in long form. That is, it can't just be a matrix of
+    raster values. It has to have $x$-coordinate, $y$-coordinate, and
+    value-at-that-coordinate columns.
 
     ```{r}
     #| label: zion-flatten
@@ -621,5 +670,3 @@ vg.plot(
   vg.height(500)
 );
 ```
-
-38. One topic that we haven't covered is using web mapping frameworks. We haven't

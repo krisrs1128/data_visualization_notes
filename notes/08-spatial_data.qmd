@@ -102,7 +102,7 @@ containing the boundaries of lakes in Madison.
    bus <- read_sf("https://uwmadison.box.com/shared/static/5neu1mpuh8esmb1q3j9celu73jy1rj2i.geojson")
 
    tm_shape(bus) +
-       tm_lines(col = "#bc7ab3", size = 1)
+       tm_lines(col = "#bc7ab3", lwd = 1)
    ```
 
    For the boundaries of the lakes above, I used this
@@ -303,8 +303,7 @@ set the `bbox` (bounding box) argument.
     ```{r}
     #| label: lifeExp-map
     tm_shape(world_asia, bbox = bbox) +
-        tm_polygons(col = "lifeExp") +
-        tm_polygons()
+        tm_polygons(fill = "lifeExp")
     ```
 
     All the encoding channels we are used to modifying through ggplot2 (like color,
@@ -412,13 +411,26 @@ grid. Notice that we had to give a fake spatial extent.
 
 ###  Advanced `tmap` topics
 
-26. We can overlay both raster and vector data in a single visualization. This is
+26. The `tm_facets_wrap` or `tm_facets_grid` layers create small multiples
+according to variable names in the vector data attributes. For example, we can
+split the bus lines by operator.
+
+    ```{r}
+    #| label: bus-facets
+    bus |>
+        filter(!is.na(operator)) |>
+        tm_shape() +
+        tm_lines(col = "#bc7ab3", lwd = 1) +
+        tm_facets_wrap("operator", drop.NA.facets = TRUE)
+    ```
+
+27. We can overlay both raster and vector data in a single visualization. This is
 done using the tmap concept of _groups_. A group is a `tm_shape` call together
 with the layers that follow it (up until the next call to `tm_shape`). The
 `tm_shape` calls refer to the data sources and may be either vector or raster
 formats.
 
-27. We can include several groups in a single visualization, in which case the
+28. We can include several groups in a single visualization, in which case the
 later groups will appear on top of the earlier ones.  For example, we can place
 a single point (its location is arbitrary) over the `satellite` dataset.
 
@@ -437,7 +449,7 @@ a single point (its location is arbitrary) over the `satellite` dataset.
         tm_dots(col = "blue", size = 5)
     ```
 
-28. Here is a more advanced example where we overlay a vector dataset of volcano
+29. Here is a more advanced example where we overlay a vector dataset of volcano
 locations on top of a raster dataset of elevations on Easter Island.
 
     ```{r}
@@ -487,7 +499,7 @@ locations on top of a raster dataset of elevations on Easter Island.
         )
     ```
 
-29. We sometimes want to include map elements that help the reader understand
+30. We sometimes want to include map elements that help the reader understand
 the visualization but which don't actually encode data. For example, we might
 want to add
 
@@ -515,16 +527,16 @@ want to add
 
 ### Coordinate Reference Systems
 
-30. $^\dagger$ An important subtlety of geographic data visualization is that
+31. $^\dagger$ An important subtlety of geographic data visualization is that
 all our maps are in 2D, but earth is 3D. The process of associated points on the
 earth with 2D coordinates is called _projection_. All projections introduce some
 level of distortion, and there is no universal, ideal projection.
 
-31. $^\dagger$ Here are a few examples of famous global projections. There are
+32. $^\dagger$ Here are a few examples of famous global projections. There are
 also many projections designed to give optimal representations locally within a
 particular geographic area.
 
-32. $^\dagger$ This means that there is no universal standard for how to
+33. $^\dagger$ This means that there is no universal standard for how to
 represent coordinates on the earth, and it’s common to find different
 projections in practice. For example, the block below shows how North America
 gets projected according to two different CRSs.
@@ -545,11 +557,11 @@ gets projected according to two different CRSs.
         tm_polygons()
     ```
 
-33. $^\dagger$ Both vector and raster spatial data will be associated with
+34. $^\dagger$ Both vector and raster spatial data will be associated with
 CRS’s. In either `sf` or `raster` objects, they can be accessed using the `crs`
 function.
 
-34. $^\dagger$ A common source of bugs is to use two different projections for
+35. $^\dagger$ A common source of bugs is to use two different projections for
 the same analysis. In this class, we will always use the EPSG:4326 projection,
 which is what is used in most online maps. But in your own projects, you should
 always check that the projections are consistent across data sources. If you
@@ -558,12 +570,12 @@ same CRS.
 
 ### Interactivity and Spatial Data
 
-35. View manipulation is common in spatial visualizations, especially navigation
+36. View manipulation is common in spatial visualizations, especially navigation
 and selection. For navigation, we often have pan and zoom functionality. We can
 interactively click and drag the map to arrive at different regions, and we can
 scroll to change the zoom level.
 
-36. This can be immediately used for tmap visualizations through the `tmap_mode`
+37. This can be immediately used for tmap visualizations through the `tmap_mode`
 function. The function doesn't return anything, but it changes the environment
 so that the following `tmap` calls will be displayed as interactive maps.
 
@@ -589,7 +601,7 @@ so that the following `tmap` calls will be displayed as interactive maps.
     `tmap_mode("view")` and `tmap_mode("plot")` make the following maps interactive and
     static, respectively.
 
-37. `tmap` supports alternative basemaps, curated map information over which we
+38. `tmap` supports alternative basemaps, curated map information over which we
 can add our own spatial data. For example, here are versions of the bus map
 overlaid on basemaps that emphasize urban landmarks, terrain, and arial imagery.
 
@@ -612,7 +624,7 @@ overlaid on basemaps that emphasize urban landmarks, terrain, and arial imagery.
 
     **Selection**
 
-38. Beyond panning and zooming, spatial visualizations can often benefit from
+39. Beyond panning and zooming, spatial visualizations can often benefit from
 selection. Mosaic can support this, but we have to introduce new layers.
 
     - We make sure our coordinator loads the spatial data input. This isn't
@@ -655,7 +667,7 @@ vg = {
 }
 ```
 
-39. Let's build an example that allows us to make an interactive choropleth map.
+40. Let's build an example that allows us to make an interactive choropleth map.
 An ordinary choropleth uses color to encode data associated with spatial
 polygons. In our case, the data are unemployment rates and the polygons are
 county boundaries. We will create an interactive version where a brush filters
@@ -687,7 +699,7 @@ vg.vconcat(
 );
 ```
 
-40. $^\dagger$ Next, let's link this map with a histogram of the unemployment
+41. $^\dagger$ Next, let's link this map with a histogram of the unemployment
 rates. This doesn't actually add too much to the visualization because we can
 already see unemployment directly on the plot. However, it can still be useful
 for noticing differences within the color bins, especially the outliers.
@@ -753,7 +765,7 @@ vg.hconcat(
 
 **Rasters**
 
-41. The machinery for working with raster data in Mosaic is not as mature as that
+42. The machinery for working with raster data in Mosaic is not as mature as that
 for working with vector data. It's not possible to work with multiband rasters
 like those we would need for a full-color satellite image. However, working with
 one layer at a time is easy and can be done using the `vg.raster` command.
@@ -770,7 +782,7 @@ one layer at a time is easy and can be done using the `vg.raster` command.
     write.csv(zion_df, "data/zion_elevation.csv", row.names = FALSE)
     ```
 
-42. The visual encoding channels are all relatively straightforward. One subtlety
+43. The visual encoding channels are all relatively straightforward. One subtlety
 about raster data is that we may want to change the resolution. Increasing pixel
 size will reduce the resolution of the plot, which can be helpful if we want to
 speed up loading on slow internet connections. Alternatively, we might want to

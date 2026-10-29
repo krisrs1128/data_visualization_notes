@@ -412,8 +412,10 @@ grid. Notice that we had to give a fake spatial extent.
 ###  Advanced `tmap` topics
 
 26. The `tm_facets_wrap` or `tm_facets_grid` layers create small multiples
-according to variable names in the vector data attributes. For example, we can
-split the bus lines by operator.
+according to variable names in the vector data attributes. Wrap and grid have
+the same interpreation as ggplot2, and like ggplot2, we can adjust the scales to
+be shared or unique across facets. For example, we can split the bus lines by
+operator.
 
     ```{r}
     #| label: bus-facets
@@ -421,7 +423,7 @@ split the bus lines by operator.
         filter(!is.na(operator)) |>
         tm_shape() +
         tm_lines(col = "#bc7ab3", lwd = 1) +
-        tm_facets_wrap("operator", drop.NA.facets = TRUE)
+        tm_facets_wrap("operator")
     ```
 
 27. We can overlay both raster and vector data in a single visualization. This is
@@ -456,7 +458,7 @@ locations on top of a raster dataset of elevations on Easter Island.
     #| label: easter-island
     ei_elev <- rast("data/easter_island/ei_elev.tif")
     ei_points <- read_sf("data/easter_island/ei_points.gpkg")
-    volcanoes <- subset(ei_points, type == "volcano")
+    volcanoes <- filter(ei_points, type == "volcano")
 
     tm_shape(ei_elev) + # raster group
         tm_raster() +

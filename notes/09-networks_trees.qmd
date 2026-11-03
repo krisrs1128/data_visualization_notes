@@ -30,6 +30,10 @@ library(ggraph)
 set.seed(2026)
 ```
 
+Readings: [1 (Chapter 9)](https://search.library.wisc.edu/catalog/9910211448302121), [2 (optional)](https://www.data-imaginist.com/posts/2017-02-06-ggraph-introduction-layouts/index.html)
+
+[Code](https://github.com/krisrs1128/data_visualization_notes/blob/main/notes/09-networks_trees.qmd)
+
 ## Graph Visualization Tasks
 
 _What are typical queries for graph data?_
@@ -94,6 +98,21 @@ individuals (edge attribute).
 
 4. An edge may be either undirected or directed. In a directed edge, one vertex
 leads to the other, while in an undirected edge, there is no sense of ordering.
+
+![](figures/directed_vs_undirected.png)
+
+5. A word of warning. While network analyses are extremely popular, they are
+limits to be aware of.
+
+    - It may force a reduction of the data that limits what we will notice. For
+    example, if we're studying how genes in a cell regulate one another's
+    expression, we may originally measure detailed activity levels over time or
+    across samples. Converting these measurements to whether pairs of genes are
+    "connected" versus "not connected" is a dramatic simplification
+    [@Wang2021-rz].
+
+    - It can inadvertently drive polarization. By grouping people into network
+    "neighborhoods," we can reinforce the group think [@Chun2024-dy].
 
 ### Tasks
 
@@ -190,8 +209,8 @@ represented by a *pair* of data.frames, one for the nodes and one for the edges,
 and the `tidygraph` structure represents graphs in exactly this way.
 
 14. For example, `G` below shows the friendship connections between 70 students
-in a high school over two years, derived from a survey conducted in 1957 and
-15. The `Node Data` component gives features for each student (in this case,
+in a high school over two years, derived from a survey conducted in 1957 and 1958.
+The `Node Data` component gives features for each student (in this case,
 just the name), while `Edge Data` represents friendship links between students.
 
 ```{r}

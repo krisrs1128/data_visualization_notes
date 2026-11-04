@@ -835,3 +835,15 @@ are the `import` statements between source files.
         geom_node_label(aes(label = shortName), size = 2) +
         coord_fixed()
     ```
+
+### Objectives
+
+- Formulate a real data analysis problem in the language of networks, Including specifying what vertex and edge sets correspond to, whether vertices or edges include attributes, and the relevant graph analysis tasks.
+- Compare and contrast attributational and topological queries as well as the three main graph task abstrawctions.
+- Explain how tidygraph represents a graph structure and apply `mutate`, `filter`, and `join` operations to preprocess graph data.
+- Interpret each layer of a ggplot graph visualization code chunk.
+- Apply scales and faceting to enrich default graph visualizations.
+- Interpret both high (e.g., grouping) and low (e.g., neighborhood) level structures visible in node-link, adjacency, and enclosure visualizations.
+- Describe strengths and weaknesses of node-link, adjacency, and enclosure visualization relative to specific graph analysis tasks.
+- Recall which geom layers in ggraph correspond to which graph visualization approaches.
+- Critique and suggest improvements to draft graph visualizations using precise terminology (e.g., edge crossing, node ordering, and edge bundling).

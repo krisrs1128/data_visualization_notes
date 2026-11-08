@@ -13,11 +13,12 @@ execute:
     message: false
     warning: false
     cache: false
+    fig-align: center
     eval: true
 ---
 
-[Reading]()
-[Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week13-1.Rmd)
+[Reading (Chapter 16)](https://clauswilke.com/dataviz/visualizing-uncertainty.html)
+[Code](https://github.com/krisrs1128/data_visualization_notes/blob/main/notes/10-uncertainty.qmd)
 
 ```{r}
 #| label: setup
@@ -35,21 +36,21 @@ theme_set(theme_classic())
 set.seed(2026)
 ```
 
-## Frequency Framing
-
 1. Whenever we analyze a dataset, it's worth keeping in mind that our
 observations could have turned out differently. Different participants might
 have enrolled in the study, the sensor might be affected by measurement noise,
 the author might have chosen a different word. Consequently, all inferences we
-draw from data are accompanied by some degree of uncertainty. One of the basic
-ideas of statistics is that we can precisely measure and honestly communicate
-this uncertainty.
+draw from data are accompanied by some degree of uncertainty.
+_One of the fundamental ideas of statistics is that we can precisely measure and honestly communicate this uncertainty._
 
 2. Yet, for most of this class, we've simply displayed the data as they are.
 When most of us see a visualization like this, we don’t automatically wonder
 about the hypothetical alternatives. Therefore, if we want our visual designs to
 communicate uncertainty, we need clear ways of representing them graphically.
-This will be our subject for the last few weeks.
+
+## Frequency Framing
+
+### Discrete Data
 
 3. For events with discrete outcomes (e.g., win the lottery or not), it is
 possible to visualize the probabilities directly. For example, if there are just
@@ -101,12 +102,14 @@ ggplot(outcomes) +
     )
 ```
 
+### Continuous Data
+
 5. How can we generalize this idea to continuous outcomes? For example, in an
 upcoming election, party A might defeat party B by X%. We might believe that X
 is distributed normally with mean 1.1 and standard deviation 2.4. One approach
 is to visualize this using the density plot below.
 
-```{r, fig.width = 3, fig.height = 1.5, dpi=300, echo = FALSE}
+```{r, fig.width = 5, fig.height = 3, out.width=400, dpi=300, echo = FALSE}
 #| label: density-plot
 estimate <- tibble(mean = c(1.1), sd = c(2.4))
 ggplot(estimate) +
@@ -124,9 +127,13 @@ ggplot(estimate) +
     )
 ```
 
-6. We created this density using the `ggdist` package with the `dist_normal`
-distribution aesthetic. We split the colors between parties using the `fill`
-argument.
+6. We created this plot using the ggdist package, which extends ggplot2 with
+layers for uncertainty visualization. The key ideas are in the second layer.
+The `stat_slab` layer defines graphical marks for probability densities. One of
+its supported `aes` arguments is `xdist`, which is expected to give an
+analytical formula for a probability distribution. For example,
+`dist_normal(mean, sd)` is the formula for a Gaussian distribution.  We split
+the colors between parties using the `fill` argument.
 
 ```{r, eval = FALSE}
 #| label: density-src
@@ -190,6 +197,8 @@ ggplot(estimate) +
     )
 ```
 
+### Multiple Outcomes
+
 9. We can compactly display the uncertainties for many inferences by stacking
 dotplots or intervals. For example, in the plot below, we show chocolate quality
 across many countries. More than simply describing the average quality of
@@ -251,19 +260,21 @@ problems. For example, if we had many more countries in our chocolate bar
 ratings plot, we need a more compact way of representing uncertainty. Our next
 few notes explore alternatives for this and other situations.
 
-## Distribution Visualization
+## Uncertainty in Point Estimates
 
-12. In the last notes, we recommended frequency framing plots as a default
-approach for visualizing uncertainty. If you have ever skimmed through
-scientific publications, though, you might have been surprised by this choice —
-in technical literature, the overwhelming majority of uncertainty visualizations
-are based on error bars.
+12. In many cases, frequency framing plots are a good default for visualizing
+uncertainty, especially for nontechnical audiences. If you have ever skimmed
+through scientific publications, though, you might have noticed that the
+overwhelming majority of uncertainty visualizations are based on error bars.
+They give an _point estimate_ of a target quantity that's assumed to exist in a
+larger population, and they use bars to represent the uncertainty in that
+estimate that results from using a random sample (rather than the full
+population).
 
-13. In many of these publications, frequency framing would likely be prefereable,
-because they give a richer view of the distribution of possible outcomes.
-However, there are two scenarios where error bars are hard to beat: when we need
-to compactly represent uncertainty for many units and when we want to combine
-them with other plots.
+13. While frequency framing gives a richer view of the distribution of possible
+outcomes, there are two scenarios where error bars are hard to beat: when we
+need to compactly represent uncertainty for many units and when we want to
+combine them with other plots.
 
 14. Since error bars take up so little space, they can be included in highly
 information dense views. For example, the intervals cover 66, 90, and 95% of the

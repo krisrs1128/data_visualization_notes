@@ -338,8 +338,8 @@ with crosses that summarize uncertainty in each dimension.
     `geom_errorbar` layers.
 
 16. One difficulty with error bars is that their interpretations are not
-self-evident from their appearance — they need to be included in the title or
-caption to the figure. For example, 90 and 99% confidence intervals have
+self-evident from their appearance (they need to be included in the title or
+caption to the figure). For example, 90 and 99% confidence intervals have
 different meanings, and this needs to be explained clearly.
 
     ```{r}
@@ -357,7 +357,7 @@ different meanings, and this needs to be explained clearly.
         labs(x = "CI for Mean", y = "Significance Level")
     ```
 
-17. A variation on error bars that pack a little more information in nearly as
+17. A variation on error bars that packs a little more information in nearly as
 little space is the graded error bar. This is a type of error bar where
 different levels of thickness are matched with different interpretations. In the
 example below, we are simultaneously showing 90, 95, and 99% confidence
@@ -427,7 +427,7 @@ very compact representation.
 21. A second encoding is the complementary cumulative distribution (CCDF) plot.
 It represents the probability that the data will lie above a particular value.
 Some studies have found that nontechnical audiences often have better inferences
-when they are presented distributional uncertainty via CCDFs.
+when they are presented distributional uncertainty via CCDFs [@Kay2016].
 
     ```{r}
     #| label: ccdf-plot
@@ -442,9 +442,11 @@ when they are presented distributional uncertainty via CCDFs.
 
 22. All the examples we've worked with in these notes have used the means and
 standard deviations from hypothetical normal distributions. However, they can
-all be created using the data itself. For example, here are `point_interval` and
-`slab_eye` intervals for a dataset `random_draws` where we draw 100 samples from
-10 different gamma distributions.
+all be created using the data itself. In this case, we directly use `x` rather
+than `xdist` encoding in our `aes()`, and it will estimate the distribution from
+the sample stored by `x`. For example, here are `point_interval` and `slab_eye`
+intervals for a dataset `random_draws` where we draw 100 samples from 10
+different gamma distributions.
 
     ```{r}
     #| label: gamma-draws
@@ -463,6 +465,8 @@ all be created using the data itself. For example, here are `point_interval` and
 
     p1 + p2
     ```
+
+_Exercise:_
 
 ## Hypothetical Outcomes
 

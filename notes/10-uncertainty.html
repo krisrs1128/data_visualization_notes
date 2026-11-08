@@ -396,7 +396,7 @@ div.csl-indent {
 </div>
 </div>
 <p>This was constructed by composing both horizontal <code>geom_errorbarh</code> and vertical <code>geom_errorbar</code> layers.</p></li>
-<li><p>One difficulty with error bars is that their interpretations are not self-evident from their appearance — they need to be included in the title or caption to the figure. For example, 90 and 99% confidence intervals have different meanings, and this needs to be explained clearly.</p>
+<li><p>One difficulty with error bars is that their interpretations are not self-evident from their appearance (they need to be included in the title or caption to the figure). For example, 90 and 99% confidence intervals have different meanings, and this needs to be explained clearly.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#\ fig-cap: Error bar visualizations can change substantially when changing the confidence level, even when the actual uncertainty about the estimate is unchanged.</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>level_compare <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">mean =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>), <span class="at">sd =</span> <span class="fu">rexp</span>(<span class="dv">1</span>), <span class="at">level =</span> <span class="fu">c</span>(<span class="fl">0.66</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span></span>
@@ -417,7 +417,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>A variation on error bars that pack a little more information in nearly as little space is the graded error bar. This is a type of error bar where different levels of thickness are matched with different interpretations. In the example below, we are simultaneously showing 90, 95, and 99% confidence intervals for a mean.</p>
+<li><p>A variation on error bars that packs a little more information in nearly as little space is the graded error bar. This is a type of error bar where different levels of thickness are matched with different interpretations. In the example below, we are simultaneously showing 90, 95, and 99% confidence intervals for a mean.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate) <span class="sc">+</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_pointinterval</span>(<span class="fu">aes</span>(<span class="at">xdist =</span> <span class="fu">dist_normal</span>(mean, sd), <span class="at">y =</span> id)) <span class="sc">+</span></span>
@@ -487,7 +487,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>A second encoding is the complementary cumulative distribution (CCDF) plot. It represents the probability that the data will lie above a particular value. Some studies have found that nontechnical audiences often have better inferences when they are presented distributional uncertainty via CCDFs.</p>
+<li><p>A second encoding is the complementary cumulative distribution (CCDF) plot. It represents the probability that the data will lie above a particular value. Some studies have found that nontechnical audiences often have better inferences when they are presented distributional uncertainty via CCDFs <span class="citation" data-cites="Kay2016">(<a href="#ref-Kay2016" role="doc-biblioref"><strong>Kay2016?</strong></a>)</span>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate) <span class="sc">+</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_ccdfinterval</span>(</span>
@@ -504,7 +504,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>All the examples we’ve worked with in these notes have used the means and standard deviations from hypothetical normal distributions. However, they can all be created using the data itself. For example, here are <code>point_interval</code> and <code>slab_eye</code> intervals for a dataset <code>random_draws</code> where we draw 100 samples from 10 different gamma distributions.</p>
+<li><p>All the examples we’ve worked with in these notes have used the means and standard deviations from hypothetical normal distributions. However, they can all be created using the data itself. In this case, we directly use <code>x</code> rather than <code>xdist</code> encoding in our <code>aes()</code>. For example, here are <code>point_interval</code> and <code>slab_eye</code> intervals for a dataset <code>random_draws</code> where we draw 100 samples from 10 different gamma distributions.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>random_draws <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
@@ -662,18 +662,18 @@ div.csl-indent {
 </div></li>
 </ol>
 <div id="hop-setup" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb24" data-startfrom="628" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 627;"><span id="cb24-628"><a href="#cb24-628" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
-<span id="cb24-629"><a href="#cb24-629" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-630"><a href="#cb24-630" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
-<span id="cb24-631"><a href="#cb24-631" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
-<span id="cb24-632"><a href="#cb24-632" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
-<span id="cb24-633"><a href="#cb24-633" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
-<span id="cb24-634"><a href="#cb24-634" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
-<span id="cb24-635"><a href="#cb24-635" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
-<span id="cb24-636"><a href="#cb24-636" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
-<span id="cb24-637"><a href="#cb24-637" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
-<span id="cb24-638"><a href="#cb24-638" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
-<span id="cb24-639"><a href="#cb24-639" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb24" data-startfrom="629" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 628;"><span id="cb24-629"><a href="#cb24-629" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
+<span id="cb24-630"><a href="#cb24-630" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-631"><a href="#cb24-631" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
+<span id="cb24-632"><a href="#cb24-632" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
+<span id="cb24-633"><a href="#cb24-633" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
+<span id="cb24-634"><a href="#cb24-634" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
+<span id="cb24-635"><a href="#cb24-635" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
+<span id="cb24-636"><a href="#cb24-636" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
+<span id="cb24-637"><a href="#cb24-637" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
+<span id="cb24-638"><a href="#cb24-638" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb24-639"><a href="#cb24-639" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
+<span id="cb24-640"><a href="#cb24-640" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-setup-1">
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -690,31 +690,31 @@ div.csl-indent {
 </div>
 </div>
 <div id="hop-brush" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" data-startfrom="644" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 643;"><span id="cb25-644"><a href="#cb25-644" aria-hidden="true" tabindex="-1"></a>$range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
-<span id="cb25-645"><a href="#cb25-645" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-646"><a href="#cb25-646" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
-<span id="cb25-647"><a href="#cb25-647" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb25-648"><a href="#cb25-648" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb25-649"><a href="#cb25-649" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
-<span id="cb25-650"><a href="#cb25-650" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
-<span id="cb25-651"><a href="#cb25-651" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb25-652"><a href="#cb25-652" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> $range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
-<span id="cb25-653"><a href="#cb25-653" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
-<span id="cb25-654"><a href="#cb25-654" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb25-655"><a href="#cb25-655" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
-<span id="cb25-656"><a href="#cb25-656" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb25-657"><a href="#cb25-657" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb25-658"><a href="#cb25-658" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
-<span id="cb25-659"><a href="#cb25-659" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
-<span id="cb25-660"><a href="#cb25-660" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb25-661"><a href="#cb25-661" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb25-662"><a href="#cb25-662" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $range})<span class="op">,</span></span>
-<span id="cb25-663"><a href="#cb25-663" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
-<span id="cb25-664"><a href="#cb25-664" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb25-665"><a href="#cb25-665" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
-<span id="cb25-666"><a href="#cb25-666" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb25-667"><a href="#cb25-667" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb25-668"><a href="#cb25-668" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" data-startfrom="645" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 644;"><span id="cb25-645"><a href="#cb25-645" aria-hidden="true" tabindex="-1"></a>$range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
+<span id="cb25-646"><a href="#cb25-646" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-647"><a href="#cb25-647" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
+<span id="cb25-648"><a href="#cb25-648" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb25-649"><a href="#cb25-649" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb25-650"><a href="#cb25-650" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
+<span id="cb25-651"><a href="#cb25-651" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
+<span id="cb25-652"><a href="#cb25-652" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb25-653"><a href="#cb25-653" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> $range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
+<span id="cb25-654"><a href="#cb25-654" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
+<span id="cb25-655"><a href="#cb25-655" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb25-656"><a href="#cb25-656" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
+<span id="cb25-657"><a href="#cb25-657" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb25-658"><a href="#cb25-658" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb25-659"><a href="#cb25-659" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
+<span id="cb25-660"><a href="#cb25-660" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
+<span id="cb25-661"><a href="#cb25-661" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb25-662"><a href="#cb25-662" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb25-663"><a href="#cb25-663" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $range})<span class="op">,</span></span>
+<span id="cb25-664"><a href="#cb25-664" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
+<span id="cb25-665"><a href="#cb25-665" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb25-666"><a href="#cb25-666" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
+<span id="cb25-667"><a href="#cb25-667" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb25-668"><a href="#cb25-668" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-669"><a href="#cb25-669" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-brush-1">
 <div id="ojs-cell-2-1" data-nodetype="declaration">

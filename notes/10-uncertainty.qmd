@@ -11,7 +11,7 @@ execute:
     echo: true
     message: false
     warning: false
-    cache: true
+    cache: false
     fig-align: center
     eval: true
 ---

@@ -274,7 +274,7 @@ problems. For example, if we had many more countries in our chocolate bar
 ratings plot, we need a more compact way of representing uncertainty. Our next
 few notes explore alternatives for this and other situations.
 
-_Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., slabs) on frequency framing visualizations?_
+    _Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., slabs) on frequency framing visualizations?_
 
 ## Uncertainty in Point Estimates
 
@@ -466,14 +466,15 @@ different gamma distributions.
     p1 + p2
     ```
 
-_Exercise:_
+    _Exercise: The quote below is from [@Kay2016]. Pick two of the visual representations of uncertainty we have discussed so far. Compare their precision (how accurately uncertainty can be evaluated) vs. glanceability (how much cognitive effort is required to draw a conclusion). This is a subjective evaluation, but make sure to give specific details from the visual representation to back your claims._
+    > Designers should attend to the balance of precision and glanceability in representing uncertainty. Participants were divided over whether our visualizations were appropriately glanceable for a transit mobile app. While some said the new designs were easy and clear, more described feeling overwhelmed at least in the context of our experiment and the majority of commenters expressed doubts about being able to use these visualizations while walking to a bus stop.
 
 ## Hypothetical Outcomes
 
 23. From our previous discussions, we now have a rich set of techniques for
 representing uncertainty for either discrete or continuous random values. But
 often, we hope to support inferences for more complex objects, like curves,
-compositions, or networks. How can we visualize uncertainty in these more richly
+maps, or networks. How can we visualize uncertainty in these more richly
 structured objects?
 
 24. For example, in linear regression, it’s possible to visualize the uncertainty
@@ -494,13 +495,14 @@ entirely within the band.
         scale_x_continuous(expand = c(0, 0))
     ```
 
-25. Have you ever wondered why the band is shaped in the way that it is? The
-curvature comes from the fact that there is uncertainty in both the intercept
-and the slope for the fitted line. This is easy to understand by overlaying the
-regression lines obtained from several versions of the same dataset. Formally,
-we’ve applied the bootstrap to resample the original data, though we could have
-just as well drawn from the posterior distribution of a fitted bayesian linear
-regression.
+25. You may have seen these confidence bands for regression in your statistics
+classes. Have you ever wondered why the band is shaped in the way that it is?
+The curvature comes from the fact that there is uncertainty in both the
+intercept and the slope for the fitted line. This is easy to understand by
+overlaying the regression lines obtained from several versions of the same
+dataset. Formally, we’ve applied the bootstrap to resample the original data,
+though we could have just as well drawn from the posterior distribution of a
+fitted bayesian linear regression.
 
     ```{r}
     #| label: bootstrap-curves
@@ -550,8 +552,8 @@ focus on the area taken up by the multiple lines. In a true hypothetical outcome
 plot, we animate each outcome one at a time. This draws attention to the
 line-to-line uncertainty, rather than the area taken up by the ensemble. We can
 create a hypothetical outcome version of the plots above using the `gganimate`
-package. This extends ggplot to allow transitions across subsets of data.
-
+package. This extends ggplot to allow transitions across subsets of data (just
+like faceting, but shown in a sequence over time rather than space).
 
     ```{r}
     #| label: hop-animate
@@ -596,11 +598,15 @@ distribution in the background.
 
 29. A somewhat less standard, but more interactive, approach would be to use
 dynamic linking. Each point in the scatterplot below is one hypothetical
-outcome, positioned by a PCA of the 150 bootstrapped curves. Brushing over
-points highlights the corresponding fits in the panel on the right.
+outcome, positioned by a PCA (week 12) of the 150 bootstrapped curves. Each
+point represents one curve, and curves with similar shapes are placed next to
+one another. Brushing over points highlights the corresponding fits in the panel
+on the right. I've hidden coode for running the PCA and setting up the
+coordinator, but it's available at the link at the start of the notebook.
 
     ```{r}
     #| label: hop-pca
+    #| echo: false
     draw_similarity <- outcomes |>
         arrange(.draw, E3) |>
         mutate(ix = rep(1:39, 150)) |>
@@ -645,7 +651,7 @@ vg = {
 
 ```{ojs}
 //| label: hop-brush
-$range = vg.Selection.intersect()
+range = vg.Selection.intersect()
 
 vg.hconcat(
   vg.plot(
@@ -653,7 +659,7 @@ vg.hconcat(
       vg.from("draw_coords"),
       {x: "PC1", y: "PC2", fill: "#4c4c4c"}
     ),
-    vg.intervalXY({as: $range, brush: {fill: "none", stroke: "#4d4d4d"}}),
+    vg.intervalXY({as: range, brush: {fill: "none", stroke: "#4d4d4d"}}),
     vg.width(300),
     vg.height(300)
   ),
@@ -663,7 +669,7 @@ vg.hconcat(
       {x: "E3", y: "Magnitude", z: ".draw", stroke: "#bbb", strokeWidth: 0.6}
     ),
     vg.line(
-      vg.from("outcomes", {filterBy: $range}),
+      vg.from("outcomes", {filterBy: range}),
       {x: "E3", y: "Magnitude", z: ".draw", stroke: "black", strokeWidth: 1.5}
     ),
     vg.width(400),
@@ -680,11 +686,8 @@ data space representation, however, is much more evocative, and preliminary
 experimental evidence suggests that this leads to better inferences in practical
 applications.
 
-31. Though we have focused on hypothetical outcomes for relative simple settings,
-the idea is applicable quite generally. For example, there has been research on
-visualizing hypothetical outcomes on spatial and network data ([NetHOPS](https://arxiv.org/abs/2108.09870) and
-[_Visualizing geospatial information uncertainty_](http://www.tandfonline.com/doi/abs/10.1559/1523040054738936)).
-
-32. A final observation: hypothetical outcome plots can natural build up to
-distributional visualizations. By layering the outcomes on top of one another,
-we can see the distribution emerge over time.
+31. Though we have focused on hypothetical outcomes for relatively simple
+settings, the idea is applicable quite generally. For example, network
+hypothetical outcome plots (NetHOPs) can be applied to graph data [@Zhang2022],
+and @MacEachren2005 review how it can be used to communicate uncertainty in
+maps.

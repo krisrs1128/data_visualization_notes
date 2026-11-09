@@ -341,9 +341,9 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>Frequency framing is a reasonable default strategy for representing uncertainty. However, there are many other ways to visually encode distributions over outcomes, and they can be worth knowing for more specialized visualization problems. For example, if we had many more countries in our chocolate bar ratings plot, we need a more compact way of representing uncertainty. Our next few notes explore alternatives for this and other situations.</p></li>
+<li><p>Frequency framing is a reasonable default strategy for representing uncertainty. However, there are many other ways to visually encode distributions over outcomes, and they can be worth knowing for more specialized visualization problems. For example, if we had many more countries in our chocolate bar ratings plot, we need a more compact way of representing uncertainty. Our next few notes explore alternatives for this and other situations.</p>
+<p><em>Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., slabs) on frequency framing visualizations?</em></p></li>
 </ol>
-<p><em>Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., slabs) on frequency framing visualizations?</em></p>
 </section>
 </section>
 <section id="uncertainty-in-point-estimates" class="level2">
@@ -487,7 +487,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>A second encoding is the complementary cumulative distribution (CCDF) plot. It represents the probability that the data will lie above a particular value. Some studies have found that nontechnical audiences often have better inferences when they are presented distributional uncertainty via CCDFs <span class="citation" data-cites="Kay2016">(<a href="#ref-Kay2016" role="doc-biblioref"><strong>Kay2016?</strong></a>)</span>.</p>
+<li><p>A second encoding is the complementary cumulative distribution (CCDF) plot. It represents the probability that the data will lie above a particular value. Some studies have found that nontechnical audiences often have better inferences when they are presented distributional uncertainty via CCDFs <span class="citation" data-cites="Kay2016">(<a href="#ref-Kay2016" role="doc-biblioref">Kay et al. 2016</a>)</span>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate) <span class="sc">+</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_ccdfinterval</span>(</span>
@@ -504,7 +504,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>All the examples we’ve worked with in these notes have used the means and standard deviations from hypothetical normal distributions. However, they can all be created using the data itself. In this case, we directly use <code>x</code> rather than <code>xdist</code> encoding in our <code>aes()</code>. For example, here are <code>point_interval</code> and <code>slab_eye</code> intervals for a dataset <code>random_draws</code> where we draw 100 samples from 10 different gamma distributions.</p>
+<li><p>All the examples we’ve worked with in these notes have used the means and standard deviations from hypothetical normal distributions. However, they can all be created using the data itself. In this case, we directly use <code>x</code> rather than <code>xdist</code> encoding in our <code>aes()</code>, and it will estimate the distribution from the sample stored by <code>x</code>. For example, here are <code>point_interval</code> and <code>slab_eye</code> intervals for a dataset <code>random_draws</code> where we draw 100 samples from 10 different gamma distributions.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>random_draws <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
@@ -527,13 +527,14 @@ div.csl-indent {
 </figure>
 </div>
 </div>
-</div></li>
+</div>
+<p><em>Exercise: The quote below is from <span class="citation" data-cites="Kay2016">(<a href="#ref-Kay2016" role="doc-biblioref">Kay et al. 2016</a>)</span>. Pick two of the visual representations of uncertainty we have discussed so far. Compare their precision (how accurately uncertainty can be evaluated) vs.&nbsp;glanceability (how much cognitive effort is required to draw a conclusion). This is a subjective evaluation, but make sure to give specific details from the visual representation to back your claims.</em> &gt; Designers should attend to the balance of precision and glanceability in representing uncertainty. Participants were divided over whether our visualizations were appropriately glanceable for a transit mobile app. While some said the new designs were easy and clear, more described feeling overwhelmed at least in the context of our experiment and the majority of commenters expressed doubts about being able to use these visualizations while walking to a bus stop.</p></li>
 </ol>
 </section>
 <section id="hypothetical-outcomes" class="level2">
 <h2 class="anchored" data-anchor-id="hypothetical-outcomes">Hypothetical Outcomes</h2>
 <ol start="23" type="1">
-<li><p>From our previous discussions, we now have a rich set of techniques for representing uncertainty for either discrete or continuous random values. But often, we hope to support inferences for more complex objects, like curves, compositions, or networks. How can we visualize uncertainty in these more richly structured objects?</p></li>
+<li><p>From our previous discussions, we now have a rich set of techniques for representing uncertainty for either discrete or continuous random values. But often, we hope to support inferences for more complex objects, like curves, maps, or networks. How can we visualize uncertainty in these more richly structured objects?</p></li>
 <li><p>For example, in linear regression, it’s possible to visualize the uncertainty associated with the fit using a confidence band. The guarantee is that, across many random samples from the same population, the line will usually fall entirely within the band.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>supernova <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week13/supernova.csv"</span>)</span>
@@ -553,7 +554,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>Have you ever wondered why the band is shaped in the way that it is? The curvature comes from the fact that there is uncertainty in both the intercept and the slope for the fitted line. This is easy to understand by overlaying the regression lines obtained from several versions of the same dataset. Formally, we’ve applied the bootstrap to resample the original data, though we could have just as well drawn from the posterior distribution of a fitted bayesian linear regression.</p>
+<li><p>You may have seen these confidence bands for regression in your statistics classes. Have you ever wondered why the band is shaped in the way that it is? The curvature comes from the fact that there is uncertainty in both the intercept and the slope for the fitted line. This is easy to understand by overlaying the regression lines obtained from several versions of the same dataset. Formally, we’ve applied the bootstrap to resample the original data, though we could have just as well drawn from the posterior distribution of a fitted bayesian linear regression.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>bootstrap_curves <span class="ot">&lt;-</span> <span class="cf">function</span>(formula, data, newdata, <span class="at">times =</span> <span class="dv">150</span>) {</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bootstraps</span>(data, <span class="at">times =</span> times)<span class="sc">$</span>splits <span class="sc">|&gt;</span></span>
@@ -601,7 +602,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>When we show multiple outcomes overlaid like this, our attention tends to focus on the area taken up by the multiple lines. In a true hypothetical outcome plot, we animate each outcome one at a time. This draws attention to the line-to-line uncertainty, rather than the area taken up by the ensemble. We can create a hypothetical outcome version of the plots above using the <code>gganimate</code> package. This extends ggplot to allow transitions across subsets of data.</p>
+<li><p>When we show multiple outcomes overlaid like this, our attention tends to focus on the area taken up by the multiple lines. In a true hypothetical outcome plot, we animate each outcome one at a time. This draws attention to the line-to-line uncertainty, rather than the area taken up by the ensemble. We can create a hypothetical outcome version of the plots above using the <code>gganimate</code> package. This extends ggplot to allow transitions across subsets of data (just like faceting, but shown in a sequence over time rather than space).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(outcomes, <span class="fu">aes</span>(E3, Magnitude)) <span class="sc">+</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
@@ -635,45 +636,21 @@ div.csl-indent {
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"gam_hypo2.gif"</span>, p, <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="https://krisrs1128.github.io/stat679_code/examples/week13/gam_hypo2.gif" width="500/"></p></li>
-<li><p>A somewhat less standard, but more interactive, approach would be to use dynamic linking. Each point in the scatterplot below is one hypothetical outcome, positioned by a PCA of the 150 bootstrapped curves. Brushing over points highlights the corresponding fits in the panel on the right.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>draw_similarity <span class="ot">&lt;-</span> outcomes <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.draw, E3) <span class="sc">|&gt;</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ix =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">39</span>, <span class="dv">150</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>E3) <span class="sc">|&gt;</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> ix, <span class="at">values_from =</span> Magnitude)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>draw_coords <span class="ot">&lt;-</span> draw_similarity <span class="sc">|&gt;</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">recipe</span>(<span class="sc">~</span>., <span class="at">data =</span> draw_similarity) <span class="sc">|&gt;</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">update_role</span>(.draw, <span class="at">new_role =</span> <span class="st">"id"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_normalize</span>(<span class="fu">all_numeric</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_pca</span>(<span class="fu">all_numeric</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prep</span>() <span class="sc">|&gt;</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bake</span>(draw_similarity) <span class="sc">|&gt;</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">.draw =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(.draw, PC1, PC2)</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>outcomes_pca <span class="ot">&lt;-</span> outcomes <span class="sc">|&gt;</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(draw_coords, <span class="at">by =</span> <span class="st">".draw"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(.draw, E3)</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(outcomes_pca, <span class="st">"data/hop_outcomes.csv"</span>)</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(draw_coords, <span class="st">"data/hop_draw_coords.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div></li>
+<li><p>A somewhat less standard, but more interactive, approach would be to use dynamic linking. Each point in the scatterplot below is one hypothetical outcome, positioned by a PCA (week 12) of the 150 bootstrapped curves. Each point represents one curve, and curves with similar shapes are placed next to one another. Brushing over points highlights the corresponding fits in the panel on the right. I’ve hidden coode for running the PCA and setting up the coordinator, but it’s available at the link at the start of the notebook.</p></li>
 </ol>
 <div id="hop-setup" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb24" data-startfrom="629" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 628;"><span id="cb24-629"><a href="#cb24-629" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
-<span id="cb24-630"><a href="#cb24-630" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-631"><a href="#cb24-631" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
-<span id="cb24-632"><a href="#cb24-632" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
-<span id="cb24-633"><a href="#cb24-633" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
-<span id="cb24-634"><a href="#cb24-634" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
-<span id="cb24-635"><a href="#cb24-635" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
-<span id="cb24-636"><a href="#cb24-636" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
-<span id="cb24-637"><a href="#cb24-637" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
-<span id="cb24-638"><a href="#cb24-638" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
-<span id="cb24-639"><a href="#cb24-639" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
-<span id="cb24-640"><a href="#cb24-640" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb23" data-startfrom="638" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 637;"><span id="cb23-638"><a href="#cb23-638" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
+<span id="cb23-639"><a href="#cb23-639" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-640"><a href="#cb23-640" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
+<span id="cb23-641"><a href="#cb23-641" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
+<span id="cb23-642"><a href="#cb23-642" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
+<span id="cb23-643"><a href="#cb23-643" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
+<span id="cb23-644"><a href="#cb23-644" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
+<span id="cb23-645"><a href="#cb23-645" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
+<span id="cb23-646"><a href="#cb23-646" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
+<span id="cb23-647"><a href="#cb23-647" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb23-648"><a href="#cb23-648" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
+<span id="cb23-649"><a href="#cb23-649" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-setup-1">
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -690,31 +667,31 @@ div.csl-indent {
 </div>
 </div>
 <div id="hop-brush" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" data-startfrom="645" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 644;"><span id="cb25-645"><a href="#cb25-645" aria-hidden="true" tabindex="-1"></a>$range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
-<span id="cb25-646"><a href="#cb25-646" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-647"><a href="#cb25-647" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
-<span id="cb25-648"><a href="#cb25-648" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb25-649"><a href="#cb25-649" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb25-650"><a href="#cb25-650" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
-<span id="cb25-651"><a href="#cb25-651" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
-<span id="cb25-652"><a href="#cb25-652" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb25-653"><a href="#cb25-653" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> $range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
-<span id="cb25-654"><a href="#cb25-654" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
-<span id="cb25-655"><a href="#cb25-655" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb25-656"><a href="#cb25-656" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
-<span id="cb25-657"><a href="#cb25-657" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb25-658"><a href="#cb25-658" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb25-659"><a href="#cb25-659" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
-<span id="cb25-660"><a href="#cb25-660" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
-<span id="cb25-661"><a href="#cb25-661" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb25-662"><a href="#cb25-662" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb25-663"><a href="#cb25-663" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> $range})<span class="op">,</span></span>
-<span id="cb25-664"><a href="#cb25-664" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
-<span id="cb25-665"><a href="#cb25-665" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb25-666"><a href="#cb25-666" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
-<span id="cb25-667"><a href="#cb25-667" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb25-668"><a href="#cb25-668" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb25-669"><a href="#cb25-669" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" data-startfrom="654" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 653;"><span id="cb24-654"><a href="#cb24-654" aria-hidden="true" tabindex="-1"></a>range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
+<span id="cb24-655"><a href="#cb24-655" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-656"><a href="#cb24-656" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
+<span id="cb24-657"><a href="#cb24-657" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb24-658"><a href="#cb24-658" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb24-659"><a href="#cb24-659" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
+<span id="cb24-660"><a href="#cb24-660" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
+<span id="cb24-661"><a href="#cb24-661" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb24-662"><a href="#cb24-662" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
+<span id="cb24-663"><a href="#cb24-663" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
+<span id="cb24-664"><a href="#cb24-664" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb24-665"><a href="#cb24-665" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
+<span id="cb24-666"><a href="#cb24-666" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb24-667"><a href="#cb24-667" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb24-668"><a href="#cb24-668" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
+<span id="cb24-669"><a href="#cb24-669" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
+<span id="cb24-670"><a href="#cb24-670" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb24-671"><a href="#cb24-671" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb24-672"><a href="#cb24-672" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> range})<span class="op">,</span></span>
+<span id="cb24-673"><a href="#cb24-673" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
+<span id="cb24-674"><a href="#cb24-674" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb24-675"><a href="#cb24-675" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
+<span id="cb24-676"><a href="#cb24-676" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb24-677"><a href="#cb24-677" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-678"><a href="#cb24-678" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-brush-1">
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -732,8 +709,7 @@ div.csl-indent {
 </div>
 <ol start="30" type="1">
 <li><p>One aspect of hypothetical outcomes is that they represent uncertainty in the data space, not the parameter space. For example, in the regression above, we could have simply drawn error bars for the intercept and slope parameters of the fit. This would be a representation of uncertainty in the parameter space. The data space representation, however, is much more evocative, and preliminary experimental evidence suggests that this leads to better inferences in practical applications.</p></li>
-<li><p>Though we have focused on hypothetical outcomes for relative simple settings, the idea is applicable quite generally. For example, there has been research on visualizing hypothetical outcomes on spatial and network data (<a href="https://arxiv.org/abs/2108.09870">NetHOPS</a> and <a href="http://www.tandfonline.com/doi/abs/10.1559/1523040054738936"><em>Visualizing geospatial information uncertainty</em></a>).</p></li>
-<li><p>A final observation: hypothetical outcome plots can natural build up to distributional visualizations. By layering the outcomes on top of one another, we can see the distribution emerge over time.</p></li>
+<li><p>Though we have focused on hypothetical outcomes for relatively simple settings, the idea is applicable quite generally. For example, network hypothetical outcome plots (NetHOPs) can be applied to graph data <span class="citation" data-cites="Zhang2022">(<a href="#ref-Zhang2022" role="doc-biblioref">Zhang et al. 2022</a>)</span>, and <span class="citation" data-cites="MacEachren2005">MacEachren et al. (<a href="#ref-MacEachren2005" role="doc-biblioref">2005</a>)</span> review how it can be used to communicate uncertainty in maps.</p></li>
 </ol>
 
 </section>
@@ -748,10 +724,19 @@ Hoffrage, Ulrich, Samuel Lindsey, Ralph Hertwig, and Gerd Gigerenzer. 2000. <spa
 <div id="ref-kahneman1973psychology" class="csl-entry" role="listitem">
 Kahneman, Daniel, and Amos Tversky. 1973. <span>“On the Psychology of Prediction.”</span> <em>Psychological Review</em> 80 (4): 237.
 </div>
+<div id="ref-Kay2016" class="csl-entry" role="listitem">
+Kay, Matthew, Tara Kola, Jessica R. Hullman, and Sean A. Munson. 2016. <span>“When (Ish) Is My Bus?: User-Centered Visualizations of Uncertainty in Everyday, Mobile Predictive Systems.”</span> <em>Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems</em>, CHI′16, May, 5092–103. <a href="https://doi.org/10.1145/2858036.2858558">https://doi.org/10.1145/2858036.2858558</a>.
+</div>
+<div id="ref-MacEachren2005" class="csl-entry" role="listitem">
+MacEachren, Alan M., Anthony Robinson, Susan Hopper, et al. 2005. <span>“Visualizing Geospatial Information Uncertainty: What We Know and What We Need to Know.”</span> <em>Cartography and Geographic Information Science</em> 32 (3): 139–60. <a href="https://doi.org/10.1559/1523040054738936">https://doi.org/10.1559/1523040054738936</a>.
+</div>
+<div id="ref-Zhang2022" class="csl-entry" role="listitem">
+Zhang, Dongping, Eytan Adar, and Jessica Hullman. 2022. <span>“Visualizing Uncertainty in Probabilistic Graphs with Network Hypothetical Outcome Plots (<span>NetHOPs</span>).”</span> <em>IEEE Transactions on Visualization and Computer Graphics</em> 28 (1): 443–53. <a href="https://doi.org/10.1109/TVCG.2021.3114679">https://doi.org/10.1109/TVCG.2021.3114679</a>.
+</div>
 </div></section></div></main>
 <!-- /main column -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSAocCkgPT4gbmV3IFVSTChgZGF0YS8ke3B9YCwgZG9jdW1lbnQuYmFzZVVSSSkuaHJlZlxuXG52ZyA9IHtcbiAgY29uc3QgdmcgPSBhd2FpdCBpbXBvcnQoXCJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvbnBtL0B1d2RhdGEvdmdwbG90QDAuMTkuMC8rZXNtXCIpO1xuICBjb25zdCB3YXNtID0gYXdhaXQgdmcud2FzbUNvbm5lY3RvcigpO1xuICB2Zy5jb29yZGluYXRvcigpLmRhdGFiYXNlQ29ubmVjdG9yKHdhc20pO1xuICBhd2FpdCB2Zy5jb29yZGluYXRvcigpLmV4ZWMoW1xuICAgIHZnLmxvYWRDU1YoXCJvdXRjb21lc1wiLCBwYXRoKFwiaG9wX291dGNvbWVzLmNzdlwiKSksXG4gICAgdmcubG9hZENTVihcImRyYXdfY29vcmRzXCIsIHBhdGgoXCJob3BfZHJhd19jb29yZHMuY3N2XCIpKVxuICBdKTtcbiAgcmV0dXJuIHZnO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiJHJhbmdlID0gdmcuU2VsZWN0aW9uLmludGVyc2VjdCgpXG5cbnZnLmhjb25jYXQoXG4gIHZnLnBsb3QoXG4gICAgdmcuZG90KFxuICAgICAgdmcuZnJvbShcImRyYXdfY29vcmRzXCIpLFxuICAgICAge3g6IFwiUEMxXCIsIHk6IFwiUEMyXCIsIGZpbGw6IFwiIzRjNGM0Y1wifVxuICAgICksXG4gICAgdmcuaW50ZXJ2YWxYWSh7YXM6ICRyYW5nZSwgYnJ1c2g6IHtmaWxsOiBcIm5vbmVcIiwgc3Ryb2tlOiBcIiM0ZDRkNGRcIn19KSxcbiAgICB2Zy53aWR0aCgzMDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4gICksXG4gIHZnLnBsb3QoXG4gICAgdmcubGluZShcbiAgICAgIHZnLmZyb20oXCJvdXRjb21lc1wiKSxcbiAgICAgIHt4OiBcIkUzXCIsIHk6IFwiTWFnbml0dWRlXCIsIHo6IFwiLmRyYXdcIiwgc3Ryb2tlOiBcIiNiYmJcIiwgc3Ryb2tlV2lkdGg6IDAuNn1cbiAgICApLFxuICAgIHZnLmxpbmUoXG4gICAgICB2Zy5mcm9tKFwib3V0Y29tZXNcIiwge2ZpbHRlckJ5OiAkcmFuZ2V9KSxcbiAgICAgIHt4OiBcIkUzXCIsIHk6IFwiTWFnbml0dWRlXCIsIHo6IFwiLmRyYXdcIiwgc3Ryb2tlOiBcImJsYWNrXCIsIHN0cm9rZVdpZHRoOiAxLjV9XG4gICAgKSxcbiAgICB2Zy53aWR0aCg0MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4gIClcbilcbiJ9XX0=
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InBhdGggPSAocCkgPT4gbmV3IFVSTChgZGF0YS8ke3B9YCwgZG9jdW1lbnQuYmFzZVVSSSkuaHJlZlxuXG52ZyA9IHtcbiAgY29uc3QgdmcgPSBhd2FpdCBpbXBvcnQoXCJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvbnBtL0B1d2RhdGEvdmdwbG90QDAuMTkuMC8rZXNtXCIpO1xuICBjb25zdCB3YXNtID0gYXdhaXQgdmcud2FzbUNvbm5lY3RvcigpO1xuICB2Zy5jb29yZGluYXRvcigpLmRhdGFiYXNlQ29ubmVjdG9yKHdhc20pO1xuICBhd2FpdCB2Zy5jb29yZGluYXRvcigpLmV4ZWMoW1xuICAgIHZnLmxvYWRDU1YoXCJvdXRjb21lc1wiLCBwYXRoKFwiaG9wX291dGNvbWVzLmNzdlwiKSksXG4gICAgdmcubG9hZENTVihcImRyYXdfY29vcmRzXCIsIHBhdGgoXCJob3BfZHJhd19jb29yZHMuY3N2XCIpKVxuICBdKTtcbiAgcmV0dXJuIHZnO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoicmFuZ2UgPSB2Zy5TZWxlY3Rpb24uaW50ZXJzZWN0KClcblxudmcuaGNvbmNhdChcbiAgdmcucGxvdChcbiAgICB2Zy5kb3QoXG4gICAgICB2Zy5mcm9tKFwiZHJhd19jb29yZHNcIiksXG4gICAgICB7eDogXCJQQzFcIiwgeTogXCJQQzJcIiwgZmlsbDogXCIjNGM0YzRjXCJ9XG4gICAgKSxcbiAgICB2Zy5pbnRlcnZhbFhZKHthczogcmFuZ2UsIGJydXNoOiB7ZmlsbDogXCJub25lXCIsIHN0cm9rZTogXCIjNGQ0ZDRkXCJ9fSksXG4gICAgdmcud2lkdGgoMzAwKSxcbiAgICB2Zy5oZWlnaHQoMzAwKVxuICApLFxuICB2Zy5wbG90KFxuICAgIHZnLmxpbmUoXG4gICAgICB2Zy5mcm9tKFwib3V0Y29tZXNcIiksXG4gICAgICB7eDogXCJFM1wiLCB5OiBcIk1hZ25pdHVkZVwiLCB6OiBcIi5kcmF3XCIsIHN0cm9rZTogXCIjYmJiXCIsIHN0cm9rZVdpZHRoOiAwLjZ9XG4gICAgKSxcbiAgICB2Zy5saW5lKFxuICAgICAgdmcuZnJvbShcIm91dGNvbWVzXCIsIHtmaWx0ZXJCeTogcmFuZ2V9KSxcbiAgICAgIHt4OiBcIkUzXCIsIHk6IFwiTWFnbml0dWRlXCIsIHo6IFwiLmRyYXdcIiwgc3Ryb2tlOiBcImJsYWNrXCIsIHN0cm9rZVdpZHRoOiAxLjV9XG4gICAgKSxcbiAgICB2Zy53aWR0aCg0MDApLFxuICAgIHZnLmhlaWdodCgzMDApXG4gIClcbilcbiJ9XX0=
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }

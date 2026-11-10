@@ -139,7 +139,7 @@ div.csl-indent {
 <p><a href="https://clauswilke.com/dataviz/visualizing-uncertainty.html">Reading (Chapter 16)</a> <a href="https://github.com/krisrs1128/data_visualization_notes/blob/main/notes/10-uncertainty.qmd">Code</a></p>
 <ol type="1">
 <li><p>Whenever we analyze a dataset, it’s worth keeping in mind that our observations could have turned out differently. Different participants might have enrolled in the study, the sensor might be affected by measurement noise, the author might have chosen a different word. Consequently, all inferences we draw from data are accompanied by some degree of uncertainty. <em>One of the fundamental ideas of statistics is that we can precisely measure and honestly communicate this uncertainty.</em></p></li>
-<li><p>Yet, for most of this class, we’ve simply displayed the data as they are. When most of us see a visualization like this, we don’t automatically wonder about the hypothetical alternatives. Therefore, if we want our visual designs to communicate uncertainty, we need clear ways of representing them graphically.</p>
+<li><p>Yet, for most of this class, we’ve simply displayed the data as they are. When most of us see a visualization, we don’t automatically wonder about the hypothetical alternatives. Therefore, if we want our visual designs to communicate uncertainty, we need clear ways of representing them graphically.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdist)</span>
@@ -158,7 +158,7 @@ div.csl-indent {
 <section id="discrete-data" class="level3">
 <h3 class="anchored" data-anchor-id="discrete-data">Discrete Data</h3>
 <ol start="3" type="1">
-<li><p>For events with discrete outcomes (e.g., win the lottery or not), it is possible to visualize the probabilities directly. For example, if there are just two outcomes, we can plot the probability on along a line; if there are multiple outcomes, a stacked bar chart can achieve the same effect.</p>
+<li><p>For events with discrete outcomes (e.g., win the lottery or not), it is possible to visualize the probabilities directly. For example, if there are just two outcomes, we can plot the probability along a line; if there are multiple outcomes, a stacked bar chart can achieve the same effect.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sample_grid <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">p =</span> <span class="fl">0.5</span>) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">expand.grid</span>(<span class="fu">seq_len</span>(<span class="dv">25</span>), <span class="fu">seq_len</span>(<span class="dv">25</span>)) <span class="sc">|&gt;</span></span>
@@ -210,11 +210,20 @@ div.csl-indent {
 </div>
 </div></li>
 </ol>
+<p><em>Exercise: <span class="citation" data-cites="Gigerenzer1995">(<a href="#ref-Gigerenzer1995" role="doc-biblioref">Gigerenzer and Hoffrage 1995</a>)</span> presented the two equivalent forms of the screening problem below. The second uses frequency framing. Try working each out and comparing the difficulties yourself.</em></p>
+<p><em>Version 1:</em></p>
+<blockquote class="blockquote">
+<p>The probability of breast cancer is 1 % for a woman at age forty who participates in routine screening. If a woman has breast cancer, the probability is 80% that she will get a positive mammography. If a woman does not have breast cancer, the probability is 9.6% that she will also get a positive mammography. A woman in this age group had a positive mammography in a routine screening. What is the probability that she actually has breast cancer? __%</p>
+</blockquote>
+<p><em>Version 2:</em></p>
+<blockquote class="blockquote">
+<p>10 out of every 1,000 women at age forty who participate in routine screening have breast cancer. 8 of every 10 women with breast cancer will get a positive mammography. 95 out of every 990 women without breast cancer will also get a positive mammography. Here is a new representative sample of women at age forty who got a positive mammography in routine screening. How many of these women do you expect to actually have breast cancer? __ out of __.</p>
+</blockquote>
 </section>
 <section id="continuous-data" class="level3">
 <h3 class="anchored" data-anchor-id="continuous-data">Continuous Data</h3>
 <ol start="5" type="1">
-<li><p>How can we generalize this idea to continuous outcomes? For example, in an upcoming election, party A might defeat party B by X%. We might believe that X is distributed normally with mean 1.1 and standard deviation 2.4. One approach is to visualize this using the density plot below.</p>
+<li><p>How can we generalize this idea to continuous outcomes? For example, in an upcoming election, party A might defeat party B by X%. We might believe that X is distributed normally with mean 1.1 and standard deviation 2.4. One approach is to visualize this with a density plot.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -225,7 +234,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>We created this plot using the ggdist package, which extends ggplot2 with layers for uncertainty visualization. The key ideas are in the second layer. The <code>stat_slab</code> layer defines graphical marks for probability densities. One of its supported <code>aes</code> arguments is <code>xdist</code>, which is expected to give an analytical formula for a probability distribution. For example, <code>dist_normal(mean, sd)</code> is the formula for a Gaussian distribution. We split the colors between parties using the <code>fill</code> argument.</p>
+<li><p>We created this plot using the <a href="https://mjskay.github.io/ggdist/">ggdist package</a>, which extends ggplot2 with layers for uncertainty visualization. The key ideas are in the second layer. The <code>stat_slab</code> layer defines graphical marks for probability densities. One of its supported <code>aes</code> arguments is <code>xdist</code>, which is expected to give an analytical formula for a probability distribution. For example, <code>dist_normal(mean, sd)</code> is the formula for a Gaussian distribution. We split the colors between wining parties with <code>fill</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>estimate <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">mean =</span> <span class="fu">c</span>(<span class="fl">1.1</span>), <span class="at">sd =</span> <span class="fu">c</span>(<span class="fl">2.4</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate) <span class="sc">+</span></span>
@@ -242,7 +251,7 @@ div.csl-indent {
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>()</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p>This visualization suffers from the same limitations as directly representing probabilities in the discrete outcome case. The frequency framing version creates a dotplot for hypothetical outcomes at locations proportional to their probability. It seems like a simple change, but it is often better perceived, since judging counts is often easier than comparing areas.</p>
+<li><p>This visualization suffers from the same limitations as directly representing probabilities in the discrete outcome case. The frequency framing version creates a dotplot for hypothetical outcomes at locations proportional to their probability. It seems like a simple change, but it is often better perceived, since judging counts is easier than comparing areas.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -253,7 +262,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>We created this dotplot using the <code>stat_dots</code> layer from <code>ggdist</code>. Like in ordinary ggplot2, ggdist allows us to compose layers. For example, we can create a combined density and dot plot (this is called a rain cloud plot). The <code>side</code> argument puts the density (the cloud) above the interval and the dots (the rain) below it, and setting <code>scale = 0.5</code> keeps the two from overlapping.</p>
+<li><p>We created this dotplot using the <code>stat_dots</code> layer from ggdist. Like in ordinary ggplot2, ggdist allows us to compose layers. For example, we can create a combined density and dot plot (this is called a rain cloud plot). The <code>side</code> argument puts the density (the cloud) above the interval and the dots (the rain) below it, and setting <code>scale = 0.5</code> keeps the two from overlapping.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate, <span class="fu">aes</span>(<span class="at">xdist =</span> <span class="fu">dist_normal</span>(mean, sd), <span class="at">y =</span> <span class="dv">0</span>, <span class="at">fill =</span> <span class="fu">after_stat</span>(x <span class="sc">&gt;</span> <span class="dv">0</span>))) <span class="sc">+</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_slab</span>(<span class="at">scale =</span> <span class="fl">0.5</span>, <span class="at">side =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
@@ -278,7 +287,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p><em>Exercise: What are the strengths/weaknesses of using more dots in a frequency framing visualization?</em></p></li>
+<p><em>Exercise: What are the strengths/weaknesses of using more vs.&nbsp;fewer dots in a frequency framing visualization?</em></p></li>
 </ol>
 </section>
 <section id="multiple-inferences" class="level3">
@@ -304,14 +313,14 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>Instead of dots, we can apply the ridgeline plots we saw in the small multiples notes. This no longer supports frequency framing, but it’s much easier to view partially overlapping density plots than dot plots.</p>
+<li><p>Instead of dots, we can apply the ridgeline plots we saw in the small multiples notes. This no longer supports frequency framing, but the densities can be partially overlapped, which is impossible in dot plots.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">stat_slab</span>(<span class="at">height =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"#6894A6"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="10-uncertainty_files/figure-html/ridgeline-1.png" class="img-fluid figure-img" width="400"></p>
-<figcaption>Uncertainty in chocolate qualitiy using ridgelines.</figcaption>
+<figcaption>Uncertainty in chocolate quality using ridgelines.</figcaption>
 </figure>
 </div>
 </div>
@@ -341,15 +350,15 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>Frequency framing is a reasonable default strategy for representing uncertainty. However, there are many other ways to visually encode distributions over outcomes, and they can be worth knowing for more specialized visualization problems. For example, if we had many more countries in our chocolate bar ratings plot, we need a more compact way of representing uncertainty. Our next few notes explore alternatives for this and other situations.</p>
-<p><em>Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., slabs) on frequency framing visualizations?</em></p></li>
+<li><p>Frequency framing is a reasonable default strategy for representing uncertainty. However, there are many other ways to visually encode distributions over outcomes, and they are worth knowing for more specialized problems. For example, if we had many more countries in our chocolate bar ratings plot, we need a more compact way of representing uncertainty. We will explore this below.</p>
+<p><em>Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., summary intervals) on frequency framing visualizations?</em></p></li>
 </ol>
 </section>
 </section>
 <section id="uncertainty-in-point-estimates" class="level2">
 <h2 class="anchored" data-anchor-id="uncertainty-in-point-estimates">Uncertainty in Point Estimates</h2>
 <ol start="12" type="1">
-<li><p>In many cases, frequency framing plots are a good default for visualizing uncertainty, especially for nontechnical audiences. If you have ever skimmed through scientific publications, though, you might have noticed that the overwhelming majority of uncertainty visualizations are based on error bars. They give an <em>point estimate</em> of a target quantity that’s assumed to exist in a larger population, and they use bars to represent the uncertainty in that estimate that results from using a random sample (rather than the full population).</p></li>
+<li><p>In many cases, frequency framing plots are a good default for visualizing uncertainty, especially for nontechnical audiences. If you have ever skimmed through scientific publications, though, you might have noticed that the overwhelming majority of uncertainty visualizations are based on error bars. They give a <em>point estimate</em> of a target quantity that’s assumed to exist in a larger population, and they use bars to represent the uncertainty in that estimate that results from using a random sample (rather than the full population).</p></li>
 <li><p>While frequency framing gives a richer view of the distribution of possible outcomes, there are two scenarios where error bars are hard to beat,</p>
 <ul>
 <li>When we need to compactly represent uncertainty for many units.</li>
@@ -357,16 +366,16 @@ div.csl-indent {
 </ul></li>
 <li><p>Since error bars take up so little space, they can be included in highly information dense views. For example, the intervals cover 66, 90, and 95% of the central area for each of 10 normal distributions.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#\ fig-cap: Error bars can compactly visualize uncertainty in many point estimates.</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>estimate <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">seq_len</span>(n), <span class="at">mean =</span> <span class="fu">rnorm</span>(n), <span class="at">sd =</span> <span class="fu">rgamma</span>(n, <span class="dv">4</span>, <span class="dv">12</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(mean, id, <span class="at">xmin =</span> mean <span class="sc">-</span> <span class="fl">1.9</span> <span class="sc">*</span> sd, <span class="at">xmax =</span> mean <span class="sc">+</span> <span class="fl">1.9</span> <span class="sc">*</span> sd)) <span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"95% Confidence Intervals (Randomly Generated)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>estimate <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">id =</span> <span class="fu">seq_len</span>(n), <span class="at">mean =</span> <span class="fu">rnorm</span>(n), <span class="at">sd =</span> <span class="fu">rgamma</span>(n, <span class="dv">4</span>, <span class="dv">12</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(mean, id, <span class="at">xmin =</span> mean <span class="sc">-</span> <span class="fl">1.9</span> <span class="sc">*</span> sd, <span class="at">xmax =</span> mean <span class="sc">+</span> <span class="fl">1.9</span> <span class="sc">*</span> sd)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"95% Confidence Intervals (Randomly Generated)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="10-uncertainty_files/figure-html/errorbar-ci-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Error bars can compactly visualize uncertainty in many point estimates.</figcaption>
 </figure>
 </div>
 </div>
@@ -374,50 +383,50 @@ div.csl-indent {
 <p>We created this using the <code>geom_errorbarh</code> layer, which draws horizontal error bars when given the center (<code>x</code>) and endpoints (<code>xmin</code> and <code>xmax</code>) of the error bars.</p></li>
 <li><p>Since they are so compact, it is relatively easy to incorporate error bars into other visualizations. For example, we can replace points in a scatterplot with crosses that summarize uncertainty in each dimension.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#\ fig-cap: Integrating error bars into a scatterplot visualization.</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>points <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">rnorm</span>(n),</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_x =</span> <span class="fu">rgamma</span>(n, <span class="dv">3</span>, <span class="dv">24</span>),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_y =</span> <span class="fu">rgamma</span>(n, <span class="dv">3</span>, <span class="dv">24</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(points, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> y <span class="sc">-</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_y, <span class="at">ymax =</span> y <span class="sc">+</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_y)) <span class="sc">+</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> x <span class="sc">-</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_x, <span class="at">xmax =</span> x <span class="sc">+</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_x)) <span class="sc">+</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"95% Error Bars"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>points <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">rnorm</span>(n),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_x =</span> <span class="fu">rgamma</span>(n, <span class="dv">3</span>, <span class="dv">24</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_y =</span> <span class="fu">rgamma</span>(n, <span class="dv">3</span>, <span class="dv">24</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(points, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> y <span class="sc">-</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_y, <span class="at">ymax =</span> y <span class="sc">+</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_y)) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> x <span class="sc">-</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_x, <span class="at">xmax =</span> x <span class="sc">+</span> <span class="fl">1.9</span> <span class="sc">*</span> sd_x)) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"95% Error Bars"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="10-uncertainty_files/figure-html/errorbar-cross-1.png" class="img-fluid figure-img" width="480"></p>
+<figcaption>Integrating error bars into a scatterplot visualization.</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>This was constructed by composing both horizontal <code>geom_errorbarh</code> and vertical <code>geom_errorbar</code> layers.</p></li>
+<p>This was constructed by composing both horizontal <code>geom_errorbarh</code> and vertical <code>geom_errorbar</code> layers, both of which are built into ggplot2 (no need for ggdist).</p></li>
 <li><p>One difficulty with error bars is that their interpretations are not self-evident from their appearance (they need to be included in the title or caption to the figure). For example, 90 and 99% confidence intervals have different meanings, and this needs to be explained clearly.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#\ fig-cap: Error bar visualizations can change substantially when changing the confidence level, even when the actual uncertainty about the estimate is unchanged.</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>level_compare <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">mean =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>), <span class="at">sd =</span> <span class="fu">rexp</span>(<span class="dv">1</span>), <span class="at">level =</span> <span class="fu">c</span>(<span class="fl">0.66</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">scaling =</span> <span class="fu">qnorm</span>(level <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> level)),</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower =</span> mean <span class="sc">-</span> scaling <span class="sc">*</span> sd,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper =</span> mean <span class="sc">+</span> scaling <span class="sc">*</span> sd</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(level_compare) <span class="sc">+</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(mean, <span class="fu">as.factor</span>(level), <span class="at">xmin =</span> lower, <span class="at">xmax =</span> upper)) <span class="sc">+</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"CI for Mean"</span>, <span class="at">y =</span> <span class="st">"Significance Level"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>level_compare <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">mean =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>), <span class="at">sd =</span> <span class="fu">rexp</span>(<span class="dv">1</span>), <span class="at">level =</span> <span class="fu">c</span>(<span class="fl">0.66</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">scaling =</span> <span class="fu">qnorm</span>(level <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> level)),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower =</span> mean <span class="sc">-</span> scaling <span class="sc">*</span> sd,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper =</span> mean <span class="sc">+</span> scaling <span class="sc">*</span> sd</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(level_compare) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(mean, <span class="fu">as.factor</span>(level), <span class="at">xmin =</span> lower, <span class="at">xmax =</span> upper)) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"CI for Mean"</span>, <span class="at">y =</span> <span class="st">"Significance Level"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="10-uncertainty_files/figure-html/ci-levels-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Error bar visualizations can change substantially when changing the confidence level, even when the actual uncertainty about the estimate is unchanged.</figcaption>
 </figure>
 </div>
 </div>
 </div></li>
-<li><p>A variation on error bars that packs a little more information in nearly as little space is the graded error bar. This is a type of error bar where different levels of thickness are matched with different interpretations. In the example below, we are simultaneously showing 90, 95, and 99% confidence intervals for a mean.</p>
+<li><p>A variation on error bars that packs a little more information in nearly as little space is the graded error bar. This is a type of error bar where different levels of thickness are matched with different interpretations. In the example below, we are simultaneously showing 66 and 95% confidence intervals for a mean.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(estimate) <span class="sc">+</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_pointinterval</span>(<span class="fu">aes</span>(<span class="at">xdist =</span> <span class="fu">dist_normal</span>(mean, sd), <span class="at">y =</span> id)) <span class="sc">+</span></span>
@@ -444,7 +453,7 @@ div.csl-indent {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="10-uncertainty_files/figure-html/halfeye-dotinterval-1.png" class="img-fluid figure-img" width="1344"></p>
+<p><img src="10-uncertainty_files/figure-html/halfeye-dotinterval-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -457,7 +466,7 @@ div.csl-indent {
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="10-uncertainty_files/figure-html/halfeye-fill-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="10-uncertainty_files/figure-html/halfeye-fill-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -528,7 +537,10 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p><em>Exercise: The quote below is from <span class="citation" data-cites="Kay2016">(<a href="#ref-Kay2016" role="doc-biblioref">Kay et al. 2016</a>)</span>. Pick two of the visual representations of uncertainty we have discussed so far. Compare their precision (how accurately uncertainty can be evaluated) vs.&nbsp;glanceability (how much cognitive effort is required to draw a conclusion). This is a subjective evaluation, but make sure to give specific details from the visual representation to back your claims.</em> &gt; Designers should attend to the balance of precision and glanceability in representing uncertainty. Participants were divided over whether our visualizations were appropriately glanceable for a transit mobile app. While some said the new designs were easy and clear, more described feeling overwhelmed at least in the context of our experiment and the majority of commenters expressed doubts about being able to use these visualizations while walking to a bus stop.</p></li>
+<p><em>Exercise: The quote below is from <span class="citation" data-cites="Kay2016">(<a href="#ref-Kay2016" role="doc-biblioref">Kay et al. 2016</a>)</span>. Pick two of the visual representations of uncertainty we have discussed so far. Compare their precision (how accurately uncertainty can be evaluated) vs.&nbsp;glanceability (how much cognitive effort is required to draw a conclusion). This is a subjective evaluation, but make sure to give specific details from the visual representation to back your claims.</em></p>
+<blockquote class="blockquote">
+<p>Designers should attend to the balance of precision and glanceability in representing uncertainty. Participants were divided over whether our visualizations were appropriately glanceable for a transit mobile app. While some said the new designs were easy and clear, more described feeling overwhelmed at least in the context of our experiment and the majority of commenters expressed doubts about being able to use these visualizations while walking to a bus stop.</p>
+</blockquote></li>
 </ol>
 </section>
 <section id="hypothetical-outcomes" class="level2">
@@ -581,7 +593,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>We can generalize this idea to nonlinear fits. For example, below, we are using multiple draws to represent the uncertainty of a smoothing spline regression between supernova Magnitude and another oen of the predictor variables. One nice aspect of showing multiple realizations is that it shows uncertainty in the “turns” of individual curves, which is not reflected in the confidence bands alone.</p>
+<li><p>We can generalize this idea to nonlinear fits. For example, below, we are using multiple draws to represent the uncertainty of a smoothing spline regression between supernova Magnitude and another one of the predictor variables. One nice aspect of showing multiple realizations is that it shows uncertainty in the “turns” of individual curves, which is not reflected in the confidence bands alone.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>outcomes <span class="ot">&lt;-</span> <span class="fu">bootstrap_curves</span>(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    Magnitude <span class="sc">~</span> <span class="fu">s</span>(E3, <span class="at">sp =</span> <span class="fu">c</span>(.<span class="dv">2</span>)), supernova, supernova <span class="sc">|&gt;</span> <span class="fu">select</span>(E3)</span>
@@ -602,7 +614,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>When we show multiple outcomes overlaid like this, our attention tends to focus on the area taken up by the multiple lines. In a true hypothetical outcome plot, we animate each outcome one at a time. This draws attention to the line-to-line uncertainty, rather than the area taken up by the ensemble. We can create a hypothetical outcome version of the plots above using the <code>gganimate</code> package. This extends ggplot to allow transitions across subsets of data (just like faceting, but shown in a sequence over time rather than space).</p>
+<li><p>When we show multiple outcomes overlaid like this, our attention tends to focus on the area taken up by the multiple lines. Alternatively, in a hypothetical outcome plot, we animate each outcome one at a time. This draws attention to the line-to-line uncertainty, rather than the area taken up by the ensemble. We can create a hypothetical outcome version of the plots above using the <code>gganimate</code> package. This extends ggplot to allow transitions across subsets of data (just like faceting, but shown in a sequence over time rather than space).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(outcomes, <span class="fu">aes</span>(E3, Magnitude)) <span class="sc">+</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
@@ -636,21 +648,21 @@ div.csl-indent {
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"gam_hypo2.gif"</span>, p, <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="https://krisrs1128.github.io/stat679_code/examples/week13/gam_hypo2.gif" width="500/"></p></li>
-<li><p>A somewhat less standard, but more interactive, approach would be to use dynamic linking. Each point in the scatterplot below is one hypothetical outcome, positioned by a PCA (week 12) of the 150 bootstrapped curves. Each point represents one curve, and curves with similar shapes are placed next to one another. Brushing over points highlights the corresponding fits in the panel on the right. I’ve hidden coode for running the PCA and setting up the coordinator, but it’s available at the link at the start of the notebook.</p></li>
+<li><p>A somewhat less standard, but more interactive, approach would be to use linked brushing. Each point in the scatterplot below is one hypothetical outcome, positioned by a PCA (week 12) of the 150 bootstrapped curves. Each point represents one curve, and curves with similar shapes are placed next to one another. Brushing over points highlights the corresponding fits in the panel on the right. I’ve hidden code for running the PCA and setting up the coordinator, but it’s available at the link at the start of the notebook.</p></li>
 </ol>
 <div id="hop-setup" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb23" data-startfrom="638" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 637;"><span id="cb23-638"><a href="#cb23-638" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
-<span id="cb23-639"><a href="#cb23-639" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-640"><a href="#cb23-640" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
-<span id="cb23-641"><a href="#cb23-641" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
-<span id="cb23-642"><a href="#cb23-642" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
-<span id="cb23-643"><a href="#cb23-643" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
-<span id="cb23-644"><a href="#cb23-644" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
-<span id="cb23-645"><a href="#cb23-645" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
-<span id="cb23-646"><a href="#cb23-646" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
-<span id="cb23-647"><a href="#cb23-647" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
-<span id="cb23-648"><a href="#cb23-648" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
-<span id="cb23-649"><a href="#cb23-649" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb23" data-startfrom="651" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 650;"><span id="cb23-651"><a href="#cb23-651" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
+<span id="cb23-652"><a href="#cb23-652" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-653"><a href="#cb23-653" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
+<span id="cb23-654"><a href="#cb23-654" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
+<span id="cb23-655"><a href="#cb23-655" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
+<span id="cb23-656"><a href="#cb23-656" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
+<span id="cb23-657"><a href="#cb23-657" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
+<span id="cb23-658"><a href="#cb23-658" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
+<span id="cb23-659"><a href="#cb23-659" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
+<span id="cb23-660"><a href="#cb23-660" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb23-661"><a href="#cb23-661" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
+<span id="cb23-662"><a href="#cb23-662" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-setup-1">
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -667,31 +679,31 @@ div.csl-indent {
 </div>
 </div>
 <div id="hop-brush" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" data-startfrom="654" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 653;"><span id="cb24-654"><a href="#cb24-654" aria-hidden="true" tabindex="-1"></a>range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
-<span id="cb24-655"><a href="#cb24-655" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-656"><a href="#cb24-656" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
-<span id="cb24-657"><a href="#cb24-657" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb24-658"><a href="#cb24-658" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb24-659"><a href="#cb24-659" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
-<span id="cb24-660"><a href="#cb24-660" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
-<span id="cb24-661"><a href="#cb24-661" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb24-662"><a href="#cb24-662" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
-<span id="cb24-663"><a href="#cb24-663" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
-<span id="cb24-664"><a href="#cb24-664" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb24-665"><a href="#cb24-665" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
-<span id="cb24-666"><a href="#cb24-666" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb24-667"><a href="#cb24-667" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb24-668"><a href="#cb24-668" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
-<span id="cb24-669"><a href="#cb24-669" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
-<span id="cb24-670"><a href="#cb24-670" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb24-671"><a href="#cb24-671" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb24-672"><a href="#cb24-672" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> range})<span class="op">,</span></span>
-<span id="cb24-673"><a href="#cb24-673" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" data-startfrom="667" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 666;"><span id="cb24-667"><a href="#cb24-667" aria-hidden="true" tabindex="-1"></a>range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
+<span id="cb24-668"><a href="#cb24-668" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-669"><a href="#cb24-669" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
+<span id="cb24-670"><a href="#cb24-670" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb24-671"><a href="#cb24-671" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb24-672"><a href="#cb24-672" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
+<span id="cb24-673"><a href="#cb24-673" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
 <span id="cb24-674"><a href="#cb24-674" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb24-675"><a href="#cb24-675" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
-<span id="cb24-676"><a href="#cb24-676" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb24-677"><a href="#cb24-677" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb24-678"><a href="#cb24-678" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb24-675"><a href="#cb24-675" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
+<span id="cb24-676"><a href="#cb24-676" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
+<span id="cb24-677"><a href="#cb24-677" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb24-678"><a href="#cb24-678" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
+<span id="cb24-679"><a href="#cb24-679" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb24-680"><a href="#cb24-680" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb24-681"><a href="#cb24-681" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
+<span id="cb24-682"><a href="#cb24-682" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
+<span id="cb24-683"><a href="#cb24-683" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb24-684"><a href="#cb24-684" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb24-685"><a href="#cb24-685" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> range})<span class="op">,</span></span>
+<span id="cb24-686"><a href="#cb24-686" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
+<span id="cb24-687"><a href="#cb24-687" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb24-688"><a href="#cb24-688" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
+<span id="cb24-689"><a href="#cb24-689" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb24-690"><a href="#cb24-690" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-691"><a href="#cb24-691" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-brush-1">
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -711,12 +723,27 @@ div.csl-indent {
 <li><p>One aspect of hypothetical outcomes is that they represent uncertainty in the data space, not the parameter space. For example, in the regression above, we could have simply drawn error bars for the intercept and slope parameters of the fit. This would be a representation of uncertainty in the parameter space. The data space representation, however, is much more evocative, and preliminary experimental evidence suggests that this leads to better inferences in practical applications.</p></li>
 <li><p>Though we have focused on hypothetical outcomes for relatively simple settings, the idea is applicable quite generally. For example, network hypothetical outcome plots (NetHOPs) can be applied to graph data <span class="citation" data-cites="Zhang2022">(<a href="#ref-Zhang2022" role="doc-biblioref">Zhang et al. 2022</a>)</span>, and <span class="citation" data-cites="MacEachren2005">MacEachren et al. (<a href="#ref-MacEachren2005" role="doc-biblioref">2005</a>)</span> review how it can be used to communicate uncertainty in maps.</p></li>
 </ol>
+<section id="objectives" class="level3">
+<h3 class="anchored" data-anchor-id="objectives">Objectives</h3>
+<ul>
+<li>Define frequency framing, error bar, and hypothetical outcome plots.</li>
+<li>Accurately draw conoclusions from frequency framing, density, error bar, and CCDF plots.</li>
+<li>Explain how frequency framing makes probabilities easier to work with and describe its application to both discrete and continuous data.</li>
+<li>Given ggplot and ggdist code that implements an uncertainty visualization layer, explain how each layer works and its place in the overall visualization, including the difference between providing variables through <code>x</code> versus <code>x_dist</code> aesthetic encoding.</li>
+<li>Discuss tradeoffs between alternative representations of point estimate uncertainty, including dot plots, error bar intervals, ridge densities, and gradient intervals.</li>
+<li>Compare approaches to visualizing uncertainty in regression curves, including confidence bands, overlaid curves, and hypothetical outcome plots.</li>
+<li>Given a practical visualization task and either samples or summaries from a distribution, propose an uncertainty visualization and outline this implementation using ggplot2, ggdist, or gganimate.</li>
+</ul>
 
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-Cosmides1996" class="csl-entry" role="listitem">
 Cosmides, L. 1996. <span>“Are Humans Good Intuitive Statisticians After All? Rethinking Some Conclusions from the Literature on Judgment Under Uncertainty.”</span> <em>Cognition</em> 58 (1): 1–73. <a href="https://doi.org/10.1016/0010-0277(95)00664-8">https://doi.org/10.1016/0010-0277(95)00664-8</a>.
+</div>
+<div id="ref-Gigerenzer1995" class="csl-entry" role="listitem">
+Gigerenzer, Gerd, and Ulrich Hoffrage. 1995. <span>“How to Improve Bayesian Reasoning Without Instruction: Frequency Formats.”</span> <em>Psychological Review</em> 102 (4): 684–704. <a href="https://doi.org/10.1037/0033-295x.102.4.684">https://doi.org/10.1037/0033-295x.102.4.684</a>.
 </div>
 <div id="ref-Hoffrage2000" class="csl-entry" role="listitem">
 Hoffrage, Ulrich, Samuel Lindsey, Ralph Hertwig, and Gerd Gigerenzer. 2000. <span>“Communicating Statistical Information.”</span> <em>Science</em> 290 (5500): 2261–62. <a href="https://doi.org/10.1126/science.290.5500.2261">https://doi.org/10.1126/science.290.5500.2261</a>.

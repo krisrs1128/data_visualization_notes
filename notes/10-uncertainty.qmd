@@ -27,8 +27,8 @@ draw from data are accompanied by some degree of uncertainty.
 _One of the fundamental ideas of statistics is that we can precisely measure and honestly communicate this uncertainty._
 
 2. Yet, for most of this class, we've simply displayed the data as they are.
-When most of us see a visualization like this, we don’t automatically wonder
-about the hypothetical alternatives. Therefore, if we want our visual designs to
+When most of us see a visualization, we don’t automatically wonder about the
+hypothetical alternatives. Therefore, if we want our visual designs to
 communicate uncertainty, we need clear ways of representing them graphically.
 
    ```{r}
@@ -53,7 +53,7 @@ communicate uncertainty, we need clear ways of representing them graphically.
 
 3. For events with discrete outcomes (e.g., win the lottery or not), it is
 possible to visualize the probabilities directly. For example, if there are just
-two outcomes, we can plot the probability on along a line; if there are multiple
+two outcomes, we can plot the probability along a line; if there are multiple
 outcomes, a stacked bar chart can achieve the same effect.
 
    ```{r, fig.width = 6, fig.height = 3}
@@ -103,12 +103,23 @@ probability of occurring.
        )
    ```
 
+_Exercise: [@Gigerenzer1995] presented the two equivalent forms of the screening problem below. The second uses frequency framing. Try working each out and comparing the difficulties yourself._
+
+_Version 1:_
+
+> The probability of breast cancer is 1 % for a woman at age forty who participates in routine screening. If a woman has breast cancer, the probability is 80% that she will get a positive mammography. If a woman does not have breast cancer, the probability is 9.6% that she will also get a positive mammography. A woman in this age group had a positive mammography in a routine screening. What is the probability that she actually has breast cancer? __%
+
+_Version 2:_
+
+> 10 out of every 1,000 women at age forty who participate in routine screening have breast cancer.  8 of every 10 women with breast cancer will get a positive mammography.  95 out of every 990 women without breast cancer will also get a positive mammography.  Here is a new representative sample of women at age forty who got a positive mammography in routine screening. How many of these women do you expect to actually have breast cancer? __ out of __.
+
+
 ### Continuous Data
 
 5. How can we generalize this idea to continuous outcomes? For example, in an
 upcoming election, party A might defeat party B by X%. We might believe that X
 is distributed normally with mean 1.1 and standard deviation 2.4. One approach
-is to visualize this using the density plot below.
+is to visualize this with a density plot.
 
    ```{r, fig.width = 5, fig.height = 3, out.width=400, dpi=300, echo = FALSE}
    #| label: density-plot
@@ -129,13 +140,13 @@ is to visualize this using the density plot below.
        )
    ```
 
-6. We created this plot using the ggdist package, which extends ggplot2 with
-layers for uncertainty visualization. The key ideas are in the second layer.
-The `stat_slab` layer defines graphical marks for probability densities. One of
-its supported `aes` arguments is `xdist`, which is expected to give an
-analytical formula for a probability distribution. For example,
-`dist_normal(mean, sd)` is the formula for a Gaussian distribution.  We split
-the colors between parties using the `fill` argument.
+6. We created this plot using the [ggdist package](https://mjskay.github.io/ggdist/), which extends ggplot2 with layers
+for uncertainty visualization. The key ideas are in the second layer.  The
+`stat_slab` layer defines graphical marks for probability densities. One of its
+supported `aes` arguments is `xdist`, which is expected to give an analytical
+formula for a probability distribution. For example, `dist_normal(mean, sd)` is
+the formula for a Gaussian distribution. We split the colors between wining
+parties with `fill`.
 
    ```{r, eval = FALSE}
    #| label: density-src
@@ -160,7 +171,7 @@ the colors between parties using the `fill` argument.
 probabilities in the discrete outcome case. The frequency framing version
 creates a dotplot for hypothetical outcomes at locations proportional to their
 probability. It seems like a simple change, but it is often better perceived,
-since judging counts is often easier than comparing areas.
+since judging counts is easier than comparing areas.
 
    ```{r, fig.width = 5, fig.height = 3, out.width = 400, dpi=300, echo = FALSE}
    #| label: dot-plot
@@ -180,7 +191,7 @@ since judging counts is often easier than comparing areas.
        )
    ```
 
-8. We created this dotplot using the `stat_dots` layer from `ggdist`. Like in
+8. We created this dotplot using the `stat_dots` layer from ggdist. Like in
 ordinary ggplot2, ggdist allows us to compose layers. For example, we can create
 a combined density and dot plot (this is called a rain cloud plot). The `side`
 argument puts the density (the cloud) above the interval and the dots (the rain)
@@ -206,7 +217,7 @@ below it, and setting `scale = 0.5` keeps the two from overlapping.
        )
    ```
 
-   _Exercise: What are the strengths/weaknesses of using more dots in a frequency framing visualization?_
+   _Exercise: What are the strengths/weaknesses of using more vs. fewer dots in a frequency framing visualization?_
 
 ### Multiple Inferences
 
@@ -234,13 +245,13 @@ include summary intervals showing the mean +/- 1 and two standard deviations
    ```
 
 10. Instead of dots, we can apply the ridgeline plots we saw in the small
-multiples notes. This no longer supports frequency framing, but it's much easier
-to view partially overlapping density plots than dot plots.
+multiples notes. This no longer supports frequency framing, but the densities
+can be partially overlapped, which is impossible in dot plots.
 
-    ```{r}
+    ```{r, fig.height = 4, fig.width = 6}
     #| label: ridgeline
     #| out-width: 400
-    #| fig-cap: Uncertainty in chocolate qualitiy using ridgelines.
+    #| fig-cap: Uncertainty in chocolate quality using ridgelines.
     p + stat_slab(height = 2, col = "black", fill = "#6894A6")
     ```
 
@@ -269,12 +280,11 @@ to view partially overlapping density plots than dot plots.
 
 11. Frequency framing is a reasonable default strategy for representing
 uncertainty. However, there are many other ways to visually encode distributions
-over outcomes, and they can be worth knowing for more specialized visualization
-problems. For example, if we had many more countries in our chocolate bar
-ratings plot, we need a more compact way of representing uncertainty. Our next
-few notes explore alternatives for this and other situations.
+over outcomes, and they are worth knowing for more specialized problems. For
+example, if we had many more countries in our chocolate bar ratings plot, we
+need a more compact way of representing uncertainty. We will explore this below.
 
-    _Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., slabs) on frequency framing visualizations?_
+    _Exercise: What are strengths and weaknesses of overlaying statistical summaries (e.g., summary intervals) on frequency framing visualizations?_
 
 ## Uncertainty in Point Estimates
 
@@ -282,7 +292,7 @@ few notes explore alternatives for this and other situations.
 uncertainty, especially for nontechnical audiences. If you have ever skimmed
 through scientific publications, though, you might have noticed that the
 overwhelming majority of uncertainty visualizations are based on error bars.
-They give an _point estimate_ of a target quantity that's assumed to exist in a
+They give a _point estimate_ of a target quantity that's assumed to exist in a
 larger population, and they use bars to represent the uncertainty in that
 estimate that results from using a random sample (rather than the full
 population).
@@ -299,7 +309,7 @@ central area for each of 10 normal distributions.
 
     ```{r}
     #| label: errorbar-ci
-    #\ fig-cap: Error bars can compactly visualize uncertainty in many point estimates.
+    #| fig-cap: Error bars can compactly visualize uncertainty in many point estimates.
     n <- 10
     estimate <- tibble(id = seq_len(n), mean = rnorm(n), sd = rgamma(n, 4, 12))
     ggplot(estimate) +
@@ -319,7 +329,7 @@ with crosses that summarize uncertainty in each dimension.
     #| label: errorbar-cross
     #| fig-width: 5
     #| fig-height: 5
-    #\ fig-cap: Integrating error bars into a scatterplot visualization.
+    #| fig-cap: Integrating error bars into a scatterplot visualization.
     points <- tibble(
         x = rnorm(n),
         y = rnorm(n),
@@ -334,8 +344,9 @@ with crosses that summarize uncertainty in each dimension.
         labs(title = "95% Error Bars")
     ```
 
-    This was constructed by composing both horizontal `geom_errorbarh` and vertical
-    `geom_errorbar` layers.
+    This was constructed by composing both horizontal `geom_errorbarh` and
+    vertical `geom_errorbar` layers, both of which are built into ggplot2 (no
+    need for ggdist).
 
 16. One difficulty with error bars is that their interpretations are not
 self-evident from their appearance (they need to be included in the title or
@@ -344,7 +355,7 @@ different meanings, and this needs to be explained clearly.
 
     ```{r}
     #| label: ci-levels
-    #\ fig-cap: Error bar visualizations can change substantially when changing the confidence level, even when the actual uncertainty about the estimate is unchanged.
+    #| fig-cap: Error bar visualizations can change substantially when changing the confidence level, even when the actual uncertainty about the estimate is unchanged.
     level_compare <- tibble(mean = rnorm(1), sd = rexp(1), level = c(0.66, 0.9, 0.95, 0.99)) |>
         mutate(
             scaling = qnorm(level + 0.5 * (1 - level)),
@@ -360,8 +371,8 @@ different meanings, and this needs to be explained clearly.
 17. A variation on error bars that packs a little more information in nearly as
 little space is the graded error bar. This is a type of error bar where
 different levels of thickness are matched with different interpretations. In the
-example below, we are simultaneously showing 90, 95, and 99% confidence
-intervals for a mean.
+example below, we are simultaneously showing 66 and 95% confidence intervals for
+a mean.
 
     ```{r}
     #| label: graded-ci
@@ -377,7 +388,7 @@ can see the full distribution of uncertainty, not simply summaries. Using the
 error bar, we can tell whether specific values are above or below important
 cutoffs.
 
-    ```{r, fig.height = 8, fig.width = 14}
+    ```{r, fig.height = 6, fig.width = 10}
     #| label: halfeye-dotinterval
     p1 <- ggplot(estimate) +
         stat_halfeye(aes(xdist = dist_normal(mean, sd), y = id)) +
@@ -393,7 +404,7 @@ cutoffs.
 19. A related approach is to fill in subsets of a distribution plot according to
 more interpretable cutoffs.
 
-    ```{r, fig.width = 8, fig.height = 8}
+    ```{r, fig.width = 6, fig.height = 5}
     #| label: halfeye-fill
     ggplot(estimate) +
         stat_halfeye(aes(xdist = dist_normal(mean, sd), y = id, fill = stat(level)), .width = c(0.66, 0.9, 0.95)) +
@@ -467,6 +478,7 @@ different gamma distributions.
     ```
 
     _Exercise: The quote below is from [@Kay2016]. Pick two of the visual representations of uncertainty we have discussed so far. Compare their precision (how accurately uncertainty can be evaluated) vs. glanceability (how much cognitive effort is required to draw a conclusion). This is a subjective evaluation, but make sure to give specific details from the visual representation to back your claims._
+
     > Designers should attend to the balance of precision and glanceability in representing uncertainty. Participants were divided over whether our visualizations were appropriately glanceable for a transit mobile app. While some said the new designs were easy and clear, more described feeling overwhelmed at least in the context of our experiment and the majority of commenters expressed doubts about being able to use these visualizations while walking to a bus stop.
 
 ## Hypothetical Outcomes
@@ -527,7 +539,7 @@ fitted bayesian linear regression.
 
 26. We can generalize this idea to nonlinear fits. For example, below, we are
 using multiple draws to represent the uncertainty of a smoothing spline
-regression between supernova Magnitude and another oen of the predictor
+regression between supernova Magnitude and another one of the predictor
 variables. One nice aspect of showing multiple realizations is that it shows
 uncertainty in the "turns" of individual curves, which is not reflected in the
 confidence bands alone.
@@ -548,12 +560,13 @@ confidence bands alone.
     ```
 
 27. When we show multiple outcomes overlaid like this, our attention tends to
-focus on the area taken up by the multiple lines. In a true hypothetical outcome
-plot, we animate each outcome one at a time. This draws attention to the
-line-to-line uncertainty, rather than the area taken up by the ensemble. We can
-create a hypothetical outcome version of the plots above using the `gganimate`
-package. This extends ggplot to allow transitions across subsets of data (just
-like faceting, but shown in a sequence over time rather than space).
+focus on the area taken up by the multiple lines. Alternatively, in a
+hypothetical outcome plot, we animate each outcome one at a time. This draws
+attention to the line-to-line uncertainty, rather than the area taken up by the
+ensemble. We can create a hypothetical outcome version of the plots above using
+the `gganimate` package. This extends ggplot to allow transitions across subsets
+of data (just like faceting, but shown in a sequence over time rather than
+space).
 
     ```{r}
     #| label: hop-animate
@@ -597,11 +610,11 @@ distribution in the background.
     <img src="https://krisrs1128.github.io/stat679_code/examples/week13/gam_hypo2.gif" width=500/>
 
 29. A somewhat less standard, but more interactive, approach would be to use
-dynamic linking. Each point in the scatterplot below is one hypothetical
+linked brushing. Each point in the scatterplot below is one hypothetical
 outcome, positioned by a PCA (week 12) of the 150 bootstrapped curves. Each
 point represents one curve, and curves with similar shapes are placed next to
 one another. Brushing over points highlights the corresponding fits in the panel
-on the right. I've hidden coode for running the PCA and setting up the
+on the right. I've hidden code for running the PCA and setting up the
 coordinator, but it's available at the link at the start of the notebook.
 
     ```{r}
@@ -691,3 +704,13 @@ settings, the idea is applicable quite generally. For example, network
 hypothetical outcome plots (NetHOPs) can be applied to graph data [@Zhang2022],
 and @MacEachren2005 review how it can be used to communicate uncertainty in
 maps.
+
+### Objectives
+
+- Define frequency framing, error bar, and hypothetical outcome plots.
+- Accurately draw conoclusions from frequency framing, density, error bar, and CCDF plots.
+- Explain how frequency framing makes probabilities easier to work with and describe its application to both discrete and continuous data.
+- Given ggplot and ggdist code that implements an uncertainty visualization layer, explain how each layer works and its place in the overall visualization, including the difference between providing variables through `x` versus `x_dist` aesthetic encoding.
+- Discuss tradeoffs between alternative representations of point estimate uncertainty, including dot plots, error bar intervals, ridge densities, and gradient intervals.
+- Compare approaches to visualizing uncertainty in regression curves, including confidence bands, overlaid curves, and hypothetical outcome plots.
+- Given a practical visualization task and either samples or summaries from a distribution, propose an uncertainty visualization and outline this implementation using ggplot2, ggdist, or gganimate.

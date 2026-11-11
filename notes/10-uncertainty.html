@@ -96,6 +96,35 @@ div.csl-indent {
 <script type="module" src="10-uncertainty_files/libs/quarto-ojs/quarto-ojs-runtime.js"></script>
 <link href="10-uncertainty_files/libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -547,7 +576,7 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="hypothetical-outcomes">Hypothetical Outcomes</h2>
 <ol start="23" type="1">
 <li><p>From our previous discussions, we now have a rich set of techniques for representing uncertainty for either discrete or continuous random values. But often, we hope to support inferences for more complex objects, like curves, maps, or networks. How can we visualize uncertainty in these more richly structured objects?</p></li>
-<li><p>For example, in linear regression, it’s possible to visualize the uncertainty associated with the fit using a confidence band. The guarantee is that, across many random samples from the same population, the line will usually fall entirely within the band.</p>
+<li><p>For example, in linear regression, it’s possible to visualize the uncertainty associated with the fit using a pointwise confidence band (here, we use a 95% confidence band). The guarantee is that, for any fixed <span class="math inline">\(x\)</span> value, the (random) band will cover the true regression curve at that <span class="math inline">\(x\)</span> value in 95% of randomly drawn datasets. These per-<span class="math inline">\(x\)</span> pointwise confidence band endpoints are output by the <code>predictions</code> function in the <code>marginaleffects</code> package. Be cautious that these are <em>pointwise</em> confidence bands, reflecting the fraction of times the curve is captured by the band at a single <span class="math inline">\(x\)</span>, rather than a <em>simultaneous</em> confidence band, which captures the fraction of times the band covers the entire curve.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>supernova <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week13/supernova.csv"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>intervals <span class="ot">&lt;-</span> <span class="fu">gam</span>(Magnitude <span class="sc">~</span> E9, <span class="at">data =</span> supernova) <span class="sc">|&gt;</span></span>
@@ -566,7 +595,7 @@ div.csl-indent {
 </div>
 </div>
 </div></li>
-<li><p>You may have seen these confidence bands for regression in your statistics classes. Have you ever wondered why the band is shaped in the way that it is? The curvature comes from the fact that there is uncertainty in both the intercept and the slope for the fitted line. This is easy to understand by overlaying the regression lines obtained from several versions of the same dataset. Formally, we’ve applied the bootstrap to resample the original data, though we could have just as well drawn from the posterior distribution of a fitted bayesian linear regression.</p>
+<li><p>You may have seen pointwise confidence bands for regression in your statistics classes. Have you ever wondered why the band is shaped in the way that it is? The curvature comes from the fact that there is uncertainty in both the intercept and the slope for the fitted line. This is easy to understand by overlaying the regression lines obtained from several versions of the same dataset. Formally, we’ve applied the bootstrap to resample the original data, though we could have just as well drawn from the posterior distribution of a fitted bayesian linear regression.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>bootstrap_curves <span class="ot">&lt;-</span> <span class="cf">function</span>(formula, data, newdata, <span class="at">times =</span> <span class="dv">150</span>) {</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bootstraps</span>(data, <span class="at">times =</span> times)<span class="sc">$</span>splits <span class="sc">|&gt;</span></span>
@@ -613,56 +642,88 @@ div.csl-indent {
 </figure>
 </div>
 </div>
+</div>
+<p>We can also use these random bootstrap draws to create a pointwise confidence band. For each <span class="math inline">\(x\)</span> value, we compute the 0.025 and 0.975 quantiles of <span class="math inline">\(y\)</span> values across all curves we observed at that <span class="math inline">\(x\)</span>. This can be done by aggregating using the <code>group_by + summarise</code> pattern.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>band <span class="ot">&lt;-</span> outcomes <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(E3) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower =</span> <span class="fu">quantile</span>(Magnitude, <span class="fl">0.025</span>),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper =</span> <span class="fu">quantile</span>(Magnitude, <span class="fl">0.975</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We can then add a ribbon layer reflecting the endpoints of the bootstrap-derived pointwise confidence band.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(outcomes, <span class="fu">aes</span>(E3, Magnitude)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">filter</span>(outcomes, .draw <span class="sc">&lt;=</span> <span class="dv">20</span>),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">group =</span> .draw),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"#d3d3d3"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> band,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#a0b9a4"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> supernova) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10-uncertainty_files/figure-html/bootstrap-band-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div></li>
 <li><p>When we show multiple outcomes overlaid like this, our attention tends to focus on the area taken up by the multiple lines. Alternatively, in a hypothetical outcome plot, we animate each outcome one at a time. This draws attention to the line-to-line uncertainty, rather than the area taken up by the ensemble. We can create a hypothetical outcome version of the plots above using the <code>gganimate</code> package. This extends ggplot to allow transitions across subsets of data (just like faceting, but shown in a sequence over time rather than space).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(outcomes, <span class="fu">aes</span>(E3, Magnitude)) <span class="sc">+</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">group =</span> .draw),</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"#d3d3d3"</span>, <span class="at">size =</span> <span class="fl">1.5</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> supernova) <span class="sc">+</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transition_time</span>(.draw) <span class="sc">+</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ease_aes</span>(<span class="st">"sine-in-out"</span>)</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"gam_hypo.gif"</span>, p, <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(outcomes, <span class="fu">aes</span>(E3, Magnitude)) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">group =</span> .draw),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"#d3d3d3"</span>, <span class="at">size =</span> <span class="fl">1.5</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> supernova) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transition_time</span>(.draw) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ease_aes</span>(<span class="st">"sine-in-out"</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"gam_hypo.gif"</span>, p, <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="https://krisrs1128.github.io/stat679_code/examples/week13/gam_hypo.gif" width="500/"></p></li>
 <li><p>Alternatively, we can animate individual events while displaying the full distribution in the background.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(outcomes, <span class="fu">aes</span>(E3, Magnitude)) <span class="sc">+</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">rename</span>(outcomes, <span class="at">.draw2 =</span> .draw),</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">group =</span> .draw2),</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"#d3d3d3"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">0.6</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">group =</span> .draw),</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="fl">1.5</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> supernova) <span class="sc">+</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transition_states</span>(.draw)</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"gam_hypo2.gif"</span>, p, <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(outcomes, <span class="fu">aes</span>(E3, Magnitude)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">rename</span>(outcomes, <span class="at">.draw2 =</span> .draw),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">group =</span> .draw2),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"#d3d3d3"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">0.6</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">group =</span> .draw),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="fl">1.5</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> supernova) <span class="sc">+</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transition_states</span>(.draw)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">anim_save</span>(<span class="st">"gam_hypo2.gif"</span>, p, <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="https://krisrs1128.github.io/stat679_code/examples/week13/gam_hypo2.gif" width="500/"></p></li>
 <li><p>A somewhat less standard, but more interactive, approach would be to use linked brushing. Each point in the scatterplot below is one hypothetical outcome, positioned by a PCA (week 12) of the 150 bootstrapped curves. Each point represents one curve, and curves with similar shapes are placed next to one another. Brushing over points highlights the corresponding fits in the panel on the right. I’ve hidden code for running the PCA and setting up the coordinator, but it’s available at the link at the start of the notebook.</p></li>
 </ol>
 <div id="hop-setup" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb23" data-startfrom="651" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 650;"><span id="cb23-651"><a href="#cb23-651" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
-<span id="cb23-652"><a href="#cb23-652" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-653"><a href="#cb23-653" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
-<span id="cb23-654"><a href="#cb23-654" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
-<span id="cb23-655"><a href="#cb23-655" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
-<span id="cb23-656"><a href="#cb23-656" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
-<span id="cb23-657"><a href="#cb23-657" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
-<span id="cb23-658"><a href="#cb23-658" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
-<span id="cb23-659"><a href="#cb23-659" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
-<span id="cb23-660"><a href="#cb23-660" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
-<span id="cb23-661"><a href="#cb23-661" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
-<span id="cb23-662"><a href="#cb23-662" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb25" data-startfrom="692" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 691;"><span id="cb25-692"><a href="#cb25-692" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> (p) <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="vs">`data/</span><span class="sc">${</span>p<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span></span>
+<span id="cb25-693"><a href="#cb25-693" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-694"><a href="#cb25-694" aria-hidden="true" tabindex="-1"></a>vg <span class="op">=</span> {</span>
+<span id="cb25-695"><a href="#cb25-695" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
+<span id="cb25-696"><a href="#cb25-696" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wasm <span class="op">=</span> <span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>()<span class="op">;</span></span>
+<span id="cb25-697"><a href="#cb25-697" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(wasm)<span class="op">;</span></span>
+<span id="cb25-698"><a href="#cb25-698" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
+<span id="cb25-699"><a href="#cb25-699" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"outcomes"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_outcomes.csv"</span>))<span class="op">,</span></span>
+<span id="cb25-700"><a href="#cb25-700" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"draw_coords"</span><span class="op">,</span> <span class="fu">path</span>(<span class="st">"hop_draw_coords.csv"</span>))</span>
+<span id="cb25-701"><a href="#cb25-701" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb25-702"><a href="#cb25-702" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
+<span id="cb25-703"><a href="#cb25-703" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-setup-1">
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -679,31 +740,31 @@ div.csl-indent {
 </div>
 </div>
 <div id="hop-brush" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" data-startfrom="667" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 666;"><span id="cb24-667"><a href="#cb24-667" aria-hidden="true" tabindex="-1"></a>range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
-<span id="cb24-668"><a href="#cb24-668" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-669"><a href="#cb24-669" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
-<span id="cb24-670"><a href="#cb24-670" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb24-671"><a href="#cb24-671" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
-<span id="cb24-672"><a href="#cb24-672" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
-<span id="cb24-673"><a href="#cb24-673" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
-<span id="cb24-674"><a href="#cb24-674" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb24-675"><a href="#cb24-675" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
-<span id="cb24-676"><a href="#cb24-676" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
-<span id="cb24-677"><a href="#cb24-677" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb24-678"><a href="#cb24-678" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
-<span id="cb24-679"><a href="#cb24-679" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
-<span id="cb24-680"><a href="#cb24-680" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb24-681"><a href="#cb24-681" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
-<span id="cb24-682"><a href="#cb24-682" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
-<span id="cb24-683"><a href="#cb24-683" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb24-684"><a href="#cb24-684" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb24-685"><a href="#cb24-685" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> range})<span class="op">,</span></span>
-<span id="cb24-686"><a href="#cb24-686" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
-<span id="cb24-687"><a href="#cb24-687" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
-<span id="cb24-688"><a href="#cb24-688" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
-<span id="cb24-689"><a href="#cb24-689" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
-<span id="cb24-690"><a href="#cb24-690" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb24-691"><a href="#cb24-691" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" data-startfrom="708" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 707;"><span id="cb26-708"><a href="#cb26-708" aria-hidden="true" tabindex="-1"></a>range <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()</span>
+<span id="cb26-709"><a href="#cb26-709" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-710"><a href="#cb26-710" aria-hidden="true" tabindex="-1"></a>vg<span class="op">.</span><span class="fu">hconcat</span>(</span>
+<span id="cb26-711"><a href="#cb26-711" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb26-712"><a href="#cb26-712" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(</span>
+<span id="cb26-713"><a href="#cb26-713" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"draw_coords"</span>)<span class="op">,</span></span>
+<span id="cb26-714"><a href="#cb26-714" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#4c4c4c"</span>}</span>
+<span id="cb26-715"><a href="#cb26-715" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb26-716"><a href="#cb26-716" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> range<span class="op">,</span> <span class="dt">brush</span><span class="op">:</span> {<span class="dt">fill</span><span class="op">:</span> <span class="st">"none"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#4d4d4d"</span>}})<span class="op">,</span></span>
+<span id="cb26-717"><a href="#cb26-717" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">300</span>)<span class="op">,</span></span>
+<span id="cb26-718"><a href="#cb26-718" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb26-719"><a href="#cb26-719" aria-hidden="true" tabindex="-1"></a>  )<span class="op">,</span></span>
+<span id="cb26-720"><a href="#cb26-720" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb26-721"><a href="#cb26-721" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb26-722"><a href="#cb26-722" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span>)<span class="op">,</span></span>
+<span id="cb26-723"><a href="#cb26-723" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#bbb"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.6</span>}</span>
+<span id="cb26-724"><a href="#cb26-724" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb26-725"><a href="#cb26-725" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb26-726"><a href="#cb26-726" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"outcomes"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> range})<span class="op">,</span></span>
+<span id="cb26-727"><a href="#cb26-727" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"E3"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"Magnitude"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">".draw"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"black"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span>}</span>
+<span id="cb26-728"><a href="#cb26-728" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb26-729"><a href="#cb26-729" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">400</span>)<span class="op">,</span></span>
+<span id="cb26-730"><a href="#cb26-730" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">height</span>(<span class="dv">300</span>)</span>
+<span id="cb26-731"><a href="#cb26-731" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-732"><a href="#cb26-732" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="hop-brush-1">
 <div id="ojs-cell-2-1" data-nodetype="declaration">

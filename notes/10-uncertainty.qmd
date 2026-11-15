@@ -103,15 +103,15 @@ probability of occurring.
        )
    ```
 
-_Exercise: [@Gigerenzer1995] presented the two equivalent forms of the screening problem below. The second uses frequency framing. Try working each out and comparing the difficulties yourself._
+   _Exercise: [@Gigerenzer1995] presented the two equivalent forms of the screening problem below. The second uses frequency framing. Try working each out and comparing the difficulties yourself._
 
-_Version 1:_
+   _Version 1:_
 
-> The probability of breast cancer is 1 % for a woman at age forty who participates in routine screening. If a woman has breast cancer, the probability is 80% that she will get a positive mammography. If a woman does not have breast cancer, the probability is 9.6% that she will also get a positive mammography. A woman in this age group had a positive mammography in a routine screening. What is the probability that she actually has breast cancer? __%
+   > The probability of breast cancer is 1 % for a woman at age forty who participates in routine screening. If a woman has breast cancer, the probability is 80% that she will get a positive mammography. If a woman does not have breast cancer, the probability is 9.6% that she will also get a positive mammography. A woman in this age group had a positive mammography in a routine screening. What is the probability that she actually has breast cancer? __%
 
-_Version 2:_
+   _Version 2:_
 
-> 10 out of every 1,000 women at age forty who participate in routine screening have breast cancer.  8 of every 10 women with breast cancer will get a positive mammography.  95 out of every 990 women without breast cancer will also get a positive mammography.  Here is a new representative sample of women at age forty who got a positive mammography in routine screening. How many of these women do you expect to actually have breast cancer? __ out of __.
+   > 10 out of every 1,000 women at age forty who participate in routine screening have breast cancer.  8 of every 10 women with breast cancer will get a positive mammography.  95 out of every 990 women without breast cancer will also get a positive mammography.  Here is a new representative sample of women at age forty who got a positive mammography in routine screening. How many of these women do you expect to actually have breast cancer? __ out of __.
 
 
 ### Continuous Data

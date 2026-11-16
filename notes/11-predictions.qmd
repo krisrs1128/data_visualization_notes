@@ -408,7 +408,7 @@ similar to that in the real dataset.
     wrap_plots(plots, nrow = 1)
     ```
 
-24. According to this summary, it seems like the `regions` model is the best. It
+24. According to this summary, it seems like the `clusters` model is the best. It
 gives simulated datasets whose skewness values match those that we observed in
 the real data. Of course, someone could call into our question the choice of
 using skewness over other test statistics. But we can at least have a productive

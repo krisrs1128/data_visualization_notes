@@ -163,49 +163,53 @@ window.Quarto = {
 </header>
 
 
-<p><a href="https://ema.drwhy.ai/partialDependenceProfiles.html">Reading</a> <a href="">Code</a></p>
+<p><a href="https://canvas.wisc.edu/courses/530541/files/54329528?wrap=1">Reading (Chapter 8.1 - 8.2)</a> <a href="https://github.com/krisrs1128/data_visualization_notes/blob/main/notes/11-predictions.qmd">Code</a></p>
 <ol type="1">
-<li><p>When we read data analysis reports or attend statistical research seminar, we are bound to be bombarded by numerical outputs from models, <span class="math inline">\(p\)</span>-values, test set accuracies, parameter estimates, <span class="math inline">\(R^2\)</span> values… This is all helpful for keeping everyone honest about how good models really are, but if we want to build intuition (and improve) models, then it really helps to visualize them.</p></li>
+<li><p>When we read data analysis reports or attend statistical research seminar, we are often bombarded by numerical outputs from models, like <span class="math inline">\(p\)</span>-values, test set accuracies, parameter estimates, or <span class="math inline">\(R^2\)</span> values. This is all helpful for keeping everyone honest, but if we want to build intuition (and improve) our models, then it really helps to visualize them, and not simply use numerical summaries.</p></li>
 <li><p>In fact, we can integrate visualization throughout the model building process. In data science, there is a cliche that visualization is mainly useful at the very beginning (exploratory data analysis) or end (pretty presentations) of a study. But careful modeling requires visualization at all steps.</p></li>
-<li><p>UW-Madison’s Statistics Department was founded by George Box, one of the most important statisticians of the 20th century. Among many methdological contributions, he is famous for the quote, “All models are wrong, but some are useful.” I’ve always found it a bit unfortunate that this quote became so popular without the related idea, “Box’s Loop,” becoming similarly famous. The idea of the Loop is that we should seek out limitations in our models (“all models are wrong”) but then use that to suggest improvements.</p>
+<li><p>UW-Madison’s Statistics Department was founded by George Box, one of the most important statisticians of the 20th century. Among many methdological contributions, he is famous for sayinig</p>
+<blockquote class="blockquote">
+<p>All models are wrong, but some are useful.</p>
+</blockquote>
+<p>I’ve always found it a bit unfortunate that this quote became so popular without the related idea, “Box’s Loop,” becoming similarly famous. The idea of the Loop is that we should seek out limitations in our models (“all models are wrong”) but then use that to suggest improvements.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="figures/blei_boxs_loop.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<p><img src="figures/blei_boxs_loop.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div></li>
-<li><p>If this seems a little abstract, consider this example from the reading. The 538 blog releases election forecasts based on statistical models trained on polling and historical election data. We’ll consider a model they built just before the 2020 US Presidential Election between Joe Biden and Donald Trump. This supports simulation, so we can generate hypothetical election results using the fitted model parameters. For each of the simulated datasets, we get a percentage breakdown Biden vs.&nbsp;Trump for each state.</p></li>
-<li><p>If we average the statewise results across all the simulated elections, then the model makes sense, considering voting patterns in recent elections. For example, California reliably votes for the Democrat (Biden) while Wyoming reliably votes for the Republican (Trump).</p>
+<li><p>If this seems a little abstract, consider this example from the reading. The 538 blog releases election forecasts based on statistical models trained on polling and historical election data. We’ll consider a model they built just before the 2020 US Presidential Election between Joe Biden and Donald Trump. Their model supports simulation, and could generate hypothetical election results. For each of the simulated datasets, we get a percentage breakdown Biden vs.&nbsp;Trump across all states.</p></li>
+<li><p>If we average the statewise results across all the simulated elections, then the model makes sense, considering voting patterns in recent elections. For example, California reliably votes Democrat (Biden) while Wyoming reliably votes Republican (Trump).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="figures/election_statewise.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div></li>
-<li><p>Further, for particular pairs of states, the correlations match our expectations. For example, Wisconsin and Pennsylvania are traditionally “swing” states, which have gone to either Democrats or Republicans in recent elections. If we plot the simulated outcomes against one another, then they are positively correlated, which is what we would expect if there were events (in the time between the forecast and the final election) that either improved or damaged their chances consistently across both states.</p>
+<li><p>Further, for particular pairs of states, the correlations match our expectations. For example, Wisconsin and Pennsylvania are traditionally “swing” states, which can go either way. If we plot the simulated outcomes against one another, then these states outcomes’ are positively correlated, which is what we would expect if there were events (in the time between the forecast and the election) that either improved or damaged their chances consistently across both states.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="figures/election_correlation_positive.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
 </figure>
 </div></li>
-<li><p>But for other pairs, the results are suspicious. For example, the simulations suggest that the outcomes in Washington (a Democrat-leaning state) and Mississippi (a Republican-leaning state) are negative correlated. This is strange, because it means that if Trump won Washington, he would be more likely to <em>lose</em> Mississippi. You would think that if he had won a historic upset and succeeded in Washington, then surely he would have also won in Mississippi.</p>
+<li><p>But for other pairs, the results are suspicious. For example, the simulations suggest that the outcomes in Washington (a Democrat-leaning state) and Mississippi (a Republican-leaning state) are negative correlated. This is strange, because it means that if Trump won Washington, he would be more likely to <em>lose</em> Mississippi. You would think that if he had won a historic upset in Washington, then surely he would also win Mississippi.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="figures/election_correlation_negative.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
 </figure>
 </div></li>
-<li><p>The authors of our reading argue that this negative correlation is a technical artifact of teh statistical model used by the 538 team, and not a real pattern from any historical data. It turns out that the default statistical choice the team used is not really compatible with our knowledge about the problem setting. This is a place where defaults could be adapted to obtain a more realistic model; i.e., it motivates moving through an interation of Box’s loop.</p></li>
+<li><p>The authors of our reading argue that this negative correlation is a technical artifact of the statistical model used by the 538 team, and not a real pattern from the data. It turns out that the default statistical choice the team most likely used is not compatible with our domain knowledge. This is a place where defaults could be adapted to obtain a more realistic model; i.e., it motivates moving through an interation of Box’s loop.</p></li>
 </ol>
 <section id="probabilistic-models" class="level2">
 <h2 class="anchored" data-anchor-id="probabilistic-models">Probabilistic Models</h2>
 <section id="notation" class="level3">
 <h3 class="anchored" data-anchor-id="notation">Notation</h3>
 <ol start="9" type="1">
-<li><p>If the election example feels a bit ad hoc to you, then you have a good instinct for statistics. One of the goals of statistical methods research is to formalize good intuition using more mathematical language, and that’s exactly what we’ll do here. In this way, we’ll ensure that good ideas that appear in one specific field can be easily adapted to other fields.</p></li>
-<li><p>We will use the following notation. A simulation model is one that allows us to draw replicate datasets <span class="math inline">\(y_{i}^{\text{rep}}\)</span> given an observed dataset <span class="math inline">\(y\)</span>, <span id="eq-post-pred"><span class="math display">\[
+<li><p>If the election example feels a bit ad hoc to you, then you have a good instinct for statistics. One of the goals of statistical research is to formalize good intuition using mathematical language. In this way, we can ensure that good ideas that appear in one specific application can be easily adapted to other problems.</p></li>
+<li><p>Let’s establish notation. A simulation model is one that allows us to draw replicate datasets <span class="math inline">\(y_{i}^{\text{rep}}\)</span> given an observed dataset <span class="math inline">\(y\)</span>, <span id="eq-post-pred"><span class="math display">\[
 y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}} \vert y\right).
 \tag{1}\]</span></span> You should think of each <span class="math inline">\(y_{i}^{\text{rep}}\)</span> and <span class="math inline">\(y\)</span> as vectors, because they represent an entire dataset.</p>
 <ul>
 <li><p>In our reading, the probability in <a href="#eq-post-pred" class="quarto-xref">Equation&nbsp;1</a> is called the <strong>posterior predictive distribution</strong>. The hope is that after having observed the real dataset <span class="math inline">\(y\)</span>, the distribution <span class="math inline">\(p\left(y^{\text{rep}} \vert y\right)\)</span> should allow us to simulate new replicates that look similar to the real data.</p></li>
-<li><p>In contrast, the <strong>prior predictive distribution</strong>, denoted <span class="math inline">\(p\left(y^{\text{rep}}\right)\)</span>, describes how we would simulate new datasets before having observed any real data <span class="math inline">\(y\)</span>. <span id="eq-prior-pred"><span class="math display">\[
+<li><p>In contrast, the <strong>prior predictive distribution</strong>, denoted <span class="math inline">\(p\left(y^{\text{rep}}\right)\)</span>, describes how we would simulate new datasets before having observed any real data <span class="math inline">\(y\)</span>. It encodes basic facts about the problem setting (e.g., plausible ranges of the outcome) but not the more specific relationships that are unknown in advance. <span id="eq-prior-pred"><span class="math display">\[
 y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 \tag{2}\]</span></span></p></li>
 </ul></li>
@@ -214,7 +218,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 <section id="running-example" class="level3">
 <h3 class="anchored" data-anchor-id="running-example">Running Example</h3>
 <ol start="11" type="1">
-<li><p>As our running example, we will use a PM2.5 monitoring dataset. PM2.5 is a type of air pollution that can be bad for public health. High-quality weather station data apply in the areas around the weather station, but don’t give any information about what happens in the areas between stations. In contrast, satellite data give global coverage, but they are lower quality. In the last decade, it’s become popular to train models that use high quality station measurements to adjust satellite data, which gets us closer to the best of both worlds. If it works well, it could be used to monitor PM2.5 levels at global scale.</p>
+<li><p>As our running example, we will use a PM2.5 monitoring dataset. PM2.5 is a type of air pollution that can cause health problems. High-quality weather station data apply in the areas around the weather station, but don’t give any information about what happens in the areas between stations. In contrast, satellite data give global coverage, but they are lower quality. In the last decade, it’s become popular to train models that use high quality station measurements to adjust satellite data, which gets us closer to the best of both worlds. If it works well, it could be used to monitor PM2.5 levels at global scale.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">tempfile</span>()</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://github.com/jgabry/bayes-vis-paper/blob/master/bayes-vis.RData?raw=true"</span>, f)</span>

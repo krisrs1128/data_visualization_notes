@@ -52,7 +52,7 @@ popular without the related idea, "Box's Loop," becoming similarly famous. The
 idea of the Loop is that we should seek out limitations in our models ("all
 models are wrong") but then use that to suggest improvements.
 
-   ![](figures/blei_boxs_loop.png){width=70%}
+   ![](figures/blei_boxs_loop.png){width=70% fig-align="center"}
 
 4. If this seems a little abstract, consider this example from the reading. The
 538 blog releases election forecasts based on statistical models trained on
@@ -67,7 +67,7 @@ the model makes sense, considering voting patterns in recent elections. For
 example, California reliably votes for the Democrat (Biden) while Wyoming
 reliably votes for the Republican (Trump).
 
-   ![](figures/election_statewise.png){width=90%}
+   ![](figures/election_statewise.png){width=90% fig-align="center"}
 
 6. Further, for particular pairs of states, the correlations match our
 expectations. For example, Wisconsin and Pennsylvania are traditionally "swing"
@@ -77,7 +77,7 @@ correlated, which is what we would expect if there were events (in the time
 between the forecast and the final election) that either improved or damaged
 their chances consistently across both states.
 
-   ![](figures/election_correlation_positive.png){width=60%}
+   ![](figures/election_correlation_positive.png){width=60% fig-align="center"}
 
 7. But for other pairs, the results are suspicious. For example, the simulations
 suggest that the outcomes in Washington (a Democrat-leaning state) and
@@ -86,7 +86,7 @@ strange, because it means that if Trump won Washington, he would be more likely
 to _lose_ Mississippi. You would think that if he had won a historic upset and
 succeeded in Washington, then surely he would have also won in Mississippi.
 
-   ![](figures/election_correlation_negative.png){width=60%}
+   ![](figures/election_correlation_negative.png){width=60% fig-align="center"}
 
 8. The authors of our reading argue that this negative correlation is a
 technical artifact of teh statistical model used by the 538 team, and not a real
@@ -110,19 +110,21 @@ one specific field can be easily adapted to other fields.
 to draw replicate datasets $y_{i}^{\text{rep}}$ given an observed dataset $y$,
 $$
 y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}} \vert y\right).
-$$
+$$ {#eq-post-pred}
  You should think of each
 $y_{i}^{\text{rep}}$ and $y$ as vectors, because they represent an entire
 dataset.
 
-    - In our reading, the probability on the right hand side is called the
+    - In our reading, the probability in @eq-post-pred is called the
     **posterior predictive distribution**. The hope is that after having observed the real dataset $y$, the
     distribution $p\left(y^{\text{rep}} \vert y\right)$ should allow us to simulate
     new replicates that look similar to the real data.
 
     - In contrast, the
-    **prior predictive distribution**, denoted $p\left(y^{\text{rep}}\right)$, describes how we would simulate new datasets
-    $y^{\text{rep}}$ before having observed any real data $y$.
+    **prior predictive distribution**, denoted $p\left(y^{\text{rep}}\right)$, describes how we would simulate new datasets before having observed any real data $y$.
+$$
+y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
+$$ {#eq-prior-pred}
 
 ### Running Example
 
@@ -169,15 +171,15 @@ satellite data alone.  What features might we include to improve the model fit?
 regression lines separately for different country super-regions, as specified by
 the WHO. The fact that the slopes are not the same in each region means that we
 should modify our model to have a different slope in each region 1 .
-   ```{r}
-   #| label: pm25-regions
-   ggplot(GM@data, aes(log_sat, log_pm25)) +
-       geom_point(aes(col = super_region_name), size = 0.4, alpha = 0.7) +
-       geom_smooth(aes(col = super_region_name), method = "lm", se = FALSE, size = 2) +
-       scale_color_brewer(palette = "Set2") +
-       labs(x = "log(satellite)", y = "log(ground station)", col = "WHO Region") +
-       coord_fixed()
-   ```
+```{r}
+#| label: pm25-regions
+ggplot(GM@data, aes(log_sat, log_pm25)) +
+    geom_point(aes(col = super_region_name), size = 0.4, alpha = 0.7) +
+    geom_smooth(aes(col = super_region_name), method = "lm", se = FALSE, size = 2) +
+    scale_color_brewer(palette = "Set2") +
+    labs(x = "log(satellite)", y = "log(ground station)", col = "WHO Region") +
+    coord_fixed()
+```
 
 15. The WHO categorizations are somewhat arbitrary. Maybe there are better
 country groupings, tailored specifically to the PM2.5 problem? One idea is to
@@ -403,8 +405,7 @@ similar to that in the real dataset.
 
     plots <- imap(models, ~
         pp_check(.x, type = "stat", stat = skew, binwidth = 0.01) +
-            ggtitle(.y)
-    )
+            ggtitle(.y))
     wrap_plots(plots, nrow = 1)
     ```
 
@@ -436,8 +437,8 @@ query test points for predictions but can't simulate.
 
 ## Explaining Black Boxes
 
-27. Specifically, we'll focus on Partial dependence profiles (PDP) and
-individual conditional expectation (ICE) plots. They are general-purpose
+27. Specifically, we'll focus on Partial Dependence Profiles (PDP) and
+Individual Conditional Expectation (ICE) curves. They are general-purpose
 visualizations that attempt to explain how the model relates a predictor
 variable/set of predictor variables with the response.
 
@@ -465,13 +466,13 @@ PDP is to average across them.
 all their $d^{th}$ coordinates to $z$, evaluate the function $f$, and then
 average.
 
-    ![Evaluating the PDP at a single value $z = x_d^*$ ](figures/pdp_one_z.png)
+    ![Evaluating the PDP at a single value $z = x_d^*$ ](figures/pdp_one_z.png){width=60% fig-align="center"}
 
     We repeat this for many $z$'s to trace out the partial dependence
     curve.
 
     ![Repeating this
-    process across many $z$ lets us trace out a $\text{PDP}_d(x_d)$ curve.](figures/pdp_multiple_z.png)
+    process across many $z$ lets us trace out a $\text{PDP}_d(x_d)$ curve.](figures/pdp_multiple_z.png){width=60% fig-align="center"}
 
 ### Individual Conditional Expectations
 
@@ -491,7 +492,7 @@ This is especially useful for discovering interactions. For example, here are
 ICE curves for a model trained to predict survival with the Titanic dataset.
 The age effect is very different for crew vs. passengers.
 
-    ![ICE ("Ceteris Paribus") curves for a survival model fit to the Titanic
+    ![ICE curves for a survival model fit to the Titanic
     dataset, colored by passenger/crew class.](figures/plot_titanic_ice.png)
 
 ### Example
@@ -510,7 +511,8 @@ survive, so a model is fitted to predict survival.
 
     x <- select(titanic, -survived)
     fit <- gbm(
-        survived ~ ., data = titanic,
+        survived ~ .,
+        data = titanic,
         distribution = "bernoulli",
         n.trees = 100, interaction.depth = 8,
         shrinkage = 0.1, n.minobsinnode = 10,
@@ -540,9 +542,9 @@ characteristics that made them more or less likely to survive.
 
 36. Some details about the code. The `explain` function takes the fitted model
 and original dataset as input. It returns an object with many kinds of model
-summaries. To extract the ICE profiles from these summaries, we use
+summaries. To extract the ICE curves from these summaries, we use
 `model_profile`. The output of this function has been designed so that calling
-plot with `geom = "profiles"` will show the ICE profiles.
+plot with `geom = "profiles"` will show the ICE curves.
 
 ### Interactions
 
@@ -551,13 +553,13 @@ the relationship between $x_{j}$ and $y$ is modulated by variable $j^{\prime}$.
 For example, in the figure below, the slope of cross-sections across $j$ depends
 on $j^{\prime}$.
 
-38. Using the language of partial dependence profiles, the figure above means that the shape of
-the PDP profile in $j$ depends on the particular setting of $j^{\prime}$. This
-motivates the use of Grouped PD profiles — we compute several PD profiles in
-$j$, restricting attention to CP profiles whose value $x_{j^{\prime}}$ lies
-within a prespecified range.
+38. Using the language of partial dependence profiles, the figure above means
+that the shape of the ICE curve in $j$ depends on the particular setting of
+$j^{\prime}$. This motivates the use of Grouped PD profiles — we compute several
+PD profiles in $j$, restricting attention to PDP profiles whose value
+$x_{j^{\prime}}$ lies within a prespecified range.
 
-39. To illustrate, we revisit the CP profiles for age from the Titanic dataset.
+39. To illustrate, we revisit the ICE curves for age from the Titanic dataset.
 Below, the profiles are grouped according to the class of the ticket holder. The
 result shows that the relationship between age and survival was not the same
 across all passengers. For all classes, there was a decrease in survival
@@ -565,7 +567,7 @@ probability for adults, but the dropoff was most severe for crew members.
 
     ```{r}
     #| label: titanic-cp
-    #| fig.cap: "Grouping the CP profiles by ticket class reveals an interaction effect with age in the Titanic dataset."
+    #| fig.cap: "Grouping the ICE curves by ticket class reveals an interaction effect with age in the Titanic dataset."
     profiles <- model_profile(explainer = explanation, groups = "class")
     plot(profiles, geom = "profiles", variables = "age") +
         scale_color_brewer(palette = "Set2")
@@ -574,9 +576,9 @@ probability for adults, but the dropoff was most severe for crew members.
 40. What should we do if there are many input variables and we don’t have a
 priori knowledge about which variables $j^{\prime}$ might be interacting with
 $j$? One idea is to try to *discover* relevant interactions by clustering the
-original set of CP profiles.
+original set of ICE curves.
 
-41. In more detail, we can compute the CP profiles for all the samples, and then
+41. In more detail, we can compute the ICE curves for all the samples, and then
 see whether there are subsets of profiles that all look similar. If we find
 features $j^{\prime}$ that characterize these groupings, then we have found
 features that interact with $j$ (with respect to the fitted model $f$). The plot
@@ -586,7 +588,7 @@ explicitly provided this grouping variable.
 
     ```{r}
     #| label: titanic-clusters
-    #| fig.cap: "Discovered groupings in the CP profiles for age reveals an interaction effect."
+    #| fig.cap: "Discovered groupings in the ICE curves for age reveals an interaction effect."
     profiles <- model_profile(explainer = explanation, variables = "age", k = 3)
     plot(profiles, geom = "profiles", variables = "age") +
         scale_color_brewer(palette = "Set2")
@@ -599,14 +601,14 @@ explicitly provided this grouping variable.
   	* Guide the design of new features, and
   	* Characterizing overfitting
   	PD profiles that are used to compare different models are sometimes called
-  	« Contrastive » PD profiles.
+  	"Contrastive" PD profiles.
 
 43. To validate a simple model, we can compare its PD profiles with those of a
 more sophisticated model. We will illustrate this by fitting linear and
 gradient boosting models to a dataset of apartment prices^[It is a simulated dataset, but
 designed to reflect properties of a real dataset.]. Given various properties of
 an apartment, the goal is to determine its price. The code below fits the two
-models and extracts their CP and PD profiles.
+models and extracts their ICE and PD profiles.
 
     ```{r}
     #| label: apartments-fit
@@ -637,8 +639,8 @@ discrepancies might become apparent. For example, important nonlinearities or
 interactions might be visible from the PD profiles of the complex model. This
 information can guide the design of new features in the simpler model, so that
 it can continue to be used. This is exactly the case in the apartments dataset
-above -- there is a strong nonlinear relationship for the construction year
-variables. This suggests that, if a linear model is still desired, then a new
+above (there is a strong nonlinear relationship for the construction year
+variables). This suggests that, if a linear model is still desired, then a new
 feature should be defined that identifies whether the apartment was built
 between 1935 and 1990.
 

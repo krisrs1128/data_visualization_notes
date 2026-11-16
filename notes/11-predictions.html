@@ -168,14 +168,30 @@ window.Quarto = {
 <li><p>When we read data analysis reports or attend statistical research seminar, we are bound to be bombarded by numerical outputs from models, <span class="math inline">\(p\)</span>-values, test set accuracies, parameter estimates, <span class="math inline">\(R^2\)</span> values… This is all helpful for keeping everyone honest about how good models really are, but if we want to build intuition (and improve) models, then it really helps to visualize them.</p></li>
 <li><p>In fact, we can integrate visualization throughout the model building process. In data science, there is a cliche that visualization is mainly useful at the very beginning (exploratory data analysis) or end (pretty presentations) of a study. But careful modeling requires visualization at all steps.</p></li>
 <li><p>UW-Madison’s Statistics Department was founded by George Box, one of the most important statisticians of the 20th century. Among many methdological contributions, he is famous for the quote, “All models are wrong, but some are useful.” I’ve always found it a bit unfortunate that this quote became so popular without the related idea, “Box’s Loop,” becoming similarly famous. The idea of the Loop is that we should seek out limitations in our models (“all models are wrong”) but then use that to suggest improvements.</p>
-<p><img src="figures/blei_boxs_loop.png" class="img-fluid" style="width:70.0%"></p></li>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/blei_boxs_loop.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div></li>
 <li><p>If this seems a little abstract, consider this example from the reading. The 538 blog releases election forecasts based on statistical models trained on polling and historical election data. We’ll consider a model they built just before the 2020 US Presidential Election between Joe Biden and Donald Trump. This supports simulation, so we can generate hypothetical election results using the fitted model parameters. For each of the simulated datasets, we get a percentage breakdown Biden vs.&nbsp;Trump for each state.</p></li>
 <li><p>If we average the statewise results across all the simulated elections, then the model makes sense, considering voting patterns in recent elections. For example, California reliably votes for the Democrat (Biden) while Wyoming reliably votes for the Republican (Trump).</p>
-<p><img src="figures/election_statewise.png" class="img-fluid" style="width:90.0%"></p></li>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/election_statewise.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+</figure>
+</div></li>
 <li><p>Further, for particular pairs of states, the correlations match our expectations. For example, Wisconsin and Pennsylvania are traditionally “swing” states, which have gone to either Democrats or Republicans in recent elections. If we plot the simulated outcomes against one another, then they are positively correlated, which is what we would expect if there were events (in the time between the forecast and the final election) that either improved or damaged their chances consistently across both states.</p>
-<p><img src="figures/election_correlation_positive.png" class="img-fluid" style="width:60.0%"></p></li>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/election_correlation_positive.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div></li>
 <li><p>But for other pairs, the results are suspicious. For example, the simulations suggest that the outcomes in Washington (a Democrat-leaning state) and Mississippi (a Republican-leaning state) are negative correlated. This is strange, because it means that if Trump won Washington, he would be more likely to <em>lose</em> Mississippi. You would think that if he had won a historic upset and succeeded in Washington, then surely he would have also won in Mississippi.</p>
-<p><img src="figures/election_correlation_negative.png" class="img-fluid" style="width:60.0%"></p></li>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/election_correlation_negative.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div></li>
 <li><p>The authors of our reading argue that this negative correlation is a technical artifact of teh statistical model used by the 538 team, and not a real pattern from any historical data. It turns out that the default statistical choice the team used is not really compatible with our knowledge about the problem setting. This is a place where defaults could be adapted to obtain a more realistic model; i.e., it motivates moving through an interation of Box’s loop.</p></li>
 </ol>
 <section id="probabilistic-models" class="level2">
@@ -184,12 +200,14 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="notation">Notation</h3>
 <ol start="9" type="1">
 <li><p>If the election example feels a bit ad hoc to you, then you have a good instinct for statistics. One of the goals of statistical methods research is to formalize good intuition using more mathematical language, and that’s exactly what we’ll do here. In this way, we’ll ensure that good ideas that appear in one specific field can be easily adapted to other fields.</p></li>
-<li><p>We will use the following notation. A simulation model is one that allows us to draw replicate datasets <span class="math inline">\(y_{i}^{\text{rep}}\)</span> given an observed dataset <span class="math inline">\(y\)</span>, <span class="math display">\[
+<li><p>We will use the following notation. A simulation model is one that allows us to draw replicate datasets <span class="math inline">\(y_{i}^{\text{rep}}\)</span> given an observed dataset <span class="math inline">\(y\)</span>, <span id="eq-post-pred"><span class="math display">\[
 y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}} \vert y\right).
-\]</span> You should think of each <span class="math inline">\(y_{i}^{\text{rep}}\)</span> and <span class="math inline">\(y\)</span> as vectors, because they represent an entire dataset.</p>
+\tag{1}\]</span></span> You should think of each <span class="math inline">\(y_{i}^{\text{rep}}\)</span> and <span class="math inline">\(y\)</span> as vectors, because they represent an entire dataset.</p>
 <ul>
-<li><p>In our reading, the probability on the right hand side is called the <strong>posterior predictive distribution</strong>. The hope is that after having observed the real dataset <span class="math inline">\(y\)</span>, the distribution <span class="math inline">\(p\left(y^{\text{rep}} \vert y\right)\)</span> should allow us to simulate new replicates that look similar to the real data.</p></li>
-<li><p>In contrast, the <strong>prior predictive distribution</strong>, denoted <span class="math inline">\(p\left(y^{\text{rep}}\right)\)</span>, describes how we would simulate new datasets <span class="math inline">\(y^{\text{rep}}\)</span> before having observed any real data <span class="math inline">\(y\)</span>.</p></li>
+<li><p>In our reading, the probability in <a href="#eq-post-pred" class="quarto-xref">Equation&nbsp;1</a> is called the <strong>posterior predictive distribution</strong>. The hope is that after having observed the real dataset <span class="math inline">\(y\)</span>, the distribution <span class="math inline">\(p\left(y^{\text{rep}} \vert y\right)\)</span> should allow us to simulate new replicates that look similar to the real data.</p></li>
+<li><p>In contrast, the <strong>prior predictive distribution</strong>, denoted <span class="math inline">\(p\left(y^{\text{rep}}\right)\)</span>, describes how we would simulate new datasets before having observed any real data <span class="math inline">\(y\)</span>. <span id="eq-prior-pred"><span class="math display">\[
+y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
+\tag{2}\]</span></span></p></li>
 </ul></li>
 </ol>
 </section>
@@ -224,14 +242,21 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}} \vert y
 <li><p>When we plot these two variables against one another, we can see that we won’t be able to obtain good predictions for the station measurements using the satellite data alone. What features might we include to improve the model fit?</p></li>
 <li><p>One hypothesis is that country region is an important factor. Below, we fit regression lines separately for different country super-regions, as specified by the WHO. The fact that the slopes are not the same in each region means that we should modify our model to have a different slope in each region 1 .</p></li>
 </ol>
-<p>::: {.cell}</p>
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(GM<span class="sc">@</span>data, <span class="fu">aes</span>(log_sat, log_pm25)) <span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col =</span> super_region_name), <span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col =</span> super_region_name), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"log(satellite)"</span>, <span class="at">y =</span> <span class="st">"log(ground station)"</span>, <span class="at">col =</span> <span class="st">"WHO Region"</span>) <span class="sc">+</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>::: {.cell-output-display} <img src="11-predictions_files/figure-html/pm25-regions-1.png" class="img-fluid" width="672"> ::: :::</p>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="11-predictions_files/figure-html/pm25-regions-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <ol start="15" type="1">
 <li><p>The WHO categorizations are somewhat arbitrary. Maybe there are better country groupings, tailored specifically to the PM2.5 problem? One idea is to cluster the ground stations based on PM2.5 level and use these clusters as a different region grouping.</p>
 <div class="cell">
@@ -413,9 +438,8 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}} \vert y
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">imap</span>(models, <span class="sc">~</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pp_check</span>(.x, <span class="at">type =</span> <span class="st">"stat"</span>, <span class="at">stat =</span> skew, <span class="at">binwidth =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggtitle</span>(.y)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(plots, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggtitle</span>(.y))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(plots, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -465,7 +489,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}} \vert y
 <section id="explaining-black-boxes" class="level2">
 <h2 class="anchored" data-anchor-id="explaining-black-boxes">Explaining Black Boxes</h2>
 <ol start="27" type="1">
-<li><p>Specifically, we’ll focus on Partial dependence profiles (PDP) and individual conditional expectation (ICE) plots. They are general-purpose visualizations that attempt to explain how the model relates a predictor variable/set of predictor variables with the response.</p></li>
+<li><p>Specifically, we’ll focus on Partial Dependence Profiles (PDP) and Individual Conditional Expectation (ICE) curves. They are general-purpose visualizations that attempt to explain how the model relates a predictor variable/set of predictor variables with the response.</p></li>
 <li><p>Partial dependence profiles were first introduced as a minor point in an influential paper about gradient boosting <span class="citation" data-cites="friedman2001greedy">(<a href="#ref-friedman2001greedy" role="doc-biblioref">Friedman 2001</a>)</span>. ICE and ALE were introduced to address some limitations of PDP, mainly related to the fact that prediction surfaces can become complicated in high-dimensions and when many interactions are present.</p></li>
 <li><p>Let <span class="math inline">\(f\)</span> be the learned black box function. Let <span class="math inline">\(x\)</span> be its <span class="math inline">\(D\)</span>-dimensional input. The idea is to ask how <span class="math inline">\(f\)</span> changes as we vary the <span class="math inline">\(d\)</span>th coordinate over its range. We need to do something with the remaining coordinates. The idea of PDP is to average across them.</p>
 <p><span class="math display">\[
@@ -475,14 +499,14 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}} \vert y
 <li><p>Here is some geometric intuition. We take the original samples, manually set all their <span class="math inline">\(d^{th}\)</span> coordinates to <span class="math inline">\(z\)</span>, evaluate the function <span class="math inline">\(f\)</span>, and then average.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="figures/pdp_one_z.png" class="img-fluid figure-img"></p>
+<p><img src="figures/pdp_one_z.png" class="img-fluid figure-img" style="width:60.0%"></p>
 <figcaption>Evaluating the PDP at a single value <span class="math inline">\(z = x_d^*\)</span></figcaption>
 </figure>
 </div>
 <p>We repeat this for many <span class="math inline">\(z\)</span>’s to trace out the partial dependence curve.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="figures/pdp_multiple_z.png" class="img-fluid figure-img"></p>
+<p><img src="figures/pdp_multiple_z.png" class="img-fluid figure-img" style="width:60.0%"></p>
 <figcaption>Repeating this process across many <span class="math inline">\(z\)</span> lets us trace out a <span class="math inline">\(\text{PDP}_d(x_d)\)</span> curve.</figcaption>
 </figure>
 </div></li>
@@ -499,7 +523,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="figures/plot_titanic_ice.png" class="img-fluid figure-img"></p>
-<figcaption>ICE (“Ceteris Paribus”) curves for a survival model fit to the Titanic dataset, colored by passenger/crew class.</figcaption>
+<figcaption>ICE curves for a survival model fit to the Titanic dataset, colored by passenger/crew class.</figcaption>
 </figure>
 </div></li>
 </ol>
@@ -516,12 +540,13 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">select</span>(titanic, <span class="sc">-</span>survived)</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">gbm</span>(</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    survived <span class="sc">~</span> ., <span class="at">data =</span> titanic,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">distribution =</span> <span class="st">"bernoulli"</span>,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.trees =</span> <span class="dv">100</span>, <span class="at">interaction.depth =</span> <span class="dv">8</span>,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">shrinkage =</span> <span class="fl">0.1</span>, <span class="at">n.minobsinnode =</span> <span class="dv">10</span>,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    survived <span class="sc">~</span> .,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> titanic,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">distribution =</span> <span class="st">"bernoulli"</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.trees =</span> <span class="dv">100</span>, <span class="at">interaction.depth =</span> <span class="dv">8</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">shrinkage =</span> <span class="fl">0.1</span>, <span class="at">n.minobsinnode =</span> <span class="dv">10</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>Next, we can compute the ICE curves using the <code>DALEX</code> package. We are showing the relationship between age and survival, though any subset of variables could be requested. The bold curve is a Partial Dependence (PD) profile. Each of the other curves corresponds to a passenger, though only a subsample is shown. The curves are obtained by fixing all the characteristics of the passanger except for age, and then seeing what happens to the prediction when the age variable is increased or decreased.</p>
 <div class="cell">
@@ -550,15 +575,15 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </div>
 </div></li>
 <li><p>It seems that children had the highest probability 2 of survival. The relationship is far from linear, with those between 40 and 60 all having about the same probabilities. Notice that the profiles are vertically offset from one passenger to another. This is because, aside from age, each passenger had characteristics that made them more or less likely to survive.</p></li>
-<li><p>Some details about the code. The <code>explain</code> function takes the fitted model and original dataset as input. It returns an object with many kinds of model summaries. To extract the ICE profiles from these summaries, we use <code>model_profile</code>. The output of this function has been designed so that calling plot with <code>geom = "profiles"</code> will show the ICE profiles.</p></li>
+<li><p>Some details about the code. The <code>explain</code> function takes the fitted model and original dataset as input. It returns an object with many kinds of model summaries. To extract the ICE curves from these summaries, we use <code>model_profile</code>. The output of this function has been designed so that calling plot with <code>geom = "profiles"</code> will show the ICE curves.</p></li>
 </ol>
 </section>
 <section id="interactions" class="level3">
 <h3 class="anchored" data-anchor-id="interactions">Interactions</h3>
 <ol start="37" type="1">
 <li><p>We say that there is an interaction between variables <span class="math inline">\(j\)</span> and <span class="math inline">\(j^{\prime}\)</span> if the relationship between <span class="math inline">\(x_{j}\)</span> and <span class="math inline">\(y\)</span> is modulated by variable <span class="math inline">\(j^{\prime}\)</span>. For example, in the figure below, the slope of cross-sections across <span class="math inline">\(j\)</span> depends on <span class="math inline">\(j^{\prime}\)</span>.</p></li>
-<li><p>Using the language of partial dependence profiles, the figure above means that the shape of the PDP profile in <span class="math inline">\(j\)</span> depends on the particular setting of <span class="math inline">\(j^{\prime}\)</span>. This motivates the use of Grouped PD profiles — we compute several PD profiles in <span class="math inline">\(j\)</span>, restricting attention to CP profiles whose value <span class="math inline">\(x_{j^{\prime}}\)</span> lies within a prespecified range.</p></li>
-<li><p>To illustrate, we revisit the CP profiles for age from the Titanic dataset. Below, the profiles are grouped according to the class of the ticket holder. The result shows that the relationship between age and survival was not the same across all passengers. For all classes, there was a decrease in survival probability for adults, but the dropoff was most severe for crew members.</p>
+<li><p>Using the language of partial dependence profiles, the figure above means that the shape of the ICE curve in <span class="math inline">\(j\)</span> depends on the particular setting of <span class="math inline">\(j^{\prime}\)</span>. This motivates the use of Grouped PD profiles — we compute several PD profiles in <span class="math inline">\(j\)</span>, restricting attention to PDP profiles whose value <span class="math inline">\(x_{j^{\prime}}\)</span> lies within a prespecified range.</p></li>
+<li><p>To illustrate, we revisit the ICE curves for age from the Titanic dataset. Below, the profiles are grouped according to the class of the ticket holder. The result shows that the relationship between age and survival was not the same across all passengers. For all classes, there was a decrease in survival probability for adults, but the dropoff was most severe for crew members.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>profiles <span class="ot">&lt;-</span> <span class="fu">model_profile</span>(<span class="at">explainer =</span> explanation, <span class="at">groups =</span> <span class="st">"class"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(profiles, <span class="at">geom =</span> <span class="st">"profiles"</span>, <span class="at">variables =</span> <span class="st">"age"</span>) <span class="sc">+</span></span>
@@ -567,13 +592,13 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="11-predictions_files/figure-html/titanic-cp-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Grouping the CP profiles by ticket class reveals an interaction effect with age in the Titanic dataset.</figcaption>
+<figcaption>Grouping the ICE curves by ticket class reveals an interaction effect with age in the Titanic dataset.</figcaption>
 </figure>
 </div>
 </div>
 </div></li>
-<li><p>What should we do if there are many input variables and we don’t have a priori knowledge about which variables <span class="math inline">\(j^{\prime}\)</span> might be interacting with <span class="math inline">\(j\)</span>? One idea is to try to <em>discover</em> relevant interactions by clustering the original set of CP profiles.</p></li>
-<li><p>In more detail, we can compute the CP profiles for all the samples, and then see whether there are subsets of profiles that all look similar. If we find features <span class="math inline">\(j^{\prime}\)</span> that characterize these groupings, then we have found features that interact with <span class="math inline">\(j\)</span> (with respect to the fitted model <span class="math inline">\(f\)</span>). The plot below shows the same profiles as above, but clustering directly. It seems to recover the interaction between age and class, even though we have not explicitly provided this grouping variable.</p>
+<li><p>What should we do if there are many input variables and we don’t have a priori knowledge about which variables <span class="math inline">\(j^{\prime}\)</span> might be interacting with <span class="math inline">\(j\)</span>? One idea is to try to <em>discover</em> relevant interactions by clustering the original set of ICE curves.</p></li>
+<li><p>In more detail, we can compute the ICE curves for all the samples, and then see whether there are subsets of profiles that all look similar. If we find features <span class="math inline">\(j^{\prime}\)</span> that characterize these groupings, then we have found features that interact with <span class="math inline">\(j\)</span> (with respect to the fitted model <span class="math inline">\(f\)</span>). The plot below shows the same profiles as above, but clustering directly. It seems to recover the interaction between age and class, even though we have not explicitly provided this grouping variable.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>profiles <span class="ot">&lt;-</span> <span class="fu">model_profile</span>(<span class="at">explainer =</span> explanation, <span class="at">variables =</span> <span class="st">"age"</span>, <span class="at">k =</span> <span class="dv">3</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(profiles, <span class="at">geom =</span> <span class="st">"profiles"</span>, <span class="at">variables =</span> <span class="st">"age"</span>) <span class="sc">+</span></span>
@@ -582,7 +607,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="11-predictions_files/figure-html/titanic-clusters-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Discovered groupings in the CP profiles for age reveals an interaction effect.</figcaption>
+<figcaption>Discovered groupings in the ICE curves for age reveals an interaction effect.</figcaption>
 </figure>
 </div>
 </div>
@@ -596,9 +621,9 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <ul>
 <li>Validate a simple model</li>
 <li>Guide the design of new features, and</li>
-<li>Characterizing overfitting PD profiles that are used to compare different models are sometimes called «&nbsp;Contrastive&nbsp;» PD profiles.</li>
+<li>Characterizing overfitting PD profiles that are used to compare different models are sometimes called “Contrastive” PD profiles.</li>
 </ul></li>
-<li><p>To validate a simple model, we can compare its PD profiles with those of a more sophisticated model. We will illustrate this by fitting linear and gradient boosting models to a dataset of apartment prices<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Given various properties of an apartment, the goal is to determine its price. The code below fits the two models and extracts their CP and PD profiles.</p>
+<li><p>To validate a simple model, we can compare its PD profiles with those of a more sophisticated model. We will illustrate this by fitting linear and gradient boosting models to a dataset of apartment prices<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Given various properties of an apartment, the goal is to determine its price. The code below fits the two models and extracts their ICE and PD profiles.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(apartments)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">select</span>(apartments, <span class="sc">-</span>m2.price)</span>
@@ -648,7 +673,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 </div>
 </div>
 </div></li>
-<li><p>When making the comparison between a simple and a complex model, certain discrepancies might become apparent. For example, important nonlinearities or interactions might be visible from the PD profiles of the complex model. This information can guide the design of new features in the simpler model, so that it can continue to be used. This is exactly the case in the apartments dataset above – there is a strong nonlinear relationship for the construction year variables. This suggests that, if a linear model is still desired, then a new feature should be defined that identifies whether the apartment was built between 1935 and 1990.</p>
+<li><p>When making the comparison between a simple and a complex model, certain discrepancies might become apparent. For example, important nonlinearities or interactions might be visible from the PD profiles of the complex model. This information can guide the design of new features in the simpler model, so that it can continue to be used. This is exactly the case in the apartments dataset above (there is a strong nonlinear relationship for the construction year variables). This suggests that, if a linear model is still desired, then a new feature should be defined that identifies whether the apartment was built between 1935 and 1990.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(profiles_lm, profiles_rf, <span class="at">variables =</span> <span class="st">"construction.year"</span>) <span class="sc">+</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

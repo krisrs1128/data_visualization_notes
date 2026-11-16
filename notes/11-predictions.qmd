@@ -23,8 +23,8 @@ execute:
 #| echo: false
 library(knitr)
 library(tidyverse)
-library(caret)
-library(tidyverse)
+library(gbm)
+library(ranger)
 library(DALEX)
 library(brms)
 library(bayesplot)
@@ -221,11 +221,13 @@ modified. Either the prior or the likelihood might need revision.
 assumptions, based on "vague" and "informative" priors, respectively. The first
 type of assumption is quite common in practice, and a version of this is likely
 what the 538 team used. However, in the PM2.5 example, the simulated data using
-the vague prior is not even remotely plausible.
+the vague prior is not even remotely plausible. To see this, we can use the
+`ppc_scatter` function from the `bayesplot` package, which takes the real and
+simulated data as arguments.
 
     ```{r}
     #| label: vague-prior
-    # function to simulate from vague prior
+    # function to simulate from the first modeling assumption (vague prior)
     prior1 <- function(Nsim) {
         tau0 <- 1 / sqrt(rgamma(1, 1, rate = 100))
         tau1 <- 1 / sqrt(rgamma(1, 1, rate = 100))
@@ -247,8 +249,12 @@ the vague prior is not even remotely plausible.
     ```{r}
     #| label: vague-plot
     #| fig.cap: "Prior predictive samples from the vague prior are on a completely implausible scale."
+
+    # generate 12 samples
     prior1_data <- replicate(12, prior1(Nsim = nrow(GM@data))$sim) |>
         t()
+
+    # plot them
     ppc_scatter(
         y = GM$log_pm25,
         yrep = prior1_data,
@@ -270,7 +276,7 @@ our prior knowledge of the problem setting.
     #| label: informed-prior
     #| fig.cap: "Prior predictive samples from the weakly informative prior seem more plausible
     #| though they do not (and should not) exactly fit the true data."
-    # function to simulate from informative prior
+    # function to simulate from second modeling assumption (informative)
     prior2 <- function(Nsim) {
         tau0 <- abs(rnorm(1, 0, 1))
         tau1 <- abs(rnorm(1, 0, 1))
@@ -499,11 +505,17 @@ survive, so a model is fitted to predict survival.
     ```{r}
     data(titanic)
     titanic <- select(titanic, -country) |>
-      na.omit()
+        na.omit() |>
+        mutate(survived = as.numeric(survived == "yes"))
 
     x <- select(titanic, -survived)
-    hyper <- data.frame(n.trees = 100, interaction.depth = 8, shrinkage = 0.1, n.minobsinnode = 10)
-    fit <- train(x = x, y = titanic$survived, method = "gbm", tuneGrid = hyper, verbose = F)
+    fit <- gbm(
+        survived ~ ., data = titanic,
+        distribution = "bernoulli",
+        n.trees = 100, interaction.depth = 8,
+        shrinkage = 0.1, n.minobsinnode = 10,
+        verbose = FALSE
+    )
     ```
 
 34. Next, we can compute the ICE curves using the `DALEX` package. We are showing
@@ -554,17 +566,6 @@ probability for adults, but the dropoff was most severe for crew members.
     ```{r}
     #| label: titanic-cp
     #| fig.cap: "Grouping the CP profiles by ticket class reveals an interaction effect with age in the Titanic dataset."
-    f <- tempfile()
-    download.file("https://uwmadison.box.com/shared/static/nau695mppsoxx0f6bns1ieo7kh1bje0j.rda", f)
-    fit <- get(load(f))
-
-    data(titanic)
-    titanic <- titanic |>
-        select(-country) |>
-        na.omit()
-    x <- select(titanic, -survived)
-
-    explanation <- explain(model = fit, data = x, y = titanic$survived)
     profiles <- model_profile(explainer = explanation, groups = "class")
     plot(profiles, geom = "profiles", variables = "age") +
         scale_color_brewer(palette = "Set2")
@@ -601,8 +602,8 @@ explicitly provided this grouping variable.
   	« Contrastive » PD profiles.
 
 43. To validate a simple model, we can compare its PD profiles with those of a
-more sophisticated model. We will illustrate this by fitting linear and random
-forest models to a dataset of apartment prices^[It is a simulated dataset, but
+more sophisticated model. We will illustrate this by fitting linear and
+gradient boosting models to a dataset of apartment prices^[It is a simulated dataset, but
 designed to reflect properties of a real dataset.]. Given various properties of
 an apartment, the goal is to determine its price. The code below fits the two
 models and extracts their CP and PD profiles.
@@ -611,11 +612,11 @@ models and extracts their CP and PD profiles.
     #| label: apartments-fit
     data(apartments)
     x <- select(apartments, -m2.price)
-    profiles_lm <- train(x, apartments$m2.price, method = "lm") |>
-        explain(x, apartments$m2.price, label = "LM") |>
+    profiles_lm <- lm(m2.price ~ ., data = apartments) |>
+        explain(data = x, y = apartments$m2.price, label = "LM") |>
         model_profile()
-    profiles_rf <- train(x, apartments$m2.price, method = "rf", tuneGrid = data.frame(mtry = 10)) |>
-        explain(x, apartments$m2.price, label = "RF") |>
+    profiles_rf <- ranger(m2.price ~ ., data = apartments) |>
+        explain(data = x, y = apartments$m2.price, label = "RF") |>
         model_profile()
     ```
 

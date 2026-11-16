@@ -5,14 +5,13 @@ date: 2026-09-01
 bibliography: references.bib
 format:
   html:
-    embed-resources: true
     html-math-method: mathjax
     fig-align: center
 execute:
     echo: true
     message: false
     warning: false
-    cache: false
+    cache: true
     eval: true
 ---
 
@@ -28,6 +27,8 @@ library(caret)
 library(tidyverse)
 library(DALEX)
 library(brms)
+library(bayesplot)
+library(patchwork)
 theme_set(theme_classic())
 set.seed(2026)
 ```
@@ -246,13 +247,16 @@ the vague prior is not even remotely plausible.
     ```{r}
     #| label: vague-plot
     #| fig.cap: "Prior predictive samples from the vague prior are on a completely implausible scale."
-    prior1_data <- map_dfr(1:12, ~ prior1(Nsim = nrow(GM@data)), .id = "replicate")
-    ggplot(prior1_data, aes(x = log_pm25, y = sim)) +
-        geom_abline(slope = 1) +
-        geom_point(aes(col = region), alpha = 0.1, size = 0.4) +
-        scale_color_brewer(palette = "Set2") +
-        labs(x = "True station data", y = "Simulated station data") +
-        facet_wrap(~replicate, scale = "free_y")
+    prior1_data <- replicate(12, prior1(Nsim = nrow(GM@data))$sim) |>
+        t()
+    ppc_scatter(
+        y = GM$log_pm25,
+        yrep = prior1_data,
+        size = 0.4,
+        alpha = 0.1,
+        facet_args = list(scales = "free_x", ncol = 4)
+    ) +
+        labs(x = "Simulated station data", y = "True station data")
     ```
 
 19. The block below instead simulates from a subjective, informative prior. The
@@ -284,13 +288,16 @@ our prior knowledge of the problem setting.
         )
     }
 
-    prior2_data <- map_dfr(1:12, ~ prior2(Nsim = nrow(GM@data)), .id = "replicate")
-    ggplot(prior2_data, aes(x = log_pm25, y = sim)) +
-        geom_abline(slope = 1) +
-        geom_point(aes(col = region), alpha = 0.1, size = 0.4) +
-        scale_color_brewer(palette = "Set2") +
-        labs(x = "True station data", y = "Simulated station data") +
-        facet_wrap(~replicate, scale = "free_y")
+    prior2_data <- replicate(12, prior2(Nsim = nrow(GM@data))$sim) |>
+        t()
+    ppc_scatter(
+        y = GM$log_pm25,
+        yrep = prior2_data,
+        size = 0.4,
+        alpha = 0.1,
+        facet_args = list(scales = "free_x", ncol = 4)
+    ) +
+        labs(x = "Simulated station data", y = "True station data")
     ```
 
 ### Posterior predictive distributions
@@ -357,19 +364,15 @@ sense, because it has been trained to approximate it.
     #| fig-width: 10
     #| fig-height: 6
     #| fig.cap: "Samples from the posterior predictive in the cluster-based model."
-    # extract 12 samples and reshape it to "long" format
-    posterior_samples <- posterior_predict(models$clusters, ndraws = 12) |>
-        t() |>
-        as_tibble() |>
-        bind_cols(GM@data) |>
-        pivot_longer(V1:V12, names_to = "replicate", values_to = "log_pm25_sim")
-
-    ggplot(posterior_samples, aes(log_pm25, log_pm25_sim)) +
-        geom_abline(slope = 1) +
-        geom_point(aes(col = cluster_region), size = 0.4, alpha = 0.1) +
-        scale_color_brewer(palette = "Set2") +
-        labs(x = "True station data", y = "Simulated station data") +
-        facet_wrap(~replicate, scale = "free_y")
+    pp_check(
+        models$clusters,
+        type = "scatter",
+        ndraws = 12,
+        size = 0.4,
+        alpha = 0.1,
+        facet_args = list(scales = "free_x", ncol = 4)
+    ) +
+        labs(x = "Simulated station data", y = "True station data")
     ```
 
 23. We can next define **test summaries** to see whether properties of the real
@@ -385,14 +388,6 @@ similar to that in the real dataset.
     #| fig-height: 3
     #| fig-width: 10
     #| fig.cap: "Posterior simulated skewness according to the three different models."
-    apply_stat <- function(x, f) {
-        z <- posterior_predict(x)
-        tibble(
-            "replicate" = seq_len(nrow(z)),
-            "statistic" = apply(z, 1, f)
-        )
-    }
-
     skew <- function(x) {
         xdev <- x - mean(x)
         n <- length(x)
@@ -400,12 +395,11 @@ similar to that in the real dataset.
         r * sqrt(n) * (1 - 1 / n)^1.5
     }
 
-    posteriors <- map_dfr(models, ~ apply_stat(., skew), .id = "model")
-    truth <- skew(GM@data$log_pm25)
-    ggplot(posteriors, aes(statistic)) +
-        geom_histogram(aes(fill = model), binwidth = 0.01) +
-        geom_vline(xintercept = truth, col = "red") +
-        scale_fill_brewer(palette = "Set3")
+    plots <- imap(models, ~
+        pp_check(.x, type = "stat", stat = skew, binwidth = 0.01) +
+            ggtitle(.y)
+    )
+    wrap_plots(plots, nrow = 1)
     ```
 
 24. According to this summary, it seems like the `regions` model is the best. It
@@ -465,16 +459,15 @@ PDP is to average across them.
 all their $d^{th}$ coordinates to $z$, evaluate the function $f$, and then
 average.
 
-
-    ![Evaluating the PDP at a single value $z = x_d^*$ ](figures/pdp_slice_sketch.png)
+    ![Evaluating the PDP at a single value $z = x_d^*$ ](figures/pdp_one_z.png)
 
     We repeat this for many $z$'s to trace out the partial dependence
     curve.
 
     ![Repeating this
-    process across many $z$ lets us trace out a $\text{PDP}_d(x_d)$ curve.](figures/pdp_slice_sketch.png)
+    process across many $z$ lets us trace out a $\text{PDP}_d(x_d)$ curve.](figures/pdp_multiple_z.png)
 
-## Individual Conditional Expectations
+### Individual Conditional Expectations
 
 31. ICE plots consider each term in the PDP formula as its own function of $z$.
 
@@ -495,55 +488,64 @@ The age effect is very different for crew vs. passengers.
     ![ICE ("Ceteris Paribus") curves for a survival model fit to the Titanic
     dataset, colored by passenger/crew class.](figures/plot_titanic_ice.png)
 
-33. Two common tricks for ICE plots:
+### Example
 
-    * We might suspect an interaction with an unmeasured variable. This can
-    sometimes be seen as groups of curves with different shapes, but where we
-    don't have a variable in the data that splits those groups. In this case,
-    people often cluster the curves and use cluster membership as a stand in for
-    the unobserved interacting variable.
+33. Let's consider how ICE and PDP can be used to understand a model fitted to
+the Titanic dataset. This is a dataset that was used to understand what
+characteristics survivors of the Titanic disaster had in common.  It’s not
+obvious in advance which characteristics of passengers made them more likely to
+survive, so a model is fitted to predict survival.
 
-    ![Groups of ICE curves with different shapes can suggest an interaction with
-    an unmeasured variable; clustering the curves gives a stand-in for that
-    variable.](figures/ice_cluster_sketch.png)
+    ```{r}
+    data(titanic)
+    titanic <- select(titanic, -country) |>
+      na.omit()
 
-    * Often the curves are offset because of differences in the coordinates other
-    than the $d$th. To see whether they nonetheless have similar shapes, it's
-    sometimes helpful to "center" the curves, so that they all start out equal to
-    one another.
+    x <- select(titanic, -survived)
+    hyper <- data.frame(n.trees = 100, interaction.depth = 8, shrinkage = 0.1, n.minobsinnode = 10)
+    fit <- train(x = x, y = titanic$survived, method = "gbm", tuneGrid = hyper, verbose = F)
+    ```
 
-    $$
-    \tilde{h}_n(z) = f(x_d = z, x_{n, -d}) - f(x_d = 0, x_{n, -d})
-    $$
+34. Next, we can compute the ICE curves using the `DALEX` package. We are showing
+the relationship between age and survival, though any subset of variables could
+be requested. The bold curve is a Partial Dependence (PD) profile. Each of the
+other curves corresponds to a passenger, though only a subsample is shown. The
+curves are obtained by fixing all the characteristics of the passanger except
+for age, and then seeing what happens to the prediction when the age variable is
+increased or decreased.
 
-    ![Raw ICE curves for a partial $\hat{y}$ vs. age relationship (left) and the
-    same curves after centering (right); centering makes it easier to compare
-    shapes across curves that start at different levels.](figures/plot_partial_yhat.png)
+    ```{r}
+    explanation <- explain(model = fit, data = x, y = titanic$survived)
+    profile <- model_profile(explainer = explanation)
+    plot(profile, geom = "profiles", variables = "age")
+    ```
 
-34. Partial dependence (PD) plots help answer the question, « How is feature $j$
-used by my model $f$? » Slight variations on PD plots are useful for some
-related followup questions,
-  	* Has my model $f$ learned interactions between features $j$ and $j^{\prime}$?
-  	* How do the models $f$ and $f^{\prime}$ differ in the way that they use feature $j$?
+35. It seems that children had the highest probability 2 of survival. The
+relationship is far from linear, with those between 40 and 60 all having about
+the same probabilities. Notice that the profiles are vertically offset from one
+passenger to another. This is because, aside from age, each passenger had
+characteristics that made them more or less likely to survive.
 
-35. The variants, called Grouped and Contrastive PD plots, reduce the original CP
-profiles less aggressively than PD plots, but without becoming overwhelmingly
-complicated.
+36. Some details about the code. The `explain` function takes the fitted model
+and original dataset as input. It returns an object with many kinds of model
+summaries. To extract the ICE profiles from these summaries, we use
+`model_profile`. The output of this function has been designed so that calling
+plot with `geom = "profiles"` will show the ICE profiles.
 
 ### Interactions
 
-36. We say that there is an interaction between variables $j$ and $j^{\prime}$ if
+37. We say that there is an interaction between variables $j$ and $j^{\prime}$ if
 the relationship between $x_{j}$ and $y$ is modulated by variable $j^{\prime}$.
 For example, in the figure below, the slope of cross-sections across $j$ depends
 on $j^{\prime}$.
 
-37. Using the language of CP profiles, the figure above means that the shape of
-the CP profile in $j$ depends on the particular setting of $j^{\prime}$. This
+38. Using the language of partial dependence profiles, the figure above means that the shape of
+the PDP profile in $j$ depends on the particular setting of $j^{\prime}$. This
 motivates the use of Grouped PD profiles — we compute several PD profiles in
 $j$, restricting attention to CP profiles whose value $x_{j^{\prime}}$ lies
 within a prespecified range.
 
-38. To illustrate, we revisit the CP profiles for age from the Titanic dataset.
+39. To illustrate, we revisit the CP profiles for age from the Titanic dataset.
 Below, the profiles are grouped according to the class of the ticket holder. The
 result shows that the relationship between age and survival was not the same
 across all passengers. For all classes, there was a decrease in survival
@@ -568,12 +570,12 @@ probability for adults, but the dropoff was most severe for crew members.
         scale_color_brewer(palette = "Set2")
     ```
 
-39. What should we do if there are many input variables and we don’t have a
+40. What should we do if there are many input variables and we don’t have a
 priori knowledge about which variables $j^{\prime}$ might be interacting with
 $j$? One idea is to try to *discover* relevant interactions by clustering the
 original set of CP profiles.
 
-40. In more detail, we can compute the CP profiles for all the samples, and then
+41. In more detail, we can compute the CP profiles for all the samples, and then
 see whether there are subsets of profiles that all look similar. If we find
 features $j^{\prime}$ that characterize these groupings, then we have found
 features that interact with $j$ (with respect to the fitted model $f$). The plot
@@ -591,14 +593,14 @@ explicitly provided this grouping variable.
 
 ### Model Comparison
 
-41. The comparison of different models’ PD profiles can be used to,
+42. The comparison of different models’ PD profiles can be used to,
   	* Validate a simple model
   	* Guide the design of new features, and
   	* Characterizing overfitting
   	PD profiles that are used to compare different models are sometimes called
   	« Contrastive » PD profiles.
 
-42. To validate a simple model, we can compare its PD profiles with those of a
+43. To validate a simple model, we can compare its PD profiles with those of a
 more sophisticated model. We will illustrate this by fitting linear and random
 forest models to a dataset of apartment prices^[It is a simulated dataset, but
 designed to reflect properties of a real dataset.]. Given various properties of
@@ -617,7 +619,7 @@ models and extracts their CP and PD profiles.
         model_profile()
     ```
 
-43. The PD profile below shows that the random forest learns linear
+44. The PD profile below shows that the random forest learns linear
 relationships with price for both the surface and floor variables. If all the
 effects were like this, then we would have a good reason for preferring the
 linear model.
@@ -629,7 +631,7 @@ linear model.
         scale_color_brewer(palette = "Set2")
     ```
 
-44. When making the comparison between a simple and a complex model, certain
+45. When making the comparison between a simple and a complex model, certain
 discrepancies might become apparent. For example, important nonlinearities or
 interactions might be visible from the PD profiles of the complex model. This
 information can guide the design of new features in the simpler model, so that
@@ -646,7 +648,7 @@ between 1935 and 1990.
         scale_color_brewer(palette = "Set2")
     ```
 
-45. Suppose you have found that a model is overfitting (e.g., by finding that
+46. Suppose you have found that a model is overfitting (e.g., by finding that
 it’s training error is much lower than its test error). One way to address this
 overfitting is to compare the PD profiles between the simple and complex models.
 If the profiles are very different for one of the features, then that feature

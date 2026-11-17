@@ -49,7 +49,7 @@ of a study. But careful modeling requires visualization at all steps.
 
 3. UW-Madison's Statistics Department was founded by George Box, one of the most
 important statisticians of the 20th century. Among many methdological
-contributions, he is famous for sayinig
+contributions, he is famous for saying
 
    > All models are wrong, but some are useful.
 

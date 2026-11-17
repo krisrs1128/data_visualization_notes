@@ -214,11 +214,12 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 \tag{2}\]</span></span></p></li>
 </ul></li>
 </ol>
+<p><em>Exercise: You are working with a team on a model of bikesharing demand. A colleague interprets the posterior predictive as the “model’s prediction of future bike demand.” What are they misunderstanding? How would you explain the posterior predictive to them?</em></p>
 </section>
 <section id="running-example" class="level3">
 <h3 class="anchored" data-anchor-id="running-example">Running Example</h3>
 <ol start="11" type="1">
-<li><p>As our running example, we will use a PM2.5 monitoring dataset. PM2.5 is a type of air pollution that can cause health problems. High-quality weather station data apply in the areas around the weather station, but don’t give any information about what happens in the areas between stations. In contrast, satellite data give global coverage, but they are lower quality. In the last decade, it’s become popular to train models that use high quality station measurements to adjust satellite data, which gets us closer to the best of both worlds. If it works well, it could be used to monitor PM2.5 levels at global scale.</p>
+<li><p>As our running example, we will use a PM2.5 monitoring dataset. PM2.5 is a type of air pollution that can cause health problems. High-quality weather station data apply in the areas around the weather station, but don’t give any information about what happens in the areas between stations. In contrast, satellite data give global coverage, but they are lower quality. In the last few decades, it’s become popular to train models that use high quality station measurements to adjust satellite data, which gets us closer to the best of both worlds. If it works well, it could be used to monitor PM2.5 levels at global scale.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">tempfile</span>()</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://github.com/jgabry/bayes-vis-paper/blob/master/bayes-vis.RData?raw=true"</span>, f)</span>
@@ -244,7 +245,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 </div>
 </div></li>
 <li><p>When we plot these two variables against one another, we can see that we won’t be able to obtain good predictions for the station measurements using the satellite data alone. What features might we include to improve the model fit?</p></li>
-<li><p>One hypothesis is that country region is an important factor. Below, we fit regression lines separately for different country super-regions, as specified by the WHO. The fact that the slopes are not the same in each region means that we should modify our model to have a different slope in each region 1 .</p></li>
+<li><p>One hypothesis is that country region is an important factor. Below, we fit regression lines separately for different country super-regions, as specified by the WHO. The fact that the slopes are not the same in each region means that we should modify our model to have a different slope in each region.</p></li>
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(GM<span class="sc">@</span>data, <span class="fu">aes</span>(log_sat, log_pm25)) <span class="sc">+</span></span>
@@ -262,7 +263,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 </div>
 </div>
 <ol start="15" type="1">
-<li><p>The WHO categorizations are somewhat arbitrary. Maybe there are better country groupings, tailored specifically to the PM2.5 problem? One idea is to cluster the ground stations based on PM2.5 level and use these clusters as a different region grouping.</p>
+<li><p>The WHO categories are somewhat arbitrary. Maybe there are better country groupings, tailored specifically to the PM2.5 problem? One idea is to cluster the ground stations based on PM2.5 level and use these clusters as a different region grouping.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>average <span class="ot">&lt;-</span> GM<span class="sc">@</span>data <span class="sc">|&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(iso3) <span class="sc">|&gt;</span></span>
@@ -287,14 +288,14 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 </div>
 </div>
 </div></li>
-<li><p>Which model should we actually use? In some of your other classes, you might have used cross-validation / test set error. While this is useful (and relatively automatic), it doesn’t necessarily tell you how to improve the model. An alternative which often brings more insight is to simulate from the model and see which aspects of the real data it can (and cannot) capture.</p></li>
+<li><p>Which model should we actually use? In some of your other classes, you might have used cross-validation / test set error. While this is useful, it doesn’t necessarily give us new ideas for how to improve the model (it just helps us evaluate our existing ideas). An alternative which often brings more insight is to simulate from the model and see which aspects of the real data it can (and cannot) capture.</p></li>
 </ol>
 </section>
 <section id="prior-predictive-distributions" class="level3">
 <h3 class="anchored" data-anchor-id="prior-predictive-distributions">Prior predictive distributions</h3>
 <ol start="17" type="1">
-<li><p>The prior predictive distribution can be used to decide whether certain model families are reasonable candidates for a problem, before fitting the models to actual data. If the simulated datasets are plausible, then the overall model class is a reasonable one. If they are not, then the model class should be modified. Either the prior or the likelihood might need revision.</p></li>
-<li><p>For example, in the example below, we simulate datasets two types of model assumptions, based on “vague” and “informative” priors, respectively. The first type of assumption is quite common in practice, and a version of this is likely what the 538 team used. However, in the PM2.5 example, the simulated data using the vague prior is not even remotely plausible. To see this, we can use the <code>ppc_scatter</code> function from the <code>bayesplot</code> package, which takes the real and simulated data as arguments.</p>
+<li><p>The prior predictive distribution can be used to decide whether certain model families are reasonable candidates for a problem, before fitting the models to actual data. If the simulated datasets are plausible, then the overall model family is a reasonable one. If they are not, then the model family should be modified.</p></li>
+<li><p>For example, in the example below, we simulate datasets two types of model assumptions, based on “vague” and “informative” priors, respectively (don’t worry about what these hyperparameters mean, for our purpose, they are just two model choices). The first type of assumption is quite common in practice, and a version of this is likely what the 538 team used for their election problem. However, in the PM2.5 example, the simulated data using the vague prior is not even remotely plausible. To see this, we can use the <code>ppc_scatter</code> function<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> from the <code>bayesplot</code> package, which takes the real and simulated data as arguments.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to simulate from the first modeling assumption (vague prior)</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>prior1 <span class="ot">&lt;-</span> <span class="cf">function</span>(Nsim) {</span>
@@ -337,7 +338,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 </div>
 </div>
 </div></li>
-<li><p>The block below instead simulates from a subjective, informative prior. The resulting samples are much more plausible, lying in a comparable range to the true data. However, note that the samples from the prior predictive do not need to look exactly like the observed data. If they did, then we wouldn’t have to collect real data at all! All we ask is that they are roughly compatible with our prior knowledge of the problem setting.</p>
+<li><p>The block below instead simulates from the informative prior. The resulting samples are much more plausible, lying in a comparable range to the true data. However, note that the samples from the prior predictive do not need to look exactly like the observed data. If they did, then we wouldn’t have to collect real data at all! All we ask is that they are roughly compatible with our prior knowledge of the problem setting.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to simulate from second modeling assumption (informative)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>prior2 <span class="ot">&lt;-</span> <span class="cf">function</span>(Nsim) {</span>
@@ -371,7 +372,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="11-predictions_files/figure-html/informed-prior-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Prior predictive samples from the weakly informative prior seem more plausible though they do not (and should not) exactly fit the true data.</figcaption>
+<figcaption>Prior predictive samples from the informative prior seem more plausible though they do not (and should not) exactly fit the true data.</figcaption>
 </figure>
 </div>
 </div>
@@ -381,9 +382,9 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 <section id="posterior-predictive-distributions" class="level3">
 <h3 class="anchored" data-anchor-id="posterior-predictive-distributions">Posterior predictive distributions</h3>
 <ol start="20" type="1">
-<li><p>Once the prior predictive is calibrated, we can fit the model. To evaluate its quality, we can use the posterior predictive, which is just like the prior predictive, except that it samples model parameters after having fit the model to the data.</p></li>
-<li><p>The code below fits three models with the <code>brms</code> package<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. The first model fits a linear model with random slope and intercept terms, but assumes the effects are shared across the all countries. The next two variations fit separate slopes and intercepts within each super-region (<code>(1 + log_sat || super_region_name)</code>) and geographical cluster (<code>(1 + log_sat || cluster_region)</code>). The way we read this is that the term after <code>||</code> defines groups and the terms before it define parameters that differ across those groups. The <code>log_sat</code> term is the effect associated with the <code>log_sat</code> feature (slope in our scatterplots above) and <code>1</code> specifies the intercept.</p>
-<p>We use the <code>prior()</code> block at the top to specify a plausible values for each of the model parameters. For example, the first line encodes our assumption that the overall log(PM2.5) level should be centered around 0. This has the effect of stabilizing the model fit around this value.</p>
+<li><p>Once we have landed on a model family that gives plausible prior predictive samples, we can fit the model. To evaluate its quality, we can use the posterior predictive, which is just like the prior predictive, except that draws samples after having fit the model to the observed data.</p></li>
+<li><p>The code below fits three models with the <code>brms</code> package<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. The first model fits a linear model with random slope and intercept terms, but assumes the effects are shared across the all countries. The next two variations fit separate slopes and intercepts within each WHO region (<code>(1 + log_sat || super_region_name)</code>) and custom cluster (<code>(1 + log_sat || cluster_region)</code>). The way we read this is that the term after <code>||</code> defines groups and the terms before it define parameters that depend on those groups. The <code>log_sat</code> term is the effect associated with the <code>log_sat</code> feature (slope in our scatterplots above) and <code>1</code> specifies the intercept.</p>
+<p>The <code>priors_lm</code> variable below defines the same prior as <code>prior2</code> from before, but with <code>brms</code> syntax (not just base R code). It’s a technicality needed to get the model to fit, not an essential point about visualizing prior and posterior predictives.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"fits"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>priors_lm <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
@@ -411,7 +412,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p>The code above takes a bit of time, about 10 minutes. Afterwards, it gets saved to the <code>fits</code> directory. To simulate new PM2.5 data from the fitted models, we can call <code>posterior_predict()</code> on them. This is done in the block below simulates. Note that, compared to the prior predictive, the posterior predictive is much more closely related to the underlying dataset, which makes sense, because it has been trained to approximate it.</p>
+<li><p>The code above takes a bit of time, about 10 minutes. Afterwards, it gets saved to the <code>fits</code> directory. To simulate new PM2.5 data from the fitted models, we call <code>posterior_predict()</code> on them. This is done in the block below. Note that, compared to the prior predictive, the posterior predictive is much more closely related to the underlying dataset, which makes sense, because it has been fitted to it.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    models<span class="sc">$</span>clusters,</span>
@@ -431,7 +432,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 </div>
 </div>
 </div></li>
-<li><p>We can next define <strong>test summaries</strong> to see whether properties of the real data are captured by the posterior predictive distribution. In the block below, we compute the skewness for each simulated station dataset from the three different models. These skewnesses are plotted as histograms, with the true dataset’s skewness indicated by a vertical line. It seems that the model that uses clustering to define regions is able to simulate datasets with skewness similar to that in the real dataset.</p>
+<li><p>We can next define <strong>test summaries</strong> to see whether properties of the real data are captured by the posterior predictive distribution. In the block below, we compute the skewness for each simulated <span class="math inline">\(y^{\text{rep}}\)</span> from the three different models. These skewnesses are plotted as histograms, with the true dataset’s skewness indicated by a vertical line. It seems that the model that uses clustering to define regions is able to simulate datasets with skewness similar to that in the real dataset.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>skew <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    xdev <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
@@ -443,7 +444,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">imap</span>(models, <span class="sc">~</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pp_check</span>(.x, <span class="at">type =</span> <span class="st">"stat"</span>, <span class="at">stat =</span> skew, <span class="at">binwidth =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggtitle</span>(.y))</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(plots, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(plots)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -454,7 +455,7 @@ y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
 </div>
 </div></li>
 <li><p>According to this summary, it seems like the <code>clusters</code> model is the best. It gives simulated datasets whose skewness values match those that we observed in the real data. Of course, someone could call into our question the choice of using skewness over other test statistics. But we can at least have a productive debate by suggesting and evaluating different test statistics.</p></li>
-<li><p>So far, we’ve worked with models that directly support simulation. This is actually a relatively broad class. It includes the Bayesian models discussed in the reading, of course, but also the humble linear model.</p>
+<li><p>So far, we’ve worked with models that directly support simulation. This is actually a relatively broad class. It includes the Bayesian models discussed in the reading, of course, and also the humble linear model.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">10</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)</span>
@@ -627,7 +628,7 @@ h_n(z) := f(x_d = z, x_{n, -d})
 <li>Guide the design of new features, and</li>
 <li>Characterizing overfitting PD profiles that are used to compare different models are sometimes called “Contrastive” PD profiles.</li>
 </ul></li>
-<li><p>To validate a simple model, we can compare its PD profiles with those of a more sophisticated model. We will illustrate this by fitting linear and gradient boosting models to a dataset of apartment prices<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Given various properties of an apartment, the goal is to determine its price. The code below fits the two models and extracts their ICE and PD profiles.</p>
+<li><p>To validate a simple model, we can compare its PD profiles with those of a more sophisticated model. We will illustrate this by fitting linear and gradient boosting models to a dataset of apartment prices<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Given various properties of an apartment, the goal is to determine its price. The code below fits the two models and extracts their ICE and PD profiles.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(apartments)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">select</span>(apartments, <span class="sc">-</span>m2.price)</span>
@@ -705,8 +706,9 @@ Friedman, Jerome H. 2001. <span>“Greedy Function Approximation: A Gradient Boo
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>In any HW or exam questions, we will give you <code>brms</code> code. You don’t need to know how to run the models, just how to visualize the simulated samples.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>It is a simulated dataset, but designed to reflect properties of a real dataset.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>PPC stands for “Posterior Predictive Check” but it also applies to prior predictives, like here.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>In any HW or exam questions, we will give you <code>brms</code> code. You don’t need to know how to run the models, just how to visualize the simulated samples.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>It is a simulated dataset, but designed to reflect properties of a real dataset.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->

@@ -132,6 +132,8 @@ dataset.
     y_{1}^{\text{rep}}, \dots, y_{n}^{\text{rep}} \sim p\left(y^{\text{rep}}\right).
     $$ {#eq-prior-pred}
 
+_Exercise: You are working with a team on a model of bikesharing demand. A colleague interprets the posterior predictive as the "model's prediction of future bike demand." What are they misunderstanding? How would you explain the posterior predictive to them?_
+
 ### Running Example
 
 11. As our running example, we will use a PM2.5 monitoring dataset. PM2.5 is a
@@ -139,7 +141,7 @@ type of air pollution that can cause health problems. High-quality weather
 station data apply in the areas around the weather station, but don't give any
 information about what happens in the areas between stations. In contrast,
 satellite data give global coverage, but they are lower quality.  In the last
-decade, it's become popular to train models that use high quality station
+few decades, it's become popular to train models that use high quality station
 measurements to adjust satellite data, which gets us closer to the best of both
 worlds. If it works well, it could be used to monitor PM2.5 levels at global
 scale.
@@ -176,7 +178,7 @@ satellite data alone.  What features might we include to improve the model fit?
 14. One hypothesis is that country region is an important factor. Below, we fit
 regression lines separately for different country super-regions, as specified by
 the WHO. The fact that the slopes are not the same in each region means that we
-should modify our model to have a different slope in each region 1 .
+should modify our model to have a different slope in each region.
 ```{r}
 #| label: pm25-regions
 ggplot(GM@data, aes(log_sat, log_pm25)) +
@@ -187,10 +189,10 @@ ggplot(GM@data, aes(log_sat, log_pm25)) +
     coord_fixed()
 ```
 
-15. The WHO categorizations are somewhat arbitrary. Maybe there are better
-country groupings, tailored specifically to the PM2.5 problem? One idea is to
-cluster the ground stations based on PM2.5 level and use these clusters as a
-different region grouping.
+15. The WHO categories are somewhat arbitrary. Maybe there are better country
+groupings, tailored specifically to the PM2.5 problem? One idea is to cluster
+the ground stations based on PM2.5 level and use these clusters as a different
+region grouping.
 
     ```{r}
     #| label: pm25-clusters
@@ -212,26 +214,29 @@ different region grouping.
     ```
 
 16. Which model should we actually use? In some of your other classes, you might
-have used cross-validation / test set error. While this is useful (and
-relatively automatic), it doesn't necessarily tell you how to improve the model.
-An alternative which often brings more insight is to simulate from the model and
-see which aspects of the real data it can (and cannot) capture.
+have used cross-validation / test set error. While this is useful, it doesn't
+necessarily give us new ideas for how to improve the model (it just helps us
+evaluate our existing ideas).  An alternative which often brings more insight is
+to simulate from the model and see which aspects of the real data it can (and
+cannot) capture.
 
 ### Prior predictive distributions
 
-17. The prior predictive distribution can be used to decide whether certain model
-families are reasonable candidates for a problem, before fitting the models to
-actual data.  If the simulated datasets are plausible, then the overall model
-class is a reasonable one. If they are not, then the model class should be
-modified. Either the prior or the likelihood might need revision.
+17. The prior predictive distribution can be used to decide whether certain
+model families are reasonable candidates for a problem, before fitting the
+models to actual data.  If the simulated datasets are plausible, then the
+overall model family is a reasonable one. If they are not, then the model family
+should be modified.
 
 18. For example, in the example below, we simulate datasets two types of model
-assumptions, based on "vague" and "informative" priors, respectively. The first
-type of assumption is quite common in practice, and a version of this is likely
-what the 538 team used. However, in the PM2.5 example, the simulated data using
-the vague prior is not even remotely plausible. To see this, we can use the
-`ppc_scatter` function from the `bayesplot` package, which takes the real and
-simulated data as arguments.
+assumptions, based on "vague" and "informative" priors, respectively (don't
+worry about what these hyperparameters mean, for our purpose, they are just two
+model choices). The first type of assumption is quite common in practice, and a
+version of this is likely what the 538 team used for their election problem.
+However, in the PM2.5 example, the simulated data using the vague prior is not
+even remotely plausible. To see this, we can use the `ppc_scatter`
+function^[PPC stands for "Posterior Predictive Check" but it also applies to prior predictives, like here.] from
+the `bayesplot` package, which takes the real and simulated data as arguments.
 
     ```{r}
     #| label: vague-prior
@@ -273,16 +278,16 @@ simulated data as arguments.
         labs(x = "Simulated station data", y = "True station data")
     ```
 
-19. The block below instead simulates from a subjective, informative prior. The
-resulting samples are much more plausible, lying in a comparable range to the
-true data. However, note that the samples from the prior predictive do not need
-to look exactly like the observed data. If they did, then we wouldn't have to
-collect real data at all! All we ask is that they are roughly compatible with
-our prior knowledge of the problem setting.
+19. The block below instead simulates from the informative prior. The resulting
+samples are much more plausible, lying in a comparable range to the true data.
+However, note that the samples from the prior predictive do not need to look
+exactly like the observed data. If they did, then we wouldn't have to collect
+real data at all! All we ask is that they are roughly compatible with our prior
+knowledge of the problem setting.
 
     ```{r}
     #| label: informed-prior
-    #| fig.cap: "Prior predictive samples from the weakly informative prior seem more plausible
+    #| fig.cap: "Prior predictive samples from the informative prior seem more plausible
     #| though they do not (and should not) exactly fit the true data."
     # function to simulate from second modeling assumption (informative)
     prior2 <- function(Nsim) {
@@ -316,26 +321,27 @@ our prior knowledge of the problem setting.
 
 ### Posterior predictive distributions
 
-20. Once the prior predictive is calibrated, we can fit the model. To evaluate
-its quality, we can use the posterior predictive, which is just like the prior
-predictive, except that it samples model parameters after having fit the model
-to the data.
+20. Once we have landed on a model family that gives plausible prior predictive
+samples, we can fit the model. To evaluate its quality, we can use the posterior
+predictive, which is just like the prior predictive, except that draws samples
+after having fit the model to the observed data.
 
-21. The code below fits three models with the `brms` package^[In any HW or exam questions, we will give you `brms` code. You don't need to know how to run the models, just how to visualize the simulated samples.]. The first model
-fits a linear model with random slope and intercept terms, but assumes the
-effects are shared across the all countries. The next two variations
-fit separate slopes and intercepts within each super-region
-(`(1 + log_sat || super_region_name)`) and geographical
-cluster (`(1 + log_sat || cluster_region)`). The way we read this is that the
-term after `||` defines groups and the terms before it define parameters that
-differ across those groups. The `log_sat` term is the effect associated with the
-`log_sat` feature (slope in our scatterplots above) and `1` specifies the
+21. The code below fits three models with the `brms` package^[In any HW or exam
+questions, we will give you `brms` code. You don't need to know how to run the
+models, just how to visualize the simulated samples.]. The first model fits a
+linear model with random slope and intercept terms, but assumes the effects are
+shared across the all countries. The next two variations fit separate slopes and
+intercepts within each WHO region (`(1 + log_sat || super_region_name)`) and
+custom cluster (`(1 + log_sat || cluster_region)`). The way we read this is that
+the term after `||` defines groups and the terms before it define parameters
+that depend on those groups. The `log_sat` term is the effect associated with
+the `log_sat` feature (slope in our scatterplots above) and `1` specifies the
 intercept.
 
-    We use the `prior()` block at the top to specify a plausible values for each of
-    the model parameters. For example, the first line encodes our assumption that
-    the overall log(PM2.5) level should be centered around 0. This has the effect of
-    stabilizing the model fit around this value.
+    The `priors_lm` variable below defines the same prior as `prior2` from
+    before, but with `brms` syntax (not just base R code). It's a technicality
+    needed to get the model to fit, not an essential point about visualizing
+    prior and posterior predictives.
 
     ```{r}
     #| label: fit-models
@@ -368,10 +374,10 @@ intercept.
 
 22. The code above takes a bit of time, about 10 minutes. Afterwards, it gets
 saved to the `fits` directory. To simulate new PM2.5 data from the fitted
-models, we can call `posterior_predict()` on them. This is done in the block
-below simulates.  Note that, compared to the prior predictive, the posterior
-predictive is much more closely related to the underlying dataset, which makes
-sense, because it has been trained to approximate it.
+models, we call `posterior_predict()` on them. This is done in the block below.
+Note that, compared to the prior predictive, the posterior predictive is much
+more closely related to the underlying dataset, which makes sense, because it
+has been fitted to it.
 
     ```{r}
     #| label: post-plot
@@ -391,7 +397,7 @@ sense, because it has been trained to approximate it.
 
 23. We can next define **test summaries** to see whether properties of the real
 data are captured by the posterior predictive distribution.  In the block below,
-we compute the skewness for each simulated station dataset from the three
+we compute the skewness for each simulated $y^{\text{rep}}$ from the three
 different models.  These skewnesses are plotted as histograms, with the true
 dataset's skewness indicated by a vertical line. It seems that the model that
 uses clustering to define regions is able to simulate datasets with skewness
@@ -412,7 +418,7 @@ similar to that in the real dataset.
     plots <- imap(models, ~
         pp_check(.x, type = "stat", stat = skew, binwidth = 0.01) +
             ggtitle(.y))
-    wrap_plots(plots, nrow = 1)
+    wrap_plots(plots)
     ```
 
 24. According to this summary, it seems like the `clusters` model is the best. It
@@ -423,7 +429,7 @@ debate by suggesting and evaluating different test statistics.
 
 25. So far, we've worked with models that directly support simulation. This is
 actually a relatively broad class. It includes the Bayesian models discussed in
-the reading, of course, but also the humble linear model.
+the reading, of course, and also the humble linear model.
 
     ```{r}
     x <- seq(-1, 1, length.out = 10)
@@ -432,14 +438,14 @@ the reading, of course, but also the humble linear model.
     simulate(fit, nsim = 8)
     ```
 
-    Perhaps surprisingly, it even includes advanced AI models, like image generation
-    models and LLMs (which, after all, are just simulating text).
+    Perhaps surprisingly, it even includes advanced AI models, like image
+    generation models and LLMs (which, after all, are just simulating text).
 
-26. That said, not all models support simulation. For example, if we fit a random
-forest model, we can ask for predictions at any test point $x$, but we can't ask
-it to simulate new datasets. For the rest of this note, we're going to focus on
-how we can use visualization to analyze these types of models, which let us
-query test points for predictions but can't simulate.
+26. That said, not all models support simulation. For example, if we fit a
+random forest model, we can ask for predictions at any test point $x$, but we
+can't ask it to simulate new datasets. For the rest of this note, we're going to
+focus on how we can use visualization to analyze these types of models, which
+let us query test points for predictions but can't simulate.
 
 ## Explaining Black Boxes
 

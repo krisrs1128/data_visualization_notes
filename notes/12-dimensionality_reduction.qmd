@@ -4,28 +4,29 @@ author: Kris Sankaran
 bibliography: references.bib
 format:
   html:
-    embed-resources: true
     html-math-method: mathjax
     fig-align: center
 execute:
     echo: true
     message: false
     warning: false
-    cache: false
+    cache: true
     eval: true
 ---
 
 Reading [[1] (Section 10.2)](https://canvas.wisc.edu/courses/530541/files/54329609?wrap=1), [2 (optional)](https://visxai-dimensionality-reduction-1dbad0a67a092b007c526a45.vercel.app/), [3 (optional)](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html)
+
 [Code](https://github.com/krisrs1128/data_visualization_notes/blob/main/notes/11-predictions.qmd)
+
 Items marked with $^\dagger$ will not be tested on exams.
 
 ```{r}
-#| label: setup
+#| label: libraries
 #| echo: false
 library(knitr)
 library(tidyverse)
-library(tidymodels)
-library(embed)
+library(mlr3)
+library(mlr3pipelines) # pak::pak(c("mlr-org/mlr3pipelines", "uwot"))
 library(ggrepel)
 library(tidytext)
 theme479 <- theme_minimal() +
@@ -39,23 +40,27 @@ theme_set(theme479)
 set.seed(479)
 ```
 
-
-1. *High-dimensional data* are data where many features are collected for each
-observation. These tend to be wide datasets with many columns. The name comes
-from the fact that each row of the dataset can be viewed as a vector in a
-high-dimensional space (one dimension for each feature). These data are common
-in modern applications,
+1. *High-dimensional data* are data with many features per sample. Often, the
+number of features is comparable or larger than the number of samples, so when
+the data are drawn as a rectangle with samples along rows and features along
+columns, they are "wide."" The name comes from the fact that each row of the
+dataset can be viewed as a vector in a high-dimensional space (one dimension for
+each feature). These data are common in modern applications,
 
    * Each cell in a genomics dataset might have measurements for hundreds of molecules.
    * Each survey respondent might provide answers to dozens of questions.
    * Each image might have several thousand pixels.
    * Each document might have counts across several thousand relevant words.
 
+   [todo: add rectangle drawings]
+
 2. For low-dimensional data, we could visually encode all the features in our
-data directly, either using properties of marks or through faceting. In
+data directly, either using visual channels or through small multiples. In
 high-dimensional data, this is no longer possible. However, though there are
-many features associated with each observation, it may still be possible to
+many features associated with each sample, it may still be possible to
 organize samples across a smaller number of meaningful, derived features.
+
+   [todo: add derivation sketch]
 
 3. For example, consider the Metropolitan Museum of Art dataset, which contains
 images of many artworks. Abstractly, each artwork is a high-dimensional object,
@@ -63,19 +68,21 @@ containing pixel intensities across many pixels. But it is reasonable to derive
 a feature based on the average brightness.
 
    ```{r}
+   #| label: brightness
    #| echo: false
    #| fig.cap: "An arrangement of artworks according to their average pixel brightness
-   #| as given in the reading."
+   #| as given in reading [2]."
    #| fig.align: "center"
    include_graphics("https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/brightness.png?raw=true")
    ```
 
 4. In general, manual feature construction can be difficult. Algorithmic
-approaches try streamline the process of generating these maps by optimizing
+approaches streamline the process of generating these maps by optimizing
 some more generic criterion. Different algorithms use different criteria, which
 we will review below.
 
    ```{r}
+   #| label: reduction-animation
    #| echo: false
    #| fig.cap: "The dimensionality reduction algorithm in this animation converts a large number of raw features into a position on a one-dimensional axis defined by average pixel brightness. In general
    #| we might reduce to dimensions other than 1D
@@ -88,25 +95,36 @@ we will review below.
 5. Informally, the goal of dimensionality reduction techniques is to produce a
 low-dimensional "atlas" relating members of a collection of complex objects.
 Samples that are similar to one another in the high-dimensional space should be
-placed near one another in the low-dimensional view. For example, we might want
-to make an atlas of artworks, with similar styles and historical periods being
-placed near to one another.
+placed near one another in the low-dimensional view. For example, in the single
+cell atlas below, each point represents a brain cell. In the original data, each
+cell is associated with expression levels across thousands of genes. After
+dimensionality reduction, cells with similar gene expression profiles get placed
+into "islands" of comparable activity [@LaManno2020]. This gives a
+quantitative/molecular way of categorizing different cell types, complementary
+to the qualitative/morphological approach pioneered by early neuroscientists.
+
+   ```{r}
+   #| label: mouse-brain
+   #| echo: false
+   #| out.width: 900
+   #| fig-cap: "An atlas of gene expression activity in single cell data, generated by [@LaManno2020]."
+   include_graphics("figures/mouse_brain_map.png")
+   ```
 
 ## Principal Components Analysis
-
-[Reading](https://juliasilge.com/blog/cocktail-recipes-umap/)
 
 ### Definition
 
 6. In the previous section, we saw how we could organize a collection of images
 based on average pixel brightness. We can think of average pixel brightness as a
 derived feature that can be used to build a low-dimensional map. We can
-partially automate the process of deriving new features. Though, in general,
-finding the best way to combine raw features into derived ones is a complicated
-problem, we can simplify things by restricting attention to,
-  - Features that are linear combinations of the raw input columns.
-  - Features that are orthogonal to one another.
-  - Features that have high variance.
+partially automate the process of deriving new features. In general, finding the
+"best" derived features is an underspecified problem. To make progress, we can
+restrict attention to,
+
+   - Features that are linear combinations of the raw input columns.
+   - Features that are orthogonal to one another.
+   - Features that have high variance.
 
 7. Restricting to *linear combinations* allows for an analytical solution. We
 will relax this requirement when discussing UMAP. *Orthogonality* means that the
@@ -117,6 +135,7 @@ underlying data. For example, if you look at this 2D representation of a 3D
 object, it's hard to tell what it is,
 
    ```{r}
+   #| label: pca-object
    #| echo: false
    #| fig.cap: "What is this object?"
    #| fig.align: "center"
@@ -127,6 +146,7 @@ object, it's hard to tell what it is,
    But when viewing an alternative reduction which has higher variance...
 
    ```{r}
+   #| label: high-variance
    #| echo: false
    #| fig.cap: "Not so complicated now. Credit for this example goes to Professor Julie Josse
    #| at Ecole Polytechnique."
@@ -153,6 +173,7 @@ columns of $\Phi$ span a plane that approximates the data. The $z_{i}$ provide
 coordinates of points projected onto this plane.
 
    ```{r}
+   #| label: pca-projection
    #| echo: false
    #| fig.cap: "PCA finds a low-dimensional linear subspace that closely approximates the high-dimensional data."
    include_graphics("https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true")
@@ -160,7 +181,7 @@ coordinates of points projected onto this plane.
 
 ### Implementation in R
 
-10. In R, PCA can be conveniently implemented using the tidymodels package. We
+10. In R, PCA can be conveniently implemented using the `mlr3pipelines` package. We
 will see a base R implementation below. The
 [dataset](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-26/readme.md)
 below contains properties of a variety of cocktails, from the Boston Bartender's
@@ -168,77 +189,87 @@ guide. The first two columns are qualitative descriptors, while the rest give
 numerical ingredient information.
 
     ```{r}
+    #| label: read-cocktails
     cocktails_df <- read_csv("https://uwmadison.box.com/shared/static/qyqof2512qsek8fpnkqqiw3p1jb77acf.csv")
     cocktails_df[, 1:6]
     ```
-11. The `pca_rec` object below defines a tidymodels recipe for performing PCA.
-Computation of the lower-dimensional representation is deferred until `prep()`
-is called. This delineation between workflow definition and execution helps
-clarify the overall workflow, and it is typical of the tidymodels package.
+
+11.  In `mlr3_pipelines`, we first create a task object, which will include both
+the model fitting code and context about how it was run. This is convenient
+because it helps us avoid many intermediate datasets. For example, through
+`set_col_roles`, we can instruct the PCA to ignore the categorical features and
+focus entirely on the numerical ingredient features.
 
     ```{r}
-    pca_rec <- recipe(~., data = cocktails_df) |>
-      update_role(name, category, new_role = "id") |>
-      step_normalize(all_predictors()) |>
-      step_pca(all_predictors())
+    #| label: pca-workflow
+    cocktails_task <- as_task_unsupervised(cocktails_df)
+    cocktails_task$set_col_roles(c("name", "category"), remove_from = "feature")
 
-    pca_prep <- prep(pca_rec)
+    pca <- po("pca", scale. = TRUE)
+    cocktails_pca <- preproc(cocktails_task, pca)
     ```
 
-12. The `step_normalize` call is used to center and scale all the columns. This
-is needed because otherwise columns with larger variance will have more weight
-in the final dimensionality reduction, but this is not conceptually meaningful.
+12. The `scale. = TRUE` argument is used to scale all the columns. This is
+needed because otherwise columns with larger variance will have more weight in
+the final dimensionality reduction, but this is not conceptually meaningful.
 For example, if one of the columns in a dataset were measuring length in
 kilometers, then we could artificially increase its influence in a PCA by
 expressing the same value in meters. To achieve invariance to this change in
-units, it would be important to normalize first.
+units, it would be important to scale first.
 
-13. We can `tidy` each element of the workflow object. Since PCA was the second
-step in the workflow, the PCA components can be obtained by calling tidy with the
-argument "2." The scores of each sample with respect to these components can be
-extracted using `juice.` The amount of variance explained by each dimension is
-also given by `tidy`, but with the argument `type = "variance"`. We'll see how
-to visualize and interpret these results next.
+13. The key outputs are `rotation` and `data`, which correspond to $\Phi$ and
+$z_i$. Each column of `rotation` describes an axis of the plane approximating
+most of the data. These are the derived features.  The $z_i$ gives the
+coordinates of sample $i$ with respect to the axes of that plane, they are the
+sample locations in the map.  The output `sdev^2` gives the variance explained
+by each dimension. It summarizes how much information was preserved by each
+dimension, and larger the proportion of variance explained in the first $K$
+derived components, the less information we're losing by using the
+$K$-dimensional PCA approximation rather than the original data.
 
     ```{r}
+    #| label: pca-components
     #| fig.cap: "The first five principal components are linear combinations of features."
-    tidy(pca_prep, 2)
+    pca$state$rotation[, 1:5]
     ```
 
     ```{r}
+    #| label: pca-scores
     #| fig.cap: "The coordinates of a few samples with respect to the princpal components above."
-    juice(pca_prep)
+    cocktails_pca$data(cols = c("name", "category", "PC1", "PC2"))
     ```
     ```{r}
+    #| label: pca-variance
     #| fig.cap: "Total variance explained by each component of the PCA."
-    tidy(pca_prep, 2, type = "variance")
+    pca$state$sdev^2
     ```
 
 ### Visualizing and Interpreting Components
 
-14. How should we visualize the results from PCA? There are three artifacts
-produced by the procedure worth considering — components, scores, and variances.
-The components describe derived features, the scores lay samples out on a map,
-and the variances summarize how much information was preserved by each
-dimension.
+14. How should we visualize the results from PCA? There are three artifacts to
+consider, components $\Phi$, scores $z_i$, and variances `sdev^2`.
 
     ```{r}
-    # produced by code in previous section
-    components <- read_csv("https://uwmadison.box.com/shared/static/dituepd0751qqsims22v2liukuk0v4bf.csv") |>
+    #| label: prepare-components
+    components <- as_tibble(pca$state$rotation, rownames = "terms") |>
+      pivot_longer(-terms, names_to = "component") |>
       filter(component %in% str_c("PC", 1:5))
-    scores <- read_csv("https://uwmadison.box.com/shared/static/qisbw1an4lo8naifoxyu4dqv4bfsotcu.csv")
-    variances <- read_csv("https://uwmadison.box.com/shared/static/ye125xf8800zc5eh3rfeyzszagqkaswf.csv") |>
-      filter(terms == "percent variance")
+    scores <- cocktails_pca$data(cols = c("name", "category", "PC1", "PC2"))
+    variances <- tibble(
+      component = seq_along(pca$state$sdev),
+      value = pca$state$sdev^2 / sum(pca$state$sdev^2)
+    )
     ```
 
-15. First, let's see how much variance is explained by each dimension of the PCA.
-Without detouring into the mathematical explanation, the main idea is that, the
-more rapid the dropoff in variance explained, the better the low-dimensional
-approximation. For example, if the data actually lie on a 2D plane in a
-high-dimensional space, then the first two bars would contain all the variance
-(the rest would be zero).
+15. First, let's see how much variance is explained by each dimension of the
+PCA.  Without detouring into the mathematical explanation, the main idea is
+that, the more rapid the dropoff in variance explained, the better the
+low-dimensional approximation. For example, if the data actually lie on a 2D
+plane in a high-dimensional space, then the first two bars would contain all the
+variance and the rest would be zero.
 
     ```{r}
+    #| label: explained-variance
     #| fig-height: 2
     #| fig-width: 4
     #| fig.cap: "Proportion of variance explained by each component in the PCA."
@@ -246,15 +277,18 @@ high-dimensional space, then the first two bars would contain all the variance
       geom_col(aes(component, value))
     ```
 
-16. We can interpret components by looking at the linear coefficients of the
-variables used to define them. From the plot below, we see that the first PC
-mostly captures variation related to whether the drink is made with powdered
-sugar or simple syrup. Drinks with high values of PC1 are usually to be made
-from simple syrup, those with low values of PC1 are usually made from powdered
-sugar. From the two largest bars in PC2, we can see that it highlights the
-vermouth vs. non-vermouth distinction.
+16. We can interpret components by looking at what coefficients they put on the
+original variables used to define them. For example, if the derived feature
+corresponded to the average, it would place coefficient $\frac{1}{D}$ on each
+feature.  From the plot below, we see that the first PC mostly captures
+variation related to whether the drink is made with powdered sugar or simple
+syrup. Drinks with high values of PC1 are usually to be made from simple syrup,
+those with low values of PC1 are usually made from powdered sugar. From the two
+largest bars in PC2, we can see that it highlights the vermouth vs. non-vermouth
+distinction.
 
     ```{r}
+    #| label: component-loadings
     #| fig.cap: "The top 5 principal components associated with the cocktails dataset."
     ggplot(components, aes(value, terms)) +
       geom_col(show.legend = FALSE) +
@@ -271,6 +305,7 @@ the `reorder_within` function coupled with `scale_*_reordered`, both from the
 tidytext package.
 
     ```{r}
+    #| label: sorted-loadings
     #| fig-width: 10
     #| fig-height: 6
     #| fig.cap: "The top 3 principal components
@@ -294,6 +329,7 @@ for variables with large component values in the coordinate directions where
 $z_{i}$ is farther along.
 
     ```{r}
+    #| label: cocktail-scores
     #| fig-height: 6
     #| fig.cap: "The scores associated with the cocktails dataset."
     ggplot(scores, aes(PC1, PC2, label = name)) +
@@ -311,16 +347,17 @@ important to visualize several pairs of PC dimensions against one another, not
 just the top 2.
 
 20. Let's examine the original code in a little more detail. We are using
-tidymodels, which is a package for decoupling the definition and execution of a
-data pipeline. This compartmentalization makes it easier to design and reuse
-across settings. Here is how you would apply PCA without the tidymodels package.
+`mlr3pipelines`, which gives simple syntax for manipulating data analysis
+pipelines.  This makes it easier to design and reuse methods across problem
+settings. Here is how you would apply PCA without the `mlr3pipelines` package.
 You have to first split the data into the "metadata" that is used to interpret
 the scores and the numerical variables used as input to PCA. Then at the end,
-you have to join the metadata back in. It's not impossible, but the code is not
+you have to join the metadata back in. It's not not too bad, but the code is not
 as readable.
 
     ```{r}
-    #| fig.cap: "A plot of the PCA scores made without using tidymodels."
+    #| label: direct-pca
+    #| fig.cap: "A plot of the PCA scores made without using mlr3pipelines."
     # split name and category out of the data frame
     pca_result <- cocktails_df |>
       select(-name, -category) |>
@@ -338,9 +375,10 @@ as readable.
       coord_fixed(sqrt(variances$value[2] / variances$value[1])) # rescale axes to reflect variance
     ```
 
-21. The equivalent tidymodels implementation handles the difference between
-supplementary and modeling data less bluntly, setting the `name` and `category`
-variables to `id` roles, so that `all_predictors()` knows to skip them.
+21. The equivalent `mlr3pipelines` implementation handles the difference between
+supplementary and modeling features less bluntly, using `set_col_roles` to
+specify which variables should be skipped in the PCA approximation (but which we
+might want to keep around for later visualization context).
 
 ### Properties of PCA
 
@@ -365,8 +403,6 @@ between alternative dimensionality reduction methods.
 
 ## UMAP
 
-[Reading](https://pair-code.github.io/understanding-umap)
-
 ### Motivation and Graph Construction
 
 22. Nonlinear dimension reduction methods can give a more faithful representation
@@ -377,6 +413,7 @@ alternative approach to reducing dimensionality if we want to preserve nonlinear
 structure.
 
     ```{r}
+    #| label: read-moons
     #| fig.cap: "An example nonlinear dataset where projections onto any straight line will necessarily cause the classes to bleed together."
     moons <- read_csv("https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv")
     ggplot(moons, aes(X, Y, col = Class)) +
@@ -387,11 +424,12 @@ structure.
 23. From a high-level, the intuition behind UMAP is to (a) build a graph joining
 nearby neighbors in the original high-dimensional space, and then (b) layout the
 graph in a lower-dimensional space. For example, consider the 2-dimensional sine
-wave below. If we build a graph, we can try to layout the resulting nodes and
+wave below. If we build a graph, we can lay out the resulting nodes and
 edges on a 1-dimensional line in a way that approximately preserves the
 ordering.
 
     ```{r}
+    #| label: graph-construction
     #| fig.cap: "UMAP (and many other nonlinear methods) begins by constructing a graph in the high-dimensional space
     #| whose layout in the lower dimensional space will ideally preserve the essential relationships between samples."
     #| echo: false
@@ -406,6 +444,7 @@ differences. This property is not obvious a priori, but is suggested by the
 simulations described in the reading.
 
     ```{r}
+    #| label: local-neighbors
     #| fig.cap: "When using fewer nearest neighbors
     #| the final dimensionality reduction will place more emphasis on effectively preserving the relationships between points in local neighborhoods."
     #| echo: false
@@ -413,6 +452,7 @@ simulations described in the reading.
     ```
 
     ```{r}
+    #| label: global-neighbors
     #| fig.cap: "When using larger neighborhoods
     #| UMAP will place more emphasis on preserving global structure
     #| sometimes at the cost of local relationships between points."
@@ -437,6 +477,7 @@ allow the points to spread out more loosely, higher tension forces points closer
 together. This is a second hyperparameter of UMAP.
 
     ```{r}
+    #| label: graph-layout
     #| fig.keep: 'hold'
     #| out.width: 200
     #| echo: false
@@ -455,22 +496,23 @@ preserved.
 ### Implementation in R
 
 28. In R, we can implement this using almost the same code as we used for PCA.
-The `step_umap` command is available through the embed package.
+We still use `po`, but call it with `umap` and its hyperparameters^[As of November 2026, this functionality is only in the development (not CRAN) version of `mlr3pipelines`. You can install it with `pak::pak(c("mlr-org/mlr3pipelines", "uwot"))`.].
 
     ```{r}
-    umap_rec <- recipe(~., data = cocktails_df) |>
-      update_role(name, category, new_role = "id") |>
-      step_normalize(all_predictors()) |>
-      step_umap(all_predictors(), neighbors = 20, min_dist = 0.1)
-    umap_prep <- prep(umap_rec)
+    #| label: umap-workflow
+    umap <- po("umap", scale = TRUE, n_neighbors = 20)
+    cocktails_umap <- preproc(cocktails_task, umap)
     ```
 
 29. UMAP returns a low-dimensional atlas relating the points, but it does not
 provide any notion of derived features.
 
     ```{r}
+    #| label: umap-scores
     #| fig.cap: "The learned UMAP representation of the cocktails dataset."
-    ggplot(juice(umap_prep), aes(UMAP1, UMAP2)) +
+    scores <- cocktails_umap$data(cols = c("name", "category", "V1", "V2")) |>
+      rename(UMAP1 = V1, UMAP2 = V2)
+    ggplot(scores, aes(UMAP1, UMAP2)) +
       geom_point(aes(color = category), alpha = 0.7, size = 0.8) +
       geom_text(aes(label = name), check_overlap = TRUE, size = 3, hjust = "inward")
     ```
@@ -502,6 +544,7 @@ in higher-dimensions (which we can't directly visualize), then UMAP would be a
 more suitable choice.
 
     ```{r}
+    #| label: moons-example
     #| fig.cap: "The original two moons dataset. We will ask both PCA and UMAP to recover a 1D reduction of these 2D data."
     moons <- read_csv("https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv")
     ggplot(moons, aes(X, Y, col = Class)) +
@@ -509,15 +552,16 @@ more suitable choice.
       scale_color_brewer(palette = "Set2")
     ```
 
-31. The code block below defines both the PCA and UMAP recipes. There is no need
+31. The code block below defines both the PCA and UMAP tasks. There is no need
 to normalize the data, since the two dimensions are already on the same scale.
 
     ```{r}
-    moons_ <- recipe(~ ., data = moons) |>
-      update_role(Class, new_role = "id")
+    #| label: moons-recipes
+    moons_task <- as_task_unsupervised(moons)
+    moons_task$set_col_roles("Class", remove_from = "feature")
 
-    pca_rec <- step_pca(moons_, all_predictors(), num_comp = 1)
-    umap_rec <- step_umap(moons_, all_predictors(), num_comp = 1)
+    pca <- po("pca", rank. = 1)
+    umap <- po("umap", n_components = 1)
     ```
 
 32. The block below shows both the UMAP and PCA representations. The PCA
@@ -528,12 +572,16 @@ graph that defines UMAP is likely separated into two major components, one for
 each moon.
 
     ```{r}
+    #| label: method-comparison
     #| fig-height: 4
     #| fig-width: 6
     #| fig.cap: "1D PCA and UMAP representations of the 2D two moons dataset."
+    moons_pca <- preproc(moons_task, pca)
+    moons_umap <- preproc(moons_task, umap)
     scores <- bind_cols(
-      prep(umap_rec) |> juice() |> mutate(UMAP1 = scale(UMAP1)),
-      prep(pca_rec) |> juice() |> select(-Class)
+      moons_umap$data(cols = c("Class", "V1")) |>
+        transmute(Class, UMAP1 = as.numeric(scale(V1))),
+      moons_pca$data(cols = "PC1")
     ) |>
       pivot_longer(-Class, names_to = "method")
 
@@ -554,38 +602,41 @@ species profiles. In addition to loading species counts, we load taxonomic
 information about each species, in the `taxa` variable.
 
     ```{r}
+    #| label: read-antibiotics
     antibiotic <- read_csv("https://uwmadison.box.com/shared/static/t1lifegdz8s0a8lgckber32ytyh9hu4r.csv")
     taxa <- read_csv("https://uwmadison.box.com/shared/static/ng6y6etk79lrm0gtsgw2u0yq6gqcozze.csv")
     ```
 
-34. We now define a PCA recipe. Since the counts are relatively skewed, we
+34. We now define a PCA task. Since the counts are relatively skewed, we
 log-transform^[Specifically, we use a $\log\left(1 + x\right)$ transform, since
 there are many 0 counts.], using `step_log`. The rest of the definition is like
 the 2D example above.
 
     ```{r}
-    antibiotic_ <- recipe(~ ., data = antibiotic) |>
-      update_role(sample:antibiotic, new_role = "id") |>
-      step_log(all_predictors(), offset = 1) |>
-      step_normalize(all_predictors())
+    #| label: antibiotic-pca
+    antibiotic_task <- as_task_unsupervised(antibiotic)
+    antibiotic_ids <- c("sample", "ind", "time", "antibiotic")
+    antibiotic_task$set_col_roles(antibiotic_ids, remove_from = "feature")
+    antibiotic_log <- preproc(antibiotic_task, po("colapply", applicator = log1p))
 
-    pca_rec <- step_pca(antibiotic_, all_predictors())
-    pca_prep <- prep(pca_rec)
+    pca <- po("pca", scale. = TRUE)
+    antibiotic_pca <- preproc(antibiotic_log, pca)
     ```
 
 35. We generate a map of the PCA scores below. The primary difference is between
-the three study participants -- D, E, and F. Within each person, there is some
+the three study participants, D, E, and F. Within each person, there is some
 variation between the antibiotic periods, as indicated by the points' colors.
 
     ```{r}
+    #| label: antibiotic-scores
     #| fig.cap: "PCA scores for the antibiotics dataset. The main difference is between study participants
     #| with some secondary variation related to whether the participant was taking the antibiotic at that timepoint."
-    scores <- juice(pca_prep)
-    variances <- tidy(pca_prep, 2, type = "variance")
+    scores <- antibiotic_pca$data(cols = c(antibiotic_ids, "PC1", "PC2"))
+    variances <- pca$state$sdev^2
     ggplot(scores, aes(PC1, PC2, col = antibiotic)) +
       geom_point(aes(shape = ind), size = 1.5) +
       geom_text_repel(aes(label = sample), check_overlap = TRUE, size = 3) +
-      coord_fixed(sqrt(variances$value[2] / variances$value[1])) +
+      coord_fixed(sqrt(variances[2] / variances[1])) +
       scale_color_brewer(palette = "Set2")
     ```
 
@@ -598,8 +649,10 @@ have more Firmicutes than Bacteroidetes. PC2 seems to pick up on two species
 that have higher abundance when the rest drop-off.
 
     ```{r}
+    #| label: antibiotic-loadings
     #| fig.cap: "The first six principal components associated with the antibiotics dataset."
-    components_ <- tidy(pca_prep, 3) |>
+    components_ <- as_tibble(pca$state$rotation, rownames = "terms") |>
+      pivot_longer(-terms, names_to = "component") |>
       filter(component %in% str_c("PC", 1:6)) |>
       mutate(terms_ = reorder_within(terms, abs(value), component)) |>
       group_by(component) |>
@@ -622,11 +675,14 @@ approach to interpret the representation is to find points that are close
 together (e.g., using $K$-means) and take their average species profile.
 
     ```{r}
+    #| label: antibiotic-umap
     #| fig.cap: "The UMAP representation associated with the antibiotics dataset."
-    umap_rec <- step_umap(antibiotic_, all_predictors(), min_dist = 1.5)
-    umap_prep <- prep(umap_rec)
+    # UMAP requires spread to be at least min_dist.
+    umap <- po("umap", scale = TRUE, min_dist = 1.5, spread = 1.5)
+    antibiotic_umap <- preproc(antibiotic_log, umap)
 
-    scores <- juice(umap_prep)
+    scores <- antibiotic_umap$data(cols = c(antibiotic_ids, "V1", "V2")) |>
+      rename(UMAP1 = V1, UMAP2 = V2)
     ggplot(scores, aes(UMAP1, UMAP2, col = antibiotic)) +
       geom_point(aes(shape = ind), size = 1.5) +
       geom_text_repel(aes(label = sample), max.overlaps = 10) +
@@ -644,6 +700,7 @@ similar overall pixel values should be located next to one another. First, we
 read in the data and subsample it, so the code doesn't take so long to run.
 
     ```{r}
+    #| label: read-fashion
     fashion <- read_csv("https://uwmadison.box.com/shared/static/aur84ttkwa2rqvzo99qo7yhxemoc6om0.csv") |>
       sample_frac(0.2) |>
       mutate(
@@ -652,19 +709,21 @@ read in the data and subsample it, so the code doesn't take so long to run.
       )
     ```
 
-39. Each row of the matrix above is a separate image. We can prepare a PCA
-recipe just like in the two examples above. Note that we are not normalizing the
-features -- the pixels are already on a common scale.
+39. Each row of the matrix above is a separate image. We can prepare a PCA task
+just like in the two examples above. Note that we are not normalizing the
+features, since the pixels are already on a common scale.
 
     ```{r}
-    fashion_ <- recipe(~ ., data = fashion) |>
-      update_role(label, image, new_role = "id")
+    #| label: fashion-pca
+    fashion_task <- as_task_unsupervised(fashion)
+    fashion_task$set_col_roles(c("label", "image"), remove_from = "feature")
 
-    pca_rec <- step_pca(fashion_, all_predictors())
-    pca_prep <- prep(pca_rec)
+    pca <- po("pca")
+    fashion_pca <- preproc(fashion_task, pca)
     ```
 
     ```{r}
+    #| label: image-functions
     #| echo: false
     pivot_scores <- function(scores, fashion, scale_factor=12, max_images=300) {
       scores |>
@@ -700,10 +759,11 @@ the labels are not informative... to understand what the colors mean, we need to
 look at the images.
 
     ```{r}
+    #| label: fashion-scores
     #| fig-width: 5
     #| fig-height: 5
     #| fig.cap: "Principal component scores from the fashion dataset."
-    scores <- juice(pca_prep) |>
+    scores <- fashion_pca$data(cols = c("label", "image", "PC1", "PC2")) |>
       rename(x = PC1, y = PC2)
     ggplot(scores, aes(x, y, col = label)) +
       geom_point() +
@@ -717,6 +777,7 @@ sort of image using ggplot2; however, we have hidden it to avoid cluttering
 these notes.
 
     ```{r}
+    #| label: pca-images
     #| fig-width: 5
     #| fig-height: 5
     #| fig.cap: "A subset of principal component scores expressed as the corresponding images."
@@ -730,13 +791,14 @@ new coordinates. It seems that UMAP can more clearly separate shoes and pants
 from shirts and sweaters.
 
     ```{r}
+    #| label: fashion-umap
     #| fig-width: 5
     #| fig-height: 5
     #| fig.cap: "The locations of all the images according to UMAP. Each color is a different class."
-    umap_rec <- step_umap(fashion_, all_predictors(), num_comp = 2, min_dist = 0.5)
-    umap_prep <- prep(umap_rec)
-    scores <- juice(umap_prep) |>
-      rename(x = UMAP1, y = UMAP2)
+    umap <- po("umap", min_dist = 0.5)
+    fashion_umap <- preproc(fashion_task, umap)
+    scores <- fashion_umap$data(cols = c("label", "image", "V1", "V2")) |>
+      rename(x = V1, y = V2)
     ggplot(scores, aes(x, y, col = label)) +
       geom_point() +
       scale_color_brewer(palette = "Set3") +
@@ -744,6 +806,7 @@ from shirts and sweaters.
     ```
 
     ```{r}
+    #| label: umap-images
     #| fig-width: 5
     #| fig-height: 5
     #| fig.cap: "A sample of the images at the locations determined by UMAP."

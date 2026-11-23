@@ -752,6 +752,6 @@ maps.
 - Accurately draw conoclusions from frequency framing, density, error bar, and CCDF plots.
 - Explain how frequency framing makes probabilities easier to work with and describe its application to both discrete and continuous data.
 - Given ggplot and ggdist code that implements an uncertainty visualization layer, explain how each layer works and its place in the overall visualization, including the difference between providing variables through `x` versus `x_dist` aesthetic encoding.
-- Discuss tradeoffs between alternative representations of point estimate uncertainty, including dot plots, error bar intervals, ridge densities, and gradient intervals.
+- Discuss tradeoffs between alternative representations of point estimate uncertainty, including dot plots, error bar intervals, ridge densities, point intervals, half eyes, and gradient intervals.
 - Compare approaches to visualizing uncertainty in regression curves, including confidence bands, overlaid curves, and hypothetical outcome plots.
 - Given a practical visualization task and either samples or summaries from a distribution, propose an uncertainty visualization and outline this implementation using ggplot2, ggdist, or gganimate.

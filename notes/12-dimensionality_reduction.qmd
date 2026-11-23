@@ -1,6 +1,7 @@
 ---
 title: "Dimensionality Reduction"
 author: Kris Sankaran
+bibliography: references.bib
 format:
   html:
     embed-resources: true
@@ -13,6 +14,10 @@ execute:
     cache: false
     eval: true
 ---
+
+Reading [[1] (Section 10.2)](https://canvas.wisc.edu/courses/530541/files/54329609?wrap=1), [2 (optional)](https://visxai-dimensionality-reduction-1dbad0a67a092b007c526a45.vercel.app/), [3 (optional)](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html)
+[Code](https://github.com/krisrs1128/data_visualization_notes/blob/main/notes/11-predictions.qmd)
+Items marked with $^\dagger$ will not be tested on exams.
 
 ```{r}
 #| label: setup
@@ -34,9 +39,6 @@ theme_set(theme479)
 set.seed(479)
 ```
 
-## Motivation
-
-[Reading](https://idyll.pub/post/visxai-dimensionality-reduction-1dbad0a67a092b007c526a45/)
 
 1. *High-dimensional data* are data where many features are collected for each
 observation. These tend to be wide datasets with many columns. The name comes

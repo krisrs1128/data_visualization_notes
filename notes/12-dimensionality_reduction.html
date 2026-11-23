@@ -278,23 +278,18 @@ window.Quarto = {
 # ℹ 927 more rows</code></pre>
 </div>
 </div></li>
-<li><p>In <code>mlr3_pipelines</code>, we first create a task object, which will include both the model fitting code and context about how it was run. This is convenient because it helps us avoid many intermediate datasets. For example, through <code>set_col_roles</code>, we can instruct the PCA to ignore the categorical features and focus entirely on the numerical ingredient features.</p></li>
-</ol>
-<pre><code>::: {.cell}
-
-```{.r .cell-code}
-cocktails_task &lt;- as_task_unsupervised(cocktails_df)
-cocktails_task$set_col_roles(c("name", "category"), remove_from = "feature")
-
-pca &lt;- po("pca", scale. = TRUE)
-cocktails_pca &lt;- preproc(cocktails_task, pca)
-```
-:::</code></pre>
-<ol start="12" type="1">
+<li><p>In <code>mlr3_pipelines</code>, we first create a task object, which will include both the model fitting code and context about how it was run. This is convenient because it helps us avoid many intermediate datasets. For example, through <code>set_col_roles</code>, we can instruct the PCA to ignore the categorical features and focus entirely on the numerical ingredient features.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cocktails_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(cocktails_df)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cocktails_task<span class="sc">$</span><span class="fu">set_col_roles</span>(<span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>), <span class="at">remove_from =</span> <span class="st">"feature"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>cocktails_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(cocktails_task, pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
 <li><p>The <code>scale. = TRUE</code> argument is used to scale all the columns. This is needed because otherwise columns with larger variance will have more weight in the final dimensionality reduction, but this is not conceptually meaningful. For example, if one of the columns in a dataset were measuring length in kilometers, then we could artificially increase its influence in a PCA by expressing the same value in meters. To achieve invariance to this change in units, it would be important to scale first.</p></li>
 <li><p>The key outputs are <code>rotation</code> and <code>data</code>, which correspond to <span class="math inline">\(\Phi\)</span> and <span class="math inline">\(z_i\)</span>. Each column of <code>rotation</code> describes an axis of the plane approximating most of the data. These are the derived features. The <span class="math inline">\(z_i\)</span> gives the coordinates of sample <span class="math inline">\(i\)</span> with respect to the axes of that plane, they are the sample locations in the map. The output <code>sdev^2</code> gives the variance explained by each dimension. It summarizes how much information was preserved by each dimension, and larger the proportion of variance explained in the first <span class="math inline">\(K\)</span> derived components, the less information we’re losing by using the <span class="math inline">\(K\)</span>-dimensional PCA approximation rather than the original data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pca<span class="sc">$</span>state<span class="sc">$</span>rotation[, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pca<span class="sc">$</span>state<span class="sc">$</span>rotation[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                  PC1           PC2          PC3          PC4
 amaretto                 0.0792386894 -7.676115e-03  0.141342090 -0.109604236
@@ -336,48 +331,7 @@ sweet_vermouth          -0.0661070190  3.754366e-01  0.119845502 -0.004266470
 triple_sec               0.0137312412  7.168169e-03 -0.194038414  0.164384468
 vodka                    0.1993017779 -1.408724e-01  0.216781383 -0.300840580
 white_creme_de_cacao     0.0703471751 -4.233134e-02  0.120417840 -0.208906342
-whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344
-                                  PC5
-amaretto                 0.0660435577
-anisette                -0.0239670473
-apple_brandy            -0.0413424206
-apricot_flavored_brandy -0.0734702651
-benedictine             -0.0030379593
-bitters                  0.0145349861
-blanco_tequila          -0.1117205556
-blended_scotch_whiskey   0.0723967777
-blended_whiskey          0.0615918979
-bourbon_whiskey          0.1595986089
-brandy                  -0.0990715486
-cherry_flavored_brandy   0.1013084093
-citrus_flavored_vodka    0.3635988897
-cranberry_juice          0.0983353476
-dark_rum                -0.1286794936
-dry_vermouth             0.0126514763
-dubonnet                -0.0176409387
-egg_white                0.0694117857
-egg_yolk                -0.1293068202
-gin                      0.0699674605
-grapefruit_juice         0.0545007553
-grenadine               -0.2463169217
-half_and_half            0.0198579196
-lemon_juice              0.4093391404
-light_cream              0.0996088815
-light_rum               -0.3622283246
-lime_juice              -0.3837224014
-maraschino               0.0000537957
-old_mr_boston_dry_gin   -0.0329441220
-orange_juice            -0.1843701174
-pineapple_juice         -0.2389329042
-port                    -0.0728332222
-powdered_sugar          -0.0456144025
-simple_syrup             0.1789193524
-straight_rye_whiskey     0.0995135935
-sweet_vermouth          -0.0197676564
-triple_sec              -0.1455602172
-vodka                    0.2016229350
-white_creme_de_cacao    -0.0322879500
-whole_egg               -0.1030678884</code></pre>
+whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -585,7 +539,7 @@ whole_egg               -0.1030678884</code></pre>
 </div>
 </div></li>
 <li><p>One detail in the graph construction: In UMAP, the edges are assigned weights depending on the distance they span, normalized by the distance to the closest neighbor. Neighbors that are close, relative to the nearest neighbors, are assigned higher weights than those that are far away, and points that are linked by high weight edges are pulled together with larger force in the final graph layout. This is what the authors mean by using a “fuzzy” nearest neighbor graph. The fuzziness allows the algorithm to distinguish neighbors that are very close from those that are far, even though they all lie within a <span class="math inline">\(K\)</span>-nearest-neighborhood.</p></li>
-<li><p>Once the graph is constructed, there is the question of how the graph layout should proceed. UMAP uses a variant of force-directed layout, and the global strength of the springs is another hyperparameter. Lower tension on the springs allow the points to spread out more loosely, higher tension forces points closer together. This is a second hyperparameter of UMAP.</p>
+<li><p>Once the graph is constructed, there is the question of how the graph layout should proceed. UMAP uses a variant of force-directed layout, and the spring tension is another hyperparameter<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Lower tension on the springs allow the points to spread out more loosely, higher tension forces points closer together. This is a second hyperparameter of UMAP.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -603,17 +557,28 @@ whole_egg               -0.1030678884</code></pre>
 </div>
 </div></li>
 <li><p>These two hyperparameters — the number of nearest neighbors <span class="math inline">\(K\)</span> and the layout tension — are the only two hyperparameters of UMAP. You can see more examples of what this algorithm does to toy datasets in the <a href="https://pair-code.github.io/understanding-umap">reading</a>. Note in particular the properties that the algorithm <em>does not</em> preserve. The distance between clusters should not be interpreted, since it just means that the graph components were not connected. Similarly, the density of points is not preserved.</p></li>
+<li><p>UMAP can introduce technical artifacts that are important to be aware of, so that we don’t misread it. The most important issue is that it can create artificial clusters between data that actually overlap, and its results can be very sensitive to hyperparameters. You can see this yourself using the “Random (Gaussian) walk” dataset in the optional reading’s <a href="https://pair-code.github.io/understanding-umap/">Figure 1</a>. This can have real world consequences! There was quite a controversy when authors of a prominent paper <span class="citation" data-cites="allofus2024">(<a href="#ref-allofus2024" role="doc-biblioref">Bick et al. 2024</a>)</span> about the “All of Us” study (which deliberately sampled diverse genetic profiles) used a UMAP that made racial groups look more different than was really justified (and whose sharp differences disappeared in the PCA).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/pritchard_all_of_us.png" class="img-fluid figure-img" width="550"></p>
+<figcaption>A tweet responding to misinformation that originated in misinterpretation of a UMAP created with genotype data.</figcaption>
+</figure>
+</div>
+</div>
+</div></li>
 </ol>
 </section>
 <section id="implementation-in-r-1" class="level3">
 <h3 class="anchored" data-anchor-id="implementation-in-r-1">Implementation in R</h3>
-<ol start="28" type="1">
-<li><p>In R, we can implement this using almost the same code as we used for PCA. We still use <code>po</code>, but call it with <code>umap</code> and its hyperparameters<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<ol start="29" type="1">
+<li><p>In R, we can implement this using almost the same code as we used for PCA. We still use <code>po</code>, but call it with <code>umap</code> and its hyperparameters<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">n_neighbors =</span> <span class="dv">20</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cocktails_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(cocktails_task, umap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p>UMAP returns a low-dimensional atlas relating the points, but it does not provide any notion of derived features.</p>
+<li><p>UMAP returns a low-dimensional atlas relating the points, but it does not provide any notion of derived features <span class="math inline">\(\Phi\)</span> like PCA. To interpret why samples get placed close to one another, we can overlay context associated wtih each sample or look for source features that vary clearly across the plot.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> cocktails_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">UMAP1 =</span> V1, <span class="at">UMAP2 =</span> V2)</span>
@@ -645,7 +610,7 @@ whole_egg               -0.1030678884</code></pre>
 </section>
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<ol start="30" type="1">
+<ol start="31" type="1">
 <li><p>We presented the two moons dataset earlier as an example where UMAP, but not PCA, would be able to discover a one-dimensional representation that separates the groups. The implication is that, if we anticipate some sort of nonlinearity in higher-dimensions (which we can’t directly visualize), then UMAP would be a more suitable choice.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>moons <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv"</span>)</span>
@@ -669,14 +634,14 @@ whole_egg               -0.1030678884</code></pre>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>, <span class="at">rank. =</span> <span class="dv">1</span>)</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">n_components =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p>The block below shows both the UMAP and PCA representations. The PCA representation seems to mostly reflect the variation on the <span class="math inline">\(x\)</span>-axis of the original data, and the two classes mix together. On the other hand, the UMAP clearly separates the groups. This is expected, since the nearest neighborhood graph that defines UMAP is likely separated into two major components, one for each moon.</p>
+<li><p>The block below shows both the UMAP and PCA representations. The PCA representation seems to mostly reflect the variation on the <span class="math inline">\(x\)</span>-axis of the original data, and the two classes mix together. On the other hand, the UMAP mostly separates the groups. This is expected, since the nearest neighborhood graph that defines UMAP is likely separated into two major components, one for each moon.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>moons_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(moons_task, pca)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>moons_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(moons_task, umap)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  moons_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Class"</span>, <span class="st">"V1"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(Class, <span class="at">UMAP1 =</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(V1))),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  moons_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="st">"PC1"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  moons_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="st">"PC1"</span>),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  moons_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Class"</span>, <span class="st">"V1"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(Class, <span class="at">UMAP1 =</span> <span class="fu">scale</span>(V1))</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>Class, <span class="at">names_to =</span> <span class="st">"method"</span>)</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
@@ -695,13 +660,13 @@ whole_egg               -0.1030678884</code></pre>
 </ol>
 <section id="antibiotics-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="antibiotics-dataset">Antibiotics Dataset</h3>
-<ol start="33" type="1">
-<li><p>We can apply dimensionality reduction to the antibiotics dataset described in <a href="https://krisrs1128.github.io/stat479/posts/2021-01-20-week2-1/">lecture 2 - 1</a>. There, we had filtered down to the 6 most abundant bacteria. Now we will consider 147 most abundant, which means that each sample can be imagined as a vector in a 147-dimensional space. Ideally, a dimensionality-reduction procedure should be able to place samples close to one another when they have similar species profiles. In addition to loading species counts, we load taxonomic information about each species, in the <code>taxa</code> variable.</p>
+<ol start="34" type="1">
+<li><p>We can apply dimensionality reduction to the antibiotics dataset we discussed in the small multiples notes. There, we had filtered down to the 6 most abundant bacteria. Now we will consider 147 most abundant, which means that each sample can be imagined as a vector in a 147-dimensional space. Ideally, a dimensionality-reduction procedure should be able to place samples close to one another when they have similar species profiles. In addition to loading species counts, we load taxonomic information about each species, in the <code>taxa</code> variable.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>antibiotic <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/t1lifegdz8s0a8lgckber32ytyh9hu4r.csv"</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/ng6y6etk79lrm0gtsgw2u0yq6gqcozze.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
-<li><p>We now define a PCA task. Since the counts are relatively skewed, we log-transform<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, using <code>step_log</code>. The rest of the definition is like the 2D example above.</p>
+<li><p>We now define a PCA task. Since the counts are relatively skewed, we log-transform<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, using <code>applicator = log1p</code>. The rest of the definition is like the 2D example above.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>antibiotic_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(antibiotic)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>antibiotic_ids <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sample"</span>, <span class="st">"ind"</span>, <span class="st">"time"</span>, <span class="st">"antibiotic"</span>)</span>
@@ -765,7 +730,7 @@ whole_egg               -0.1030678884</code></pre>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">UMAP1 =</span> V1, <span class="at">UMAP2 =</span> V2)</span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(UMAP1, UMAP2, <span class="at">col =</span> antibiotic)) <span class="sc">+</span></span>
 <span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> ind), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> sample), <span class="at">max.overlaps =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> sample), <span class="at">max.overlaps =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
 <span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -780,8 +745,8 @@ whole_egg               -0.1030678884</code></pre>
 </section>
 <section id="image-data" class="level3">
 <h3 class="anchored" data-anchor-id="image-data">Image Data</h3>
-<ol start="38" type="1">
-<li><p>Both PCA and UMAP can be used on image data. Here, each pixel in an image is considered a different feature. For example, the FashionMNIST dataset includes 60,000 28 x 28 images of fashion objects. We can think of image as a vector<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <span class="math inline">\(x_{i} \in \mathbb{R}^{784}\)</span>. The goal of dimensionality reduction in this context is to build an atlas of images, where images with similar overall pixel values should be located next to one another. First, we read in the data and subsample it, so the code doesn’t take so long to run.</p>
+<ol start="39" type="1">
+<li><p>Both PCA and UMAP can be used on image data. Here, each pixel in an image is considered a different feature. For example, the FashionMNIST dataset includes 60,000 28 x 28 images of fashion objects. We can think of image as a vector<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> <span class="math inline">\(x_{i} \in \mathbb{R}^{784}\)</span>. The goal of dimensionality reduction in this context is to build an atlas of images, where images with similar overall pixel values should be located next to one another. First, we read in the data and subsample it, so the code doesn’t take so long to run.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fashion <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/aur84ttkwa2rqvzo99qo7yhxemoc6om0.csv"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_frac</span>(<span class="fl">0.2</span>) <span class="sc">|&gt;</span></span>
@@ -815,7 +780,7 @@ whole_egg               -0.1030678884</code></pre>
 </div>
 </div>
 </div></li>
-<li><p>The block below overlays the first 300 images from the dataset at the locations from the previous plot. We have prepared a function to generate this sort of image using ggplot2; however, we have hidden it to avoid cluttering these notes.</p>
+<li><p>The block below overlays the first 300 images from the dataset at the locations from the previous plot. We have prepared a function to generate this sort of image using ggplot2; however, we have hidden it to avoid cluttering these notes (you can find it at the code link at the top of the notes).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_scores</span>(scores, fashion) <span class="sc">|&gt;</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">overlay_images</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -866,15 +831,19 @@ whole_egg               -0.1030678884</code></pre>
 
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-allofus2024" class="csl-entry" role="listitem">
+Bick, Alexander G. and, Ginger A. Metcalf, Kelsey R. Mayo, et al. 2024. <span>“Genomic Data in the All of Us Research Program.”</span> <em>Nature</em> 627 (8003): 340–46. <a href="https://doi.org/10.1038/s41586-023-06957-x">https://doi.org/10.1038/s41586-023-06957-x</a>.
+</div>
 <div id="ref-LaManno2020" class="csl-entry" role="listitem">
 La Manno, Gioele, Kimberly Siletti, Alessandro Furlan, et al. 2020. <em>Molecular Architecture of the Developing Mouse Brain</em>. <a href="https://doi.org/10.1101/2020.07.02.184051">https://doi.org/10.1101/2020.07.02.184051</a>.
 </div>
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>As of November 2026, this functionality is only in the development (not CRAN) version of <code>mlr3pipelines</code>. You can install it with <code>pak::pak(c("mlr-org/mlr3pipelines", "uwot"))</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Specifically, we use a <span class="math inline">\(\log\left(1 + x\right)\)</span> transform, since there are many 0 counts.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>28 * 28 = 784<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>This is also sometimes called <code>min_dist</code> in software implementations. Lowering the minimum distance is like increasing the spring tension and pulls the points closer together in the embeddings space.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>As of November 2026, this functionality is only in the development (not CRAN) version of <code>mlr3pipelines</code>. You can install it with <code>pak::pak(c("mlr-org/mlr3pipelines", "uwot"))</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Specifically, we use a <span class="math inline">\(\log\left(1 + x\right)\)</span> transform, since there are many 0 counts.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>28 * 28 = 784<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->

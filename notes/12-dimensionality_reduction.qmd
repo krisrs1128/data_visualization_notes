@@ -10,7 +10,7 @@ execute:
     echo: true
     message: false
     warning: false
-    cache: true
+    cache: false
     eval: true
 ---
 
@@ -194,7 +194,7 @@ numerical ingredient information.
     cocktails_df[, 1:6]
     ```
 
-11.  In `mlr3_pipelines`, we first create a task object, which will include both
+11. In `mlr3_pipelines`, we first create a task object, which will include both
 the model fitting code and context about how it was run. This is convenient
 because it helps us avoid many intermediate datasets. For example, through
 `set_col_roles`, we can instruct the PCA to ignore the categorical features and
@@ -230,7 +230,7 @@ $K$-dimensional PCA approximation rather than the original data.
     ```{r}
     #| label: pca-components
     #| fig.cap: "The first five principal components are linear combinations of features."
-    pca$state$rotation[, 1:5]
+    pca$state$rotation[, 1:4]
     ```
 
     ```{r}
@@ -471,10 +471,12 @@ from those that are far, even though they all lie within a
 $K$-nearest-neighborhood.
 
 26. Once the graph is constructed, there is the question of how the graph layout
-should proceed. UMAP uses a variant of force-directed layout, and the global
-strength of the springs is another hyperparameter. Lower tension on the springs
-allow the points to spread out more loosely, higher tension forces points closer
-together. This is a second hyperparameter of UMAP.
+should proceed. UMAP uses a variant of force-directed layout, and the spring
+tension is another hyperparameter^[This is also sometimes called `min_dist` in
+software implementations. Lowering the minimum distance is like increasing the
+spring tension and pulls the points closer together in the embeddings space.].
+Lower tension on the springs allow the points to spread out more loosely, higher
+tension forces points closer together. This is a second hyperparameter of UMAP.
 
     ```{r}
     #| label: graph-layout
@@ -493,9 +495,29 @@ clusters should not be interpreted, since it just means that the graph
 components were not connected. Similarly, the density of points is not
 preserved.
 
+28. UMAP can introduce technical artifacts that are important to be aware of, so
+that we don't misread it. The most important issue is that it can create
+artificial clusters between data that actually overlap, and its results can be
+very sensitive to hyperparameters. You can see this yourself using the "Random
+(Gaussian) walk" dataset in the optional reading's
+[Figure 1](https://pair-code.github.io/understanding-umap/).  This can have real
+world consequences! There was quite a controversy when authors of a prominent
+paper [@allofus2024] about the "All of Us" study (which deliberately sampled
+diverse genetic profiles) used a UMAP that made racial groups look more
+different than was really justified (and whose sharp differences disappeared in
+the PCA).
+
+    ```{r}
+    #| label: all-of-us
+    #| out.width: 550
+    #| echo: false
+    #| fig.cap: "A tweet responding to misinformation that originated in misinterpretation of a UMAP created with genotype data."
+    include_graphics("figures/pritchard_all_of_us.png")
+    ```
+
 ### Implementation in R
 
-28. In R, we can implement this using almost the same code as we used for PCA.
+29. In R, we can implement this using almost the same code as we used for PCA.
 We still use `po`, but call it with `umap` and its hyperparameters^[As of November 2026, this functionality is only in the development (not CRAN) version of `mlr3pipelines`. You can install it with `pak::pak(c("mlr-org/mlr3pipelines", "uwot"))`.].
 
     ```{r}
@@ -504,8 +526,10 @@ We still use `po`, but call it with `umap` and its hyperparameters^[As of Novemb
     cocktails_umap <- preproc(cocktails_task, umap)
     ```
 
-29. UMAP returns a low-dimensional atlas relating the points, but it does not
-provide any notion of derived features.
+30. UMAP returns a low-dimensional atlas relating the points, but it does not
+provide any notion of derived features $\Phi$ like PCA. To interpret why samples
+get placed close to one another, we can overlay context associated wtih each
+sample or look for source features that vary clearly across the plot.
 
     ```{r}
     #| label: umap-scores
@@ -537,7 +561,7 @@ We can summarize the properties of UMAP,
 
 ## Examples
 
-30. We presented the two moons dataset earlier as an example where UMAP, but not
+31. We presented the two moons dataset earlier as an example where UMAP, but not
 PCA, would be able to discover a one-dimensional representation that separates
 the groups. The implication is that, if we anticipate some sort of nonlinearity
 in higher-dimensions (which we can't directly visualize), then UMAP would be a
@@ -552,7 +576,7 @@ more suitable choice.
       scale_color_brewer(palette = "Set2")
     ```
 
-31. The code block below defines both the PCA and UMAP tasks. There is no need
+32. The code block below defines both the PCA and UMAP tasks. There is no need
 to normalize the data, since the two dimensions are already on the same scale.
 
     ```{r}
@@ -564,10 +588,10 @@ to normalize the data, since the two dimensions are already on the same scale.
     umap <- po("umap", n_components = 1)
     ```
 
-32. The block below shows both the UMAP and PCA representations. The PCA
+33. The block below shows both the UMAP and PCA representations. The PCA
 representation seems to mostly reflect the variation on the $x$-axis of the
 original data, and the two classes mix together. On the other hand, the UMAP
-clearly separates the groups. This is expected, since the nearest neighborhood
+mostly separates the groups. This is expected, since the nearest neighborhood
 graph that defines UMAP is likely separated into two major components, one for
 each moon.
 
@@ -579,9 +603,9 @@ each moon.
     moons_pca <- preproc(moons_task, pca)
     moons_umap <- preproc(moons_task, umap)
     scores <- bind_cols(
+      moons_pca$data(cols = "PC1"),
       moons_umap$data(cols = c("Class", "V1")) |>
-        transmute(Class, UMAP1 = as.numeric(scale(V1))),
-      moons_pca$data(cols = "PC1")
+        transmute(Class, UMAP1 = scale(V1))
     ) |>
       pivot_longer(-Class, names_to = "method")
 
@@ -592,14 +616,14 @@ each moon.
 
 ### Antibiotics Dataset
 
-33. We can apply dimensionality reduction to the antibiotics dataset described in
-[lecture 2 - 1](https://krisrs1128.github.io/stat479/posts/2021-01-20-week2-1/).
-There, we had filtered down to the 6 most abundant bacteria. Now we will
-consider 147 most abundant, which means that each sample can be imagined as a
-vector in a 147-dimensional space. Ideally, a dimensionality-reduction procedure
-should be able to place samples close to one another when they have similar
-species profiles. In addition to loading species counts, we load taxonomic
-information about each species, in the `taxa` variable.
+34. We can apply dimensionality reduction to the antibiotics dataset we
+discussed in the small multiples notes.  There, we had filtered down to the 6
+most abundant bacteria. Now we will consider 147 most abundant, which means that
+each sample can be imagined as a vector in a 147-dimensional space. Ideally, a
+dimensionality-reduction procedure should be able to place samples close to one
+another when they have similar species profiles. In addition to loading species
+counts, we load taxonomic information about each species, in the `taxa`
+variable.
 
     ```{r}
     #| label: read-antibiotics
@@ -607,10 +631,10 @@ information about each species, in the `taxa` variable.
     taxa <- read_csv("https://uwmadison.box.com/shared/static/ng6y6etk79lrm0gtsgw2u0yq6gqcozze.csv")
     ```
 
-34. We now define a PCA task. Since the counts are relatively skewed, we
+35. We now define a PCA task. Since the counts are relatively skewed, we
 log-transform^[Specifically, we use a $\log\left(1 + x\right)$ transform, since
-there are many 0 counts.], using `step_log`. The rest of the definition is like
-the 2D example above.
+there are many 0 counts.], using `applicator = log1p`. The rest of the
+definition is like the 2D example above.
 
     ```{r}
     #| label: antibiotic-pca
@@ -623,7 +647,7 @@ the 2D example above.
     antibiotic_pca <- preproc(antibiotic_log, pca)
     ```
 
-35. We generate a map of the PCA scores below. The primary difference is between
+36. We generate a map of the PCA scores below. The primary difference is between
 the three study participants, D, E, and F. Within each person, there is some
 variation between the antibiotic periods, as indicated by the points' colors.
 
@@ -640,7 +664,7 @@ variation between the antibiotic periods, as indicated by the points' colors.
       scale_color_brewer(palette = "Set2")
     ```
 
-36. Which species contribute the most to the principal components? We can analyze
+37. Which species contribute the most to the principal components? We can analyze
 this like we did with the cocktails dataset. In addition to plotting the raw
 component value, we also join in the taxa information. This allows us to color
 in each bar by the species group that each bacteria belongs to. For example, we
@@ -668,7 +692,7 @@ that have higher abundance when the rest drop-off.
       theme(axis.text = element_text(size = 5))
     ```
 
-37. We can use similar code to compute a UMAP embedding. The UMAP seems to
+38. We can use similar code to compute a UMAP embedding. The UMAP seems to
 separate the different timepoints more clearly. However, there is no analog of
 `components` with which to interpret the different axes. Instead, a typical
 approach to interpret the representation is to find points that are close
@@ -685,13 +709,13 @@ together (e.g., using $K$-means) and take their average species profile.
       rename(UMAP1 = V1, UMAP2 = V2)
     ggplot(scores, aes(UMAP1, UMAP2, col = antibiotic)) +
       geom_point(aes(shape = ind), size = 1.5) +
-      geom_text_repel(aes(label = sample), max.overlaps = 10) +
+      geom_text_repel(aes(label = sample), max.overlaps = 7) +
       scale_color_brewer(palette = "Set2")
     ```
 
 ### Image Data
 
-38. Both PCA and UMAP can be used on image data. Here, each pixel in an image is
+39. Both PCA and UMAP can be used on image data. Here, each pixel in an image is
 considered a different feature. For example, the FashionMNIST dataset includes
 60,000 28 x 28 images of fashion objects. We can think of image as a
 vector^[28 * 28 = 784] $x_{i} \in \mathbb{R}^{784}$. The goal of dimensionality
@@ -709,7 +733,7 @@ read in the data and subsample it, so the code doesn't take so long to run.
       )
     ```
 
-39. Each row of the matrix above is a separate image. We can prepare a PCA task
+40. Each row of the matrix above is a separate image. We can prepare a PCA task
 just like in the two examples above. Note that we are not normalizing the
 features, since the pixels are already on a common scale.
 
@@ -752,7 +776,7 @@ features, since the pixels are already on a common scale.
     }
     ```
 
-40. The code below extracts the PCA scores and visualizes them as a cloud of
+41. The code below extracts the PCA scores and visualizes them as a cloud of
 points. Each point corresponds to an image, and the different types of fashion
 items are indicated by color. It seems that the types are well separated, but
 the labels are not informative... to understand what the colors mean, we need to
@@ -771,10 +795,10 @@ look at the images.
       coord_fixed()
     ```
 
-41. The block below overlays the first 300 images from the dataset at the
+42. The block below overlays the first 300 images from the dataset at the
 locations from the previous plot. We have prepared a function to generate this
 sort of image using ggplot2; however, we have hidden it to avoid cluttering
-these notes.
+these notes (you can find it at the code link at the top of the notes).
 
     ```{r}
     #| label: pca-images
@@ -785,7 +809,7 @@ these notes.
       overlay_images()
     ```
 
-42. Finally, we can repeat the exercise above with UMAP. The first plot shows
+43. Finally, we can repeat the exercise above with UMAP. The first plot shows
 the UMAP scores and the second overlays the same set of 300 images onto these
 new coordinates. It seems that UMAP can more clearly separate shoes and pants
 from shirts and sweaters.

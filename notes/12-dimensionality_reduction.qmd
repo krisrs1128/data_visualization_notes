@@ -993,3 +993,14 @@ from shirts and sweaters.
     pivot_scores(scores, fashion, scale_factor = 0.05) |>
         overlay_images(scale_factor = 0.05)
     ```
+
+### Objectives
+
+- Define high-dimensional data, explain the abstract goals of dimensionality reduction, and evaluate whether a specific dataset would be analyzed using dimensionality reduction.
+- Accurately interpret outputs from PCA (scores, components, and proportion of
+variance explained). In particular, be able to describe feature values using sample
+scores in relation to learned components, and evaluate the quality of the low-dimensional approximation from `sdev` output.
+-  Compare and contrast the PCA and UMAP dimensionality reduction methods and
+use their differences to decide whether they apply in specific problem contexts.
+- Describe the key hyperparameters underlying UMAP and what influence they have on the resulting visualization.
+- Avoid common pitfalls in interpretation of UMAP visualizations while accurately drawing conclusions about real patterns where they are warranted.

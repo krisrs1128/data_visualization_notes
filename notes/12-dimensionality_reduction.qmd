@@ -23,19 +23,20 @@ Items marked with $^\dagger$ will not be tested on exams.
 ```{r}
 #| label: libraries
 #| echo: false
+library(ggrepel)
+library(jsonlite)
 library(knitr)
-library(tidyverse)
 library(mlr3)
 library(mlr3pipelines) # pak::pak(c("mlr-org/mlr3pipelines", "uwot"))
-library(ggrepel)
 library(tidytext)
+library(tidyverse)
 theme479 <- theme_minimal() +
-  theme(
-    panel.grid.minor = element_blank(),
-    panel.background = element_rect(fill = "#f7f7f7"),
-    panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
-    legend.position = "bottom"
-  )
+    theme(
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = "#f7f7f7"),
+        panel.border = element_rect(fill = NA, color = "#0c0c0c", size = 0.6),
+        legend.position = "bottom"
+    )
 theme_set(theme479)
 set.seed(479)
 ```
@@ -47,12 +48,22 @@ columns, they are "wide."" The name comes from the fact that each row of the
 dataset can be viewed as a vector in a high-dimensional space (one dimension for
 each feature). These data are common in modern applications,
 
-   * Each cell in a genomics dataset might have measurements for hundreds of molecules.
+   * Each cell in a genomics dataset might have measurements for thousands of genes.
    * Each survey respondent might provide answers to dozens of questions.
    * Each image might have several thousand pixels.
    * Each document might have counts across several thousand relevant words.
 
-   [todo: add rectangle drawings]
+   ```{r}
+   #| label: high-dim-examples
+   #| layout-ncol: 2
+   #| fig-cap: "Examples of high-dimensional data."
+   #| echo: false
+   include_graphics(c(
+       "figures/high-dim-genes.jpeg",
+       "figures/high-dim-images.jpeg"
+   ))
+   ```
+
 
 2. For low-dimensional data, we could visually encode all the features in our
 data directly, either using visual channels or through small multiples. In
@@ -60,7 +71,12 @@ high-dimensional data, this is no longer possible. However, though there are
 many features associated with each sample, it may still be possible to
 organize samples across a smaller number of meaningful, derived features.
 
-   [todo: add derivation sketch]
+   ```{r}
+   #| label: high-dim-summaries
+   #| fig-cap: "Dimensionality reduction visualizations attempt to derive a smaller number of meaningful features."
+   #| echo: false
+   include_graphics("figures/derived-features.jpeg")
+   ```
 
 3. For example, consider the Metropolitan Museum of Art dataset, which contains
 images of many artworks. Abstractly, each artwork is a high-dimensional object,
@@ -165,6 +181,15 @@ vector $z_{i}$ is called the score of $x_{i}$ with respect to these components.
 The top component explains the most variance, the second captures the next most,
 and so on.
 
+   ```{r}
+   #| label: pca-matrices
+   #| echo: false
+   #| fig.cap: "Shapes of the scores and components learned by PCA, in comparison to the original data."
+   #| fig.align: "center"
+   #| out.width: 170
+   include_graphics("figures/pca-approx.jpeg")
+   ```
+
 9. For example, if one of the columns of $\Phi$ was equal to $\left(\frac{1}{D},
 \dots, \frac{1}{D}\right)$, then that feature computes the average of all
 coordinates (e.g., to get average brightness), and the corresponding $z_{i}$
@@ -178,6 +203,8 @@ coordinates of points projected onto this plane.
    #| fig.cap: "PCA finds a low-dimensional linear subspace that closely approximates the high-dimensional data."
    include_graphics("https://github.com/krisrs1128/stat436_s24/blob/main/exercises/figure/pca_projection.png?raw=true")
    ```
+
+   _Exercise: In terms of the figure above, how could you interpret the $z_i$ and columns of $\Phi$?_
 
 ### Implementation in R
 
@@ -252,12 +279,12 @@ consider, components $\Phi$, scores $z_i$, and variances `sdev^2`.
     ```{r}
     #| label: prepare-components
     components <- as_tibble(pca$state$rotation, rownames = "terms") |>
-      pivot_longer(-terms, names_to = "component") |>
-      filter(component %in% str_c("PC", 1:5))
+        pivot_longer(-terms, names_to = "component") |>
+        filter(component %in% str_c("PC", 1:5))
     scores <- cocktails_pca$data(cols = c("name", "category", "PC1", "PC2"))
     variances <- tibble(
-      component = seq_along(pca$state$sdev),
-      value = pca$state$sdev^2 / sum(pca$state$sdev^2)
+        component = seq_along(pca$state$sdev),
+        value = pca$state$sdev^2 / sum(pca$state$sdev^2)
     )
     ```
 
@@ -274,28 +301,27 @@ variance and the rest would be zero.
     #| fig-width: 4
     #| fig.cap: "Proportion of variance explained by each component in the PCA."
     ggplot(variances) +
-      geom_col(aes(component, value))
+        geom_col(aes(component, value))
     ```
 
-16. We can interpret components by looking at what coefficients they put on the
-original variables used to define them. For example, if the derived feature
-corresponded to the average, it would place coefficient $\frac{1}{D}$ on each
-feature.  From the plot below, we see that the first PC mostly captures
-variation related to whether the drink is made with powdered sugar or simple
-syrup. Drinks with high values of PC1 are usually to be made from simple syrup,
-those with low values of PC1 are usually made from powdered sugar. From the two
-largest bars in PC2, we can see that it highlights the vermouth vs. non-vermouth
-distinction.
+16. We can interpret components in terms of the source features. Mathematically,
+each bar below corresponds to $\varphi_{jk}$ for some component $k$ and feature
+$j$. Assume that the data are centered in advance (each column has mean zero).
+Then, when $\varphi_{jk} > 0$, that means any sample $i$ with positive score
+$z_{ik}$ will be more likely to have above average values of feature $j$ (though
+be careful, effects can cancel across the different $k$).
 
     ```{r}
     #| label: component-loadings
     #| fig.cap: "The top 5 principal components associated with the cocktails dataset."
     ggplot(components, aes(value, terms)) +
-      geom_col(show.legend = FALSE) +
-      facet_wrap(~component, nrow = 1) +
-      labs(y = NULL) +
-      theme(axis.text = element_text(size = 7))
+        geom_col(show.legend = FALSE) +
+        facet_wrap(~component, nrow = 1) +
+        labs(y = NULL) +
+        theme(axis.text = element_text(size = 7))
     ```
+
+    _Exercise: Consider the manually constructed feature that places $\frac{1}{D}$ on each feature. What would be the correpsonding bar plot in the figure above?_
 
 17. It is often easier read the components when the bars are sorted according to
 their magnitude. The usual ggplot approach to reordering axes labels, using
@@ -304,6 +330,13 @@ facets in the same way. If we want to reorder each facet on its own, we can use
 the `reorder_within` function coupled with `scale_*_reordered`, both from the
 tidytext package.
 
+    From the plot below, we see that the first PC mostly captures
+    variation related to whether the drink is made with powdered sugar or simple
+    syrup. Drinks with high values of PC1 are usually to be made from simple syrup,
+    those with low values of PC1 are usually made from powdered sugar. From the two
+    largest bars in PC2, we can see that it highlights the vermouth vs. non-vermouth
+    distinction.
+
     ```{r}
     #| label: sorted-loadings
     #| fig-width: 10
@@ -311,14 +344,14 @@ tidytext package.
     #| fig.cap: "The top 3 principal components
     #| with defining variables sorted by the magnitude of their coefficient."
     components_ <- components |>
-      filter(component %in% str_c("PC", 1:3)) |>
-      mutate(terms = reorder_within(terms, abs(value), component))
+        filter(component %in% str_c("PC", 1:3)) |>
+        mutate(terms = reorder_within(terms, abs(value), component))
     ggplot(components_, aes(value, terms)) +
-      geom_col(show.legend = FALSE) +
-      facet_wrap(~ component, scales = "free_y") +
-      scale_y_reordered() +
-      labs(y = NULL) +
-      theme(axis.text = element_text(size = 7))
+        geom_col(show.legend = FALSE) +
+        facet_wrap(~component, scales = "free_y") +
+        scale_y_reordered() +
+        labs(y = NULL) +
+        theme(axis.text = element_text(size = 7))
     ```
 
 18. Next, we can visualize the scores of each sample with respect to these
@@ -333,12 +366,71 @@ $z_{i}$ is farther along.
     #| fig-height: 6
     #| fig.cap: "The scores associated with the cocktails dataset."
     ggplot(scores, aes(PC1, PC2, label = name)) +
-      geom_point(aes(color = category), alpha = 0.7, size = 1.5) +
-      geom_text_repel(check_overlap = TRUE, size = 3) +
-      coord_fixed(sqrt(variances$value[2] / variances$value[1])) # rescale axes to reflect variance
+        geom_point(aes(color = category), alpha = 0.7, size = 1.5) +
+        geom_text_repel(check_overlap = TRUE, size = 3) +
+        coord_fixed(sqrt(variances$value[2] / variances$value[1])) # rescale axes to reflect variance
     ```
 
-19. For example, El Nino has high value for PC1, which means it has a high value
+19. We can add interactivity to these dimensionality reduction maps. Considering
+that they are overview visualizations, it's natural to support details on demand
+using brush or hover queries. We'll use the same pattern from our earlier mosaic
+notes. I've hidden the coordinator code (accessible at the `code` link at the
+top of the note). We'll work with the CSV file saved below.
+
+    ```{r}
+    #| label: cocktail-pca-interactive-data
+    write_csv(
+        cocktails_pca$data(cols = c("name", "category", "PC1", "PC2")),
+        "data/cocktail_pca.csv"
+    )
+    ```
+
+    ```{=html}
+    <style>
+    .input label:first-of-type { margin-right: .5em; }
+    </style>
+    ```
+
+```{ojs}
+//| label: cocktail-vgplot-setup
+//| echo: false
+cocktail_vg = {
+  const vg = await import("https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm");
+  vg.coordinator().databaseConnector(await vg.wasmConnector());
+  await vg.coordinator().exec([
+    vg.loadCSV("cocktail_pca", new URL("data/cocktail_pca.csv", document.baseURI).href),
+    vg.loadCSV("cocktail_umap_wide", new URL("data/cocktail_umap_wide.csv", document.baseURI).href)
+  ]);
+  return vg;
+}
+
+ingredients = await fetch(
+  new URL("data/ingredients.json", document.baseURI)
+).then(r => r.json());
+```
+
+20. The block below creates a brush input with `intervalXY` and uses it to
+populate a table below (`filterBy: brush`). Do you think you could extend this
+code so that the names listed in the table are colored in to match the cocktail
+category?
+
+```{ojs}
+//| label: cocktail-pca-brush
+cocktail_pca_brush = {
+  const vg = cocktail_vg;
+  const brush = vg.Selection.intersect();
+  return vg.vconcat(
+    vg.plot(
+      vg.dot(vg.from("cocktail_pca"), {x: "PC1", y: "PC2", fill: "category"}),
+      vg.intervalXY({as: brush}),
+      vg.width(600), vg.aspectRatio(1)
+    ),
+    vg.table({from: "cocktail_pca", filterBy: brush, columns: ["name", "category"], height: 180})
+  );
+}
+```
+
+21. For example, El Nino has high value for PC1, which means it has a high value
 of variables that are positive for PC1 (like simple syrup) and low value for
 those variables that are negative (like powdered sugar). Similarly, since
 $\varphi_{2}$ puts high positive weight on vermouth-related variables, so H. P.
@@ -346,7 +438,29 @@ W. Cocktail has many vermouth-related ingredients. In practice, it will often be
 important to visualize several pairs of PC dimensions against one another, not
 just the top 2.
 
-20. Let's examine the original code in a little more detail. We are using
+    _Exercise: How do you interpret points near the "center" of the triangle? What do you expect the ingredients to be like for "Port Wine Cobbler"?_
+
+22. Here is the equivalent hover version. Notice that there is a data entry
+error. It seems that `H. P. W. Cocktail` was duplicated in another row and named
+`H.P.W. Cocktail`. This was hard to notice in the static version alone.
+
+```{ojs}
+//| label: cocktail-pca-hover
+cocktail_pca_hover = {
+  const vg = cocktail_vg;
+  const hovered = vg.Selection.single({empty: true});
+  return vg.plot(
+    vg.dot(vg.from("cocktail_pca"), {x: "PC1", y: "PC2", fill: "category"}),
+    vg.nearest({as: hovered}),
+    vg.text(vg.from("cocktail_pca", {filterBy: hovered}),
+      {x: "PC1", y: "PC2", text: "name", dy: -10, fill: "black"}),
+    vg.width(600), vg.aspectRatio(1)
+  );
+}
+```
+
+
+23. Let's examine the original code in a little more detail. We are using
 `mlr3pipelines`, which gives simple syntax for manipulating data analysis
 pipelines.  This makes it easier to design and reuse methods across problem
 settings. Here is how you would apply PCA without the `mlr3pipelines` package.
@@ -360,22 +474,22 @@ as readable.
     #| fig.cap: "A plot of the PCA scores made without using mlr3pipelines."
     # split name and category out of the data frame
     pca_result <- cocktails_df |>
-      select(-name, -category) |>
-      scale() |>
-      princomp()
+        select(-name, -category) |>
+        scale() |>
+        princomp()
 
     # join them back into the PCA result
     metadata <- cocktails_df |>
-      select(name, category)
+        select(name, category)
     scores_direct <- cbind(metadata, pca_result$scores)
 
     ggplot(scores_direct, aes(Comp.1, Comp.2, label = name)) +
-      geom_point(aes(color = category), alpha = 0.7, size = 1.5) +
-      geom_text_repel(check_overlap = TRUE, size = 3) +
-      coord_fixed(sqrt(variances$value[2] / variances$value[1])) # rescale axes to reflect variance
+        geom_point(aes(color = category), alpha = 0.7, size = 1.5) +
+        geom_text_repel(check_overlap = TRUE, size = 3) +
+        coord_fixed(sqrt(variances$value[2] / variances$value[1])) # rescale axes to reflect variance
     ```
 
-21. The equivalent `mlr3pipelines` implementation handles the difference between
+24. The equivalent `mlr3pipelines` implementation handles the difference between
 supplementary and modeling features less bluntly, using `set_col_roles` to
 specify which variables should be skipped in the PCA approximation (but which we
 might want to keep around for later visualization context).
@@ -405,7 +519,7 @@ between alternative dimensionality reduction methods.
 
 ### Motivation and Graph Construction
 
-22. Nonlinear dimension reduction methods can give a more faithful representation
+25. Nonlinear dimension reduction methods can give a more faithful representation
 than PCA when the data don't lie on a low-dimensional linear subspace. For
 example, suppose the data were shaped like this. There is no one-dimensional
 line through these data that separate the groups well. We will need an
@@ -417,11 +531,11 @@ structure.
     #| fig.cap: "An example nonlinear dataset where projections onto any straight line will necessarily cause the classes to bleed together."
     moons <- read_csv("https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv")
     ggplot(moons, aes(X, Y, col = Class)) +
-      geom_point() +
-      scale_color_brewer(palette = "Set2")
+        geom_point() +
+        scale_color_brewer(palette = "Set2")
     ```
 
-23. From a high-level, the intuition behind UMAP is to (a) build a graph joining
+26. From a high-level, the intuition behind UMAP is to (a) build a graph joining
 nearby neighbors in the original high-dimensional space, and then (b) layout the
 graph in a lower-dimensional space. For example, consider the 2-dimensional sine
 wave below. If we build a graph, we can lay out the resulting nodes and
@@ -436,7 +550,7 @@ ordering.
     include_graphics("https://uwmadison.box.com/shared/static/k4hrx2s4cqmmheg6u0yclir8op42sb0s.png")
     ```
 
-24. A natural way to build a graph is to join each node to its $K$ closest
+27. A natural way to build a graph is to join each node to its $K$ closest
 neighbors. The choice of $K$ will influence the final reduction, and it is
 treated as a hyperparameter of UMAP. Larger values of $K$ prioritize
 preservation of global structure, while smaller $K$ will better reflect local
@@ -460,7 +574,7 @@ simulations described in the reading.
     include_graphics("https://uwmadison.box.com/shared/static/70utv1s9yv3h5kturf6i02knhi2jw2dl.png")
     ```
 
-25. One detail in the graph construction: In UMAP, the edges are assigned weights
+28. One detail in the graph construction: In UMAP, the edges are assigned weights
 depending on the distance they span, normalized by the distance to the closest
 neighbor. Neighbors that are close, relative to the nearest neighbors, are
 assigned higher weights than those that are far away, and points that are linked
@@ -470,7 +584,7 @@ The fuzziness allows the algorithm to distinguish neighbors that are very close
 from those that are far, even though they all lie within a
 $K$-nearest-neighborhood.
 
-26. Once the graph is constructed, there is the question of how the graph layout
+29. Once the graph is constructed, there is the question of how the graph layout
 should proceed. UMAP uses a variant of force-directed layout, and the spring
 tension is another hyperparameter^[This is also sometimes called `min_dist` in
 software implementations. Lowering the minimum distance is like increasing the
@@ -480,13 +594,16 @@ tension forces points closer together. This is a second hyperparameter of UMAP.
 
     ```{r}
     #| label: graph-layout
-    #| fig.keep: 'hold'
-    #| out.width: 200
+    #| layout-ncol: 2
+    #| fig-cap: "The layout tension (aka `min_dist`) hyperparameter controls how closely points appear relative to one another in the final UMAP display."
     #| echo: false
-    include_graphics(c("https://uwmadison.box.com/shared/static/g6uqg4dauzfea0qrymaw5m77hl79adem.png", "https://uwmadison.box.com/shared/static/vo96qoakuzm8kx8h7sbuqfaulksfvm1j.png"))
+    include_graphics(c(
+        "https://uwmadison.box.com/shared/static/g6uqg4dauzfea0qrymaw5m77hl79adem.png",
+        "https://uwmadison.box.com/shared/static/vo96qoakuzm8kx8h7sbuqfaulksfvm1j.png"
+    ))
     ```
 
-27. These two hyperparameters — the number of nearest neighbors $K$ and the
+30. These two hyperparameters — the number of nearest neighbors $K$ and the
 layout tension — are the only two hyperparameters of UMAP. You can see more
 examples of what this algorithm does to toy datasets in the
 [reading](https://pair-code.github.io/understanding-umap). Note in particular
@@ -495,7 +612,7 @@ clusters should not be interpreted, since it just means that the graph
 components were not connected. Similarly, the density of points is not
 preserved.
 
-28. UMAP can introduce technical artifacts that are important to be aware of, so
+31. UMAP can introduce technical artifacts that are important to be aware of, so
 that we don't misread it. The most important issue is that it can create
 artificial clusters between data that actually overlap, and its results can be
 very sensitive to hyperparameters. You can see this yourself using the "Random
@@ -517,7 +634,7 @@ the PCA).
 
 ### Implementation in R
 
-29. In R, we can implement this using almost the same code as we used for PCA.
+32. In R, we can implement this using almost the same code as we used for PCA.
 We still use `po`, but call it with `umap` and its hyperparameters^[As of November 2026, this functionality is only in the development (not CRAN) version of `mlr3pipelines`. You can install it with `pak::pak(c("mlr-org/mlr3pipelines", "uwot"))`.].
 
     ```{r}
@@ -526,7 +643,7 @@ We still use `po`, but call it with `umap` and its hyperparameters^[As of Novemb
     cocktails_umap <- preproc(cocktails_task, umap)
     ```
 
-30. UMAP returns a low-dimensional atlas relating the points, but it does not
+33. UMAP returns a low-dimensional atlas relating the points, but it does not
 provide any notion of derived features $\Phi$ like PCA. To interpret why samples
 get placed close to one another, we can overlay context associated wtih each
 sample or look for source features that vary clearly across the plot.
@@ -535,11 +652,50 @@ sample or look for source features that vary clearly across the plot.
     #| label: umap-scores
     #| fig.cap: "The learned UMAP representation of the cocktails dataset."
     scores <- cocktails_umap$data(cols = c("name", "category", "V1", "V2")) |>
-      rename(UMAP1 = V1, UMAP2 = V2)
+        rename(UMAP1 = V1, UMAP2 = V2)
     ggplot(scores, aes(UMAP1, UMAP2)) +
-      geom_point(aes(color = category), alpha = 0.7, size = 0.8) +
-      geom_text(aes(label = name), check_overlap = TRUE, size = 3, hjust = "inward")
+        geom_point(aes(color = category), alpha = 0.7, size = 0.8) +
+        geom_text(aes(label = name), check_overlap = TRUE, size = 3, hjust = "inward")
     ```
+
+34. Interactivity can help with interpretation in this case. We can
+interactively color the samples according to their source features. This works
+especially well once we've narrowed down to features that are the most
+concentrated within specific regions of the plot, rather than spread out evenly
+across it.
+
+    ```{r}
+    #| label: cocktail-umap-interactive-data
+    ingredients <- setdiff(names(cocktails_df), c("name", "category"))
+    cocktails_umap$data(cols = c("name", "category", "V1", "V2")) |>
+        bind_cols(cocktails_task$data(cols = ingredients)) |>
+        write_csv("data/cocktail_umap_wide.csv")
+    write_json(sort(ingredients), "data/ingredients.json")
+    ```
+
+```{ojs}
+//| label: cocktail-umap-search
+cocktail_umap_search = {
+  const vg = cocktail_vg;
+  const feature = vg.Param.value(ingredients[0]);
+  const brush = vg.Selection.intersect();
+  return vg.vconcat(
+    vg.menu({options: ingredients, as: feature, label: "Ingredient", value: ingredients[0]}),
+    vg.plot(
+      vg.dot(vg.from("cocktail_umap_wide"),
+        {x: "V1", y: "V2", fill: vg.column(feature), stroke: "#555", strokeWidth: 0.5}),
+      vg.intervalXY({as: brush}),
+      vg.colorScheme("purples"),
+      vg.colorLegend(),
+      vg.width(600), vg.aspectRatio(1)
+    ),
+    vg.table({
+      from: "cocktail_umap_wide", filterBy: brush,
+      columns: ["name", "category"], height: 180
+    })
+  );
+}
+```
 
 ### Properties of UMAP
 
@@ -561,7 +717,7 @@ We can summarize the properties of UMAP,
 
 ## Examples
 
-31. We presented the two moons dataset earlier as an example where UMAP, but not
+35. We presented the two moons dataset earlier as an example where UMAP, but not
 PCA, would be able to discover a one-dimensional representation that separates
 the groups. The implication is that, if we anticipate some sort of nonlinearity
 in higher-dimensions (which we can't directly visualize), then UMAP would be a
@@ -572,11 +728,11 @@ more suitable choice.
     #| fig.cap: "The original two moons dataset. We will ask both PCA and UMAP to recover a 1D reduction of these 2D data."
     moons <- read_csv("https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv")
     ggplot(moons, aes(X, Y, col = Class)) +
-      geom_point() +
-      scale_color_brewer(palette = "Set2")
+        geom_point() +
+        scale_color_brewer(palette = "Set2")
     ```
 
-32. The code block below defines both the PCA and UMAP tasks. There is no need
+36. The code block below defines both the PCA and UMAP tasks. There is no need
 to normalize the data, since the two dimensions are already on the same scale.
 
     ```{r}
@@ -588,7 +744,7 @@ to normalize the data, since the two dimensions are already on the same scale.
     umap <- po("umap", n_components = 1)
     ```
 
-33. The block below shows both the UMAP and PCA representations. The PCA
+37. The block below shows both the UMAP and PCA representations. The PCA
 representation seems to mostly reflect the variation on the $x$-axis of the
 original data, and the two classes mix together. On the other hand, the UMAP
 mostly separates the groups. This is expected, since the nearest neighborhood
@@ -603,20 +759,20 @@ each moon.
     moons_pca <- preproc(moons_task, pca)
     moons_umap <- preproc(moons_task, umap)
     scores <- bind_cols(
-      moons_pca$data(cols = "PC1"),
-      moons_umap$data(cols = c("Class", "V1")) |>
-        transmute(Class, UMAP1 = scale(V1))
+        moons_pca$data(cols = "PC1"),
+        moons_umap$data(cols = c("Class", "V1")) |>
+            transmute(Class, UMAP1 = scale(V1))
     ) |>
-      pivot_longer(-Class, names_to = "method")
+        pivot_longer(-Class, names_to = "method")
 
     ggplot(scores, aes(value, method, col = Class)) +
-      geom_point(position = position_jitter(h = 0.1), alpha = 0.8) +
-      scale_color_brewer(palette = "Set2")
+        geom_point(position = position_jitter(h = 0.1), alpha = 0.8) +
+        scale_color_brewer(palette = "Set2")
     ```
 
 ### Antibiotics Dataset
 
-34. We can apply dimensionality reduction to the antibiotics dataset we
+38. We can apply dimensionality reduction to the antibiotics dataset we
 discussed in the small multiples notes.  There, we had filtered down to the 6
 most abundant bacteria. Now we will consider 147 most abundant, which means that
 each sample can be imagined as a vector in a 147-dimensional space. Ideally, a
@@ -631,7 +787,7 @@ variable.
     taxa <- read_csv("https://uwmadison.box.com/shared/static/ng6y6etk79lrm0gtsgw2u0yq6gqcozze.csv")
     ```
 
-35. We now define a PCA task. Since the counts are relatively skewed, we
+39. We now define a PCA task. Since the counts are relatively skewed, we
 log-transform^[Specifically, we use a $\log\left(1 + x\right)$ transform, since
 there are many 0 counts.], using `applicator = log1p`. The rest of the
 definition is like the 2D example above.
@@ -647,7 +803,7 @@ definition is like the 2D example above.
     antibiotic_pca <- preproc(antibiotic_log, pca)
     ```
 
-36. We generate a map of the PCA scores below. The primary difference is between
+40. We generate a map of the PCA scores below. The primary difference is between
 the three study participants, D, E, and F. Within each person, there is some
 variation between the antibiotic periods, as indicated by the points' colors.
 
@@ -658,13 +814,13 @@ variation between the antibiotic periods, as indicated by the points' colors.
     scores <- antibiotic_pca$data(cols = c(antibiotic_ids, "PC1", "PC2"))
     variances <- pca$state$sdev^2
     ggplot(scores, aes(PC1, PC2, col = antibiotic)) +
-      geom_point(aes(shape = ind), size = 1.5) +
-      geom_text_repel(aes(label = sample), check_overlap = TRUE, size = 3) +
-      coord_fixed(sqrt(variances[2] / variances[1])) +
-      scale_color_brewer(palette = "Set2")
+        geom_point(aes(shape = ind), size = 1.5) +
+        geom_text_repel(aes(label = sample), check_overlap = TRUE, size = 3) +
+        coord_fixed(sqrt(variances[2] / variances[1])) +
+        scale_color_brewer(palette = "Set2")
     ```
 
-37. Which species contribute the most to the principal components? We can analyze
+41. Which species contribute the most to the principal components? We can analyze
 this like we did with the cocktails dataset. In addition to plotting the raw
 component value, we also join in the taxa information. This allows us to color
 in each bar by the species group that each bacteria belongs to. For example, we
@@ -676,23 +832,23 @@ that have higher abundance when the rest drop-off.
     #| label: antibiotic-loadings
     #| fig.cap: "The first six principal components associated with the antibiotics dataset."
     components_ <- as_tibble(pca$state$rotation, rownames = "terms") |>
-      pivot_longer(-terms, names_to = "component") |>
-      filter(component %in% str_c("PC", 1:6)) |>
-      mutate(terms_ = reorder_within(terms, abs(value), component)) |>
-      group_by(component) |>
-      top_n(20, abs(value)) |>
-      left_join(taxa)
+        pivot_longer(-terms, names_to = "component") |>
+        filter(component %in% str_c("PC", 1:6)) |>
+        mutate(terms_ = reorder_within(terms, abs(value), component)) |>
+        group_by(component) |>
+        top_n(20, abs(value)) |>
+        left_join(taxa)
 
     ggplot(components_, aes(value, terms_, fill = Phylum)) +
-      geom_col() +
-      facet_wrap(~ component, scales = "free_y") +
-      scale_y_reordered() +
-      labs(y = NULL) +
-      scale_fill_brewer(palette = "Set1") +
-      theme(axis.text = element_text(size = 5))
+        geom_col() +
+        facet_wrap(~component, scales = "free_y") +
+        scale_y_reordered() +
+        labs(y = NULL) +
+        scale_fill_brewer(palette = "Set1") +
+        theme(axis.text = element_text(size = 5))
     ```
 
-38. We can use similar code to compute a UMAP embedding. The UMAP seems to
+42. We can use similar code to compute a UMAP embedding. The UMAP seems to
 separate the different timepoints more clearly. However, there is no analog of
 `components` with which to interpret the different axes. Instead, a typical
 approach to interpret the representation is to find points that are close
@@ -706,16 +862,16 @@ together (e.g., using $K$-means) and take their average species profile.
     antibiotic_umap <- preproc(antibiotic_log, umap)
 
     scores <- antibiotic_umap$data(cols = c(antibiotic_ids, "V1", "V2")) |>
-      rename(UMAP1 = V1, UMAP2 = V2)
+        rename(UMAP1 = V1, UMAP2 = V2)
     ggplot(scores, aes(UMAP1, UMAP2, col = antibiotic)) +
-      geom_point(aes(shape = ind), size = 1.5) +
-      geom_text_repel(aes(label = sample), max.overlaps = 7) +
-      scale_color_brewer(palette = "Set2")
+        geom_point(aes(shape = ind), size = 1.5) +
+        geom_text_repel(aes(label = sample), max.overlaps = 7) +
+        scale_color_brewer(palette = "Set2")
     ```
 
 ### Image Data
 
-39. Both PCA and UMAP can be used on image data. Here, each pixel in an image is
+43. Both PCA and UMAP can be used on image data. Here, each pixel in an image is
 considered a different feature. For example, the FashionMNIST dataset includes
 60,000 28 x 28 images of fashion objects. We can think of image as a
 vector^[28 * 28 = 784] $x_{i} \in \mathbb{R}^{784}$. The goal of dimensionality
@@ -726,14 +882,14 @@ read in the data and subsample it, so the code doesn't take so long to run.
     ```{r}
     #| label: read-fashion
     fashion <- read_csv("https://uwmadison.box.com/shared/static/aur84ttkwa2rqvzo99qo7yhxemoc6om0.csv") |>
-      sample_frac(0.2) |>
-      mutate(
-        image = row_number(),
-        label = as.factor(label)
-      )
+        sample_frac(0.2) |>
+        mutate(
+            image = row_number(),
+            label = as.factor(label)
+        )
     ```
 
-40. Each row of the matrix above is a separate image. We can prepare a PCA task
+44. Each row of the matrix above is a separate image. We can prepare a PCA task
 just like in the two examples above. Note that we are not normalizing the
 features, since the pixels are already on a common scale.
 
@@ -749,34 +905,34 @@ features, since the pixels are already on a common scale.
     ```{r}
     #| label: image-functions
     #| echo: false
-    pivot_scores <- function(scores, fashion, scale_factor=12, max_images=300) {
-      scores |>
-        bind_cols(select(fashion, -image, -label)) |>
-        filter(image < max_images) |>
-        pivot_longer(starts_with("pixel")) |>
-        mutate(
-          pixel = as.numeric(str_replace(name, "pixel", "")),
-          w = pixel %% 28,
-          h = 28 - floor(pixel / 28),
-          x = x + scale_factor * w,
-          y = y + scale_factor * h
-        )
+    pivot_scores <- function(scores, fashion, scale_factor = 12, max_images = 300) {
+        scores |>
+            bind_cols(select(fashion, -image, -label)) |>
+            filter(image < max_images) |>
+            pivot_longer(starts_with("pixel")) |>
+            mutate(
+                pixel = as.numeric(str_replace(name, "pixel", "")),
+                w = pixel %% 28,
+                h = 28 - floor(pixel / 28),
+                x = x + scale_factor * w,
+                y = y + scale_factor * h
+            )
     }
 
-    overlay_images <- function(scores_joined, scale_factor=12) {
-      ggplot(scores_joined) +
-        geom_tile(
-          aes(x, y, alpha = value, fill = label),
-          width = scale_factor, height = scale_factor
-        ) +
-        scale_alpha(range = c(0, 1)) +
-        scale_fill_brewer(palette = "Set3") +
-        scale_color_brewer(palette = "Set3") +
-        coord_fixed()
+    overlay_images <- function(scores_joined, scale_factor = 12) {
+        ggplot(scores_joined) +
+            geom_tile(
+                aes(x, y, alpha = value, fill = label),
+                width = scale_factor, height = scale_factor
+            ) +
+            scale_alpha(range = c(0, 1)) +
+            scale_fill_brewer(palette = "Set3") +
+            scale_color_brewer(palette = "Set3") +
+            coord_fixed()
     }
     ```
 
-41. The code below extracts the PCA scores and visualizes them as a cloud of
+45. The code below extracts the PCA scores and visualizes them as a cloud of
 points. Each point corresponds to an image, and the different types of fashion
 items are indicated by color. It seems that the types are well separated, but
 the labels are not informative... to understand what the colors mean, we need to
@@ -788,14 +944,14 @@ look at the images.
     #| fig-height: 5
     #| fig.cap: "Principal component scores from the fashion dataset."
     scores <- fashion_pca$data(cols = c("label", "image", "PC1", "PC2")) |>
-      rename(x = PC1, y = PC2)
+        rename(x = PC1, y = PC2)
     ggplot(scores, aes(x, y, col = label)) +
-      geom_point() +
-      scale_color_brewer(palette = "Set3") +
-      coord_fixed()
+        geom_point() +
+        scale_color_brewer(palette = "Set3") +
+        coord_fixed()
     ```
 
-42. The block below overlays the first 300 images from the dataset at the
+46. The block below overlays the first 300 images from the dataset at the
 locations from the previous plot. We have prepared a function to generate this
 sort of image using ggplot2; however, we have hidden it to avoid cluttering
 these notes (you can find it at the code link at the top of the notes).
@@ -806,10 +962,10 @@ these notes (you can find it at the code link at the top of the notes).
     #| fig-height: 5
     #| fig.cap: "A subset of principal component scores expressed as the corresponding images."
     pivot_scores(scores, fashion) |>
-      overlay_images()
+        overlay_images()
     ```
 
-43. Finally, we can repeat the exercise above with UMAP. The first plot shows
+47. Finally, we can repeat the exercise above with UMAP. The first plot shows
 the UMAP scores and the second overlays the same set of 300 images onto these
 new coordinates. It seems that UMAP can more clearly separate shoes and pants
 from shirts and sweaters.
@@ -822,11 +978,11 @@ from shirts and sweaters.
     umap <- po("umap", min_dist = 0.5)
     fashion_umap <- preproc(fashion_task, umap)
     scores <- fashion_umap$data(cols = c("label", "image", "V1", "V2")) |>
-      rename(x = V1, y = V2)
+        rename(x = V1, y = V2)
     ggplot(scores, aes(x, y, col = label)) +
-      geom_point() +
-      scale_color_brewer(palette = "Set3") +
-      coord_fixed()
+        geom_point() +
+        scale_color_brewer(palette = "Set3") +
+        coord_fixed()
     ```
 
     ```{r}
@@ -835,5 +991,5 @@ from shirts and sweaters.
     #| fig-height: 5
     #| fig.cap: "A sample of the images at the locations determined by UMAP."
     pivot_scores(scores, fashion, scale_factor = 0.05) |>
-      overlay_images(scale_factor = 0.05)
+        overlay_images(scale_factor = 0.05)
     ```

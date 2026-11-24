@@ -92,6 +92,8 @@ div.csl-indent {
 <script src="12-dimensionality_reduction_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="12-dimensionality_reduction_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="12-dimensionality_reduction_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script type="module" src="12-dimensionality_reduction_files/libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="12-dimensionality_reduction_files/libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -162,14 +164,42 @@ window.Quarto = {
 <ol type="1">
 <li><p><em>High-dimensional data</em> are data with many features per sample. Often, the number of features is comparable or larger than the number of samples, so when the data are drawn as a rectangle with samples along rows and features along columns, they are “wide.”” The name comes from the fact that each row of the dataset can be viewed as a vector in a high-dimensional space (one dimension for each feature). These data are common in modern applications,</p>
 <ul>
-<li>Each cell in a genomics dataset might have measurements for hundreds of molecules.</li>
+<li>Each cell in a genomics dataset might have measurements for thousands of genes.</li>
 <li>Each survey respondent might provide answers to dozens of questions.</li>
 <li>Each image might have several thousand pixels.</li>
 <li>Each document might have counts across several thousand relevant words.</li>
 </ul>
-<p>[todo: add rectangle drawings]</p></li>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/high-dim-genes.jpeg" class="img-fluid figure-img" width="1113"></p>
+<figcaption>Examples of high-dimensional data.</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/high-dim-images.jpeg" class="img-fluid figure-img" width="1124"></p>
+<figcaption>Examples of high-dimensional data.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div></li>
 <li><p>For low-dimensional data, we could visually encode all the features in our data directly, either using visual channels or through small multiples. In high-dimensional data, this is no longer possible. However, though there are many features associated with each sample, it may still be possible to organize samples across a smaller number of meaningful, derived features.</p>
-<p>[todo: add derivation sketch]</p></li>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/derived-features.jpeg" class="img-fluid figure-img" width="1635"></p>
+<figcaption>Dimensionality reduction visualizations attempt to derive a smaller number of meaningful features.</figcaption>
+</figure>
+</div>
+</div>
+</div></li>
 <li><p>For example, consider the Metropolitan Museum of Art dataset, which contains images of many artworks. Abstractly, each artwork is a high-dimensional object, containing pixel intensities across many pixels. But it is reasonable to derive a feature based on the average brightness.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -239,7 +269,17 @@ window.Quarto = {
 </div></li>
 <li><p>Principal Components Analysis (PCA) is the optimal dimensionality reduction under these three restrictions, in the sense that it finds derived features with the highest variance. Formally, PCA finds a matrix <span class="math inline">\(\Phi \in \mathbb{R}^{D
 \times K}\)</span> and a set of vector <span class="math inline">\(z_{i} \in \mathbb{R}^{K}\)</span> such that <span class="math inline">\(x_{i}
-\approx \Phi z_{i}\)</span> for all <span class="math inline">\(i\)</span>. The columns of <span class="math inline">\(\Phi\)</span> are called principal components, and they specify the structure of the derived linear features. The vector <span class="math inline">\(z_{i}\)</span> is called the score of <span class="math inline">\(x_{i}\)</span> with respect to these components. The top component explains the most variance, the second captures the next most, and so on.</p></li>
+\approx \Phi z_{i}\)</span> for all <span class="math inline">\(i\)</span>. The columns of <span class="math inline">\(\Phi\)</span> are called principal components, and they specify the structure of the derived linear features. The vector <span class="math inline">\(z_{i}\)</span> is called the score of <span class="math inline">\(x_{i}\)</span> with respect to these components. The top component explains the most variance, the second captures the next most, and so on.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/pca-approx.jpeg" class="img-fluid figure-img" width="170"></p>
+<figcaption>Shapes of the scores and components learned by PCA, in comparison to the original data.</figcaption>
+</figure>
+</div>
+</div>
+</div></li>
 <li><p>For example, if one of the columns of <span class="math inline">\(\Phi\)</span> was equal to <span class="math inline">\(\left(\frac{1}{D},
 \dots, \frac{1}{D}\right)\)</span>, then that feature computes the average of all coordinates (e.g., to get average brightness), and the corresponding <span class="math inline">\(z_{i}\)</span> would be a measure of the average brightness of sample <span class="math inline">\(i\)</span>. Geometrically, the columns of <span class="math inline">\(\Phi\)</span> span a plane that approximates the data. The <span class="math inline">\(z_{i}\)</span> provide coordinates of points projected onto this plane.</p>
 <div class="cell">
@@ -251,7 +291,8 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-</div></li>
+</div>
+<p><em>Exercise: In terms of the figure above, how could you interpret the <span class="math inline">\(z_i\)</span> and columns of <span class="math inline">\(\Phi\)</span>?</em></p></li>
 </ol>
 </section>
 <section id="implementation-in-r" class="level3">
@@ -371,18 +412,18 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 <li><p>How should we visualize the results from PCA? There are three artifacts to consider, components <span class="math inline">\(\Phi\)</span>, scores <span class="math inline">\(z_i\)</span>, and variances <code>sdev^2</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>components <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(pca<span class="sc">$</span>state<span class="sc">$</span>rotation, <span class="at">rownames =</span> <span class="st">"terms"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>terms, <span class="at">names_to =</span> <span class="st">"component"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(component <span class="sc">%in%</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>terms, <span class="at">names_to =</span> <span class="st">"component"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(component <span class="sc">%in%</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> cocktails_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>, <span class="st">"PC1"</span>, <span class="st">"PC2"</span>))</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>variances <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">component =</span> <span class="fu">seq_along</span>(pca<span class="sc">$</span>state<span class="sc">$</span>sdev),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> pca<span class="sc">$</span>state<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(pca<span class="sc">$</span>state<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">component =</span> <span class="fu">seq_along</span>(pca<span class="sc">$</span>state<span class="sc">$</span>sdev),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> pca<span class="sc">$</span>state<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(pca<span class="sc">$</span>state<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>First, let’s see how much variance is explained by each dimension of the PCA. Without detouring into the mathematical explanation, the main idea is that, the more rapid the dropoff in variance explained, the better the low-dimensional approximation. For example, if the data actually lie on a 2D plane in a high-dimensional space, then the first two bars would contain all the variance and the rest would be zero.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(variances) <span class="sc">+</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(component, value))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(component, value))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -392,13 +433,13 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div>
 </div>
 </div></li>
-<li><p>We can interpret components by looking at what coefficients they put on the original variables used to define them. For example, if the derived feature corresponded to the average, it would place coefficient <span class="math inline">\(\frac{1}{D}\)</span> on each feature. From the plot below, we see that the first PC mostly captures variation related to whether the drink is made with powdered sugar or simple syrup. Drinks with high values of PC1 are usually to be made from simple syrup, those with low values of PC1 are usually made from powdered sugar. From the two largest bars in PC2, we can see that it highlights the vermouth vs.&nbsp;non-vermouth distinction.</p>
+<li><p>We can interpret components in terms of the source features. Mathematically, each bar below corresponds to <span class="math inline">\(\varphi_{jk}\)</span> for some component <span class="math inline">\(k\)</span> and feature <span class="math inline">\(j\)</span>. Assume that the data are centered in advance (each column has mean zero). Then, when <span class="math inline">\(\varphi_{jk} &gt; 0\)</span>, that means any sample <span class="math inline">\(i\)</span> with positive score <span class="math inline">\(z_{ik}\)</span> will be more likely to have above average values of feature <span class="math inline">\(j\)</span> (though be careful, effects can cancel across the different <span class="math inline">\(k\)</span>).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(components, <span class="fu">aes</span>(value, terms)) <span class="sc">+</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>component, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>component, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -407,18 +448,20 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </figure>
 </div>
 </div>
-</div></li>
+</div>
+<p><em>Exercise: Consider the manually constructed feature that places <span class="math inline">\(\frac{1}{D}\)</span> on each feature. What would be the correpsonding bar plot in the figure above?</em></p></li>
 <li><p>It is often easier read the components when the bars are sorted according to their magnitude. The usual ggplot approach to reordering axes labels, using either <code>reorder()</code> or releveling the associated factor, will reorder all the facets in the same way. If we want to reorder each facet on its own, we can use the <code>reorder_within</code> function coupled with <code>scale_*_reordered</code>, both from the tidytext package.</p>
+<p>From the plot below, we see that the first PC mostly captures variation related to whether the drink is made with powdered sugar or simple syrup. Drinks with high values of PC1 are usually to be made from simple syrup, those with low values of PC1 are usually made from powdered sugar. From the two largest bars in PC2, we can see that it highlights the vermouth vs.&nbsp;non-vermouth distinction.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>components_ <span class="ot">&lt;-</span> components <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(component <span class="sc">%in%</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">terms =</span> <span class="fu">reorder_within</span>(terms, <span class="fu">abs</span>(value), component))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(component <span class="sc">%in%</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">terms =</span> <span class="fu">reorder_within</span>(terms, <span class="fu">abs</span>(value), component))</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(components_, <span class="fu">aes</span>(value, terms)) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> component, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reordered</span>() <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>component, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_reordered</span>() <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -432,9 +475,9 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 \approx \varphi_{1}z_{i1} + \varphi_{2} z_{i2}\)</span>, the samples have large values for variables with large component values in the coordinate directions where <span class="math inline">\(z_{i}\)</span> is farther along.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(PC1, PC2, <span class="at">label =</span> name)) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> category), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="fu">sqrt</span>(variances<span class="sc">$</span>value[<span class="dv">2</span>] <span class="sc">/</span> variances<span class="sc">$</span>value[<span class="dv">1</span>])) <span class="co"># rescale axes to reflect variance</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> category), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text_repel</span>(<span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>(<span class="fu">sqrt</span>(variances<span class="sc">$</span>value[<span class="dv">2</span>] <span class="sc">/</span> variances<span class="sc">$</span>value[<span class="dv">1</span>])) <span class="co"># rescale axes to reflect variance</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -444,24 +487,109 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div>
 </div>
 </div></li>
-<li><p>For example, El Nino has high value for PC1, which means it has a high value of variables that are positive for PC1 (like simple syrup) and low value for those variables that are negative (like powdered sugar). Similarly, since <span class="math inline">\(\varphi_{2}\)</span> puts high positive weight on vermouth-related variables, so H. P. W. Cocktail has many vermouth-related ingredients. In practice, it will often be important to visualize several pairs of PC dimensions against one another, not just the top 2.</p></li>
+<li><p>We can add interactivity to these dimensionality reduction maps. Considering that they are overview visualizations, it’s natural to support details on demand using brush or hover queries. We’ll use the same pattern from our earlier mosaic notes. I’ve hidden the coordinator code (accessible at the <code>code</code> link at the top of the note). We’ll work with the CSV file saved below.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    cocktails_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>, <span class="st">"PC1"</span>, <span class="st">"PC2"</span>)),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data/cocktail_pca.csv"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<style>
+.input label:first-of-type { margin-right: .5em; }
+</style></li>
+</ol>
+<div id="cocktail-vgplot-setup" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb16" data-startfrom="397" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 396;"><span id="cb16-397"><a href="#cb16-397" aria-hidden="true" tabindex="-1"></a>cocktail_vg <span class="op">=</span> {</span>
+<span id="cb16-398"><a href="#cb16-398" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.jsdelivr.net/npm/@uwdata/vgplot@0.19.0/+esm"</span>)<span class="op">;</span></span>
+<span id="cb16-399"><a href="#cb16-399" aria-hidden="true" tabindex="-1"></a>  vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">databaseConnector</span>(<span class="cf">await</span> vg<span class="op">.</span><span class="fu">wasmConnector</span>())<span class="op">;</span></span>
+<span id="cb16-400"><a href="#cb16-400" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> vg<span class="op">.</span><span class="fu">coordinator</span>()<span class="op">.</span><span class="fu">exec</span>([</span>
+<span id="cb16-401"><a href="#cb16-401" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"cocktail_pca"</span><span class="op">,</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="st">"data/cocktail_pca.csv"</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span>)<span class="op">,</span></span>
+<span id="cb16-402"><a href="#cb16-402" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">loadCSV</span>(<span class="st">"cocktail_umap_wide"</span><span class="op">,</span> <span class="kw">new</span> <span class="fu">URL</span>(<span class="st">"data/cocktail_umap_wide.csv"</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)<span class="op">.</span><span class="at">href</span>)</span>
+<span id="cb16-403"><a href="#cb16-403" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb16-404"><a href="#cb16-404" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">;</span></span>
+<span id="cb16-405"><a href="#cb16-405" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-406"><a href="#cb16-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-407"><a href="#cb16-407" aria-hidden="true" tabindex="-1"></a>ingredients <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb16-408"><a href="#cb16-408" aria-hidden="true" tabindex="-1"></a>  <span class="kw">new</span> <span class="fu">URL</span>(<span class="st">"data/ingredients.json"</span><span class="op">,</span> <span class="bu">document</span><span class="op">.</span><span class="at">baseURI</span>)</span>
+<span id="cb16-409"><a href="#cb16-409" aria-hidden="true" tabindex="-1"></a>)<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="cocktail-vgplot-setup-1">
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div id="cocktail-vgplot-setup-2">
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<ol start="20" type="1">
+<li>The block below creates a brush input with <code>intervalXY</code> and uses it to populate a table below (<code>filterBy: brush</code>). Do you think you could extend this code so that the names listed in the table are colored in to match the cocktail category?</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" data-startfrom="418" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 417;"><span id="cb17-418"><a href="#cb17-418" aria-hidden="true" tabindex="-1"></a>cocktail_pca_brush <span class="op">=</span> {</span>
+<span id="cb17-419"><a href="#cb17-419" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> cocktail_vg<span class="op">;</span></span>
+<span id="cb17-420"><a href="#cb17-420" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> brush <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
+<span id="cb17-421"><a href="#cb17-421" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb17-422"><a href="#cb17-422" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb17-423"><a href="#cb17-423" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"cocktail_pca"</span>)<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"category"</span>})<span class="op">,</span></span>
+<span id="cb17-424"><a href="#cb17-424" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> brush})<span class="op">,</span></span>
+<span id="cb17-425"><a href="#cb17-425" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">600</span>)<span class="op">,</span> vg<span class="op">.</span><span class="fu">aspectRatio</span>(<span class="dv">1</span>)</span>
+<span id="cb17-426"><a href="#cb17-426" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb17-427"><a href="#cb17-427" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">table</span>({<span class="dt">from</span><span class="op">:</span> <span class="st">"cocktail_pca"</span><span class="op">,</span> <span class="dt">filterBy</span><span class="op">:</span> brush<span class="op">,</span> <span class="dt">columns</span><span class="op">:</span> [<span class="st">"name"</span><span class="op">,</span> <span class="st">"category"</span>]<span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">180</span>})</span>
+<span id="cb17-428"><a href="#cb17-428" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb17-429"><a href="#cb17-429" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cocktail-pca-brush" class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<ol start="21" type="1">
+<li><p>For example, El Nino has high value for PC1, which means it has a high value of variables that are positive for PC1 (like simple syrup) and low value for those variables that are negative (like powdered sugar). Similarly, since <span class="math inline">\(\varphi_{2}\)</span> puts high positive weight on vermouth-related variables, so H. P. W. Cocktail has many vermouth-related ingredients. In practice, it will often be important to visualize several pairs of PC dimensions against one another, not just the top 2.</p>
+<p><em>Exercise: How do you interpret points near the “center” of the triangle? What do you expect the ingredients to be like for “Port Wine Cobbler”?</em></p></li>
+<li><p>Here is the equivalent hover version. Notice that there is a data entry error. It seems that <code>H. P. W. Cocktail</code> was duplicated in another row and named <code>H.P.W. Cocktail</code>. This was hard to notice in the static version alone.</p></li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" data-startfrom="448" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 447;"><span id="cb18-448"><a href="#cb18-448" aria-hidden="true" tabindex="-1"></a>cocktail_pca_hover <span class="op">=</span> {</span>
+<span id="cb18-449"><a href="#cb18-449" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> cocktail_vg<span class="op">;</span></span>
+<span id="cb18-450"><a href="#cb18-450" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hovered <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">single</span>({<span class="dt">empty</span><span class="op">:</span> <span class="kw">true</span>})<span class="op">;</span></span>
+<span id="cb18-451"><a href="#cb18-451" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb18-452"><a href="#cb18-452" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"cocktail_pca"</span>)<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"category"</span>})<span class="op">,</span></span>
+<span id="cb18-453"><a href="#cb18-453" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">nearest</span>({<span class="dt">as</span><span class="op">:</span> hovered})<span class="op">,</span></span>
+<span id="cb18-454"><a href="#cb18-454" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">text</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"cocktail_pca"</span><span class="op">,</span> {<span class="dt">filterBy</span><span class="op">:</span> hovered})<span class="op">,</span></span>
+<span id="cb18-455"><a href="#cb18-455" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">x</span><span class="op">:</span> <span class="st">"PC1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"PC2"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> <span class="st">"name"</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"black"</span>})<span class="op">,</span></span>
+<span id="cb18-456"><a href="#cb18-456" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">600</span>)<span class="op">,</span> vg<span class="op">.</span><span class="fu">aspectRatio</span>(<span class="dv">1</span>)</span>
+<span id="cb18-457"><a href="#cb18-457" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb18-458"><a href="#cb18-458" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cocktail-pca-hover" class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<ol start="23" type="1">
 <li><p>Let’s examine the original code in a little more detail. We are using <code>mlr3pipelines</code>, which gives simple syntax for manipulating data analysis pipelines. This makes it easier to design and reuse methods across problem settings. Here is how you would apply PCA without the <code>mlr3pipelines</code> package. You have to first split the data into the “metadata” that is used to interpret the scores and the numerical variables used as input to PCA. Then at the end, you have to join the metadata back in. It’s not not too bad, but the code is not as readable.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># split name and category out of the data frame</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> cocktails_df <span class="sc">|&gt;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>name, <span class="sc">-</span>category) <span class="sc">|&gt;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>() <span class="sc">|&gt;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">princomp</span>()</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># join them back into the PCA result</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> cocktails_df <span class="sc">|&gt;</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, category)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>scores_direct <span class="ot">&lt;-</span> <span class="fu">cbind</span>(metadata, pca_result<span class="sc">$</span>scores)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores_direct, <span class="fu">aes</span>(Comp<span class="fl">.1</span>, Comp<span class="fl">.2</span>, <span class="at">label =</span> name)) <span class="sc">+</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> category), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="fu">sqrt</span>(variances<span class="sc">$</span>value[<span class="dv">2</span>] <span class="sc">/</span> variances<span class="sc">$</span>value[<span class="dv">1</span>])) <span class="co"># rescale axes to reflect variance</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># split name and category out of the data frame</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> cocktails_df <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>name, <span class="sc">-</span>category) <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale</span>() <span class="sc">|&gt;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">princomp</span>()</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># join them back into the PCA result</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> cocktails_df <span class="sc">|&gt;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(name, category)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>scores_direct <span class="ot">&lt;-</span> <span class="fu">cbind</span>(metadata, pca_result<span class="sc">$</span>scores)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores_direct, <span class="fu">aes</span>(Comp<span class="fl">.1</span>, Comp<span class="fl">.2</span>, <span class="at">label =</span> name)) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> category), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text_repel</span>(<span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>(<span class="fu">sqrt</span>(variances<span class="sc">$</span>value[<span class="dv">2</span>] <span class="sc">/</span> variances<span class="sc">$</span>value[<span class="dv">1</span>])) <span class="co"># rescale axes to reflect variance</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -490,13 +618,13 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 <h2 class="anchored" data-anchor-id="umap">UMAP</h2>
 <section id="motivation-and-graph-construction" class="level3">
 <h3 class="anchored" data-anchor-id="motivation-and-graph-construction">Motivation and Graph Construction</h3>
-<ol start="22" type="1">
+<ol start="25" type="1">
 <li><p>Nonlinear dimension reduction methods can give a more faithful representation than PCA when the data don’t lie on a low-dimensional linear subspace. For example, suppose the data were shaped like this. There is no one-dimensional line through these data that separate the groups well. We will need an alternative approach to reducing dimensionality if we want to preserve nonlinear structure.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>moons <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(moons, <span class="fu">aes</span>(X, Y, <span class="at">col =</span> Class)) <span class="sc">+</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>moons <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(moons, <span class="fu">aes</span>(X, Y, <span class="at">col =</span> Class)) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -540,19 +668,23 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div></li>
 <li><p>One detail in the graph construction: In UMAP, the edges are assigned weights depending on the distance they span, normalized by the distance to the closest neighbor. Neighbors that are close, relative to the nearest neighbors, are assigned higher weights than those that are far away, and points that are linked by high weight edges are pulled together with larger force in the final graph layout. This is what the authors mean by using a “fuzzy” nearest neighbor graph. The fuzziness allows the algorithm to distinguish neighbors that are very close from those that are far, even though they all lie within a <span class="math inline">\(K\)</span>-nearest-neighborhood.</p></li>
 <li><p>Once the graph is constructed, there is the question of how the graph layout should proceed. UMAP uses a variant of force-directed layout, and the spring tension is another hyperparameter<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Lower tension on the springs allow the points to spread out more loosely, higher tension forces points closer together. This is a second hyperparameter of UMAP.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://uwmadison.box.com/shared/static/g6uqg4dauzfea0qrymaw5m77hl79adem.png" class="img-fluid figure-img" width="200"></p>
+<p><img src="https://uwmadison.box.com/shared/static/g6uqg4dauzfea0qrymaw5m77hl79adem.png" class="img-fluid figure-img"></p>
+<figcaption>The layout tension (aka <code>min_dist</code>) hyperparameter controls how closely points appear relative to one another in the final UMAP display.</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display">
-<div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://uwmadison.box.com/shared/static/vo96qoakuzm8kx8h7sbuqfaulksfvm1j.png" class="img-fluid figure-img" width="200"></p>
+<p><img src="https://uwmadison.box.com/shared/static/vo96qoakuzm8kx8h7sbuqfaulksfvm1j.png" class="img-fluid figure-img"></p>
+<figcaption>The layout tension (aka <code>min_dist</code>) hyperparameter controls how closely points appear relative to one another in the final UMAP display.</figcaption>
 </figure>
+</div>
 </div>
 </div>
 </div></li>
@@ -572,19 +704,19 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </section>
 <section id="implementation-in-r-1" class="level3">
 <h3 class="anchored" data-anchor-id="implementation-in-r-1">Implementation in R</h3>
-<ol start="29" type="1">
+<ol start="32" type="1">
 <li><p>In R, we can implement this using almost the same code as we used for PCA. We still use <code>po</code>, but call it with <code>umap</code> and its hyperparameters<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">n_neighbors =</span> <span class="dv">20</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cocktails_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(cocktails_task, umap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">n_neighbors =</span> <span class="dv">20</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cocktails_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(cocktails_task, umap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>UMAP returns a low-dimensional atlas relating the points, but it does not provide any notion of derived features <span class="math inline">\(\Phi\)</span> like PCA. To interpret why samples get placed close to one another, we can overlay context associated wtih each sample or look for source features that vary clearly across the plot.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> cocktails_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">UMAP1 =</span> V1, <span class="at">UMAP2 =</span> V2)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(UMAP1, UMAP2)) <span class="sc">+</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> category), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> cocktails_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">UMAP1 =</span> V1, <span class="at">UMAP2 =</span> V2)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(UMAP1, UMAP2)) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> category), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="st">"inward"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -594,7 +726,42 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div>
 </div>
 </div></li>
+<li><p>Interactivity can help with interpretation in this case. We can interactively color the samples according to their source features. This works especially well once we’ve narrowed down to features that are the most concentrated within specific regions of the plot, rather than spread out evenly across it.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ingredients <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(cocktails_df), <span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cocktails_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"category"</span>, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(cocktails_task<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> ingredients)) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">write_csv</span>(<span class="st">"data/cocktail_umap_wide.csv"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">write_json</span>(<span class="fu">sort</span>(ingredients), <span class="st">"data/ingredients.json"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
 </ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" data-startfrom="677" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 676;"><span id="cb24-677"><a href="#cb24-677" aria-hidden="true" tabindex="-1"></a>cocktail_umap_search <span class="op">=</span> {</span>
+<span id="cb24-678"><a href="#cb24-678" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vg <span class="op">=</span> cocktail_vg<span class="op">;</span></span>
+<span id="cb24-679"><a href="#cb24-679" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> feature <span class="op">=</span> vg<span class="op">.</span><span class="at">Param</span><span class="op">.</span><span class="fu">value</span>(ingredients[<span class="dv">0</span>])<span class="op">;</span></span>
+<span id="cb24-680"><a href="#cb24-680" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> brush <span class="op">=</span> vg<span class="op">.</span><span class="at">Selection</span><span class="op">.</span><span class="fu">intersect</span>()<span class="op">;</span></span>
+<span id="cb24-681"><a href="#cb24-681" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vg<span class="op">.</span><span class="fu">vconcat</span>(</span>
+<span id="cb24-682"><a href="#cb24-682" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">menu</span>({<span class="dt">options</span><span class="op">:</span> ingredients<span class="op">,</span> <span class="dt">as</span><span class="op">:</span> feature<span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Ingredient"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> ingredients[<span class="dv">0</span>]})<span class="op">,</span></span>
+<span id="cb24-683"><a href="#cb24-683" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">plot</span>(</span>
+<span id="cb24-684"><a href="#cb24-684" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">dot</span>(vg<span class="op">.</span><span class="fu">from</span>(<span class="st">"cocktail_umap_wide"</span>)<span class="op">,</span></span>
+<span id="cb24-685"><a href="#cb24-685" aria-hidden="true" tabindex="-1"></a>        {<span class="dt">x</span><span class="op">:</span> <span class="st">"V1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"V2"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> vg<span class="op">.</span><span class="fu">column</span>(feature)<span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#555"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">0.5</span>})<span class="op">,</span></span>
+<span id="cb24-686"><a href="#cb24-686" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">intervalXY</span>({<span class="dt">as</span><span class="op">:</span> brush})<span class="op">,</span></span>
+<span id="cb24-687"><a href="#cb24-687" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">colorScheme</span>(<span class="st">"purples"</span>)<span class="op">,</span></span>
+<span id="cb24-688"><a href="#cb24-688" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">colorLegend</span>()<span class="op">,</span></span>
+<span id="cb24-689"><a href="#cb24-689" aria-hidden="true" tabindex="-1"></a>      vg<span class="op">.</span><span class="fu">width</span>(<span class="dv">600</span>)<span class="op">,</span> vg<span class="op">.</span><span class="fu">aspectRatio</span>(<span class="dv">1</span>)</span>
+<span id="cb24-690"><a href="#cb24-690" aria-hidden="true" tabindex="-1"></a>    )<span class="op">,</span></span>
+<span id="cb24-691"><a href="#cb24-691" aria-hidden="true" tabindex="-1"></a>    vg<span class="op">.</span><span class="fu">table</span>({</span>
+<span id="cb24-692"><a href="#cb24-692" aria-hidden="true" tabindex="-1"></a>      <span class="dt">from</span><span class="op">:</span> <span class="st">"cocktail_umap_wide"</span><span class="op">,</span> <span class="dt">filterBy</span><span class="op">:</span> brush<span class="op">,</span></span>
+<span id="cb24-693"><a href="#cb24-693" aria-hidden="true" tabindex="-1"></a>      <span class="dt">columns</span><span class="op">:</span> [<span class="st">"name"</span><span class="op">,</span> <span class="st">"category"</span>]<span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">180</span></span>
+<span id="cb24-694"><a href="#cb24-694" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb24-695"><a href="#cb24-695" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb24-696"><a href="#cb24-696" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cocktail-umap-search" class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
 </section>
 <section id="properties-of-umap" class="level3">
 <h3 class="anchored" data-anchor-id="properties-of-umap">Properties of UMAP</h3>
@@ -610,13 +777,13 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </section>
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<ol start="31" type="1">
+<ol start="35" type="1">
 <li><p>We presented the two moons dataset earlier as an example where UMAP, but not PCA, would be able to discover a one-dimensional representation that separates the groups. The implication is that, if we anticipate some sort of nonlinearity in higher-dimensions (which we can’t directly visualize), then UMAP would be a more suitable choice.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>moons <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(moons, <span class="fu">aes</span>(X, Y, <span class="at">col =</span> Class)) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>moons <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(moons, <span class="fu">aes</span>(X, Y, <span class="at">col =</span> Class)) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -628,26 +795,26 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div></li>
 <li><p>The code block below defines both the PCA and UMAP tasks. There is no need to normalize the data, since the two dimensions are already on the same scale.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>moons_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(moons)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>moons_task<span class="sc">$</span><span class="fu">set_col_roles</span>(<span class="st">"Class"</span>, <span class="at">remove_from =</span> <span class="st">"feature"</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>, <span class="at">rank. =</span> <span class="dv">1</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">n_components =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>moons_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(moons)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>moons_task<span class="sc">$</span><span class="fu">set_col_roles</span>(<span class="st">"Class"</span>, <span class="at">remove_from =</span> <span class="st">"feature"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>, <span class="at">rank. =</span> <span class="dv">1</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">n_components =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>The block below shows both the UMAP and PCA representations. The PCA representation seems to mostly reflect the variation on the <span class="math inline">\(x\)</span>-axis of the original data, and the two classes mix together. On the other hand, the UMAP mostly separates the groups. This is expected, since the nearest neighborhood graph that defines UMAP is likely separated into two major components, one for each moon.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>moons_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(moons_task, pca)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>moons_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(moons_task, umap)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  moons_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="st">"PC1"</span>),</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  moons_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Class"</span>, <span class="st">"V1"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(Class, <span class="at">UMAP1 =</span> <span class="fu">scale</span>(V1))</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>Class, <span class="at">names_to =</span> <span class="st">"method"</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(value, method, <span class="at">col =</span> Class)) <span class="sc">+</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">h =</span> <span class="fl">0.1</span>), <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>moons_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(moons_task, pca)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>moons_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(moons_task, umap)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    moons_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="st">"PC1"</span>),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    moons_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Class"</span>, <span class="st">"V1"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">transmute</span>(Class, <span class="at">UMAP1 =</span> <span class="fu">scale</span>(V1))</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>Class, <span class="at">names_to =</span> <span class="st">"method"</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(value, method, <span class="at">col =</span> Class)) <span class="sc">+</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">h =</span> <span class="fl">0.1</span>), <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -660,31 +827,31 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </ol>
 <section id="antibiotics-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="antibiotics-dataset">Antibiotics Dataset</h3>
-<ol start="34" type="1">
+<ol start="38" type="1">
 <li><p>We can apply dimensionality reduction to the antibiotics dataset we discussed in the small multiples notes. There, we had filtered down to the 6 most abundant bacteria. Now we will consider 147 most abundant, which means that each sample can be imagined as a vector in a 147-dimensional space. Ideally, a dimensionality-reduction procedure should be able to place samples close to one another when they have similar species profiles. In addition to loading species counts, we load taxonomic information about each species, in the <code>taxa</code> variable.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>antibiotic <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/t1lifegdz8s0a8lgckber32ytyh9hu4r.csv"</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/ng6y6etk79lrm0gtsgw2u0yq6gqcozze.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>antibiotic <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/t1lifegdz8s0a8lgckber32ytyh9hu4r.csv"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/ng6y6etk79lrm0gtsgw2u0yq6gqcozze.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>We now define a PCA task. Since the counts are relatively skewed, we log-transform<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, using <code>applicator = log1p</code>. The rest of the definition is like the 2D example above.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>antibiotic_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(antibiotic)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>antibiotic_ids <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sample"</span>, <span class="st">"ind"</span>, <span class="st">"time"</span>, <span class="st">"antibiotic"</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>antibiotic_task<span class="sc">$</span><span class="fu">set_col_roles</span>(antibiotic_ids, <span class="at">remove_from =</span> <span class="st">"feature"</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>antibiotic_log <span class="ot">&lt;-</span> <span class="fu">preproc</span>(antibiotic_task, <span class="fu">po</span>(<span class="st">"colapply"</span>, <span class="at">applicator =</span> log1p))</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>antibiotic_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(antibiotic_log, pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>antibiotic_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(antibiotic)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>antibiotic_ids <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sample"</span>, <span class="st">"ind"</span>, <span class="st">"time"</span>, <span class="st">"antibiotic"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>antibiotic_task<span class="sc">$</span><span class="fu">set_col_roles</span>(antibiotic_ids, <span class="at">remove_from =</span> <span class="st">"feature"</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>antibiotic_log <span class="ot">&lt;-</span> <span class="fu">preproc</span>(antibiotic_task, <span class="fu">po</span>(<span class="st">"colapply"</span>, <span class="at">applicator =</span> log1p))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>antibiotic_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(antibiotic_log, pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>We generate a map of the PCA scores below. The primary difference is between the three study participants, D, E, and F. Within each person, there is some variation between the antibiotic periods, as indicated by the points’ colors.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> antibiotic_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(antibiotic_ids, <span class="st">"PC1"</span>, <span class="st">"PC2"</span>))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>variances <span class="ot">&lt;-</span> pca<span class="sc">$</span>state<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(PC1, PC2, <span class="at">col =</span> antibiotic)) <span class="sc">+</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> ind), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> sample), <span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="fu">sqrt</span>(variances[<span class="dv">2</span>] <span class="sc">/</span> variances[<span class="dv">1</span>])) <span class="sc">+</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> antibiotic_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(antibiotic_ids, <span class="st">"PC1"</span>, <span class="st">"PC2"</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>variances <span class="ot">&lt;-</span> pca<span class="sc">$</span>state<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(PC1, PC2, <span class="at">col =</span> antibiotic)) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> ind), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> sample), <span class="at">check_overlap =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>(<span class="fu">sqrt</span>(variances[<span class="dv">2</span>] <span class="sc">/</span> variances[<span class="dv">1</span>])) <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -696,21 +863,21 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div></li>
 <li><p>Which species contribute the most to the principal components? We can analyze this like we did with the cocktails dataset. In addition to plotting the raw component value, we also join in the taxa information. This allows us to color in each bar by the species group that each bacteria belongs to. For example, we see that samples on the right side of the plot above (i.e., high PC1) likely have more Firmicutes than Bacteroidetes. PC2 seems to pick up on two species that have higher abundance when the rest drop-off.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>components_ <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(pca<span class="sc">$</span>state<span class="sc">$</span>rotation, <span class="at">rownames =</span> <span class="st">"terms"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>terms, <span class="at">names_to =</span> <span class="st">"component"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(component <span class="sc">%in%</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">terms_ =</span> <span class="fu">reorder_within</span>(terms, <span class="fu">abs</span>(value), component)) <span class="sc">|&gt;</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(component) <span class="sc">|&gt;</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">20</span>, <span class="fu">abs</span>(value)) <span class="sc">|&gt;</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(taxa)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(components_, <span class="fu">aes</span>(value, terms_, <span class="at">fill =</span> Phylum)) <span class="sc">+</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> component, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reordered</span>() <span class="sc">+</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>components_ <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(pca<span class="sc">$</span>state<span class="sc">$</span>rotation, <span class="at">rownames =</span> <span class="st">"terms"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>terms, <span class="at">names_to =</span> <span class="st">"component"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(component <span class="sc">%in%</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">terms_ =</span> <span class="fu">reorder_within</span>(terms, <span class="fu">abs</span>(value), component)) <span class="sc">|&gt;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(component) <span class="sc">|&gt;</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">top_n</span>(<span class="dv">20</span>, <span class="fu">abs</span>(value)) <span class="sc">|&gt;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(taxa)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(components_, <span class="fu">aes</span>(value, terms_, <span class="at">fill =</span> Phylum)) <span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>component, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_reordered</span>() <span class="sc">+</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -722,16 +889,16 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div></li>
 <li><p>We can use similar code to compute a UMAP embedding. The UMAP seems to separate the different timepoints more clearly. However, there is no analog of <code>components</code> with which to interpret the different axes. Instead, a typical approach to interpret the representation is to find points that are close together (e.g., using <span class="math inline">\(K\)</span>-means) and take their average species profile.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># UMAP requires spread to be at least min_dist.</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">min_dist =</span> <span class="fl">1.5</span>, <span class="at">spread =</span> <span class="fl">1.5</span>)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>antibiotic_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(antibiotic_log, umap)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> antibiotic_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(antibiotic_ids, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">UMAP1 =</span> V1, <span class="at">UMAP2 =</span> V2)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(UMAP1, UMAP2, <span class="at">col =</span> antibiotic)) <span class="sc">+</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> ind), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> sample), <span class="at">max.overlaps =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># UMAP requires spread to be at least min_dist.</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">min_dist =</span> <span class="fl">1.5</span>, <span class="at">spread =</span> <span class="fl">1.5</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>antibiotic_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(antibiotic_log, umap)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> antibiotic_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(antibiotic_ids, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">UMAP1 =</span> V1, <span class="at">UMAP2 =</span> V2)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(UMAP1, UMAP2, <span class="at">col =</span> antibiotic)) <span class="sc">+</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> ind), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> sample), <span class="at">max.overlaps =</span> <span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -745,32 +912,32 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </section>
 <section id="image-data" class="level3">
 <h3 class="anchored" data-anchor-id="image-data">Image Data</h3>
-<ol start="39" type="1">
+<ol start="43" type="1">
 <li><p>Both PCA and UMAP can be used on image data. Here, each pixel in an image is considered a different feature. For example, the FashionMNIST dataset includes 60,000 28 x 28 images of fashion objects. We can think of image as a vector<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> <span class="math inline">\(x_{i} \in \mathbb{R}^{784}\)</span>. The goal of dimensionality reduction in this context is to build an atlas of images, where images with similar overall pixel values should be located next to one another. First, we read in the data and subsample it, so the code doesn’t take so long to run.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fashion <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/aur84ttkwa2rqvzo99qo7yhxemoc6om0.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_frac</span>(<span class="fl">0.2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">image =</span> <span class="fu">row_number</span>(),</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">as.factor</span>(label)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>fashion <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://uwmadison.box.com/shared/static/aur84ttkwa2rqvzo99qo7yhxemoc6om0.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sample_frac</span>(<span class="fl">0.2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">image =</span> <span class="fu">row_number</span>(),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">as.factor</span>(label)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>Each row of the matrix above is a separate image. We can prepare a PCA task just like in the two examples above. Note that we are not normalizing the features, since the pixels are already on a common scale.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fashion_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(fashion)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>fashion_task<span class="sc">$</span><span class="fu">set_col_roles</span>(<span class="fu">c</span>(<span class="st">"label"</span>, <span class="st">"image"</span>), <span class="at">remove_from =</span> <span class="st">"feature"</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>fashion_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(fashion_task, pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fashion_task <span class="ot">&lt;-</span> <span class="fu">as_task_unsupervised</span>(fashion)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>fashion_task<span class="sc">$</span><span class="fu">set_col_roles</span>(<span class="fu">c</span>(<span class="st">"label"</span>, <span class="st">"image"</span>), <span class="at">remove_from =</span> <span class="st">"feature"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"pca"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>fashion_pca <span class="ot">&lt;-</span> <span class="fu">preproc</span>(fashion_task, pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></li>
 <li><p>The code below extracts the PCA scores and visualizes them as a cloud of points. Each point corresponds to an image, and the different types of fashion items are indicated by color. It seems that the types are well separated, but the labels are not informative… to understand what the colors mean, we need to look at the images.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> fashion_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"label"</span>, <span class="st">"image"</span>, <span class="st">"PC1"</span>, <span class="st">"PC2"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(x, y, <span class="at">col =</span> label)) <span class="sc">+</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>) <span class="sc">+</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> fashion_pca<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"label"</span>, <span class="st">"image"</span>, <span class="st">"PC1"</span>, <span class="st">"PC2"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(x, y, <span class="at">col =</span> label)) <span class="sc">+</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>) <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -782,8 +949,8 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div></li>
 <li><p>The block below overlays the first 300 images from the dataset at the locations from the previous plot. We have prepared a function to generate this sort of image using ggplot2; however, we have hidden it to avoid cluttering these notes (you can find it at the code link at the top of the notes).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_scores</span>(scores, fashion) <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">overlay_images</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_scores</span>(scores, fashion) <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">overlay_images</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -795,14 +962,14 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div></li>
 <li><p>Finally, we can repeat the exercise above with UMAP. The first plot shows the UMAP scores and the second overlays the same set of 300 images onto these new coordinates. It seems that UMAP can more clearly separate shoes and pants from shirts and sweaters.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">min_dist =</span> <span class="fl">0.5</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>fashion_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(fashion_task, umap)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> fashion_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"label"</span>, <span class="st">"image"</span>, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(x, y, <span class="at">col =</span> label)) <span class="sc">+</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>) <span class="sc">+</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">po</span>(<span class="st">"umap"</span>, <span class="at">min_dist =</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>fashion_umap <span class="ot">&lt;-</span> <span class="fu">preproc</span>(fashion_task, umap)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> fashion_umap<span class="sc">$</span><span class="fu">data</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"label"</span>, <span class="st">"image"</span>, <span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scores, <span class="fu">aes</span>(x, y, <span class="at">col =</span> label)) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set3"</span>) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_fixed</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -813,8 +980,8 @@ whole_egg               -0.2903794302 -2.191547e-01  0.282581218  0.123512344</c
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_scores</span>(scores, fashion, <span class="at">scale_factor =</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">overlay_images</span>(<span class="at">scale_factor =</span> <span class="fl">0.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_scores</span>(scores, fashion, <span class="at">scale_factor =</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">overlay_images</span>(<span class="at">scale_factor =</span> <span class="fl">0.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -847,6 +1014,17 @@ La Manno, Gioele, Kimberly Siletti, Alessandro Furlan, et al. 2020. <em>Molecula
 </ol>
 </section></div></main>
 <!-- /main column -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImNvY2t0YWlsX3ZnID0ge1xuICBjb25zdCB2ZyA9IGF3YWl0IGltcG9ydChcImh0dHBzOi8vY2RuLmpzZGVsaXZyLm5ldC9ucG0vQHV3ZGF0YS92Z3Bsb3RAMC4xOS4wLytlc21cIik7XG4gIHZnLmNvb3JkaW5hdG9yKCkuZGF0YWJhc2VDb25uZWN0b3IoYXdhaXQgdmcud2FzbUNvbm5lY3RvcigpKTtcbiAgYXdhaXQgdmcuY29vcmRpbmF0b3IoKS5leGVjKFtcbiAgICB2Zy5sb2FkQ1NWKFwiY29ja3RhaWxfcGNhXCIsIG5ldyBVUkwoXCJkYXRhL2NvY2t0YWlsX3BjYS5jc3ZcIiwgZG9jdW1lbnQuYmFzZVVSSSkuaHJlZiksXG4gICAgdmcubG9hZENTVihcImNvY2t0YWlsX3VtYXBfd2lkZVwiLCBuZXcgVVJMKFwiZGF0YS9jb2NrdGFpbF91bWFwX3dpZGUuY3N2XCIsIGRvY3VtZW50LmJhc2VVUkkpLmhyZWYpXG4gIF0pO1xuICByZXR1cm4gdmc7XG59XG5cbmluZ3JlZGllbnRzID0gYXdhaXQgZmV0Y2goXG4gIG5ldyBVUkwoXCJkYXRhL2luZ3JlZGllbnRzLmpzb25cIiwgZG9jdW1lbnQuYmFzZVVSSSlcbikudGhlbihyID0+IHIuanNvbigpKTtcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImNvY2t0YWlsX3BjYV9icnVzaCA9IHtcbiAgY29uc3QgdmcgPSBjb2NrdGFpbF92ZztcbiAgY29uc3QgYnJ1c2ggPSB2Zy5TZWxlY3Rpb24uaW50ZXJzZWN0KCk7XG4gIHJldHVybiB2Zy52Y29uY2F0KFxuICAgIHZnLnBsb3QoXG4gICAgICB2Zy5kb3QodmcuZnJvbShcImNvY2t0YWlsX3BjYVwiKSwge3g6IFwiUEMxXCIsIHk6IFwiUEMyXCIsIGZpbGw6IFwiY2F0ZWdvcnlcIn0pLFxuICAgICAgdmcuaW50ZXJ2YWxYWSh7YXM6IGJydXNofSksXG4gICAgICB2Zy53aWR0aCg2MDApLCB2Zy5hc3BlY3RSYXRpbygxKVxuICAgICksXG4gICAgdmcudGFibGUoe2Zyb206IFwiY29ja3RhaWxfcGNhXCIsIGZpbHRlckJ5OiBicnVzaCwgY29sdW1uczogW1wibmFtZVwiLCBcImNhdGVnb3J5XCJdLCBoZWlnaHQ6IDE4MH0pXG4gICk7XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJjb2NrdGFpbF9wY2FfaG92ZXIgPSB7XG4gIGNvbnN0IHZnID0gY29ja3RhaWxfdmc7XG4gIGNvbnN0IGhvdmVyZWQgPSB2Zy5TZWxlY3Rpb24uc2luZ2xlKHtlbXB0eTogdHJ1ZX0pO1xuICByZXR1cm4gdmcucGxvdChcbiAgICB2Zy5kb3QodmcuZnJvbShcImNvY2t0YWlsX3BjYVwiKSwge3g6IFwiUEMxXCIsIHk6IFwiUEMyXCIsIGZpbGw6IFwiY2F0ZWdvcnlcIn0pLFxuICAgIHZnLm5lYXJlc3Qoe2FzOiBob3ZlcmVkfSksXG4gICAgdmcudGV4dCh2Zy5mcm9tKFwiY29ja3RhaWxfcGNhXCIsIHtmaWx0ZXJCeTogaG92ZXJlZH0pLFxuICAgICAge3g6IFwiUEMxXCIsIHk6IFwiUEMyXCIsIHRleHQ6IFwibmFtZVwiLCBkeTogLTEwLCBmaWxsOiBcImJsYWNrXCJ9KSxcbiAgICB2Zy53aWR0aCg2MDApLCB2Zy5hc3BlY3RSYXRpbygxKVxuICApO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiY29ja3RhaWxfdW1hcF9zZWFyY2ggPSB7XG4gIGNvbnN0IHZnID0gY29ja3RhaWxfdmc7XG4gIGNvbnN0IGZlYXR1cmUgPSB2Zy5QYXJhbS52YWx1ZShpbmdyZWRpZW50c1swXSk7XG4gIGNvbnN0IGJydXNoID0gdmcuU2VsZWN0aW9uLmludGVyc2VjdCgpO1xuICByZXR1cm4gdmcudmNvbmNhdChcbiAgICB2Zy5tZW51KHtvcHRpb25zOiBpbmdyZWRpZW50cywgYXM6IGZlYXR1cmUsIGxhYmVsOiBcIkluZ3JlZGllbnRcIiwgdmFsdWU6IGluZ3JlZGllbnRzWzBdfSksXG4gICAgdmcucGxvdChcbiAgICAgIHZnLmRvdCh2Zy5mcm9tKFwiY29ja3RhaWxfdW1hcF93aWRlXCIpLFxuICAgICAgICB7eDogXCJWMVwiLCB5OiBcIlYyXCIsIGZpbGw6IHZnLmNvbHVtbihmZWF0dXJlKSwgc3Ryb2tlOiBcIiM1NTVcIiwgc3Ryb2tlV2lkdGg6IDAuNX0pLFxuICAgICAgdmcuaW50ZXJ2YWxYWSh7YXM6IGJydXNofSksXG4gICAgICB2Zy5jb2xvclNjaGVtZShcInB1cnBsZXNcIiksXG4gICAgICB2Zy5jb2xvckxlZ2VuZCgpLFxuICAgICAgdmcud2lkdGgoNjAwKSwgdmcuYXNwZWN0UmF0aW8oMSlcbiAgICApLFxuICAgIHZnLnRhYmxlKHtcbiAgICAgIGZyb206IFwiY29ja3RhaWxfdW1hcF93aWRlXCIsIGZpbHRlckJ5OiBicnVzaCxcbiAgICAgIGNvbHVtbnM6IFtcIm5hbWVcIiwgXCJjYXRlZ29yeVwiXSwgaGVpZ2h0OiAxODBcbiAgICB9KVxuICApO1xufVxuIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../..";
+window._ojs.paths.runtimeToRoot = "../../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
